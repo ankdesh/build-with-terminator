@@ -20,8 +20,6 @@ This directory contains scripts and instructions for setting up and running [gds
 ## Usage
 
 ### 1. Download GDSII Examples
-Because the site [yzuda.org GDSII Examples](https://www.yzuda.org/download/_GDSII_examples.html) often blocks automated downloading scripts with a `406 Not Acceptable` firewall error, please download the example `.gds` or `.gds2` files manually (`wget` or a browser works well).
-
 Place the downloaded GDSII files in the `../gds_samples/` directory relative to this folder.
 
 Example manual download:
