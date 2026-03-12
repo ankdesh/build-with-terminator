@@ -1,0 +1,4 @@
+Question,Expected answer,Actual Output,Correctness Score,Correctness Reason,Eval Success
+What is the capital of France?,Paris,Simulated test response for: 'What is the capital of France?',,Evaluation failed: OpenAI API key is not configured. Set OPENAI_API_KEY in your environment or pass `api_key` to GPTModel(...).,False
+Who wrote Hamlet?,William Shakespeare,Simulated test response for: 'Who wrote Hamlet?',,Evaluation failed: OpenAI API key is not configured. Set OPENAI_API_KEY in your environment or pass `api_key` to GPTModel(...).,False
+What is 2+2?,4,Simulated test response for: 'What is 2+2?',,Evaluation failed: OpenAI API key is not configured. Set OPENAI_API_KEY in your environment or pass `api_key` to GPTModel(...).,False
