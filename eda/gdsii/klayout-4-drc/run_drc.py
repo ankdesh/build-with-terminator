@@ -39,4 +39,5 @@ def run_drc(input_gds="asap7_test.gds", output_lyrdb="drc_violations.lyrdb", drc
 if __name__ == "__main__":
     in_gds = sys.argv[1] if len(sys.argv) > 1 else "asap7_test.gds"
     out_db = sys.argv[2] if len(sys.argv) > 2 else "drc_violations.lyrdb"
+    print (f"Input GDS: {in_gds}, Output DRC Database: {out_db}")
     run_drc(in_gds, out_db)
