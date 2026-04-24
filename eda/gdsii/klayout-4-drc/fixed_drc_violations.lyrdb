@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<report-database>
+ <description>ASAP7 DRC</description>
+ <original-file/>
+ <generator>drc: script='asap7_mini.drc'</generator>
+ <top-cell>TOP</top-cell>
+ <tags>
+ </tags>
+ <categories>
+  <category>
+   <name>M1_W</name>
+   <description>M1 minimum width is 18nm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1_S</name>
+   <description>M1 minimum spacing is 18nm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V1_M1_ENC</name>
+   <description>V1 minimum enclosure by M1 is 9nm</description>
+   <categories>
+   </categories>
+  </category>
+ </categories>
+ <cells>
+  <cell>
+   <name>TOP</name>
+   <variant/>
+   <references>
+   </references>
+  </cell>
+ </cells>
+ <items>
+ </items>
+</report-database>
