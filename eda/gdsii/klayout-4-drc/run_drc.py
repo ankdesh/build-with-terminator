@@ -37,7 +37,12 @@ def run_drc(input_gds="asap7_test.gds", output_lyrdb="drc_violations.lyrdb", drc
         print(f"Total Violations: {total_errors}")
 
 if __name__ == "__main__":
-    in_gds = sys.argv[1] if len(sys.argv) > 1 else "asap7_test.gds"
-    out_db = sys.argv[2] if len(sys.argv) > 2 else "drc_violations.lyrdb"
-    print (f"Input GDS: {in_gds}, Output DRC Database: {out_db}")
-    run_drc(in_gds, out_db)
+    import argparse
+    parser = argparse.ArgumentParser(description="Run KLayout DRC.")
+    parser.add_argument("in_gds", nargs="?", default="asap7_test.gds", help="Input GDS file")
+    parser.add_argument("out_db", nargs="?", default="drc_violations.lyrdb", help="Output LYRDB file")
+    parser.add_argument("--drc-script", "-s", default="asap7_mini.drc", help="DRC script to use")
+    
+    args = parser.parse_args()
+    print(f"Input GDS: {args.in_gds}, Output DRC Database: {args.out_db}, DRC Script: {args.drc_script}")
+    run_drc(args.in_gds, args.out_db, args.drc_script)
