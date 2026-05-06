@@ -8,7 +8,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(pybind11 REQUIRED)
 
 # Create the module
-pybind11_add_module(worker main.cpp)
+pybind11_add_module(worker 
+    main.cpp 
+    gmm.cpp 
+    parallel_scanner.cpp
+)
 
-# Install destination (optional, but good for structure)
+# Install destination
 install(TARGETS worker DESTINATION .)

@@ -3,24 +3,32 @@
 This document defines the foundational principles and technical direction for the `log-analysis-client`.
 
 ## Part 1: Mission
-The mission of this project is to create a robust, extensible CLI client that acts as the bridge between local log environments and an external AI Analysis Agent.
+The mission of this project is to create a robust, extensible CLI client that acts as a Workflow Engine for log analysis, bridging local log environments and external AI Analysis Agents.
 
 ### Core Objectives
-1.  **Agent Abstraction**: Provide a clean interface for an external AI agent. The agent itself is **not** part of this project; the client must abstract all agent interactions to support seamless testing, mocking, and future agent swaps.
-2.  **Data Collection & Dispatch**: Efficiently collect data and metadata from input logs and transmit them to the agent for analysis, incorporating user confirmation and input where necessary.
-3.  **Dynamic Instruction Execution**: Implement a "command-and-control" loop where the client receives, parses, and executes instructions from the agent. Required core capabilities include:
-    *   `grep`: Executing pattern searches on local log files.
-    *   `execute_py`: Safely running Python snippets for complex data processing.
-4.  **Operational Excellence**: Ensure a reliable CLI experience with clear arguments and predictable behavior.
+1.  **Workflow Executor**: Implement a "command-and-control" loop where the Orchestrator executes a deterministic queue of declarative instructions (the "Instruction Trace").
+2.  **Dual-Plane Architecture**: Strictly separate the Control Plane (deciding what to do) from the Data Plane (doing the work).
+    *   **Control Plane**: The Orchestrator routes instructions. When stuck or given open-ended tasks, it invokes an external **LLM Planner** to generate new instructions.
+    *   **Data Plane**: Unified Workers (C++, Python, or LLM) execute specific tasks (like grepping, parsing templates, or inferring log formats).
+3.  **Replayable Traces**: Ensure that an instruction trace authored by an LLM on one log file can be deterministically replayed on similar log files without incurring further LLM inference costs.
+4.  **Agent Abstraction**: Abstract all agent interactions to support seamless testing, mocking, and future agent swaps. The client provides the capability to use the LLM either as a Planner (generating workflows) or as a Worker (processing data within a workflow).
+5.  **Operational Excellence**: Ensure a reliable CLI experience with clear arguments and predictable behavior.
 
 ## Part 2: Tech Stack
 *   **Workflow**: **Spec-Driven Development (SDD)**. Every feature must be preceded by an OpenSpec proposal, design, and task list.
 *   **Management CLI**: `openspec` for orchestrating the SDD lifecycle.
 *   **Python Tooling**: `uv` for dependency management and environment orchestration.
 *   **Architecture (Orchestrator + Worker Model)**:
-    *   **Orchestrator (Python)**: The main CLI entry point and agent interface. Handles network communication, state management, and the `execute_py` instruction.
-    *   **C++ Integration**: `pybind11` for high-performance shared library access.
-    *   **Performance Workers (C++)**: Compiled as shared libraries (`.so`/`.pyd`) for time-critical tasks (e.g., heavy log parsing, high-speed filtering).
+    *   **Orchestrator (Python)**: The main CLI entry point and Workflow Executor. Manages the instruction queue, invokes the LLM Planner when necessary, and dispatches tasks to Workers.
+    *   **Unified Worker Interface**: All workers inherit from an abstract `WorkerBase` class to provide a common execution interface.
+    *   **Python Workers**: For stateful data management and pure Python processing (e.g., `LogparserWorker` for log templates, `LlmWorker` for data inference).
+    *   **C++ Integration & Performance Workers**: Compiled as shared libraries (`.so`/`.pyd`) for time-critical tasks (e.g., heavy log parsing, high-speed filtering) via `pybind11`.
+*   **Documentation Standards**: 
+    *   **C++ Code**: ALL C++ code must be thoroughly commented. Header files must describe class responsibilities and public API contracts. Implementation files must explain complex logic, threading behavior, and memory management decisions.
+*   **Testing Standards**: 
+    *   **Unit Tests**: Comprehensive unit tests (using `pytest` for Python-facing components) MUST be written for all new features. Tests should serve as both verification of correctness and documentation of intended usage.
+
+## Part 3: Packaging
 *   **Packaging**: **AppImage**. The project uses a hybrid build strategy:
     *   **Development**: `uv` for environment management and C++ build orchestration.
     *   **Distribution**: `python-appimage` to bundle the Python interpreter, dependencies, and compiled `pybind11` workers into a single, portable executable.
