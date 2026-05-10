@@ -31,26 +31,24 @@ uv pip install torch torchvision numpy requests scikit-learn gdown tqdm
 ### 2. Unified Data Processing
 The `src/data_preparation.py` script handles all data ingestion via three distinct modes.
 
-#### Mode A: Benchmark (Download VFF-16)
-Automatically downloads and extracts the standard RFF (VFF-16) dataset from Google Drive.
+#### Mode A: Generate (From Source/GovDocs1)
+Reproduces the VFF-16 construction logic (padding, random fragmentation, shuffling) from raw source files. The script scans the source directory **recursively** to find all files of supported types.
 ```bash
-python src/data_preparation.py benchmark --sector-size 512 --max-gb 0.5
+python src/data_preparation.py generate \
+    --source-dir /path/to/govdocs1 \
+    --sector-size 512 \
+    --num-classes 5
 ```
-- `--sector-size`: Supports `512` or `4k`.
-- `--max-gb`: Optional. Limits extraction to a smaller section of the dataset for testing.
+- `--source-dir`: Root directory to scan for source files.
+- `--num-classes`: (Optional) Randomly sample a specific number of classes for training. This automatically updates `data/FFT/classes.json`.
+- **Metadata**: Generates `data/generated/metadata_512.csv` mapping all sectors to their source files and indices.
 
-#### Mode B: Generate (From GovDocs1)
-Reproduces the VFF-16 construction logic (padding, random fragmentation, shuffling) from raw source files.
-```bash
-python src/data_preparation.py generate --source-dir /path/to/govdocs1 --sector-size 512
-```
-
-#### Mode C: Custom (Forensic Chunking)
+#### Mode B: Custom (Forensic Chunking)
 Segments user-provided files into padded sectors for inference.
 ```bash
 python src/data_preparation.py custom /path/to/evidence --sector-size 512
 ```
-- **Metadata Linkage**: Automatically generates `data/custom/metadata.csv` to map fragments back to parent files.
+- **Metadata Linkage**: Automatically generates `data/custom/metadata_512.csv` to map fragments back to parent files.
 
 ---
 
@@ -59,12 +57,13 @@ Train the model on any dataset generated above. The script reports both **Traini
 
 ```bash
 python src/train.py \
-    --data-dir ./data/benchmark/512 \
+    --data-dir ./data/generated/512 \
     --sector-size 512 \
     --batch-size 512 \
     --epochs 96 \
     --num-layers 4
 ```
+- `--data-dir`: Path to the directory containing class subfolders (e.g., `./data/generated/512`).
 - `--num-layers`: Dynamically adjust the CNN depth from the command line.
 - **Optimization**: Uses SGD with 500-step linear warmup and Cosine Annealing.
 - **Output**: The best model is saved to `models/best_cnn_model.pth`.

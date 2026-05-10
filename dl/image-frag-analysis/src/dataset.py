@@ -24,6 +24,10 @@ class VFF16Dataset(Dataset):
                 if fname.endswith(".bin") or fname.endswith(".sample"): # Generic binary extensions
                     fpath = os.path.join(class_dir, fname)
                     self.samples.append((fpath, class_idx))
+        
+        # Initial shuffle to ensure mixed distribution even before DataLoader
+        import random
+        random.shuffle(self.samples)
                     
     def __len__(self):
         return len(self.samples)

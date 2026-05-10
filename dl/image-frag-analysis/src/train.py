@@ -17,6 +17,7 @@ def train():
     parser.add_argument("--epochs", type=int, default=96, help="Number of epochs.")
     parser.add_argument("--lr", type=float, default=0.2, help="Max learning rate.")
     parser.add_argument("--num-layers", type=int, default=4, help="Number of convolutional layers.")
+    parser.add_argument("--log-csv", type=str, help="Path to CSV file to log final results.")
     args = parser.parse_args()
 
     # 1. Load Classes
@@ -56,6 +57,9 @@ def train():
     # 5. Training Loop
     best_acc = 0.0
     global_step = 0
+    
+    train_acc = 0.0
+    val_acc = 0.0
     
     for epoch in range(args.epochs):
         model.train()
@@ -108,6 +112,23 @@ def train():
             os.makedirs("models", exist_ok=True)
             torch.save(model.state_dict(), "models/best_cnn_model.pth")
             print(f"--> Saved best model to models/best_cnn_model.pth with Accuracy: {val_acc:.2f}%")
+
+    # Final logging to CSV
+    if args.log_csv:
+        import csv
+        file_exists = os.path.isfile(args.log_csv)
+        with open(args.log_csv, 'a', newline='') as f:
+            writer = csv.DictWriter(f, fieldnames=["num_classes", "num_layers", "loss", "train_acc", "val_acc"])
+            if not file_exists:
+                writer.writeheader()
+            writer.writerow({
+                "num_classes": num_classes,
+                "num_layers": args.num_layers,
+                "loss": f"{total_loss/len(train_loader):.4f}",
+                "train_acc": f"{train_acc:.2f}",
+                "val_acc": f"{val_acc:.2f}"
+            })
+        print(f"Final results logged to {args.log_csv}")
 
 if __name__ == "__main__":
     train()
