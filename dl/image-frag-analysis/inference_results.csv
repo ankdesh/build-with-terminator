@@ -1,0 +1,2 @@
+fragment_name,predicted_class,confidence
+real_test.txt_chunk_000000.bin,png,0.0715
