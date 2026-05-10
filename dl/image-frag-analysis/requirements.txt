@@ -1,0 +1,6 @@
+requests
+gdown
+torch
+numpy
+pandas
+tqdm
