@@ -11,6 +11,7 @@ import argparse
 
 def train():
     parser = argparse.ArgumentParser(description="Train CNN-4L for File Fragment Classification.")
+    parser.add_argument("--data-dir", type=str, required=True, help="Path to the dataset root (containing class subfolders).")
     parser.add_argument("--sector-size", type=int, default=512, help="Sector size (512 or 4096).")
     parser.add_argument("--batch-size", type=int, default=512, help="Batch size.")
     parser.add_argument("--epochs", type=int, default=96, help="Number of epochs.")
@@ -25,9 +26,8 @@ def train():
     class_to_idx = {v: int(k) for k, v in class_map.items()}
     num_classes = len(class_to_idx)
 
-    # 2. Data Loaders (Assuming data exists at ./data/RFF/{sector_size})
-    data_path = f"./data/RFF/{args.sector_size if args.sector_size == 512 else '4k'}"
-    dataset = VFF16Dataset(data_path, sector_size=args.sector_size, class_to_idx=class_to_idx)
+    # 2. Data Loaders
+    dataset = VFF16Dataset(args.data_dir, sector_size=args.sector_size, class_to_idx=class_to_idx)
     
     # Simple split for demonstration: 80% train, 20% val
     train_size = int(0.8 * len(dataset))

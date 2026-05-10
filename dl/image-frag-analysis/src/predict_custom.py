@@ -9,17 +9,15 @@ import csv
 
 def predict():
     parser = argparse.ArgumentParser(description="Predict file fragment types for custom chunks.")
-    parser.add_argument("--chunks-dir", default="./output/chunks", help="Directory containing binary chunks.")
+    parser.add_argument("--chunks-dir", default="./data/custom/512/unlabeled", help="Directory containing binary chunks.")
     parser.add_argument("--model-path", default="models/best_cnn_model.pth", help="Path to trained model weights.")
     parser.add_argument("--sector-size", type=int, default=512, help="Sector size used for training.")
     parser.add_argument("--num-layers", type=int, default=4, help="Number of convolutional layers.")
     parser.add_argument("--output-csv", default="output/results/inference_results.csv", help="Path to save sector-level results.")
     args = parser.parse_args()
-...
-    # 4. Sector-Level Reporting (CSV)
-    os.makedirs(os.path.dirname(args.output_csv), exist_ok=True)
-    keys = results[0].keys() if results else []
 
+    # 1. Load Classes
+    with open("./data/FFT/classes.json", "r") as f:
         class_map = json.load(f)
     idx_to_class = {int(k): v for k, v in class_map.items()}
     num_classes = len(idx_to_class)
@@ -38,6 +36,10 @@ def predict():
 
     # 3. Process Chunks
     results = []
+    if not os.path.exists(args.chunks_dir):
+        print(f"Error: Chunks directory {args.chunks_dir} does not exist.")
+        return
+
     chunk_files = [f for f in os.listdir(args.chunks_dir) if f.endswith(".bin")]
     chunk_files.sort()
     
@@ -67,13 +69,16 @@ def predict():
             })
 
     # 4. Sector-Level Reporting (CSV)
-    keys = results[0].keys() if results else []
-    with open(args.output_csv, "w", newline='') as f:
-        dict_writer = csv.DictWriter(f, fieldnames=keys)
-        dict_writer.writeheader()
-        dict_writer.writerows(results)
-    
-    print(f"Sector-level classification complete. Results saved to {args.output_csv}")
+    if results:
+        os.makedirs(os.path.dirname(args.output_csv), exist_ok=True)
+        keys = results[0].keys()
+        with open(args.output_csv, "w", newline='') as f:
+            dict_writer = csv.DictWriter(f, fieldnames=keys)
+            dict_writer.writeheader()
+            dict_writer.writerows(results)
+        print(f"Sector-level classification complete. Results saved to {args.output_csv}")
+    else:
+        print("No chunks processed.")
 
 if __name__ == "__main__":
     predict()
