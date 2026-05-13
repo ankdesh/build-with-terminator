@@ -1,0 +1,15211 @@
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+1
+
+FiFTy: Large-scale File Fragment Type
+Identification using Convolutional Neural Networks
+
+arXiv:1908.06148v2 [cs.CR] 7 Jun 2020
+
+Govind Mittal, Paweł Korus, Member, IEEE and Nasir Memon, Fellow, IEEE
+Abstract—We present FiFTy, a modern file-type identification
+tool for memory forensics and data carving. In contrast to
+previous approaches based on hand-crafted features, we design
+a compact neural network architecture, which uses a trainable
+embedding space. Our approach dispenses with the explicit
+feature extraction which has been a bottleneck in legacy systems.
+We evaluate the proposed method on a novel dataset with 75 filetypes – the most diverse and balanced dataset reported to date.
+FiFTy consistently outperforms all baselines in terms of speed,
+accuracy and individual misclassification rates. We achieved an
+average accuracy of 77.5% with processing speed of ≈38 sec/GB,
+which is better and more than an order of magnitude faster than
+the previous state-of-the-art tool - Sceadan (69% at 9 min/GB).
+Our tool and the corresponding dataset is open-source.
+Index Terms—file-type classification, memory forensics, carving, machine learning, convolutional neural network.
+
+I. I NTRODUCTION
+Memory forensics and data carving heavily rely on data/filetype identification from small chunks of memory (Fig. 1).
+Many existing techniques are based on simple heuristics
+(like common byte markers) or hand-engineered features
+(unigrams [1–3], bigrams [1, 2], Shannon entropy [1–4] or
+Koglomorov complexity [1–4], etc. - see Section II for more
+details). Such an approach suffers from multiple scalability
+issues, ranging from a limited number of supported file-types,
+deteriorating classification accuracy, up to slow processing
+speed. Feature extraction alone is responsible for a bulk of
+the processing time [1]. (Our evaluation corroborates this;
+see Tab. IV.) Some studies consider boosting, and compute
+individual features only when necessary [5].
+Many file carvers rely on simple heuristics and entropy
+thresholding to find JPEG blocks in raw disk images [6].
+Although more sophisticated methods exist they often focus
+on distinguishing file-types that are very different, e.g., JPG,
+CSV, HTML, DOC, XLS [1, 3, 7–9]. Many of these filetypes exhibit distinct byte frequency statistics and are also
+unlikely to occur in memory images from cameras and IoT
+devices. The complexity of the problem leads to trade-offs
+which can compromise the speed [4] or accuracy [1, 9]. While
+allowing for rapid triage, reliance on simple heuristics leads to
+©2020 IEEE. Personal use of this material is permitted. Permission from
+IEEE must be obtained for all other uses, in any current or future media,
+including reprinting/republishing this material for advertising or promotional
+purposes, creating new collective works, for resale or redistribution to servers
+or lists, or reuse of any copyrighted component of this work in other works.
+G. Mittal and N. Memon are with the Tandon School of Engineering, New
+York University, USA. Part of this work was performed was supported by
+NYU Abu Dhabi, UAE. (e-mail: {mittal,memon}@nyu.edu).
+P. Korus is with the Tandon School of Engineering, New York University,
+USA, and also with the Department of Telecommunications, AGH University
+of Science and Technology, Poland (e-mail: pkorus@nyu.edu).
+Supplementary materials, inlcuding source code, all data sets, and additional
+results are freely available at https://github.com/mittalgovind/fifty
+
+excessive false positive matches, which need to be considered
+and discarded at later stages. This bottleneck affects even the
+most recent carvers [6, 10–12].
+To address these limitations, we explore modern neural
+networks (NNs) to dispense with the explicit feature computation. Our search for compact architectures delivering good
+balance between accuracy and speed resulted in FiFTy. It is
+a scalable and fast file-type identification tool comprising of
+models based on six real-world scenarios (see Tab. III) and
+two common block sizes (512 and 4,096 bytes).
+Our models are 1-D convolutional neural networks (CNNs)
+that take blocks of raw bytes as input, and embed them in a
+trainable latent space - akin to word embeddings that proved
+successful in natural language processing [13]. The resulting
+classifier consistently outperforms state-of-the-art models reported in the literature and can be an order of magnitude faster.
+We base our results on a novel dataset with 75 diverse and
+representative file-types (nearly twice as much as the largest
+prior work [1]). Our model achieves an average accuracy of
+77.5% (using memory blocks of 4,096 bytes) with processing
+speed of ≈38 sec/GB. The previous state-of-the art system,
+Sceadan [1], achieved 69% accuracy and required 9 min/GB
+in the same conditions (see detailed breakdown in Tab. I).
+While several recent studies started to explore deep learning
+models for the problem, their solutions have fallen short.
+Hiester [14] considered fully connected, convolutional and
+recurrent networks, but studied only 4 very different file-types
+(JPEG, GIF, XML and CSV) which can be easily distinguished
+using simple techniques employing statistical features. The
+proposed models convert input byte blocks to 1-hot encoding,
+which leads to unnecessary dimensionality explosion. Chen
+et al. [15] took a different approach, and reshaped 512-byte
+blocks as 64 × 64 grayscale images. Despite using modern
+CNNs and a small 16-type dataset, their approached delivered
+sub-par performance with accuracy of only 71%.
+Our study is significantly broader in scope. In addition to the
+largest reported dataset (Tab. I), we also study several smaller
+scenarios with application-specific selection of file-types. We
+focus on graphic and photographic data, which occur in photo
+carving applications. Our selection reflects the most popular
+files, that can be found on SD cards from modern cameras,
+smartphones and camera-enabled IoT devices. We also include
+multiple previously unstudied types like HEIC/HEIF (high
+efficiency image file format [16]) and numerous RAW photo
+varieties (including GPR from GoPro action cameras). To accommodate variations of cluster size in different file systems,
+we consider both 512 and 4,096-byte inputs.
+To ensure fair comparison, we evaluate our approach against
+three strong baselines: (1) a state-of-the-art file-type classifier,
+Sceadan [1]; (2) a fully connected neural network trained on
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+commonly used hand-crafted global block features, denoted as
+NN-GF; (3) a convolutional neural network trained on byte cooccurrences, denoted as NN-CO. The comparison was done on
+the same datasets, and using the same computational resources
+(using GPU acceleration, when possible). The proposed approach consistently outperformed all baselines with respect to
+speed, overall accuracy, and individual misclassification rates.
+The contributions of our work includes:
+• A compact neural network architecture for file-type classification with state-of-the-art performance and runtime;
+we also explore the hyperparameter space using the Treestructured Parzen Estimator (TPE) [17].
+• Detailed evaluation of the proposed approach against
+three strong baselines, including a state-of-the-art tool
+based on support vector machines [1], and modern neural
+networks trained on hand-crafted features.
+• Detailed analysis and discussion of several classification
+scenarios relevant to photo carving applications.
+• A ready-to-use, open-source implementation (Python 3)
+available at https://github.com/mittalgovind/fifty and via
+pip3 install fifty.
+• A novel data-set (75 popular file-types) publicly available
+at http://dx.doi.org/10.21227/kfxw-8084.
+The paper is organized as follows. Section II reviews related
+work. In Section III, we describe the proposed model, discuss
+key design decisions and hyper-parameter selection. We report
+the results of experimental evaluation in Section IV and
+conclude in Section V.
+II. R ELATED W ORK
+Data carving is a technique used to identify and extract
+specific file-types from memory blocks, without assuming
+explicit access to file-system metadata. The simplest carving
+methods rely on starting and ending signatures (e.g., magic
+numbers). However, they are inadequate when dealing with
+heavily fragmented file-systems or in the presence of address
+space randomization (often used to alleviate memory cell wear
+in modern SSDs). Similar techniques are also applicable to
+memory forensics, which involves analyzing random access
+memory (RAM) dumps. In such cases, it is helpful to use a
+file-type classifier that can blindly identify the data-type of
+small memory blocks.
+Most of file-type classifiers relied on hand-crafted heuristic features, and were limited to very small datasets. Only
+recently researchers began exploring (deep) neural networks,
+but the reported solutions were still limited in both scope
+and performance. Tab. I summarizes the previous approaches,
+their evaluation scenarios, and the reported performance. The
+table is divided into two sections: the top 4 rows summarize
+results of our evaluation of FiFTy and three baseline methods
+(Sceadan, NN-GF, NN-CO) in the same conditions (all 75 filetypes; 4,096-byte blocks; same hardware); the remaining rows
+summarize results, as reported in their original publications.
+A. Hand-crafted Features
+Karresand et al. [7] developed Oscar, a classifier based on
+two features: rate of change (RoC) of consecutive bytes, and
+
+2
+
+binary frequency distribution (BFD). They defined a 1-norm
+metric as the distance of these features from pre-computed
+centroids. This approach worked well for JPEG photos due
+to byte-stuffing [18], a technique involving insertion of 0x00
+after 0xFF. The RoC distribution captured this feature easily
+and thus lead to near-perfect detection of JPEG files (99.2%)
+but with high false positive rates for other high-entropy
+filetypes, e.g., Windows executables and ZIP.
+Veenman [3] trained a supervised classifier on a dataset
+described by 1-grams, entropy, and Kolmogorov complexity.
+They employed a two-stage strategy with multi-class and
+binary classification (one-against-all) using the Fischer linear
+discriminant (FLD) aiming to maximize inter-class distances.
+While this method yielded high accuracy for JPEG files (98%),
+it averaged to only 45% on a dataset with 11 filetypes. Calhoun
+et al. [8] also used the FLD, but included additional features,
+e.g., longest common strings and subsequences. While they
+report good results, and consider various feature combinations,
+the study was limited to only 4 filetypes (JPEG, PDF, GIF and
+BMP).
+Fitzgerald et al. [2] used unigrams and bigrams along with
+entropy and complexity measures to train a support vector
+machine (SVM) based classifier. They used the bag-of-words
+model (here, bag-of-bytes) to classify text documents (file
+fragment). This method worked well for text formats but failed
+for all high entropy filetypes.
+Beebe et al. [1] developed Sceadan, a tool based on various statistical features, including unigrams, bigrams, entropy,
+longest streak, etc. The features were originally extracted from
+512-byte blocks, and organized into four sets: unigram, bigram, all other global features and a subset of global features.
+These feature sets were then used for classification using
+SVMs with linear and radial basis function (RBF) kernels.
+The authors concluded that increasing the number of types of
+features had a negative effect on the classification accuracy,
+and that unigrams & bigrams worked best as they are. Until
+now, Sceadan remains the state-of-the-art open source tool and
+the corresponding paper is the most comprehensive study to
+date - it covered 38 diverse filetypes and reported accuracy
+of 73.8%. We used Sceadan as an important baseline in our
+experiments. In Tab. I, we collect both the results reported by
+the authors, as well as the results from our evaluation (with
+both 512 and 4096-byte blocks). More information about the
+experiment is available in Section IV-B.
+Xu et al. [9] converted 512-byte blocks into 32 × 32 px
+grayscale images and extracted a 512-D GIST image descriptors based on Gabor filters. Finally, they experimented with
+various classification algorithms, (e.g., Naive-Bayes, SVMs,
+k-nearest neighbours, SMO, J48) and concluded that KNN
+performed best both in terms of speed and accuracy.
+Zheng et al. [19] also relied on SVMs but employed
+only two features (binary frequency distribution and Shannon
+entropy). They explicitly differentiate between file-types (that
+could contain other embedded files, e.g., PDF and DOC) and
+data-types (that are often embedded within other files, e.g.,
+JPEG photos), but ultimately deal only with filetypes without
+any embedded foreign objects.
+Beebe et al. [20] experimented with clustering of 52 file-
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+3
+
+types, and proposed a two-layer hierarchical structure where
+filetypes are first grouped into 6 classes and classifiers are
+trained separately for each class. The authors used the same
+features as all other studies, including unigrams, bigrams
+and global statistical features (mean, entropy, complexity,
+etc.). The paper focuses on exploratory analysis based on Kmeans clustering, and reports file-level accuracy of 74.1%. The
+utilized classification strategy is not reported.
+B. Automatic Feature Extraction
+Wang et al. [4] used sparse coding for automatic feature
+extraction. They computed higher-order N -grams (N = 4, 8,
+16, 32, 64) and stored them in dictionaries. The dictionaries
+are subsequently averaged and concatenated with bigram and
+unigram frequencies. Similarly to other studies, feature extraction takes most of the processing time and makes the approach
+infeasible for high-volume applications. The reported accuracy
+was also sub-par, reaching on average 61.3% for 18 filetypes.
+Hiester [14] considered fully connected, convolutional and
+recurrent neural networks with raw bytes fed directly as
+model inputs (1-hot encoded). The study included only 4
+very different filetypes (JPEG, GIF, XML and CSV) which
+are easy to distinguish with existing techniques. The adopted
+1-hot encoding contributes to excessive dimensionality and
+slow training. Only the recurrent network achieved satisfactory
+accuracy, and did so at excessive computational effort. The
+presented approach is not scalable to real-world applications.
+Chen et al. [15] took an approach similar to Xu et al. [9]
+by converting 512-byte fragments into 64 × 64 images. Despite using a CNN architecture, the model delivered sub-par
+performance with accuracy of only 71% among 16 filetypes.
+Moreover, the network failed to classify even very distinct
+types like HTML or plain text files.
+III. P ROPOSED M ETHOD
+This section discusses our motivations for the approach,
+use-cases, description of the general architecture of models
+included in FiFTy and the dataset used.
+A. Formal Problem Statement
+We address the problem of inferring the file-type of a block
+of bytes in the absence of any side information, i.e., we aim
+to obtain a function f that maps a single block B of n bytes
+to its file-type label T :
+f : B ∈ Zn255 → T ∈ {JPG, PPT, ..., PNG}
+
+(1)
+
+where Z255 = [0, ..., 255]. We will model function f as
+a neural network, which allows for jointly learning a suitable
+feature representation, and the final classifier.
+We focus on the more common file-type classification and
+not on data-type classification. The latter is more granular,
+and involves complex combinations where one data type might
+be embedded into another (e.g., images embedded into PDF
+documents, base64-encoded images embedded into HTML, or
+sections of structured data within human-readable text). This
+leads to prohibitive complexity of training data preparation,
+
+000000 255044 504B03 FFD8FF 474946 524946 504B03
+186674 462142 045374 E1004A 3817C4 461F8B 044B44
+
+# Param
+
+File Fragment
+
+Output
+Shape
+512 bytes
+
+Embedding
+
+(512, 64)
+
+16384
+
+Convolutional
+
+(486, 128)
+
+221312
+
+Max Pooling
+
+(243, 128)
+
+(4090,
+120)
+Convolutional
+
+(217, 128)
+
+Max Pooling
+
+(108, 128)
+
+Average Pooling
+
+(128, )
+
+Dropout
+
+(128, )
+
+Dense
+
+(64, )
+
+8256
+
+Dense
+
+(25, )
+
+1625
+
+Input
+
+Convolutional
+Block
+
+Convolutional
+Block
+
+Output
+
+442496
+
+Class Label
+
+MP4 CR2 MOV JPG GIF
+
+AVI
+
+3FR
+
+Fig. 1. Illustration of the proposed network architecture; the presented model
+corresponds to hyper-parameters optimized for scenario #3 w. 512-byte inputs;
+the reported numbers indicate how dimensionality changes with successive
+processing steps, and how parametrization is allocated throughout the model.
+
+more complex carving logic, and still does not solve the necessity to handle heterogeneous blocks with multiple data types
+(especially for larger blocks). Hence, file-type classification is
+often the best choice in practice (cf. Section II).
+B. Design Objectives
+In this work, we focus on three objectives – speed, accuracy
+and generality – to make design choices. We aim to meet these
+objectives by relying on modern neural networks, which can
+automatically learn effective feature representations from raw
+bytes and dispense with explicit feature computation - a major
+bottleneck in previous solutions [1] (Tab. IV). Moreover, NN
+models can take advantage of advanced accelerators (GPUs,
+TPUs, VPUs) and can be easily deployed in desktop, server,
+mobile and edge environments [23]. We used Keras which abstracts model definition and allows to exchange computational
+backends [24]. In our experiments, we used Python 3.6 and
+the Tensorflow (1.5.0) backend. All experiments were run on a
+server with 4 Intel Xeon CPUs (E5-2680 v4 @ 2.40GHz) and
+a single Tesla V100 GPU. Our models achieve nearly identical
+runtime regardless of the number of output classes (Tab. III).
+To facilitate representation learning, we collected a novel
+dataset with 75 filetypes including: 6 bitmap photo formats,
+11 RAW photo formats, 7 video formats, 7 audio formats,
+and many others. Hence, not only is it the largest reported
+dataset, but also the only one uniquely suited for data carving
+applications. However, to make our discussion as general as
+possible, we consider 6 application scenarios with different
+levels of granularity (see Section IV-A).
+
+CNN
+
+CNN
+
+NN
+
+SVM
+
+CNN
+RNN
+
+CNN
+
+SVM
+
+K-means
+
+SVM
+
+KNN
+
+SVM
+
+SVM
+
+FLD
+
+FLD
+
+VQ
+
+2019
+
+2019
+
+2019
+
+2019
+
+2018
+
+2018
+
+2018
+
+2016
+
+2015
+
+2014
+
+2013
+
+2012
+
+2008
+
+2007
+
+2006
+
+1-gram,
+entropy,
+Kolmogorov complexity
+
+longest common substrings,
+other statistical measures
+
+unigram, bigram, entropy,
+Hamming weight, complexity, longest cont. streak
+
+statistical: unigram, bigram, entropy, etc
+
+image pixels
+
+BFD, entropy
+
+unigrams, bigrams, and global
+statistics (mean, entropy, complexity, etc.)
+
+dictionary of N-Grams
+
+image pixels
+
+1-hot enc. bytes
+
+statistical: unigram, bigram, entropy, etc
+
+global stat. features
+
+co-occurence matrix
+
+raw bytes
+
+Features
+
+n/a
+
+21
+-
+
+256 +
+2562 + 6
+
+65792
+
+512 (32 ×
+32)
+
+n/a
+
+1024 +
+1296 +
+1444
+n/a
+
+(64, 64)
+
+8192
+
+65792
+
+14
+
+(128, 128)
+
+n/a
+n/a
+
+Feature
+dim.
+
+113
+
+43
+43
+
+242
+
+382,3
+
+29
+2
+
+122
+
+522,3
+(6 classes)
+
+182
+
+162
+
+42
+42
+
+751
+751
+
+751
+751
+
+751
+751
+
+751
+751
+
+#File
+types
+
+86
+88.3
+45
+
+4096
+
+49.1
+
+512
+896
+
+512
+
+73.8
+
+39.7
+
+1024
+512
+
+67.4
+
+74.0
+
+61.3
+
+70.9
+
+73.4
+98.04
+
+57.3
+69.0
+
+45.4
+46.8
+
+64.4
+75.3
+
+65.6
+77.5
+
+Accuracy
+
+512
+
+512
+
+512
+
+4096
+
+512
+512
+
+512
+4096
+
+512
+4096
+
+512
+4096
+
+512
+4096
+
+Block
+size
+
+98
+
+83.6
+92
+
+17.4
+
+81
+
+22
+
+69.2
+
+n/a
+
+65.0
+
+15
+
+96.5
+96.5
+
+81.5
+91.8
+
+53.2
+48.6
+
+77.0
+92.5
+
+83.5
+86.3
+
+JPEG
+Acc.
+
+n/a
+
+n/a
+n/a
+
+n/a
+
+0.30
+
+n/a
+
+n/a
+
+n/a
+
+n/a
+
+n/a
+
+n/a
+n/a
+
+1.48
+2.06
+
+0.61
+2.67
+
+0.84
+1.05
+
+0.04
+0.15
+
+Speed
+[ms/block]†
+
+n/a
+
+n/a
+n/a
+
+n/a
+
+10.6
+
+n/a
+
+n/a
+
+n/a
+
+n/a
+
+n/a
+
+n/a
+n/a
+
+51.7
+9.0
+
+21.32
+11.67
+
+29.36
+4.59
+
+1.50
+0.64
+
+Speed
+[min/GB]†
+
+n/a
+
+n/a
+n/a
+
+n/a
+
+n/a
+
+0.001
+ms/block
+
+n/a
+
+n/a
+
+235
+ms/block
+
+n/a
+
+7 hours
+135 hours
+
+44 hours
+10 days*
+
+2.88 hours
+10.53 hours
+
+8.67 hours
+9.04 hours
+
+7.51 hours
+12.53 hours
+
+Training
+Time‡
+
+Pair-wise analysis
+
+Poor results for all high-entropy
+file types (incl. JPG)
+
+Sceadan; as reported by authors
+
+Includes various classifiers & grid
+search
+
+Rudimentary analysis
+
+Focus on exploratory heirarchical
+clustering
+
+Feature extraction is the bottleneck
+
+Few & very different file types
+
+Sceadan [1]; our evaluation
+
+NN-GF
+
+NN-CO
+
+FiFTy
+
+Remarks
+
+[3]
+
+[8]
+
+[2]
+
+[1]
+
+[9]
+
+[19]
+
+[20]
+
+[4]
+
+[15]
+
+[14]
+
+Self
+
+Self
+
+Self
+
+Self
+
+Ref.
+
+rate of change and binary
+n/a
+43
+512
+n/a
+99.2
+0.02
+0.6
+n/a
+JPEG-specific method (byte mark[7]
+freq. distribution
+ers); high FPR for other types
+Dataset: 1 - the proposed FFT-75 dataset[21] ; 2 - a public dataset GovDocs1 [22] ; 3 - Private dataset; * ref. section IV-C; † - Computed on Tesla V100 (Top 4 rows) ; ‡ - Computed on Tesla P40 (Top 4)
+
+Classifier
+
+Year
+
+TABLE I
+Q UANTITATIVE REVIEW OF RELATED WORK IN REVERSE CHRONOLOGICAL ORDER ; R EPORTED METRICS CORRESPOND TO : OUR EXPERIMENTS ON THE SAME DATASET (75 FILE - TYPES ; 512 AND 4,096- BYTE
+INPUTS ) AND HARDWARE ( TOP 4 ROWS ); AND RESULTS REPORTED IN ORIGINAL PUBLICATIONS ( ALL REMAINING ROWS )
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+4
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+5
+
+D. Design Space and Hyper-parameter Optimization
+We use the same general network architecture described in
+Section III-C for all our experiments, and only tune selected
+hyper-parameters to adjust the model to the scenario at hand.
+The scenarios differ in the number of output classes and reflect
+various application needs, ranging from general-purpose to
+increasingly specialized photo carving (Section IV-A).
+1) Hyper-parameter Definition: After hand tuning the general architecture, we defined 6 hyper-parameters which will
+
+Prob. distribution for worse group
+Prob. distribution for better group
+Candidate
+
+0.05
+
+Other Observation
+Observation showing highest
+expected improvement
+
+7
+6
+5
+
+Probability
+
+0.04
+4
+0.03
+
+3
+
+0.02
+
+2
+
+0.01
+
+1
+
+0.00
+
+0
+0
+
+20
+
+40
+
+60
+
+80
+Conv. Kernel
+
+100
+
+120
+
+140
+
+(a) After initial 20 random samples TPE selects 64 as the next value.
+Prob. distribution for worse group
+Prob. distribution for better group
+Candidate
+Other Observation
+Observation showing highest
+expected improvement
+
+0.07
+0.06
+
+2.5
+2.0
+
+0.05
+1.5
+
+0.04
+0.03
+
+1.0
+
+Expected Improvement
+(the bigger the better)
+
+0.08
+
+Probability
+
+We feed raw byte blocks as the input to our models. Instead
+of one-hot encoding, we use a trainable embedding layer in
+a manner similar to natural language processing (NLP) [13].
+In our work, we treat file-fragments as a sequence of bytes
+and intend to capture characteristic byte transitions patterns,
+inherent to many file-types.
+Embedding layers are commonly used for learning a fixedlength real-valued representation of variable-length discrete
+words, while maintaining their linguistic context [13]. In NLP,
+word embeddings can learn relationships between concepts,
+and allow for meaningful arithmetics. In our work, we use
+the embedding layer mainly for their efficiency in converting
+sparse binary features (1-hot encoded words in the dictionary)
+into compact real-valued representations. This allowed us to
+reduce a single byte (256 binary features in 1-hot encoding)
+into 16-64 real-valued features, which are more meaningful
+for machine learning models. The following layers will further reduce this dimensionality by pooling spatially-adjacent
+features of intermediate representations.
+Our architecture is 1-dimensional and relies on convolutions, followed by max-pooling to gradually reduce the size
+of the problem. We refer to these units as convolutional blocks
+and vary their number as a tunable hyper-parameter. Our
+final vectorized representation is obtained by average pooling
+with dropout. In the last step, two fully connected layers
+map the obtained feature vectors into class probabilities. All
+hidden layers are activated by Leaky Rectified Linear Units
+(LeakyReLU) with α = 0.3.
+The overall architecture is shown in Fig. 1. We used
+the same general architecture for all tested scenarios (Section IV-A; Tab. III) and only vary hyper-parameters (Section III-D). The model shown in the figure corresponds to
+hyper-parameters optimized for scenario #3 with block size
+of 512 bytes. The reported numbers indicate how dimensionality changes with successive processing steps, and how
+parametrization is allocated throughout the model.
+We also experimented with recurrent architectures using
+GRU units placed after the last convolutional layer. While
+initially this seemed to be more accurate, careful hyperparameter tuning eventually reduced performance gap to 1%,
+which no longer justified nearly 40× increase in processing
+time. While probably better performance could be obtained,
+longer processing time makes it difficult to explore the hyperparameter space. As a result, we currently believe that carefully tuned 1-D convolutional models are the best choice with
+respect to the accuracy-speed trade-off.
+
+0.06
+
+Expected Improvement
+(the bigger the better)
+
+C. General Model Architecture
+
+0.02
+0.5
+0.01
+0.00
+
+0.0
+0
+
+20
+
+40
+
+60
+
+80
+Conv. Kernel
+
+100
+
+120
+
+140
+
+(b) After 200 samples, 128 seems to be the optimal value.
+Fig. 2. Hyper-parameter value selection (here conv. kernel size) using TPE:
+probability distributions for top performers (red) and others (green) and the
+expected improvement (blue line).
+
+be optimized automatically using the Tree-structured Parzen
+Estimator (TPE) [17]. For each dimension, we chose a few
+possible values spanning a wide range of reasonable choices.
+• # dense units: the number of units in the hidden dense
+layer; {16, 32, 64, 128, 256};
+• embedding size: dimensionality of the trainable realvalued embedding space; {16, 32, 48, 64};
+• conv. kernel: the size of the convolution kernel (same for
+all layers); {16, 32, 64, 128};
+• conv. stride: convolution stride (same for all layers):
+{3, 11, 18, 27, 35};
+• # conv. blocks: the number of convolutional blocks (conv
++ max-pooling); {1, 2, 3};
+• max-pooling size: max pooling window size; {2, 4, 6, 8}.
+In a separate, prior experiment, we established that adoption
+of dropout is beneficial before the hidden dense layer (with
+dropping probability of 0.1).
+In Fig. 3, we graph validation loss and accuracy achieved by
+the same model versus the amount of data used for training.
+We observe that even using less than 20% data gave us
+proportional results that could be used to compare the models.
+Therefore, to speed up the hyper-parameter space exploration,
+we used 10% of the training data and 40% of the validation
+data instead of using the full set of data everytime.
+We sampled network configurations using the TPE (we used
+the implementation available in the hyperopt package [25]). In
+total, we collected 225 models for each of the 12 scenarios (6
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+75.0
+
+1.2
+acc
+loss
+
+1.1
+1.0
+
+72.5
+70.0
+67.5
+
+0.9
+
+Validation Accuracy
+
+Validation Loss
+
+1.3
+
+6
+
+65.0
+
+0.8
+0
+
+20
+
+40
+60
+Training Data (%)
+
+80
+
+100
+
+Fig. 3. Impact of training data size on validation accuracy and loss (scenario
+#1 with 4,096-byte blocks).
+
+base scenarios with 512 and 4,096-byte inputs, respectively).
+The first 20 configurations are fully random, and the remaining
+are sampled to maximize model performance. Most scenarios
+completed within a day, except for the largest two (scenario
+#1 with 75-classes for both 512 and 4096-byte inputs) that
+took up to 36 hours. Finally, we retrained the best candidate
+models on the entire dataset, and used a separate hold-out test
+set for the final evaluation.
+2) Tree-structured Parzen Estimator: TPE is a sequential
+model-based optimization (SMBO) algorithm [26] proposed
+by Bergstra et al. [17], which models the probability that
+given a scoring metric L, a hyperparameter value θ leads
+to a better performance, denoted as p(θ|L). The algorithm
+samples subsequent values for evaluation based on historical
+performances.
+The algorithm can be summarized as follows:
+1) Initialize the model with Nα random samples from the
+hyper-parameter space S.
+2) Divide the sampled models into two groups based on a
+threshold on the performance quantile.
+3) Estimate the probability density functions for top performers (p1 ) and the rest (p2 ).
+4) The next sample θ̂ is determined using the expected
+improvement:
+θ̂ = argmax EI(θ) = argmax
+θ∈Θ
+
+θ∈Θ
+
+p1 (θ)
+,
+p2 (θ)
+
+(2)
+
+where p1 (θ) and p2 (θ) are the group membership probabilities defined above.
+5) Evaluate the network defined by θ̂ and repeat steps 2 to
+5 until N samples are collected.
+Fig. 2 shows the modeled probabilities and the expected
+improvement (EI) for an example hyper-parameter from our
+design space (conv. kernel). Fig. 2(a) illustrates the initialization step of TPE. It collected 20 random samples and
+divided it into two equal groups using a quantile (here, 0.5).
+The EI is calculated and the value of 64 maximizes it.
+Fig. 2(b) illustrates the distributions after 200 samples have
+been collected, showing that the worse sample distribution is
+moving towards the better sample distribution (here, towards
+higher kernel size).
+3) Final Models and Key Observations: In Fig. 4, we show
+the impact of the hyper-parameters on the validation accuracy
+for 4,096-byte inputs (see supplementary materials for the
+512-byte version). Each plot shows a violin plot with the
+
+distributions of validation accuracies (top), and the expected
+improvement from the TPE. The best hyper-parameters are
+marked in dark green. Note that these values correspond to
+the best sampled network, and due to non-trivial interactions
+and stochastic nature of the process, may not necessarily
+correspond to seemingly best values suggested by TPE. The
+key observations are as follows:
+1) The convolution kernel size and stride seem to have the
+stringest and most consistent effect. Larger values lead
+to better performance regardless of the scenario.
+2) A single convolutional layer is typically not enough, two
+or three blocks are needed for best performance.
+3) In most scenarios, larger embedding sizes seem to be
+preferred, but good network with good performance can
+also be obtained for smaller embeddings - especially for
+smaller number of classes.
+4) For 4,096-byte blocks, stronger max-pooling seems to
+lead to better performance.
+Tab. II shows the final architectures obtained for all scenarios for both 512 and 4096-byte inputs.
+IV. E XPERIMENTAL E VALUATION
+In this section, we present the results of our experimental
+evaluation. First, we introduce a novel dataset and distinguish
+several evaluation scenarios. Then, we describe 3 reference
+models, including a state-of-the-art tool Sceadan and two
+alternative NN-based baselines. Finally, we report our results
+discuss the key limitations and causes of errors.
+A. Scenarios and Dataset
+Previous works relied mostly on small-scale private datasets
+or on GovDocs [22] - an unbalanced corpus with 20 filetypes
+comprising 99.3% and 43 filetypes comprising the remaining
+0.7% of the dataset. FiFTy comes with a novel, large and
+balanced corpus, named FFT-75, comprising of 75 different
+filetypes with emphasis on multimedia types which dominate
+disk images extracted from contemporary devices.
+We prepared the dataset by downloading public files from
+various public Internet sources and from our own collection.
+Instead of sharing the actual files, we sampled 102,400 small
+blocks for each filetype to obtain a balanced dataset well-suited
+for classification. Large and complex files cannot be recovered
+from the obtained blocks. For tiny text files potentially smaller
+than block size, we made sure to rely on open-source materials
+that explicitly permit sharing. To accommodate various filesystem cluster sizes, we consider both 512 and 4,096-byte
+blocks. The blocks are shuffled to evenly distribute the filetypes within the training (80%), validation (10%) and hold-out
+testing (10%) subsets.
+The included file-types are grouped by use-cases that include bitmaps (6 formats), RAW photographs (11), vector
+graphics (3), videos (7), archives (13), executable files (4),
+office documents (7), rich publications (4), human-readable
+text files (9), audios (7) and 4 others. More information,
+including detailed accuracy and misclassification rates are
+collected in Tab. VII. To the best of our knowledge, the
+obtained corpus is the largest and most comprehensive to date.
+
+7
+
+75
+
+50
+
+80
+
+60
+
+80
+60
+
+90
+80
+70
+
+98
+
+95
+
+98
+96
+
+EI
+
+Accuracy
+
+EI
+
+Accuracy
+
+EI
+
+Accuracy
+
+EI
+
+Accuracy
+
+EI
+
+Accuracy
+
+EI
+
+Accuracy
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+16
+
+32 64 128
+# Dense Units
+
+256
+
+16
+
+32
+48
+Embedding Size
+
+64
+
+16
+
+32
+64
+Conv. Kernel
+
+128
+
+3
+
+11 19 27
+Conv. Stride
+
+35
+
+1
+
+2
+# Conv. blocks
+
+3
+
+2
+
+4
+6
+Max Pooling size
+
+8
+
+Fig. 4. Impact of hyper-parameter variation on the validation accuracy for all scenarios with 4096-byte inputs: (top) violin plots showing distribution of
+accuracy for sampled networks - dark color corrosponds to the TPE chosen value; (bottom) expected improvement estimates from TPE.
+
+We distinguish 6 scenarios that correspond to various use
+cases and have different granularity (Tab. III). We focus on
+photo carving applications, where scenarios #3 to #6 are the
+most relevant:
+#1 (All; 75 classes): All filetypes are separate classes;
+this is the most generic case and can be aggregated into
+more specialized use-cases.
+• #2 (Use-specific; 11): Filetypes are grouped into 11
+classes according to their use (see tags in 2nd column
+of Tab. VII); this information may be useful for moredetailed, hierarchical classification or for determining the
+primary use of an unknown device.
+• #3 (Media Carver - Photos & Videos; 25): Every filetype
+tagged as a bitmap (6), RAW photo (11) or video (7) is
+considered as a separate class; all remaining types are
+grouped into one other class.
+• #4 (Coarse Photo Carver; 5): Separate classes for different photographic types: JPEG, 11 RAW images, 7 videos,
+5 remaining bitmaps are grouped into one separate class
+per category; all remaining types are grouped into one
+other class.
+•
+
+#5 (Specialized JPEG Carver; 2): JPEG is a separate
+class and the remaining 74 filetypes are grouped into one
+other class; scenario intended for analyzing disk images
+from generic devices.
+• #6 (Camera-Specialized JPEG Carver; 2): JPEG is a separate class and the remaining photographic/video types
+(11 RAW images, 3GP, MOV, MKV, TIFF and HEIC)
+are grouped into one other class; scenario intended for
+analyzing SD cards from digital cameras.
+
+•
+
+Tab. III shows the class composition of each scenario,
+overall accuracy, JPEG accuracy, training and inference time
+along with number of samples in the particular dataset for
+all considered scenarios. The table shows that in general the
+accuracy improves as the number of classes decreases - except
+for scenario #2 because it is more difficult than scenario
+#3. Scenario #2 groups filetypes by use, and not by internal
+structure, which may exhibit completely different statistics,
+e.g., the bitmap class consists of TIFF, HEIC, BMP, GIF, PNG
+and JPEG which include images with no compression, as well
+as lossless or lossy compression. These distinct characteristics
+can be easily treated as separate classes in scenario #3.
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+8
+
+TABLE II
+M ODEL ARCHITECTURES OBTAINED WITH TPE FOR EACH SCENARIO AND BLOCK SIZE .
+Scenario
+
+# Params
+
+Model Description
+FiFTy models for 512-byte blocks
+
+#1
+#2
+#3
+#4
+#5
+#6
+
+E (64) - C1D (128, 27) - MP (4) - AP - D (0.1) - F (256) - F (75)
+E (48) - C1D (128, 11) - MP (4) - C1D (128, 11) - MP (4) - AP - D (0.1) - F (64) - F (11)
+E (64) - C1D (128, 27) - MP (2) - C1D (128, 27) - MP (2) - AP - D (0.1) - F (64) - F (25)
+E (48) - C1D (128, 19) - MP (4) - C1D (128, 19) - MP (4) - AP - D (0.1) - F (256) - F (5)
+E (64) - C1D (128, 35) - MP (8) - AP - D (0.1) - F (256) - F (2)
+E (32) - C1D (128, 11) - MP (6) - C1D (128, 11) - MP (6) - AP - D (0.1) - F (64) - F (2)
+
+289,995
+269,323
+690,073
+474,885
+336,770
+242,114
+
+FiFTy models for 4,096-byte blocks
+#1
+#2
+#3
+#4
+#5
+#6
+
+E (32) - C1D (128, 19) - MP (4) - C1D (128, 19) - MP (4) - AP - D (0.1) - F (256) - F (75)
+E (32) - C1D (128, 27) - MP (8) - C1D (128, 27) - MP (8) - AP - D (0.1) - F (256) - F (11)
+E (32) - C1D (128, 11) - MP (6) - C1D (128, 11) - MP (6) - C1D (128, 11) - MP (6) - AP - D (0.1) - F (256) - F (25)
+E (64) - C1D (128, 27) - MP (6) - C1D (128, 27) - MP (6) - AP - D (0.1) - F (32) - F (5)
+E (48) - C1D (32, 35) - MP (6) - C1D (32, 35) - MP (6) - C1D (32, 35) - MP (6) - AP - D (0.1) - F (16) - F (2)
+E (16) - C1D (128, 35)- MP (8) - C1D (128, 35) - MP (8) - AP - D (0.1) - F (128) - F (2)
+
+Baseline
+
+449,867
+597,259
+453,529
+684,485
+138,386
+666,242
+
+Baseline neural network models (scenario #1 for 512 and 4,096-byte blocks)
+
+NN-CO
+C2D (48, 3) - C2D (48, 3) - C2D (48, 3) - C2D (48, 3) - V - F (64) - F(75)
+44,304,571
+NN-GF
+F (256) - F (256) - F (256) - F (75)
+157,771
+Layers: [E] embedding (hembedding vector lengthi); [C1D/C2D] convolution (hfilter size, stridei); [MP] 1-D max-pooling (hsizei) ; [AP] average pooling;
+[F] fully connected (h# unitsi); [D] dropout (hdropout valuei); [V] flatten.
+
+TABLE III
+D ETAILED RESULTS FOR ALL 6 SCENARIOS FOR 512 AND 4096- BYTE BLOCKS .
+Accuracy
+512
+4096
+
+JPEG Acc.
+512
+4096
+
+Train. time [h]
+512
+4096
+
+ms
+Inf. time [ block
+]
+512
+4096
+
+75
+
+65.6
+
+77.5
+
+83.5
+
+86.3
+
+7.51
+
+12.53
+
+0.043
+
+0.146
+
+7500k
+
+(6) + (11) + (3) + (7)
++ (13) + (4) + (7) +
+(4) + (9) + (7) + (4)
+
+78.9
+
+89.8
+
+-
+
+-
+
+1.98
+
+7.55
+
+0.036
+
+0.294
+
+1935k
+
+Bitmaps + RAW + Video
++ other
+
+6 + 11 + 7 + (51)
+
+87.9
+
+94.6
+
+93.3
+
+98.9
+
+4.26
+
+10.16
+
+0.063
+
+0.227
+
+2300k
+
+5
+
+JPEG + RAW + Video +
+5 Bitmaps + Other
+
+(1) + (11) + (7) + (5)
++ (51)
+
+90.2
+
+94.1
+
+98.6
+
+99.1
+
+0.50
+
+4.95
+
+0.043
+
+0.400
+
+1054k
+
+#5
+
+2
+
+JPEG + non-jpegs
+
+(1) + (74)
+
+99.0
+
+99.2
+
+99.3
+
+99.2
+
+0.32
+
+1.89
+
+0.045
+
+0.134
+
+1036k
+
+#6
+
+2
+
+JPEG + non-jpegs
+
+(1) + (11 + 3 + 2)
+
+99.3
+
+99.6
+
+99.5
+
+99.7
+
+0.41
+
+4.34
+
+0.047
+
+0.259
+
+1000k
+
+Scen.
+
+#Classes
+
+Classes
+
+Composition1
+
+#1
+
+75
+
+All
+
+#2
+
+11
+
+Bitmaps + RAW + Vector
++ Video + Archives +
+Exe + Office + Published
++ Human Readable +
+Audio + Other
+
+#3
+
+25
+
+#4
+
+#Samples
+
+1 Values in paranthesis represent the number of file types grouped into one class; values without paranthesis represent separate classes for each file type.
+
+B. Baseline Methods
+To validate our approach, we compare FiFTy against three
+baseline methods: the state-of-the-art tool Sceadan, and two
+neural networks trained on global statistical features (NN-GF)
+and co-occurrence features (NN-CO). We test all methods on
+the largest scenario (#1) for both 512 and 4,096-byte blocks.
+For Sceadan, we used the open-source implementation and the
+provided training scripts [29]. For the remaining two baselines,
+we used the same TPE-based procedure (Section III-D) to
+optimize the models and their hyper-parameters. The final
+network architectures are collected at the bottom of Tab. II.
+1) NN-CO: The co-occurrence or bigram features were
+commonly used for file-type classification [1, 2, 4, 7]. The
+feature is constructed from a matrix of byte co-occurrences,
+i.e., a matrix of shape (256, 256) with each element aij
+corresponding to the frequency of occurrence of byte value j
+after byte value i. Bigram features lead to good classification
+accuracy, but tends to be very sparse - especially for 512byte blocks - and relatively slow to compute (Tab. IV). As a
+
+result, they tend to be a performance bottleneck [1]. Due to
+the sparsity and excessive memory requirements, we downsampled the matrices to (128, 128) by average pooling. The
+NN-CO model comprises four 2-dimensional convolutional
+layers, and two dense layers operating on a flattened 1dim representation. We keep the same kernel size and stride
+parameters for all layers, and treat them as hyper-parameters.
+Additional hyper-parameters include number of convolutional
+layers, presence of max pooling and the number of units in
+the hidden dense layer.
+2) NN-GF: We use 14 global statistical features (Tab. IV),
+commonly used in previous studies, as the input to the final
+baseline. Each feature maps an input block into a single scalar
+value. The features vary widely with respect to their computational effort, and also lead to performance bottlenecks in
+high-volume environments. The numbers reported in Tab. IV
+correspond to feature extraction in Python 3.6 performed by
+calling low-level routines from popular external libraries (we
+relied on scipy 1.3.0 and numpy 1.16.4). This makes the
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+TABLE IV
+C OMPUTATION TIME FOR GLOBAL STATISTICAL & BIGRAM FEATURES .
+Feature
+
+Description
+
+Kolgomorov
+Complexity
+
+reduction of block length after
+bzip2/gzip compression [27, 28]
+
+0.856
+
+0.238
+
+Arithmetic
+Mean
+
+self explanatory
+
+0.003
+
+0.001
+
+Geometric
+Mean
+
+self explanatory
+
+0.063
+
+0.008
+
+Harmonic Mean
+
+self explanatory
+
+0.048
+
+0.007
+
+Standard
+Deviation
+
+self explanatory
+
+0.046
+
+0.006
+
+Mean absolute
+deviation
+
+standard deviation using abs. value
+of difference instead of squares
+
+0.077
+
+0.009
+
+Hamming
+Weight
+
+average number of set bits in the
+block
+
+0.015
+
+0.002
+
+Kurtosis of Byte
+Value
+
+measure of peakedness in the byte
+value distribution graph
+
+0.110
+
+0.015
+
+Skewness
+
+Measure of asymmetry of the byte
+value distribution graph
+
+0.113
+
+0.017
+
+Longest Byte
+streak
+
+length of longest streak of
+repeating bytes in the block.
+
+0.981
+
+0.156
+
+Low ASCII
+Range Freq
+
+frequency of bytes in range:
+0x00 - 0x1F
+
+0.006
+
+0.001
+
+Med ASCII
+Range Freq
+
+frequency of bytes in range:
+0x20 - 0x7F
+
+0.013
+
+0.002
+
+High ASCII
+Range Freq
+
+frequency of bytes in range:
+0x80 - 0xFF
+
+0.018
+
+0.002
+
+Shannon
+Entropy
+
+Σ p1 log2 p1
+
+0.289
+
+0.115
+
+Total feature extraction time for NN-GF
+
+2.636
+
+0.579
+
+byte co-occurrence matrix
+(NN-CO)
+
+0.567
+
+0.370
+
+Bigram matrix
+
+Runtime [ms/block]
+4096
+512
+
+runtime comparable to low-level C/C++ code. The classifier
+consists of four dense layers, and the number of units in all
+hidden layers was used as separate hyper-parameters.
+C. Evaluation Results
+Tab. I summarizes the overall accuracy and processing speed
+for FiFTy and all of the baselines on scenario #1 with 75
+file-types. We report both the average accuracy and the JPEG
+identification accuracy. FiFTy clearly outperforms all of the
+other methods - both with respect to accuracy and runtime.
+(Due to clearly inferior performance, we omit NN-GF in the
+following discussion.) On 4,096-byte blocks, FiFTy achieved
+average accuracy of 77.5%, compared to 75.3% and 69.0%
+for the runner-ups (NN-CO and Sceadan) which were 7× and
+14× slower, respectively. On the smaller 512-byte blocks, the
+accuracy deteriorates to 65.6% vs. 64.4% and 57.3% with an
+even steeper speed-up gains - 20× and 34×.
+In terms of training time, FiFTy was comparable to NN-CO
+and significantly faster than Sceadan, which took 44 hours
+for 512-byte inputs and over 10 days for 4096-byte inputs.
+Our model required ≈ 8 and 12 hours to train the final model
+on the entire dataset (on the slower P40 GPU), and between
+24 - 36 hours for hyper-parameter search (depending on the
+scenario at hand). If needed, faster training times are possible
+- a sub-set of the training set and a slightly simpler model can
+
+9
+
+TABLE V
+I NFERENCE T IME ( MS / BLOCK ) OF FiFTy FOR VARIOUS SCENARIOS
+TESTED ON A T ESLA V100, P40, K80 GPU AND 4 E5-2690 CPU S .
+Scenario
+
+512-byte blocks
+
+4,096-byte blocks
+
+GPUs
+
+V100
+
+P40
+
+K80
+
+CPU
+
+V100
+
+P40
+
+K80
+
+CPU
+
+#1
+#2
+#3
+#4
+#5
+#6
+
+0.043
+0.036
+0.063
+0.043
+0.045
+0.047
+
+0.058
+0.047
+0.086
+0.057
+0.057
+0.059
+
+0.181
+0.126
+0.353
+0.191
+0.232
+0.105
+
+3.102
+1.907
+5.694
+2.859
+3.893
+1.330
+
+0.146
+0.163
+0.119
+0.245
+0.097
+0.137
+
+0.256
+0.294
+0.227
+0.400
+0.134
+0.259
+
+0.947
+1.014
+0.628
+1.705
+0.541
+0.901
+
+16.836
+20.519
+11.526
+33.900
+12.569
+17.519
+
+cut down the training time to around 1-2 h with only minor
+degradation in accuracy (Fig. 3).
+Fig. 5 compares confusion matrices for all of the models.
+Due to a large number of classes, the included figure depicts
+groups of file-types and marks selected individual file-types
+of interest. For detailed file-type-level results, please refer to
+supplementary materials or Table VII which summarizes the
+most common mistakes. FiFTy delivered the best accuracy for
+43 out of 75 individual file-types. The NN-CO was the winner
+for 27 and Sceadan for 4 (for 4,096 blocks). Whenever FiFTy
+lost, the difference was marginal.
+1) Ensemble of FiFTy and NN baselines: We consider
+ensemble learning to assess whether inclusion of handengineered features could improve the accuracy. By averaging
+the probabilities prodicted by FiFTy, NN-CO, and NN-GF
+we can achieve 78.7% on 4,096-byte inputs - a marginal
+improvement not worth the enormous computational effort.
+We also tried training a simple combination NN, but did not
+observe any further improvements.
+2) Additional Scenarios: Tab. III summarizes FiFTy evaluation results for all test scenarios. As the number of classes
+decreases, we obtain increasingly more reliable results, reaching 94.6 % accuracy for 25 multimedia file-types and 99.7%
+accuracy for the most constrained JPEG-vs-others scenario. To
+the best of our knowledge, these are the best such results to
+date. The best previously reported JPEG identification accuracy was 99.2% on a dataset with only 4 very different filetypes [7]. Our classifier considered 16 other photographic and
+video types in the alternative class, which makes it suitable for
+photo carving applications. Even for the detailed multimedia
+scenario #3 (25 file-types), we achieved JPEG classification
+accuracy of 98.9%.
+3) Runtime Evaluation: The classifier comprising the heart
+of FiFTy is a neural network implemented in a high-level
+framework Keras. The model can take advantage of GPUs
+to speed up computations. In this experiment, we assess the
+inference speed on several popular server GPUs (nVidia Tesla
+V100, P40 and K80). The results are collected in Tab. V.
+Even with parallel processing, general-purpose CPUs are not
+competitive for high-volume applications. Adoption of GPUs
+significantly speeds-up the computations. On the fastest considered GPU and with 4,096-byte blocks, we achieved the
+speed of 214 Mbps for the largest scenario with 75 classes,
+and up to 322 Mbps for the simplest 2-class problem.
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+RAW
+
+cr2
+
+heic
+
+BMPS
+
+RAW
+
+heic
+
+RAW
+
+heic
+
+BMPS
+
+VECTOR
+
+mov
+
+VIDEO
+
+mkv
+
+RAW
+
+BMPS
+
+VECTOR
+
+10
+
+BMPS
+
+tiff
+
+VECTOR
+
+VIDEO
+
+VECTOR
+
+VIDEO
+
+mp4
+
+VIDEO
+
+jar
+ARCHIVE
+
+ARCHIVE
+
+ARCHIVE
+
+ARCHIVE
+xz
+
+EXECUTABLE
+
+exe
+
+OFFICE
+
+EXECUTABLE
+
+PUBLISHED
+
+mobi
+HUMAN READABLE
+
+OFFICE
+PUBLISHED
+
+mobi
+HUMAN READABLE
+
+flac
+AUDIO
+
+mov
+
+VIDEO
+
+(d) NN-GF (45.4%)
+
+heic
+
+BMPS
+
+VECTOR
+
+mov
+
+VIDEO
+
+RAW
+BMPS
+
+VECTOR
+
+bz2
+
+ARCHIVE
+exe
+
+EXECUTABLE
+
+OFFICE
+
+VIDEO
+jar
+
+ARCHIVE
+exe
+
+EXECUTABLE
+
+PUBLISHED
+HUMAN READABLE
+
+PUBLISHED
+
+djvu
+
+AUDIO
+
+PUBLISHED
+
+djvu
+HUMAN READABLE
+
+AUDIO
+
+OTHER
+
+(f) Sceadan (69.6%)
+
+EXECUTABLE
+OFFICE
+
+HUMAN READABLE
+
+OTHER
+
+(e) FiFTy (77.5%)
+
+ARCHIVE
+
+EXECUTABLE
+OFFICE
+
+PUBLISHED
+
+AUDIO
+
+ARCHIVE
+
+7z
+
+OFFICE
+
+HUMAN READABLE
+
+heic
+VECTOR
+
+VIDEO
+
+jar
+bz2
+pkg
+
+OTHER
+
+RAW
+
+heic
+
+BMPS
+
+VECTOR
+
+AUDIO
+
+(c) NN-CO (64.4%)
+
+RAW
+
+heic
+
+flac
+
+OTHER
+
+(b) Sceadan (57.3%)
+
+RAW
+
+PUBLISHED
+
+mobi
+HUMAN READABLE
+
+AUDIO
+
+OTHER
+
+(a) FiFTy (65.6%)
+
+mov
+
+PUBLISHED
+
+pdf
+HUMAN READABLE
+
+flac
+
+EXECUTABLE
+docx
+
+OFFICE
+
+AUDIO
+
+OTHER
+
+BMPS
+
+EXECUTABLE
+
+OFFICE
+
+aiff
+AUDIO
+
+OTHER
+
+(g) NN-CO (75.3%)
+
+OTHER
+
+(h) NN-GF (46.8%)
+
+Fig. 5. Heat maps of confusion matrices for scenario #1 of FiFTy, Sceadan [1], NN-CO and NN-GF with block sizes of 512 bytes in subfigures (a)-(d) and
+4096 bytes in subfigures (e)-(h). Darker color means higher value.
+
+D. Misclassification Analysis
+The last two columns in Tab. VII show a misclassification
+breakdown for all of the considered file-types. For brevity,
+we show only top-2 types most confused with each given filetype (for scenario #1/4096). There are several reasons for such
+errors. We list the most interesting observations below:
+HEIC & MOV: HEIF is a new image format used in the
+recent iPhones [30]. It is essentially a container for still
+photos encoded using the intra-frame mode of the HEVC
+video codec [31]. This leads to misclassification errors,
+since HEIC photographs are essentially small movies and
+tend to be confused with actual MOV videos. Moreover,
+due to high entropy, both formats are sometimes confused
+with archives - especially the XZ and RAR formats.
+• Archives: Data compression (whether lossy or lossless)
+reduces redundancy and stores the same information
+using fewer bits. Archive file-types are characterized by
+high entropies, thus minimizing statistical artifacts which
+could be exploited to identify them. Almost all included
+types suffer from this problem. Although the proposed
+FiFTy improves upon previous methods, the accuracy
+still averages around only 39%. The only format with
+reasonable accuracy was BZ2, which obtained 80%.
+• Compound filetypes: Many filetypes, e.g., PDF, PPT,
+KEY, DOC, MOBI are containers and may have embedded objects of other types, e.g., JPEG or other bitmaps,
+audio, video, etc. This confuses all classifiers, but seems
+to be mostly a data labeling problem. In practice, such
+segments should probably be carved using dedicated tools
+•
+
+for the embedded objects. However, the container file
+should most likely be carved as well. More complex logic
+will be needed both for carving such data as well as
+properly labeling the training data for file-type classifiers.
+• Presentation File-Types: We observed a cluster of mutual misclassifications for common presentation file-types
+(PPT, PPTX and KEY). Interestingly, we didn’t observe
+simialar relationships between document and spreadsheet
+types. To some extend the problem may stem from filetype conversion (see below).
+• Errors stemming from type conversion: Some files in our
+dataset were generated by converting from other files of
+a similar type (to reach the required number of samples).
+We observed elevated mutual misclassification rates for
+some of the pairs (WAV & AIFF, KEY & PPTX, PPT &
+PPTX and MOBI & EPUB). Other pairs (RTF & TXT,
+HTML & MD or TEX & MD) remain unaffected. More
+information about the conversion can be found in the
+documentation of the dataset.
+E. Generalization
+We tested generalization capabilities of FiFTy on the GovDocs [22] corpus and a file-system memory dump from a
+DFRWS1 carving challenge.
+a) GovDocs: GovDocs [22] is a large corpus of files
+submitted to US government websites. We took a portion
+of that corpus with sufficient number of testing examples
+and overlap with our file-types: CSV, GIF, GZ, HTML, JPG,
+1 http://old.dfrws.org/2006
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+LOG, XLS, PPT, DOC, RTF, PDF, MP3, PNG and TXT. We
+used 4,096-byte blocks for preparing a shuffled disk image.
+Table VI summarizes the validation accuracy for all scenarios,
+and Fig. 6ab show the confusion tables for two example
+scenarios.
+Please note that we report accuracy on random memory
+blocks derived from the corpus and not on entire files as
+is sometimes done by other studies. Moreover, the displayed
+rows may not add up to 100% because we only show the
+common classes between GovDocs and scenario #1. For example, none of DOCX, PPTX and XLSX filetypes are present
+in GovDocs. Therefore, if a PNG block is predicted to be
+an APK block, then it is missing in the presented confusion
+matrix. Similarly for scenario #4, there are no raw images or
+video files, therefore their rows are empty. Absent classes can
+potentially indicate classification errors.
+The key observations about the mistakes made by the
+classifier are as follows:
+• In scenario #1, JPG is confused with PDF, PPT and DOC
+because most of these files had JPG images embedded in
+them. Similar problems occur for PNG.
+• In scenario #1, RTF and TXT files are confused with
+other file-types because the samples in Govdocs were
+very often structured and mislabeled (e.g., tabular data,
+or postscript).
+• In scenario #1, CSV could be confused with HTML
+because the CSV samples have more quotation marks
+(0x22) than commas (0x2c), which is similar to HTML
+files.
+b) DFRWS: We took a disk image from the DFRWS2006 challenge. The file system has cluster size of 512 bytes
+and contained XLS, GZ, JPG, HTML, DOC and TXT files
+deliberately shuffled to make carving harder. Table VI summarizes the validation accuracy for all scenarios, and Fig 6cd
+show the results on two example scenarios.
+A key observation for the above two samples is that although the classes of both scenarios #5 and #6 are the same,
+we see different accuracies because the other class consists
+of different sets of file-types (refer Sec. IV-A). It is important
+to note that the classifier for scenario #6 was not trained on
+any other file-types in DFRWS image, except JPG. Scenario
+#5 - other class consists of all 74 file-types and scenario #6 other class consists of 16 multimedia file-types. Classifier for
+scenario #5 learned better what is not JPG and for #6 learned
+better what is JPG.
+Table VI presents a summary of results on the above two
+samples for all the six scenarios. We observe that the tool gives
+all results comparable results to the original testing accuracy
+on FFT-75 for scenarios #3 - #6. All these scenarios are related
+to multimedia file-types. Hence, the tool does show evidence
+that it is efficient and accurate asset for multimedia carving
+and related applications.
+F. Limitations and Future Work
+The presented neural network architecture reflects both the
+effects of hands-on experimentation and automatic hyperparameter tuning. Out of necessity, we explored only a small
+
+11
+
+TABLE VI
+ACCURACY ON G OV D OCS AND DFRWS FOR ALL SCENARIOS
+Data\Scenario
+
+#1
+
+#2
+
+#3
+
+#4
+
+#5
+
+#6
+
+GovDocs (4096)
+DFRWS (512)
+
+55.9%
+41.4%
+
+45.2%
+46.5%
+
+83.9%
+60.8%
+
+88.0%
+71.9%
+
+88.3%
+86.8%
+
+82.3%
+78.1%
+
+(a) GovDocs (#1/4,096 - 55.9%)
+
+(b) GovDocs (#4/4,096 - 88.0%)
+
+(c) DFRWS (#5/512 - 86.8%)
+
+(d) DFRWS (#6/512 - 78.1%)
+
+Fig. 6. Confusion matrices: on Govdocs [22] for scenario #1 and #4 (ab)
+with block size of 4096 bytes; and on the DFRWS image for scenario #5 and
+#6 (cd) with block size of 512 bytes. Darker color means higher value.
+
+fraction of the design space. It is certainly possible to expect
+that better architectures could be found using modern architecture search [32] or even random sampling methods [33].
+These methods still remain an area of active research, and its
+application for the problem at hand is left for future work.
+The FFT-75 dataset used for training suffers from some
+dependency problems. There are a lot of DOC, PDF and PPT
+files that contain images embedded in them. This makes it
+difficult for the classifier to learn and generalize. An approach
+to solving this could be to carve the images and other embeddable data-types out of these files and train on the dataset
+prepared from these files.
+Our current hyper-parameter search was driven mainly by
+validation accuracy. This sometimes leads to surprisingly high
+model complexity for seemingly simpler problems (Tab. III).
+In the future work, we’re planning to investigate the relationship between model complexity (e.g., parameter count),
+computational effort and accuracy. The problem requires a
+separate treatment since it heavily depends on the target
+runtime environment, and both hardware platforms and tensor
+libraries can result in widely different behavior [34].
+Additional improvements in classification accuracy can be
+expected by adopting more complex logic to deal with em-
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+bedded filetypes as well as with the dependencies between
+labeling decisions among neighboring blocks. For example,
+random field models could be used to reach an agreement
+regarding a larger chunk of data based on weak predictions
+of individual blocks [35]. This information could further be
+combined with the locations of known headers/footers.
+Finally, we emphasize that in real applications additional
+care may be needed for certain filetypes to accommodate
+the expected content characteristics. For example, statistical
+properties of video files may depend not only on the container,
+but also on the audio/video codecs. In our study, we relied
+on material that we captured using common camera-enabled
+devices (e.g., GoPro, dash cameras). We used default codec
+settings which should be most applicable in common media
+carving applications. Our dataset included mainly MPEG4,
+H.264, H.265, VP8, VP9 and OGV codecs with different
+distribution across containers. We leave a more detailed study
+of this phenomenon for future work.
+V. C ONCLUSIONS
+Our study addressed the problem of large-scale file fragment
+type identification. We explored neural network models, which
+dispense with explicit feature engineering - a bottleneck from
+both development and computation perspectives. Our architecture is based on 1-D convolutions. We accept raw blocks of
+bytes as input, and embed them in a trainable real-valued latent
+space. By changing a few hyper-parameters, our architecture
+can be easily adapted to various applications. We used the
+Tree-structured Parzen Estimator [17] to analyze the impact of
+hyper-parameters and find their optimal values. The resulting
+models are included in FiFTy, an open source tool for file-type
+identification.
+Our evaluation is based on a novel dataset with 75 popular
+file-types (available publicly at [21]). We focused on multimedia and photographic types which commonly occur in data
+carving applications. Based on the obtained results, we can
+conclude that neural networks are an extremely effective and
+flexible tool for file-type identification. The trained classifiers
+consistently outperformed all baseline methods. Moreover,
+thanks to modern software frameworks and hardware accelerators, classification can run an order of magnitude faster.
+R EFERENCES
+[1] N. L Beebe, L. A Maddox, L Liu, and M Sun, “Sceadan: Using Concatenated N-Gram Vectors for Improved File and Data Type Classification,”
+IEEE Tran. Inf. Forensics and Security, vol. 8, no. 9, pp. 1519–1530,
+2013.
+[2] S Fitzgerald, G Mathews, C Morris, and O Zhulyn, “Using NLP
+techniques for file fragment classification,” Digital Investigation, vol.
+9, pp. S44–S49, aug 2012.
+[3] C. J Veenman, “Statistical Disk Cluster Classification for File Carving,”
+in IEEE Int. Symposium on Information Assurance and Security, 2007.
+[4] F Wang, T.-T Quach, J Wheeler, J. B Aimone, and C. D James, “Sparse
+Coding for N-Gram Feature Extraction and Training for File Fragment
+Classification,” IEEE Tran. Inf. Forensics and Security, vol. 13, no. 10,
+pp. 2553–2562, oct 2018.
+[5] L Li, U Topkara, B Coskun, and N Memon, “Cocost: a computational
+cost efficient classifier,” in 2009 Ninth IEEE International Conference
+on Data Mining. IEEE, 2009, pp. 268–277.
+[6] J De Bock and P De Smet, “Jpgcarve: An advanced tool for automated
+recovery of fragmented jpeg files,” IEEE Tran. Inf. Forensics and
+Security, vol. 11, no. 1, pp. 19–34, Jan 2016.
+
+12
+
+[7] M Karresand and N Shahmehri, “File Type Identification of Data
+Fragments by Their Binary Structure,” in 2006 IEEE Information
+Assurance Workshop.
+[8] W. C Calhoun and D Coles, “Predicting the types of file fragments,”
+Digital Investigation, vol. 5, pp. S14–S20, sep 2008.
+[9] T Xu, M Xu, Y Ren, J Xu, H Zhang, and N Zheng, “A File
+Fragment Classification Method Based on Grayscale Image,” Journal
+of Computers, vol. 9, no. 8, aug 2014.
+[10] “JPEG Recovery Lab,” https://www.disktuna.com/photo-recoveryeaseus-data-recovery-vs-jpeg-recovery-lab/, Accessed Jun 20, 2019.
+[11] E Uzun and H. T Sencar, “Carving orphaned jpeg file fragments,” IEEE
+Tran. Inf. Forensics and Security, vol. 10, no. 8, pp. 1549–1563, 2015.
+[12] E Durmus, P Korus, and N Memon, “Every shred helps: Assembling
+evidence from orphaned jpeg fragments,” IEEE Tran. Inf. Forensics and
+Security, vol. 14, no. 9, pp. 2372–2386, 2019.
+[13] T Mikolov, K Chen, G Corrado, and J Dean, “Efficient estimation of
+word representations in vector space,” arXiv preprint arXiv:1301.3781,
+2013.
+[14] L Hiester, “File fragment classification using neural networks with
+lossless representations,” 2018, Bachelor Thesis, East Tennessee State
+University.
+[15] Q Chen, Q Liao, Z. L Jiang, J Fang, S Yiu, G Xi, R Li, Z Yi, X Wang,
+L. C Hui, D Liu, and E Zhang, “File Fragment Classification Using
+Grayscale Image Conversion and Deep Learning in Digital Forensics,”
+in IEEE Security and Privacy Workshops, 2018.
+[16] M Hannuksela, E Aksu, J Lainema, and V. M Vadakital, “Overview of
+the high efficiency image file format,” in JCTVC-V0072. 2015.
+[17] J. S Bergstra, R Bardenet, Y Bengio, and B Kégl, “Algorithms for hyperparameter optimization,” in Advances in neural information processing
+systems, 2011, pp. 2546–2554.
+[18] G. K Wallace, “The jpeg still picture compression standard,” IEEE Tran.
+consumer electronics, vol. 38, no. 1, pp. xviii–xxxiv, 1992.
+[19] N Zheng, J Wang, T Wu, and M Xu, “A Fragment Classification
+Method Depending on Data Type,” in IEEE Int. Conf. on Computer and
+Information Technology Ubiquitous Computing and Communications
+Dependable Autonomic and Secure Computing Pervasive Intelligence
+and Computing, oct 2015.
+[20] N Beebe, L Liu, and M Sun, “Data Type Classification: Hierarchical
+Class-to-Type Modeling,” in IFIP Advances in Information and Communication Technology, pp. 325–343. Springer Int. Publishing, 2016.
+[21] G Mittal, P Korus, and N Memon, “File fragment type (fft) - 75 dataset,”
+http://dx.doi.org/10.21227/kfxw-8084, 2019.
+[22] “GovDocs Dataset,” https://digitalcorpora.org/corpora/files, Accessed
+Jun 20, 2019.
+[23] “Intel Movidius Myriad X VPU,” https://www.movidius.com/myriadx,
+Accessed Jun 20, 2019.
+[24] F Chollet et al., “Keras,” https://keras.io, 2015.
+[25] J Bergstra, D Yamins, and D. D Cox, “Making a science of model
+search: Hyperparameter optimization in hundreds of dimensions for
+vision architectures,” 2013.
+[26] F Hutter, H. H Hoos, and K Leyton-Brown, “Sequential model-based
+optimization for general algorithm configuration,” in Proc. Int. Conf.
+on Learning and Intelligent Optimization, Berlin, Heidelberg, 2011,
+LION’05, pp. 507–523, Springer-Verlag.
+[27] “Bz2 package,” https://docs.python.org/3/library/bz2.html, Accessed Jun
+20, 2019.
+[28] “Zlib package,” https://docs.python.org/3/library/zlib.html, Accessed Jun
+20, 2019.
+[29] “Sceadan - open source implementation,” https://github.com/
+UTSA-cyber/sceadan.
+[30] “Everything you need to know about the JPEG-killing HEIF format Apple is adopting,” https://www.cultofmac.com/487808/heif-vsjpeg-image-files/, Accessed Jun 20, 2019.
+[31] G. J Sullivan, J.-R Ohm, W.-J Han, and T Wiegand, “Overview of the
+high efficiency video coding (hevc) standard,” IEEE Tran. Circuits and
+Systems for Video Technology, vol. 22, no. 12, pp. 1649–1668, 2012.
+[32] C Liu, B Zoph, M Neumann, J Shlens, W Hua, L.-J Li, L Fei-Fei,
+A Yuille, J Huang, and K Murphy, “Progressive neural architecture
+search,” in Proc. European Conf. Computer Vision, 2018, pp. 19–34.
+[33] S Xie, A Kirillov, R Girshick, and K He, “Exploring randomly
+wired neural networks for image recognition,”
+arXiv preprint
+arXiv:1904.01569, 2019.
+[34] S Shi, Q Wang, P Xu, and X Chu, “Benchmarking state-of-the-art deep
+learning software tools,” in Int. Conf. Cloud Computing and Big Data
+(CCBD). IEEE, 2016, pp. 99–104.
+[35] J Lafferty, A McCallum, and F. C Pereira, “Conditional random fields:
+Probabilistic models for segmenting and labeling sequence data,” 2001.
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+13
+
+TABLE VII
+F ILE - TYPE BREAKDOWN OF CLASSIFICATION ACCURACY FOR ALL MODELS ; MISCLASSIFICATION REPORTED FOR FiFTy ON 4,096- BYTES INPUTS .
+
+Filetype
+
+Tag
+
+NN-CO
+
+512 bytes
+NN-GF Sceadan
+
+ARW
+Raw
+97.8
+88.6
+CR2
+Raw
+82.4
+43.1
+DNG
+Raw
+81.6
+18.1
+GPR
+Raw
+98.7
+89.8
+NEF
+Raw
+89.3
+59.6
+NRW
+Raw
+96.1
+89.4
+ORF
+Raw
+84.0
+37.7
+PEF
+Raw
+96.1
+84.3
+RAF
+Raw
+97.9
+95.4
+RW2
+Raw
+96.6
+92.4
+3FR
+Raw
+99.4
+96.0
+JPG
+Bitmap
+77.5
+53.2
+TIFF
+Bitmap
+90.0
+34.5
+HEIC
+Bitmap
+2.0
+1.8
+BMP
+Bitmap
+97.5
+90.1
+GIF
+Bitmap
+84.5
+42.3
+PNG
+Bitmap
+47.6
+1.5
+AI
+Vector
+25.5
+12.6
+EPS
+Vector
+98.8
+95.2
+PSD
+Vector
+93.7
+86.2
+MOV
+Video
+8.7
+3.6
+MP4
+Video
+14.8
+0.0
+3GP
+Video
+91.6
+23.1
+AVI
+Video
+13.8
+1.7
+MKV
+Video
+90.5
+23.5
+OGV
+Video
+67.4
+4.6
+WEBM
+Video
+39.6
+21.4
+APK
+Archive
+32.5
+1.5
+JAR
+Archive
+36.3
+20.4
+MSI
+Archive
+5.1
+0.3
+DMG
+Archive
+7.0
+1.1
+7Z
+Archive
+0.9
+1.4
+BZ2
+Archive
+8.6
+1.2
+DEB
+Archive
+9.9
+7.0
+GZ
+Archive
+11.3
+0.0
+PKG
+Archive
+5.6
+1.9
+RAR
+Archive
+13.0
+4.2
+RPM
+Archive
+7.9
+2.6
+XZ
+Archive
+0.0
+19.4
+ZIP
+Archive
+16.2
+1.8
+EXE
+Executable
+9.2
+0.8
+MACH-O
+Executable
+93.6
+75.0
+ELF
+Executable
+87.6
+65.4
+DLL
+Executable
+91.7
+67.8
+DOC
+Office
+91.4
+44.8
+DOCX
+Office
+14.7
+0.7
+KEY
+Office
+35.8
+4.5
+PPT
+Office
+44.2
+10.9
+PPTX
+Office
+38.3
+14.4
+XLS
+Office
+99.4
+98.7
+XLSX
+Office
+96.8
+65.6
+DJVU
+Published
+18.0
+3.5
+EPUB
+Published
+29.3
+2.0
+MOBI
+Published
+72.5
+72.8
+PDF
+Published
+21.9
+11.5
+MD
+Human-readable
+98.0
+77.9
+RTF
+Human-readable
+99.5
+90.2
+TXT
+Human-readable
+95.0
+85.9
+TEX
+Human-readable
+97.8
+66.3
+JSON
+Human-readable
+99.8
+84.3
+HTML
+Human-readable
+98.4
+74.2
+XML
+Human-readable
+100.0
+99.3
+LOG
+Human-readable
+100.0
+99.3
+CSV
+Human-readable
+99.9
+92.1
+AIFF
+Audio
+95.7
+96.2
+FLAC
+Audio
+66.9
+18.5
+M4A
+Audio
+92.6
+34.6
+MP3
+Audio
+94.0
+70.8
+OGG
+Audio
+84.2
+55.3
+WAV
+Audio
+99.9
+99.9
+WMA
+Audio
+99.2
+73.8
+PCAP
+Misc
+55.4
+32.9
+TTF
+Misc
+98.1
+86.8
+DWG
+Misc
+96.5
+90.1
+SQLITE
+Misc
+98.9
+87.2
+Total Wins
+32
+2
+Note: Ties were broken depending upon runtime speed.
+
+97.3
+58.2
+47.7
+98.1
+82.5
+93.9
+63.7
+88.8
+96.6
+95.5
+96.6
+83.8
+83.8
+2.9
+96.1
+72.3
+21.7
+17.4
+97.8
+91.2
+6.1
+2.8
+79.3
+14.7
+82.3
+37.3
+33.3
+10.0
+28.9
+3.3
+3.4
+2.8
+2.5
+2.9
+3.4
+4.5
+3.0
+5.4
+2.9
+9.5
+2.4
+90.0
+83.7
+86.2
+70.5
+6.3
+23.6
+23.6
+24.0
+99.1
+92.7
+10.5
+9.2
+71.5
+20.0
+93.9
+99.7
+95.4
+93.0
+99.5
+94.9
+99.9
+99.9
+99.6
+94.9
+13.2
+86.7
+85.1
+72.3
+99.8
+98.7
+48.6
+96.3
+93.0
+97.1
+3
+
+FiFTy
+
+NN-CO
+
+97.8
+86.7
+82.7
+99.2
+87.7
+96.9
+86.3
+95.1
+98.3
+96.5
+99.6
+83.5
+96.1
+31.7
+98.0
+93.5
+67.2
+23.3
+98.7
+95.3
+6.1
+1.6
+85.6
+10.9
+88.0
+57.3
+39.8
+29.9
+41.2
+10.1
+18.2
+0.0
+13.9
+13.8
+13.2
+4.5
+24.0
+13.6
+0.0
+13.8
+0.3
+92.6
+85.9
+91.1
+87.2
+19.4
+44.1
+41.3
+44.4
+99.3
+95.2
+24.6
+20.7
+72.4
+23.1
+97.1
+99.7
+93.7
+97.6
+99.5
+97.5
+100.0
+99.9
+99.6
+99.4
+74.2
+94.3
+94.4
+90.4
+100.0
+98.2
+51.0
+98.1
+96.2
+98.6
+38
+
+98.8
+95.3
+96.7
+99.5
+89.0
+96.7
+97.6
+98.9
+91.3
+97.9
+92.6
+92.5
+98.6
+4.0
+99.4
+98.5
+72.9
+50.9
+98.0
+95.6
+0.0
+62.2
+98.8
+64.9
+99.1
+94.5
+71.5
+48.3
+74.8
+26.6
+17.4
+53.2
+75.8
+1.5
+53.0
+41.0
+18.0
+10.7
+0.0
+36.6
+4.3
+95.7
+92.2
+94.4
+91.6
+49.9
+56.7
+58.4
+32.7
+99.2
+97.4
+34.8
+74.3
+74.4
+48.3
+99.9
+100.0
+92.9
+98.8
+100.0
+99.5
+100.0
+99.9
+99.0
+94.5
+87.8
+96.5
+98.9
+95.4
+74.0
+99.9
+95.6
+99.2
+98.8
+99.5
+27
+
+4096 bytes
+NN-GF
+Sceadan
+84.7
+30.0
+54.6
+87.2
+36.1
+68.7
+51.9
+77.5
+34.0
+89.3
+81.0
+48.6
+57.9
+0.0
+91.3
+54.3
+0.4
+10.6
+88.2
+75.3
+0.0
+7.0
+32.1
+32.6
+57.5
+59.0
+71.6
+9.0
+53.4
+1.5
+0.4
+0.0
+4.3
+0.0
+4.9
+0.8
+1.7
+0.5
+1.3
+9.7
+0.3
+71.8
+54.9
+65.7
+12.4
+0.1
+10.3
+15.7
+2.6
+96.7
+20.7
+84.2
+3.3
+69.6
+11.6
+86.6
+87.7
+84.1
+58.1
+81.5
+59.1
+99.9
+91.2
+87.3
+95.0
+76.2
+29.6
+77.6
+37.3
+58.2
+95.7
+69.6
+90.2
+67.5
+91.3
+1
+
+97.5
+88.9
+75.3
+99.3
+88.3
+92.2
+87.3
+96.8
+73.6
+95.9
+97.2
+91.8
+97.7
+5.2
+98.7
+96.2
+69.5
+31.7
+97.4
+94.4
+4.8
+45.5
+98.7
+66.4
+98.9
+76.0
+71.2
+29.0
+70.2
+7.6
+9.1
+4.6
+74.8
+3.9
+19.1
+14.8
+3.9
+8.9
+5.0
+22.2
+5.4
+93.7
+89.3
+86.4
+77.6
+31.7
+44.3
+32.5
+20.2
+99.0
+91.3
+24.2
+56.0
+72.9
+38.1
+98.9
+100.0
+92.5
+97.2
+99.8
+98.9
+100.0
+99.9
+98.4
+98.4
+85.3
+98.4
+98.8
+93.3
+97.6
+99.9
+94.7
+98.4
+97.0
+98.6
+4
+
+Misclassification
+Top 2
+
+FiFTy
+
+Top 1
+
+98.9
+94.8
+96.1
+99.9
+95.3
+97.7
+96.3
+99.1
+87.1
+97.9
+99.5
+86.3
+99.0
+49.5
+98.4
+99.1
+88.0
+57.7
+95.8
+95.9
+18.5
+71.8
+98.1
+67.1
+98.4
+94.9
+78.1
+49.7
+73.8
+60.1
+19.4
+0.1
+80.6
+0.8
+42.1
+62.7
+46.6
+21.9
+12.1
+34.2
+2.7
+95.0
+86.4
+91.7
+88.9
+60.6
+43.1
+53.5
+36.0
+99.3
+97.2
+30.4
+79.7
+73.7
+45.8
+97.4
+99.8
+93.0
+98.3
+99.8
+99.6
+100.0
+99.9
+99.7
+98.8
+97.9
+98.2
+98.9
+95.5
+98.7
+99.9
+95.4
+99.3
+96.9
+99.8
+43
+
+JPG (0.4)
+NEF (1.1)
+CR2 (2.0)
+CR2 (<0.1)
+NRW (0.9)
+RAF (0.9)
+FLAC (1.4)
+NEF (<0.1)
+FLAC (4.6)
+JPG (1.0)
+DNG (0.2)
+PPT (3.9)
+APK (0.2)
+MOV (15.3)
+3FR (0.5)
+MSI (<0.1)
+PKG (1.7)
+EPUB (6.9)
+AI (3.4)
+AI (2.1)
+HEIC (43.1)
+HEIC (11.2)
+AVI (0.6)
+HEIC (13.5)
+OGV (0.4)
+OGG (1.3)
+HEIC (10.0)
+PKG (11.5)
+GZ (6.1)
+PKG (5.2)
+HEIC (17.4)
+HEIC (47.8)
+DMG (8.5)
+HEIC (38.8)
+PKG (17.9)
+GZ (6.5)
+ZIP (6.7)
+PKG (12.8)
+HEIC (45.6)
+RAR (21.6)
+HEIC (39.7)
+DLL (2.1)
+DLL (4.6)
+TXT (2.8)
+PPT (2.2)
+EPUB (20.7)
+PPTX (19.9)
+PPTX (6.2)
+PPT (14.6)
+DLL (0.3)
+PKG (0.6)
+HEIC (33.7)
+DOCX (10.5)
+EPUB (19.2)
+HEIC (13.1)
+HTML (1.7)
+TXT (<0.1)
+DOCX (2.1)
+TXT (1.6)
+TXT (<0.1)
+TXT (0.2)
+TXT (<0.1)
+TXT (<0.1)
+TXT (0.8)
+ORF (0.4)
+HEIC (0.3)
+APK (0.2)
+FLAC (2.3)
+TXT (0.6)
+3GP (<0.1)
+HEIC (0.9)
+DLL (0.3)
+BMP (0.4)
+DLL (<0.1)
+-
+
+MOV (0.1)
+DNG (0.6)
+NEF (0.4)
+PEF (<0.1)
+JPG (0.9)
+3FR (0.3)
+NEF (0.7)
+ORF (<0.1)
+3FR (4.1)
+PPT (0.2)
+TIFF (0.2)
+PPTX (2.3)
+PPT (0.2)
+XZ (11.6)
+DLL (0.3)
+OGV (<0.1)
+RAR (1.2)
+PKG (5.8)
+PDF (0.4)
+JPG (0.4)
+RAR (13.0)
+XZ (2.9)
+DMG (0.2)
+MOV (6.2)
+DMG (0.2)
+MSI (0.8)
+MOV (3.2)
+PPT (3.5)
+RPM (4.1)
+EPUB (3.0)
+PKG (14.6)
+MOV (15.4)
+HEIC (3.2)
+RAR (10.6)
+RPM (11.6)
+APK (5.7)
+HEIC (6.3)
+GZ (10.1)
+MOV (15.4)
+M4A (5.5)
+MOV (13.0)
+TXT (0.6)
+MACH-O(2.1)
+ELF (0.6)
+APK (1.2)
+RAR (8.7)
+PPT (13.2)
+PKG (3.8)
+KEY (11.5)
+MSI (0.1)
+AI (0.5)
+MOV (12.5)
+PKG (2.0)
+DOCX (2.4)
+MOV (4.7)
+TEX (0.5)
+DOC (<0.1)
+EPUB (2.0)
+RTF (<0.1)
+HTML (<0.1)
+MD (0.1)
+TXT (<0.1)
+TXT (<0.1)
+TXT (0.8)
+ORF (0.4)
+MOV (0.3)
+APK (0.2)
+FLAC (2.3)
+APK (0.4)
+APK (<0.1)
+MOV (0.4)
+DLL (0.3)
+BMP (0.4)
+DLL (<0.1)
+-
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+Govind Mittal earned his Bachelor of Engineering
+in Computer Science and Master of Science in
+Mathematics from Birla Institute of Technology and
+Science (BITS) Pilani, India. He is currently pursuing the Ph.D. degree with the Department of Computer Science and Engineering, New York University
+Tandon School of Engineering. His research interests
+includes digital forensics, tackling disinformation
+and machine learning for cyber security.
+
+Paweł Korus received his M.Sc. and Ph.D. degrees
+in telecommunications (with honors) from the AGH
+University of Science and Technology in 2008, and
+in 2013, respectively. Since 2014 he has been an
+assistant professor with the Department of Telecommunications, AGH University of Science and Technology, Krakow, Poland. He did his postdoctoral
+research at the College of Information Engineering,
+Shenzhen University, China. He is currently a visiting professor at the Tandon School of Engineering,
+New York University, USA.
+His research interests include various aspects of multimedia security,
+image processing, and low-level vision, with particular focus on content
+authentication and protection techniques for digital photographs. In 2015
+he received a scholarship for outstanding young scientists from the Polish
+Ministry of Science and Higher Education.
+
+Nasir Memon is a professor in the Department of
+Computer Science and Engineering at NYU Tandon
+School of Engineering. He is one of the founding
+members of the Center for Cyber Security (CCS) ,
+a collaborative initiative of multiple schools within
+NYU including. He is the founder of CSAW, and
+the Offensive Security, Incident Response and Internet Security Laboratory (OSIRIS) lab at NYU
+Tandon. His research interests include digital forensics, biometrics, data compression, network security
+and human behavior. Memon earned a Bachelor of
+Engineering in Chemical Engineering and a Master of Science in Mathematics
+from Birla Institute of Technology and Science (BITS) in Pilani, India. He
+received a PhD in Computer Science from the University of Nebraska.
+Professor Memon has published over 250 articles in journals and conference
+proceedings and holds a dozen patents in image compression and security. He
+has won several awards including the Jacobs Excellence in Education award
+and several best paper awards. He has been on the editorial boards of several
+journals and was the Editor-In-Chief of Transactions on Information Security
+and Forensics. He is an IEEE Fellow and an SPIE fellow.
+
+14
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+i
+
+Supplementary Materials for
+FiFTy: Large-scale File Fragment Type Identification using Neural Networks
+Govind Mittal1 , Paweł Korus1,2 , and Nasir Memon1
+New York University1 , AGH University of Science and Technology2
+
+I. S OURCE C ODE
+
+arXiv:1908.06148v2 [cs.CR] 7 Jun 2020
+
+Our file fragment classifier toolbox is available at https://github.com/mittalgovind/fifty and the supporting FFT-75 dataset is
+available at http://dx.doi.org/10.21227/kfxw-8084
+II. C ONTENTS
+Effect of hyper-parameter variation on various scenarios with block size of 512 and 4096 bytes.
+Full confusion matrices for block sizes of 512 and 4096 bytes of :
+– FiFTy
+– Sceadan
+– NN-GF
+– NN-CO
+– Scenario #2 - #6
+• List of sources for each filetype in the corpus FFT-75.
+•
+•
+
+40
+
+60
+
+60
+
+70
+
+50
+
+75
+
+70
+
+80
+
+90
+
+95
+
+90
+
+95
+
+EI
+
+Accuracy
+
+EI
+
+Accuracy
+
+EI
+
+Accuracy
+
+EI
+
+Accuracy
+
+EI
+
+Accuracy
+
+EI
+
+Accuracy
+
+16
+
+32 64 128
+# Dense Units
+
+256
+
+16
+
+32
+48
+Embedding Size
+
+64
+
+16
+
+32
+64
+Conv. Kernel
+
+128
+
+3
+
+11 19 27
+Conv. Stride
+
+35
+
+1
+
+2
+# Conv. blocks
+
+3
+
+2
+
+4
+6
+Max Pooling size
+
+8
+
+Fig. 1. Impact of hyper-parameter variation on the validation accuracy for all scenarios with 512-byte inputs: (top) violin plots showing distribution of accuracy for sampled networks - dark color corrosponds to
+the TPE chosen value; (bottom) expected improvement estimates from TPE.
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+ii
+
+50
+
+75
+
+60
+
+80
+
+60
+
+80
+
+70
+
+80
+
+90
+
+95
+
+98
+
+96
+
+98
+
+EI
+
+Accuracy
+
+EI
+
+Accuracy
+
+EI
+
+Accuracy
+
+EI
+
+Accuracy
+
+EI
+
+Accuracy
+
+EI
+
+Accuracy
+
+16
+
+32 64 128
+# Dense Units
+
+256
+
+16
+
+32
+48
+Embedding Size
+
+64
+
+16
+
+32
+64
+Conv. Kernel
+
+128
+
+3
+
+11 19 27
+Conv. Stride
+
+35
+
+1
+
+2
+# Conv. blocks
+
+3
+
+2
+
+4
+6
+Max Pooling size
+
+8
+
+Fig. 2. Impact of hyper-parameter variation on the validation accuracy for all scenarios with 4096-byte inputs: (top) violin plots showing distribution of accuracy for sampled networks - dark color corrosponds
+to the TPE chosen value; (bottom) expected improvement estimates from TPE.
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+iii
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+iv
+
+ARW
+CR2
+DNG
+GPR
+NEF
+NRW
+ORF
+PEF
+RAF
+RW2
+3FR
+JPG
+TIFF
+HEIC
+BMP
+GIF
+PNG
+AI
+EPS
+PSD
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV
+WEBM
+APK
+JAR
+MSI
+DMG
+7Z
+BZ2
+DEB
+GZ
+PKG
+RAR
+RPM
+XZ
+ZIP
+EXE
+MACH-O
+ELF
+DLL
+DOC
+DOCX
+KEY
+PPT
+PPTX
+XLS
+XLSX
+DJVU
+EPUB
+MOBI
+PDF
+MD
+RTF
+TXT
+TEX
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+FLAC
+M4A
+MP3
+OGG
+WAV
+WMA
+PCAP
+TTF
+DWG
+SQLITE
+
+Validation accuracy = 65.6
+ARW 97
+.
+86 6
+CR2
+.
+.
+4 82
+DNG
+.
+99
+GPR
+1 .
+87 1 2 1
+NEF
+. 96
+NRW
+.
+86 1
+ORF
+.
+1 95 .
+PEF
+. . . 98
+RAF
+.
+96
+RW2
+3FR
+JPG
+TIFF
+HEIC
+BMP
+GIF
+PNG
+AI .
+EPS
+PSD 1
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV .
+
+.
+
+.
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+.
+.
+
+.
+
+.
+99
+83
+
+1 2
+
+1
+
+.
+
+.
+
+.
+
+1 1
+
+96
+.
+
+.
+
+.
+
+31
+
+.
+
+.
+
+.
+.
+
+.
+.
+
+.
+
+1
+.
+.
+
+.
+10 2
+
+.
+
+2
+
+. 1
+. 1
+
+.
+. 1 . 4
+. 2 2 1 3
+
+.
+
+.
+. . 3
+2 2 4
+
+.
+. . .
+2 . . . .
+.
+. . 2 . . . .
+. 1
+85
+. 10 .
+2 . . . .
+.
+.
+87 1 . .
+1
+3 57 . . . . 1
+.
+.
+.
+.
+.
+39
+.
+. 1 . 29 3 3 5
+.
+. . . 2 41 1 3
+.
+1 1 1 5 2 10 4
+.
+. 2 . 5 4 3 18
+. . .
+2 . . . .
+.
+1 1 1 . . . .
+.
+1 1 1 3 2 2 4
+.
+1 1 1 2 3 1 5
+.
+. 1 . 6 5 2 7
+.
+. . 1 . . . .
+.
+. 1 1 4 3 2 5
+.
+.
+2 . . . .
+.
+. 1 1 1 1 1 1
+.
+.
+2 . . . .
+
+8 1 .
+10 2 .
+. . .
+9 2 .
+. . .
+. 1 1
+5 1 1
+1 4 2
+2 3 3
+4 5 3
+2 8 5
+10 2 1
+13 2 1
+5 13 4
+2 5 13
+3 8 7
+8 3 1
+4 5 4
+10 2 1
+4 4 4
+10 2 .
+
+97
+.
+
+.
+. .
+. 1
+
+.
+.
+1
+.
+
+.
+. 6
+
+.
+
+.
+.
+.
+.
+
+.
+.
+.
+.
+.
+
+. 1
+.
+1 4
+. 1
+. .
+. .
+.
+1
+. 1
+. 1
+. 1
+1
+. .
+.
+. 2
+.
+
+.
+
+.
+1
+. 1
+. 3
+. 2
+
+.
+
+93 .
+. 67 1
+. 3 23 .
+1 98
+.
+95
+.
+.
+.
+.
+.
+.
+
+1
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+1
+.
+.
+.
+.
+
+.
+.
+
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+1
+.
+1
+1
+
+.
+.
+.
+.
+.
+
+27
+30
+1
+27
+.
+.
+. . .
+.
+18
+. 2 1
+2
+.
+4
+1 1
+10 . 1 1 1
+. 5 1
+4
+.
+.
+31
+. .
+27
+. 1 1
+12
+. 4 2
+8
+. 3 2
+6
+.
+16
+1
+. 2 1
+12
+.
+31
+. 1 1
+12
+.
+29
+
+.
+
+.
+
+6 1
+1 1
+1
+
+.
+
+1
+
+.
+.
+
+. .
+. .
+1 1
+1 .
+. .
+. .
+. .
+. .
+. .
+1 .
+. .
+1 .
+
+.
+.
+
+.
+
+2
+
+.
+. 2
+.
+. 2
+
+.
+.
+.
+
+.
+. 1
+.
+. .
+.
+
+.
+
+.
+
+.
+
+.
+.
+.
+.
+
+.
+.
+.
+
+.
+
+12
+1 8
+. 1 .
+. . 8
+
+. . 1
+. 1 1
+. 3 1
+. 2 1
+
+27
+. 9
+2
+14
+
+. .
+.
+. 1 1
+. .
+. 1 1
+
+.
+.
+
+.
+
+.
+.
+.
+.
+
+1
+.
+
+.
+.
+
+.
+.
+
+.
+
+.
+
+.
+
+.
+.
+
+. .
+. 1
+1 1
+. 1
+
+.
+
+.
+.
+.
+
+. . 1
+. 1 .
+. 2 1
+. 2 .
+
+.
+.
+.
+.
+
+.
+. .
+. 2
+.
+. 1 . 1
+.
+.
+. 1 1 1
+
+.
+. .
+. 1
+.
+. 1
+
+1
+2
+3
+2
+
+.
+
+5
+.
+.
+.
+
+2
+1
+1
+1
+
+3
+2
+2
+1
+
+.
+8 1 .
+3 1 4
+. . 1
+5 1 3
+
+.
+
+.
+. 1
+.
+.
+.
+
+3
+
+. 1
+
+.
+
+.
+
+4
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+.
+
+9
+
+.
+
+.
+
+.
+
+. 1
+
+.
+
+.
+
+.
+
+.
+.
+
+.
+.
+
+. 1 1
+
+.
+.
+
+.
+
+.
+
+1
+.
+
+. ARW
+. CR2
+.
+.
+. .
+. .
+.
+1 DNG
+GPR
+.
+. . .
+.
+2 NEF
+1 NRW
+.
+.
+.
+6 . .
+ORF
+.
+PEF
+RAF
+.
+1 RW2
+.
+3FR
+1 . 1 . 3
+JPG
+.
+.
+TIFF
+9 .
+2
+5
+13 2
+9
+HEIC
+1
+BMP
+.
+.
+.
+.
+1
+GIF
+. . .
+.
+. 1
+.
+1 . 2 .
+2 . . .
+PNG
+. 5 .
+. 3 4
+.
+.
+.
+2
+6 . 1 .
+8 .
+AI
+EPS
+. . .
+PSD
+9 .
+2
+5
+14 2
+7 .
+2
+MOV
+.
+9 .
+2
+5
+14 2
+8 . .
+MP4
+.
+.
+.
+. .
+.
+1
+2 .
+3GP
+.
+8 .
+1
+5
+13 1
+8
+AVI
+.
+.
+.
+.
+.
+. .
+.
+MKV
+. .
+.
+.
+1
+1
+1 . 1 .
+3 . . 10
+OGV
+.
+.
+.
+4
+1
+2
+9 1
+6 .
+WEBM
+. . 1 1 3 1
+. 1 1
+.
+.
+1 2 3
+1
+3 . 2 1
+APK
+. 4 1
+. .
+. 1 2
+.
+2
+3
+5
+JAR
+. 6 2
+.
+. 4 2
+.
+.
+.
+3
+4
+1 .
+7 .
+MSI
+. 2 1
+.
+.
+1 4 3
+2
+3 . 2 1
+5
+DMG
+.
+9 .
+2
+5
+13 2
+10
+7Z
+.
+.
+10 .
+2
+5
+9 2
+9 .
+BZ2
+. 9 1
+.
+.
+4
+5 . 1 .
+5 2
+6 .
+DEB
+. 5 1
+. 3 5
+.
+.
+4
+7 . 2 .
+8 .
+GZ
+. 2 3
+.
+.
+4 5 4
+3
+4 . 1 .
+6 .
+PKG
+. 8
+.
+.
+.
+24
+2
+7 2
+10
+RAR
+. 5 2
+.
+1 5 13
+2
+4
+1 .
+6 .
+RPM
+9 .
+2
+5
+14 2
+10
+XZ
+. 8 .
+. 8 . 1 .
+.
+.
+.
+.
+13
+5 3
+9 .
+ZIP
+8 .
+2 .
+1
+5
+12 2
+9
+EXE
+.
+.
+92 . 1
+2 .
+MACH-O
+.
+.
+.
+.
+.
+1 85 2
+1
+1
+ELF
+. . 91 .
+.
+3 1
+DLL
+. 1 1
+.
+.
+.
+87
+1
+DOC
+. .
+.
+11 .
+3
+19
+5 7
+8
+DOCX
+.
+. 1 44 5 6
+.
+.
+.
+1 .
+1 .
+2
+KEY
+. 1 2 2 41 2
+.
+.
+1 .
+1
+1 1
+1
+3 . . 1
+PPT
+. .
+.
+. 1 4 5 44
+. .
+.
+1
+1
+1
+PPTX
+99
+XLS
+.
+95
+XLSX
+8 .
+2
+4
+24 1
+8
+DJVU
+. 6 .
+. 13 . 1 .
+.
+3
+3 20
+11
+EPUB
+.
+. 3
+. .
+. 4 72
+1
+3
+2
+MOBI
+. 5 .
+. 4
+.
+.
+2
+2 .
+6 2
+23
+7
+PDF
+.
+. MD
+97
+1 .
+99
+RTF
+.
+.
+. .
+.
+.
+93 2
+TXT
+.
+1 97
+TEX
+.
+99
+JSON
+. .
+.
+1
+97
+HTML
+99
+XML
+99
+LOG
+99
+CSV
+99
+AIFF
+.
+.
+3
+1
+1 1
+74
+FLAC
+.
+.
+. 94 . .
+M4A
+. . 94 .
+MP3
+.
+.
+. . . 90
+.
+OGG
+99
+WAV
+.
+98
+WMA
+. 2 . 1 .
+.
+.
+3 .
+1
+4 1
+3 .
+51
+PCAP
+.
+. 98
+TTF
+.
+.
+.
+.
+96
+DWG
+.
+.
+.
+98 SQLITE
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+1
+.
+.
+
+3
+
+.
+
+. 1
+
+.
+1
+
+.
+.
+
+ARW
+CR2
+DNG
+GPR
+NEF
+NRW
+ORF
+PEF
+RAF
+RW2
+3FR
+JPG
+TIFF
+HEIC
+BMP
+GIF
+PNG
+AI
+EPS
+PSD
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV
+WEBM
+APK
+JAR
+MSI
+DMG
+7Z
+BZ2
+DEB
+GZ
+PKG
+RAR
+RPM
+XZ
+ZIP
+EXE
+MACH-O
+ELF
+DLL
+DOC
+DOCX
+KEY
+PPT
+PPTX
+XLS
+XLSX
+DJVU
+EPUB
+MOBI
+PDF
+MD
+RTF
+TXT
+TEX
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+FLAC
+M4A
+MP3
+OGG
+WAV
+WMA
+PCAP
+TTF
+DWG
+SQLITE
+
+True label
+
+WEBM
+APK .
+JAR .
+MSI
+DMG
+7Z
+BZ2
+DEB
+GZ
+PKG
+RAR .
+RPM
+XZ
+ZIP .
+EXE
+MACH-O
+ELF
+DLL
+DOC 3
+DOCX .
+KEY 3
+PPT 4
+PPTX 4
+XLS
+XLSX
+DJVU
+EPUB .
+MOBI
+PDF .
+MD
+RTF
+TXT
+TEX
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+FLAC
+M4A
+MP3
+OGG
+WAV
+WMA
+PCAP .
+TTF
+DWG
+SQLITE
+
+.
+.
+
+Predicted label
+
+Fig. 3.
+
+Confusion matrix for FiFTy with block size of 512 bytes. Darker color means higher value and dot (.) means a non-zero value greater than 0.2%.
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+v
+
+ARW
+CR2
+DNG
+GPR
+NEF
+NRW
+ORF
+PEF
+RAF
+RW2
+3FR
+JPG
+TIFF
+HEIC
+BMP
+GIF
+PNG
+AI
+EPS
+PSD
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV
+WEBM
+APK
+JAR
+MSI
+DMG
+7Z
+BZ2
+DEB
+GZ
+PKG
+RAR
+RPM
+XZ
+ZIP
+EXE
+MACH-O
+ELF
+DLL
+DOC
+DOCX
+KEY
+PPT
+PPTX
+XLS
+XLSX
+DJVU
+EPUB
+MOBI
+PDF
+MD
+RTF
+TXT
+TEX
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+FLAC
+M4A
+MP3
+OGG
+WAV
+WMA
+PCAP
+TTF
+DWG
+SQLITE
+
+Validation accuracy = 77.5
+ARW 98
+94 .
+1 .
+CR2
+.
+.
+1 96
+DNG
+99
+GPR
+. .
+.
+95 .
+NEF
+. 97
+.
+NRW
+.
+96 .
+ORF
+99
+PEF
+2 . . 87
+RAF
+
+.
+.
+
+4
+
+.
+
+86
+
+.
+
+.
+
+.
+
+.
+.
+
+98
+49
+.
+
+.
+
+15
+
+.
+
+1 3
+
+98
+99
+87 .
+3 57 . . .
+3 95
+2
+95
+18
+4 71 .
+98 .
+. 67
+6
+
+.
+
+43
+11
+13
+
+.
+
+.
+
+.
+.
+
+.
+.
+.
+.
+.
+
+.
+
+1
+
+.
+
+9
+.
+.
+2
+17
+47
+3
+38
+.
+.
+6
+17
+45
+2
+39
+.
+1
+
+.
+
+3
+.
+.
+. 1
+.
+
+2
+.
+
+.
+.
+
+4
+5
+15
+. .
+13
+
+.
+
+.
+
+.
+.
+.
+.
+.
+
+.
+.
+.
+
+.
+4
+15
+1
+13
+.
+
+.
+. 1
+. 1
+1 .
+. .
+
+.
+.
+.
+.
+
+.
+
+1
+
+.
+.
+
+.
+1
+
+.
+
+98 .
+94
+.
+
+1
+1
+.
+.
+.
+.
+.
+
+.
+
+.
+.
+
+1 3
+. .
+
+.
+
+.
+
+.
+.
+1
+.
+2
+3
+3
+
+.
+.
+1
+1
+
+.
+
+.
+
+.
+
+. .
+78
+1 .
+49 . 1 1
+1 73 1 .
+. 1
+60 2
+. 3
+2 19
+.
+1 3
+.
+. 8
+. 1
+2 3
+3 2 2 2
+5 1 2 2
+. .
+5 3
+3 1 2 2
+.
+1 3
+1 . 2 1
+. 1
+2 3
+
+.
+
+.
+.
+1 1
+. 3 2
+. 3 3
+
+. .
+. 2 1
+
+.
+. .
+.
+1 .
+. .
+1 1
+1 1
+
+.
+.
+.
+12 .
+.
+80
+.
+
+.
+.
+.
+.
+.
+
+.
+.
+.
+
+.
+
+.
+
+33
+.
+
+.
+
+13
+
+2 3
+
+12 .
+.
+
+.
+
+4
+
+1 1
+. .
+1
+
+. 1
+
+.
+
+.
+
+.
+
+DNG
+GPR
+. NEF
+
+.
+
+NRW
+ORF
+PEF
+4
+RAF
+. RW2
+3FR
+.
+.
+. 3 2
+.
+.
+1
+JPG
+TIFF
+. . 10 . 11
+.
+1
+1 1
+1
+HEIC
+.
+.
+BMP
+GIF
+. 1 1
+. .
+. .
+.
+.
+.
+1
+PNG
+.
+2 5 3 . . .
+4 . 1 .
+6
+1
+1
+AI
+.
+EPS
+PSD
+. . 13 . 11
+.
+1
+2 1
+MOV
+.
+. .
+2
+2
+1 .
+MP4
+3GP
+.
+. .
+.
+.
+3
+3
+AVI
+MKV
+.
+1
+OGV
+.
+.
+1
+2
+1 .
+WEBM
+.
+. 2 1 . 3 1
+.
+.
+. . 2
+3 11 2 .
+1
+1
+APK
+.
+.
+6 6 1 4
+1
+JAR
+.
+. .
+2 5 7 . . .
+2
+3
+1
+MSI
+.
+. 1
+.
+.
+2 14 9 . 5
+1
+DMG
+. . 11 . 11
+1
+1 1
+1
+7Z
+.
+.
+.
+1
+BZ2
+. .
+. 2
+.
+.
+1 4 10 1 9 .
+2
+DEB
+. .
+.
+.
+.
+42 17 4 11 . .
+2
+2
+GZ
+.
+.
+.
+.
+.
+6 62 2 1
+2
+4
+PKG
+. .
+. . 2
+.
+1 2 46 1 2 6
+5
+2
+RAR
+.
+. 2
+.
+10 12 7 21 4 .
+2
+RPM
+. . 10 . 12
+.
+2
+1 1
+XZ
+.
+.
+. 5
+2 4 21 . . 34
+4
+1 .
+4
+ZIP
+.
+.
+1 2 10 . 10
+2
+1 . 2
+1 1
+EXE
+.
+95 . 2
+MACH-O
+. .
+.
+2 86 4
+1
+ELF
+. . 91
+.
+2
+DLL
+. . .
+. 88
+. 2 .
+.
+.
+.
+DOC
+.
+1 1 8 . . .
+60
+20
+DOCX
+. 1 .
+.
+. . 43 13 19
+.
+.
+1
+1
+KEY
+.
+. 1 . 1 53 6
+.
+.
+1 3 1 .
+2
+3
+PPT
+.
+. 1 1 11 14 36
+.
+.
+.
+.
+1 2 2
+2
+1
+PPTX
+.
+99
+XLS
+.
+.
+97
+XLSX
+. . 5 . 7
+.
+1
+30 1
+DJVU
+. 1 1
+. 10
+. .
+79 .
+1
+EPUB
+.
+.
+2
+19 73
+1
+MOBI
+. 1 4 . 3 .
+. . 1
+.
+1 1 . 3 1
+45
+PDF
+. .
+97
+1
+MD
+99
+RTF
+.
+2
+1
+93 .
+TXT
+1 98
+TEX
+99
+JSON
+.
+99
+HTML
+99
+XML
+99
+LOG
+99
+CSV
+.
+.
+98
+AIFF
+.
+.
+97
+FLAC
+.
+98
+M4A
+98
+MP3
+2
+95
+OGG
+.
+98
+WAV
+99
+WMA
+. .
+.
+.
+.
+95
+PCAP
+.
+99
+TTF
+.
+.
+.
+96
+DWG
+99 SQLITE
+
+.
+.
+
+.
+1
+.
+
+.
+
+.
+.
+
+.
+
+.
+
+ARW
+CR2
+DNG
+GPR
+NEF
+NRW
+ORF
+PEF
+RAF
+RW2
+3FR
+JPG
+TIFF
+HEIC
+BMP
+GIF
+PNG
+AI
+EPS
+PSD
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV
+WEBM
+APK
+JAR
+MSI
+DMG
+7Z
+BZ2
+DEB
+GZ
+PKG
+RAR
+RPM
+XZ
+ZIP
+EXE
+MACH-O
+ELF
+DLL
+DOC
+DOCX
+KEY
+PPT
+PPTX
+XLS
+XLSX
+DJVU
+EPUB
+MOBI
+PDF
+MD
+RTF
+TXT
+TEX
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+FLAC
+M4A
+MP3
+OGG
+WAV
+WMA
+PCAP
+TTF
+DWG
+SQLITE
+
+. 1
+
+.
+.
+
+1
+
+99
+
+.
+
+. ARW
+. CR2
+
+.
+
+97
+
+True label
+
+RW2
+3FR
+JPG
+TIFF
+HEIC
+BMP
+GIF
+PNG
+AI
+EPS
+PSD .
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV
+WEBM
+APK .
+JAR
+MSI
+DMG
+7Z
+BZ2
+DEB
+GZ
+PKG
+RAR
+RPM
+XZ
+ZIP .
+EXE
+MACH-O
+ELF
+DLL
+DOC .
+DOCX
+KEY 1
+PPT 2
+PPTX 2
+XLS
+XLSX
+DJVU
+EPUB
+MOBI
+PDF 1
+MD
+RTF
+TXT
+TEX
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+FLAC
+M4A
+MP3
+OGG
+WAV
+WMA
+PCAP
+TTF
+DWG
+SQLITE
+
+.
+
+Predicted label
+
+Fig. 4.
+
+Confusion matrix for FiFTy with block size of 4096 bytes. Darker color means higher value and dot (.) means a non-zero value greater than 0.2%.
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+vi
+
+ARW
+CR2
+DNG
+GPR
+NEF
+NRW
+ORF
+PEF
+RAF
+RW2
+3FR
+JPG
+TIFF
+HEIC
+BMP
+GIF
+PNG
+AI
+EPS
+PSD
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV
+WEBM
+APK
+JAR
+MSI
+DMG
+7Z
+BZ2
+DEB
+GZ
+PKG
+RAR
+RPM
+XZ
+ZIP
+EXE
+MACH-O
+ELF
+DLL
+DOC
+DOCX
+KEY
+PPT
+PPTX
+XLS
+XLSX
+DJVU
+EPUB
+MOBI
+PDF
+MD
+RTF
+TXT
+TEX
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+FLAC
+M4A
+MP3
+OGG
+WAV
+WMA
+PCAP
+TTF
+DWG
+SQLITE
+
+Validation accuracy = 57.3
+ARW 96
+2
+1 .
+CR2 1 59 12
+10 47
+1
+2 1
+DNG
+98
+GPR
+1 .
+82
+1 1
+NEF
+.
+. 93
+.
+NRW
+1 1
+5 . 64 1
+ORF
+.
+2 89
+PEF
+1 .
+96
+RAF
+
+True label
+
+RW2
+3FR
+. .
+JPG
+. .
+TIFF
+1 2
+HEIC .
+BMP
+GIF . . 2 .
+PNG . 2 1 2
+AI 1 . 2 3
+EPS
+PSD 4
+. 2
+MOV 1
+1 2
+MP4 .
+. .
+3GP
+1 1
+AVI .
+.
+MKV
+OGV 1 . 1 1
+.
+.
+1
+WEBM
+APK 1 . 3 5
+JAR 1 . 2 2
+MSI . . 1 2
+DMG . . 1 2
+1 1
+7Z .
+1 2
+BZ2 .
+1 2
+DEB .
+GZ 1 . 1 2
+PKG . . 1 2
+1 3
+RAR 1
+RPM 1 . 1 2
+1 2
+XZ .
+1 3
+ZIP .
+1 2
+EXE .
+MACH-O
+. .
+ELF
+DLL
+DOC 13
+DOCX 2
+KEY 18
+PPT 9
+PPTX 13
+XLS
+XLSX .
+DJVU .
+EPUB 1
+MOBI .
+PDF 2
+MD
+RTF
+TXT
+TEX
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+FLAC .
+
+.
+3
+1
+2
+2
+
+. .
+. 1
+2 3
+. .
+1 2
+
+.
+1
+
+.
+.
+
+. 1
+. 1
+
+. 1
+.
+
+.
+
+1
+
+.
+.
+
+.
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+.
+
+.
+
+.
+.
+
+.
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+. . .
+. 1 1
+
+.
+.
+
+.
+
+.
+
+.
+.
+
+.
+.
+
+.
+
+.
+.
+
+.
+.
+
+.
+.
+
+.
+.
+
+.
+.
+
+.
+.
+
+.
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+.
+.
+
+.
+.
+
+.
+.
+
+95
+96
+.
+
+. .
+. .
+1 2
+1
+. . .
+.
+84 .
+3 2
+2 2 2
+2
+.
+.
+96
+. .
+.
+72 . .
+3 1
+6 21 1
+1
+3 1
+3 2 17 .
+1
+1 97
+.
+91
+. 6
+3 2
+1 2 1
+3 2
+2 2 1
+2
+. .
+.
+.
+.
+1
+3 2
+1 2 1
+2
+. .
+. .
+.
+.
+1 .
+2 1 .
+1 1
+1 1 1
+1
+7 1
+2 2 .
+1
+5 1
+2 1 .
+1
+7 1 1 3 2 1
+2
+7 1
+3 3 1
+1
+3 3
+2 2 1
+2
+3 2
+2 2 1
+2
+5 2
+2 2 1
+1
+5 1
+4 3 1
+1
+7 1
+3 2 1
+1
+3 2
+1 2 1
+2
+7 1
+2 2 1
+1
+3 2
+2 2 1
+2
+4 1
+2 3 1
+1
+3 2
+2 2 1
+2
+
+83
+.
+
+.
+2
+
+.
+. 1
+. .
+
+1
+2 5
+2 1
+
+.
+.
+.
+.
+. 1
+.
+. 1
+.
+. .
+. .
+.
+.
+. .
+. .
+. .
+.
+. .
+.
+. .
+.
+
+. 1
+1
+.
+1
+.
+2
+1
+2
+2
+2
+2
+1
+2
+2
+2
+2
+2
+2
+2
+2
+2
+
+.
+.
+
+.
+.
+.
+.
+1
+3
+.
+4
+1
+2
+4
+.
+1
+2
+2
+4
+1
+4
+.
+1
+.
+
+.
+
+.
+
+.
+
+.
+.
+
+.
+.
+.
+.
+.
+
+.
+.
+.
+.
+
+.
+.
+
+.
+
+.
+
+.
+.
+2
+.
+1
+1
+
+4
+1
+2
+3
+
+. .
+1 .
+2 3
+. .
+2 1
+
+.
+2 2
+4 1
+. .
+2 1
+
+1
+
+.
+
+5 .
+.
+.
+. 1
+
+1 1
+
+.
+
+.
+
+.
+
+.
+2 1
+.
+4
+.
+
+.
+
+1 1
+
+. . . . . . . . . . . . . . . . . . .
+1 2 1 2 1 1 1 1 . 1 1 1 1 1 1 1 1 1 1
+1 2 2 1 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1
+
+2 2 2 2 2 3 1 2 2
+2 2 3 2 2 3 2 2 2
+. 78 . . . . . . .
+2 2 14 2 1 3 1 2 1
+. . . 81 1 . . . .
+. 2 . 3 36 . 1 . .
+1 2 2 1 1 33 1 1 1
+1 2 1 3 2 1 10 1 1
+1 1 1 1 1 1 1 29 1
+2 2 2 3 2 2 2 1 2
+1 2 1 3 2 2 2 1 1
+2 2 3 2 2 3 2 2 2
+2 3 2 2 2 3 2 2 1
+2 2 2 3 2 2 2 2 1
+1 2 2 2 2 2 2 2 1
+1 2 2 3 2 2 2 2 1
+2 2 2 2 2 3 2 2 1
+1 2 2 3 2 2 2 1 1
+2 2 3 1 2 4 2 2 2
+1 2 2 2 2 2 2 2 1
+2 2 3 1 2 3 2 2 2
+.
+. . . . . . .
+.
+
+2
+2
+.
+2
+.
+.
+1
+1
+1
+2
+3
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+
+2
+2
+.
+2
+.
+.
+1
+1
+1
+2
+1
+2
+2
+2
+1
+1
+2
+1
+3
+2
+2
+
+2
+2
+.
+2
+.
+.
+1
+1
+1
+1
+1
+2
+2
+2
+1
+1
+2
+1
+2
+1
+2
+
+2
+2
+.
+2
+.
+.
+1
+1
+1
+2
+2
+2
+2
+3
+2
+2
+2
+2
+2
+2
+2
+
+2
+2
+.
+2
+.
+.
+1
+1
+1
+1
+2
+2
+2
+2
+3
+2
+2
+2
+2
+2
+2
+
+2
+2
+.
+2
+.
+.
+1
+2
+2
+3
+3
+2
+2
+3
+2
+4
+2
+2
+2
+2
+2
+
+.
+
+.
+
+.
+
+2
+2
+.
+2
+.
+.
+1
+1
+1
+2
+1
+2
+2
+2
+2
+1
+3
+1
+2
+1
+2
+
+2
+2
+.
+2
+.
+.
+1
+2
+1
+2
+2
+2
+2
+3
+2
+3
+2
+4
+2
+2
+2
+
+2
+2
+.
+2
+.
+.
+1
+1
+1
+2
+1
+2
+2
+2
+1
+1
+2
+1
+2
+2
+2
+
+2
+2
+.
+2
+.
+.
+1
+1
+1
+1
+1
+2
+2
+2
+1
+1
+1
+1
+2
+9
+2
+
+.
+
+.
+
+.
+
+.
+
+.
+1
+2
+. 9 1
+. . 3
+. 10 1
+
+1
+1
+1
+2
+
+2 2
+. .
+. .
+. .
+
+.
+
+.
+
+.
+.
+.
+.
+. . . . . . . . . . . . . . . . . . .
+2 2 2 2 2 3 1 2 2 2 2 2 2 2 2 2 2 2 2
+
+3 1
+1 .
+3 .
+1 .
+
+1 2
+. .
+. .
+. .
+
+.
+.
+2 2 1 2 2 2 2 1 2 2 2 2 1 2 2 2 2 2
+1 . . 1 . 1 . . . . . . . . . . . .
+1 1 2 1 1 1 . . 1 . . . . 1 . . . 1
+1 . 1 1 . 1 . . 1 . . 1 . 1 . 1 . .
+
+.
+2 2 1
+3 3 1
+. . .
+2 2 1
+
+.
+.
+2 2 2 2 2 2 3 2 2 2 2 2 2 2 2 2 2 2 2 2
+1 1 2 2 1 1 3 1 2 1 1 2 1 1 2 1 2 1 1 2
+. . . . . . . . . . . . . . . . . . . .
+1 1 2 2 1 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1
+
+5 1 1
+. .
+.
+1 . .
+
+1 1 2 2 1 1 2 1 2 1 1 2 1 1 1 1 1 1 1 1
+. . 1 . . . . . . .
+. .
+. . .
+. .
+.
+.
+. . 1 . 1 2 . 1 . . . . . . . . . . . .
+
+.
+. 1
+
+.
+
+. 1 1 1 1 1 1 1 1
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+. 1
+
+.
+
+. 1 1 1
+
+.
+
+. 1 1
+
+1 ARW
+5 CR2
+2 DNG
+1
+GPR
+.
+.
+8 NEF
+.
+4 NRW
+. . .
+. . .
+.
+.
+.
+2 1 1 .
+1 ORF
+.
+1 PEF
+.
+. RAF
+3 RW2
+.
+3FR
+.
+.
+1
+1 . .
+JPG
+.
+.
+. . .
+.
+. . .
+TIFF
+. 2 . . .
+. 3 2 1 1
+.
+2
+1 3 2 . 1
+1
+HEIC
+.
+1
+BMP
+.
+.
+.
+.
+. . . . .
+. 1 1 . 1
+.
+.
+GIF
+.
+.
+1
+1 . . 1
+1 1 2
+1
+2 2 1 1
+PNG
+.
+. 2 2 1 1
+.
+.
+1
+2 . . .
+1 1 2 . 1
+AI
+.
+EPS
+.
+.
+.
+PSD
+. 2 . 1 .
+. 2 2 . 1
+.
+2
+2
+1 2 2 . 1
+1
+MOV
+. 3 2 1 2
+.
+2
+2 . 1 .
+1 2 2
+1
+1
+MP4
+.
+.
+.
+. . .
+.
+. 1 . 1
+.
+.
+3GP
+. 2 2 1 1
+.
+.
+2
+2 . 1 .
+1 2 2 . 1
+AVI
+.
+.
+. .
+. . .
+.
+. . . 1
+.
+.
+MKV
+.
+. . . .
+.
+.
+1 . .
+1 2 2 12
+1
+OGV
+.
+.
+1
+1 . . .
+1 2 1 . 1
+1 1 . 1
+WEBM
+.
+.
+1
+1 . 1 1
+1 1 1
+1
+1 1 3 3
+APK
+.
+.
+1
+1 . . .
+1 1 1
+1
+2 1 1 1
+JAR
+. . . 1 . 1 .
+.
+.
+1
+1 1 2 . 1
+2 2 . 1
+MSI
+.
+.
+1
+1 . 1 1
+2 2 2
+1
+2 2 1 2
+DMG
+. 3 2 1 1
+.
+2
+2 . 1 .
+1 2 2 . 1
+1
+7Z
+. 2 2 1 1
+.
+2
+2 . 1 .
+1 2 2 . 1
+1
+BZ2
+.
+.
+2
+2 . 1 1
+1 2 2 . 1
+2 2 1 1
+DEB
+.
+.
+1
+2 . 1 .
+1 1 2 . 1
+2 2 1 2
+GZ
+. 2 2 1 1
+.
+.
+1
+1 . 1 1
+1 1 2 . 1
+PKG
+.
+2
+2 . 1 .
+2 2 2 . 1
+3 2 1 1
+1
+RAR
+.
+. 2 . 1 1
+. .
+.
+1
+1 1 2 . 1
+2 2 1 1
+RPM
+. 2 . . .
+. 2 2 1 1
+.
+2
+1 2 2 . 1
+1
+XZ
+. 2 . 1 .
+.
+.
+1
+1 2 2 . 1
+2 2 1 1
+1
+ZIP
+. . . 2 . 1 .
+. 2 2 1 1
+.
+2
+1 2 2 . 1
+1
+EXE
+.
+.
+.
+90 4 .
+MACH-O
+. 2 84 1
+.
+.
+. .
+.
+. . .
+ELF
+. 5 86 .
+. .
+.
+.
+. . .
+DLL
+. . 69
+.
+.
+. . DOC
+1 . . .
+2 .
+. 6 . . .
+.
+.
+1
+1 2 3 . 1
+2 2 1 1
+DOCX
+.
+.
+. . .
+. . . 1
+.
+.
+1 . 23 2 6
+1
+KEY
+.
+. . 1 1 2 23 2
+.
+.
+1 . 1
+1
+1 1 . 2
+1
+PPT
+.
+.
+. . .
+.
+. 1 . 1
+.
+.
+1 . 2 2 23
+1
+PPTX
+.
+99
+XLS
+. . . .
+.
+92
+XLSX
+.
+2
+2 . 1 .
+1 10 2 . 1
+2 2 1 1
+1
+DJVU
+. 2 . . .
+.
+.
+1
+1 1 9 . 1
+2 2 1 1
+EPUB
+.
+. .
+.
+. . 2 71 .
+. . . .
+. .
+2
+MOBI
+.
+. 1 1 1 .
+.
+.
+1
+1 1 1 . 19
+2 1 1 1
+PDF
+.
+94
+2 .
+1 MD
+99
+RTF
+.
+95 .
+TXT
+7 92
+TEX
+.
+99
+JSON
+.
+. HTML
+1 . 1 . . 95
+99
+XML
+99
+LOG
+99
+CSV
+.
+94
+1 .
+AIFF
+.
+.
+2
+2 . . .
+1 1 2 . 1
+13 4 2 1
+FLAC
+.
+.
+.
+. . .
+. 86 . .
+.
+M4A
+. . .
+.
+. 86 .
+MP3
+.
+. . . .
+. .
+.
+.
+.
+1 . 71
+OGG
+99
+WAV
+98
+WMA
+.
+. . . . .
+. 1 .
+.
+3
+1
+1 1 . .
+49
+PCAP
+. . .
+.
+95
+TTF
+.
+.
+.
+.
+92
+DWG
+. .
+1
+97 SQLITE
+.
+.
+
+.
+
+.
+.
+
+.
+.
+
+.
+.
+
+.
+
+.
+.
+
+. .
+. 1
+
+.
+1
+
+. 1 .
+1 1 1
+
+.
+.
+
+.
+.
+
+.
+.
+
+ARW
+CR2
+DNG
+GPR
+NEF
+NRW
+ORF
+PEF
+RAF
+RW2
+3FR
+JPG
+TIFF
+HEIC
+BMP
+GIF
+PNG
+AI
+EPS
+PSD
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV
+WEBM
+APK
+JAR
+MSI
+DMG
+7Z
+BZ2
+DEB
+GZ
+PKG
+RAR
+RPM
+XZ
+ZIP
+EXE
+MACH-O
+ELF
+DLL
+DOC
+DOCX
+KEY
+PPT
+PPTX
+XLS
+XLSX
+DJVU
+EPUB
+MOBI
+PDF
+MD
+RTF
+TXT
+TEX
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+FLAC
+M4A
+MP3
+OGG
+WAV
+WMA
+PCAP
+TTF
+DWG
+SQLITE
+
+M4A
+MP3
+OGG .
+WAV
+WMA
+PCAP 1
+TTF
+DWG
+SQLITE
+
+.
+2
+1
+1
+1
+
+.
+
+Predicted label
+
+Fig. 5. Confusion matrix for Sceadan with block size of 512 bytes. Darker color means higher value and dot (.) means a non-zero value greater than 0.2%.
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+vii
+
+ARW
+CR2
+DNG
+GPR
+NEF
+NRW
+ORF
+PEF
+RAF
+RW2
+3FR
+JPG
+TIFF
+HEIC
+BMP
+GIF
+PNG
+AI
+EPS
+PSD
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV
+WEBM
+APK
+JAR
+MSI
+DMG
+7Z
+BZ2
+DEB
+GZ
+PKG
+RAR
+RPM
+XZ
+ZIP
+EXE
+MACH-O
+ELF
+DLL
+DOC
+DOCX
+KEY
+PPT
+PPTX
+XLS
+XLSX
+DJVU
+EPUB
+MOBI
+PDF
+MD
+RTF
+TXT
+TEX
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+FLAC
+M4A
+MP3
+OGG
+WAV
+WMA
+PCAP
+TTF
+DWG
+SQLITE
+
+Validation accuracy = 69.6
+
+True label
+
+ARW 97
+. .
+. .
+88 .
+1
+CR2
+. . . . 1
+.
+12 75
+5 .
+DNG
+99
+GPR
+.
+1 .
+88 .
+NEF
+.
+. 2
+.
+1 92
+NRW
+.
+.
+.
+. .
+87 1
+ORF
+.
+.
+.
+96
+PEF
+.
+.
+4 . 1 73
+9
+RAF
+95
+RW2
+.
+.
+1
+97
+3FR
+. . .
+91
+1
+JPG
+.
+97
+TIFF .
+. .
+.
+. 1 1
+1 5
+4 3 1 2 . 1 5 1 . 2
+HEIC
+98
+BMP
+96
+GIF
+.
+.
+. 69 .
+. . . .
+. 1 .
+.
+1 .
+PNG
+1 .
+1 .
+3 1
+1 5 31 1
+1 1 . . . 1 2 1 . .
+AI .
+2
+97
+EPS
+.
+.
+94
+PSD .
+. .
+.
+. 2 1
+1 4
+4 3 . 2 . 1 4 1 . 2
+MOV
+.
+. 2
+. 1 .
+2 45 1 1 . 1 3 . . 1
+MP4
+98 .
+3GP
+. 1
+. .
+1 1 2 66 . . 1 . . .
+AVI
+98 .
+MKV
+. .
+.
+. .
+. 75 . .
+1
+OGV
+.
+.
+.
+.
+.
+.
+. . 71 .
+1
+1 1
+1
+WEBM
+.
+. .
+. . . . . 1 1 29 1 .
+1 .
+7 .
+1 3 .
+APK 3
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+. . . 70 .
+4
+JAR
+. .
+.
+. .
+4 2 . 4 2 1
+2 2 . 2 1 2 3 2 . 7
+MSI .
+. .
+. .
+. 1 .
+4 3
+2 3 . 1 1 2 3 3 . 1
+DMG
+. .
+.
+. 2 1
+1 4
+4 3 . 2 . 1 5 1 1 2
+7Z
+.
+.
+.
+. . .
+. .
+. . 1 . .
+.
+BZ2
+. .
+.
+. 2 1
+1 4
+4 3 . 2 . 2 4 1 . 2
+DEB
+1 .
+1 .
+13 1
+1 2 .
+1 1 . 1 . 1 2 3 1 1
+GZ .
+. 1
+1 .
+11 1
+1 2 .
+1 2 . 1 1 1 2 4 1 .
+PKG .
+. 13 1
+1 .
+1 .
+2 2
+2 2 . 2 . 1 3 1 . 1
+RAR .
+.
+.
+.
+.
+.
+4
+2
+2
+1
+2 2 . 1 . 1 3 3 1 2
+RPM
+. .
+.
+. 2 1
+1 4
+4 3 . 2 . 1 5 1 . 2
+XZ
+.
+.
+.
+.
+.
+.
+.
+1
+2
+1
+14
+1 1 . . . . 1 1 . .
+ZIP
+. .
+.
+. 2 1
+1 4
+4 2 . 2 . 1 4 2 1 2
+EXE
+MACH-O
+.
+.
+.
+ELF
+. .
+.
+.
+.
+.
+.
+DLL
+.
+. .
+.
+. 1
+.
+.
+1
+DOC 5
+.
+.
+.
+.
+.
+.
+.
+1
+2 1
+3 1
+1 1
+1
+1 2 1
+DOCX 1
+.
+.
+. . . . . . 1
+1 .
+1
+1 1 5 .
+KEY 11
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+2
+1
+2
+1 7
+2
+PPT 8
+. . 1 .
+. . . . . 1 1 2 . .
+1 .
+1 . 2 1 7 1
+PPTX 13
+.
+XLS
+.
+.
+.
+. 1
+.
+.
+XLSX
+.
+.
+. 3
+. 1 1
+3 3 . 2 . 1 4 1 . 2
+DJVU
+.
+.
+. . . .
+. 1 . . .
+1 1
+1 1
+1 2 .
+EPUB .
+. .
+. .
+. .
+. .
+.
+.
+MOBI .
+.
+. 2 1 .
+. 1 1 . .
+2 1
+1
+1 1
+1 1 . .
+PDF 7
+
+.
+
+.
+
+.
+
+.
+
+2
+
+.
+
+.
+
+.
+
+.
+
+.
+3 5 1 4 4 4 2 4
+
+. . . . 1 1 . .
+1 1 3 1 1 1 1 1
+
+3 4 1 4 3 4 2 4
+1 2 . 1 1 1 1 2
+. 1
+.
+1
+.
+.
+2
+9
+3
+4
+3
+1
+2
+2
+2
+3
+1
+3
+
+. 1 1 1
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+2 3 . 3 2 3 2 3
+. . 2 . 1 . . .
+. .
+. . . .
+1 1 1 1 1 1 . 1
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+.
+
+.
+
+.
+
+.
+
+.
+.
+
+.
+
+1
+1
+1
+2
+3
+4
+.
+4
+4
+2
+2
+8
+4
+1
+4
+
+.
+1 1 2 1 2 2 1 1
+. . . . . . .
+. . 1 . 1 1 . .
+. . . . 1 1 . .
+
+.
+
+.
+
+. 1
+
+2
+1 . 1 . . .
+. 1 . 2 5 .
+. . . 2 1 .
+2 2 2 2 3 1
+2 8 2 3 6 1
+4 1 4 4 4 2
+. 74 . . . .
+4 1 3 3 5 2
+1 1 1 19 5 1
+1 2 1 5 14 1
+2 2 2 3 3 3
+3 1 3 5 6 2
+4 1 5 4 4 2
+1 1 1 2 2 4
+4 1 4 3 4 2
+
+.
+
+.
+
+.
+
+ARW
+CR2
+DNG
+GPR
+NEF
+NRW
+ORF
+PEF
+RAF
+RW2
+3FR
+JPG
+TIFF
+HEIC
+BMP
+GIF
+PNG
+AI
+EPS
+PSD
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV
+WEBM
+APK
+JAR
+MSI
+DMG
+7Z
+BZ2
+DEB
+GZ
+PKG
+RAR
+RPM
+XZ
+ZIP
+EXE
+MACH-O
+ELF
+DLL
+DOC
+DOCX
+KEY
+PPT
+PPTX
+XLS
+XLSX
+DJVU
+EPUB
+MOBI
+PDF
+MD
+RTF
+TXT
+TEX
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+FLAC
+M4A
+MP3
+OGG
+WAV
+WMA
+PCAP
+TTF
+DWG
+SQLITE
+
+MD
+RTF
+TXT
+TEX
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+FLAC
+M4A
+MP3 .
+OGG
+WAV
+WMA
+PCAP
+TTF
+DWG
+SQLITE
+
+1 ARW
+3 CR2
+. DNG
+.
+GPR
+.
+1
+1
+4 NEF
+.
+1 NRW
+.
+5 .
+ORF
+. PEF
+.
+. RAF
+7 .
+.
+2 RW2
+3FR
+.
+.
+1
+1 1 .
+JPG
+TIFF
+.
+5 2 2
+3 . . .
+2 5 3
+1
+3 1
+1
+HEIC
+.
+BMP
+.
+GIF
+. 1 .
+. 1 . . .
+.
+1 . 1
+1 .
+1
+PNG
+. 3 . . 1 .
+.
+1 1 .
+2 . . .
+2 1 3
+3
+AI
+EPS
+.
+PSD
+.
+5 2 3
+3 . . .
+2 5 3
+1
+3 1
+1 .
+MOV
+. .
+.
+2 1 1
+1
+1 2 2
+1 3 . .
+MP4
+.
+3GP
+.
+. 1
+.
+. 1 1
+.
+.
+1 . 1
+1 .
+AVI
+MKV
+. .
+1 .
+10
+OGV
+.
+. 1 1
+.
+. .
+.
+1 . .
+1
+WEBM
+. 1 .
+. 4 1 1 1 .
+.
+.
+1 . 1
+1 . 3 2 2
+APK
+. . .
+. .
+. . 1
+.
+.
+1 .
+JAR
+. . 2 . . .
+.
+.
+2 1 2
+2 2 3
+7 1 . 2
+MSI
+.
+.
+3 1 2
+2 . . .
+2 2 2
+3 . . 2
+DMG
+4 2 3
+3 . . .
+2 5 3
+1
+3 1
+1
+7Z
+. . .
+.
+. . .
+.
+1 . . .
+BZ2
+.
+4 2 3
+3 . . .
+2 5 3
+1
+3 1 1 1
+DEB
+. 2 . . .
+.
+1 1 1
+2 2 3
+1
+4 .
+GZ
+.
+1 1 1
+2 . . .
+3 2 4
+5 . . 1
+PKG
+3 4 2
+3 . . .
+2 3 3
+1
+4 . . 1
+RAR
+.
+3 1 2
+3 . . .
+2 3 3
+1
+4 . . .
+RPM
+.
+5 1 3
+3 . . .
+2 5 3
+1
+3 1
+XZ
+1 22 1
+2 . . .
+2 1 3
+1
+2 6 . 1
+ZIP
+. 1
+.
+4 1 5
+3 . . .
+2 4 3
+1
+3 1
+1
+EXE
+93 1 1
+MACH-O
+. 89 1 . .
+.
+.
+. .
+.
+.
+ELF
+. 4 86
+.
+. .
+. .
+DLL
+.
+. . 77 . . . .
+.
+.
+.
+1
+1
+DOC
+.
+1 1 1
+31 . . .
+1 2 11
+2 . . 1
+DOCX
+. .
+. . 3 . 44 2 8
+. . . 1
+1 . .
+1
+KEY
+. 1 .
+. . 3 . 5 32 3
+.
+1 . 1
+1
+1 . . 1
+PPT
+. . .
+. . 2 . 13 4 20
+.
+1 . 1
+1
+1 . . 1
+PPTX
+98
+XLS
+.
+.
+.
+. .
+.
+91
+XLSX
+.
+4 1 3
+2 . . .
+1 24 2
+1
+2 . . .
+DJVU
+. 1 .
+. 3 . . .
+1 1 56 . .
+3 . . 1
+EPUB
+.
+.
+. . 14 72
+.
+.
+1
+MOBI
+.
+1 . 1
+2 1 2 1 .
+1 1 2
+38
+1 .
+PDF
+.
+98
+MD
+99
+RTF
+.
+. . .
+.
+1
+92
+TXT
+2 97
+TEX
+99
+JSON
+.
+98
+HTML
+100
+XML
+99
+LOG
+98
+1 CSV
+. .
+98
+AIFF
+. . .
+.
+. . .
+.
+85 .
+FLAC
+98
+M4A
+98
+MP3
+4
+93
+OGG
+.
+1
+97
+WAV
+99
+WMA
+. .
+94
+PCAP
+.
+98
+TTF
+.
+96
+DWG
+.
+98 SQLITE
+.
+
+.
+
+Predicted label
+
+Fig. 6. Confusion matrix for Sceadan with block size of 4096 bytes. Darker color means higher value and dot (.) means a non-zero value greater than 0.2%.
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+viii
+
+ARW
+CR2
+DNG
+GPR
+NEF
+NRW
+ORF
+PEF
+RAF
+RW2
+3FR
+JPG
+TIFF
+HEIC
+BMP
+GIF
+PNG
+AI
+EPS
+PSD
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV
+WEBM
+APK
+JAR
+MSI
+DMG
+7Z
+BZ2
+DEB
+GZ
+PKG
+RAR
+RPM
+XZ
+ZIP
+EXE
+MACH-O
+ELF
+DLL
+DOC
+DOCX
+KEY
+PPT
+PPTX
+XLS
+XLSX
+DJVU
+EPUB
+MOBI
+PDF
+MD
+RTF
+TXT
+TEX
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+FLAC
+M4A
+MP3
+OGG
+WAV
+WMA
+PCAP
+TTF
+DWG
+SQLITE
+
+Validation accuracy = 45.4
+
+True label
+
+.
+.
+.
+1
+4
+ARW 88 .
+. 6
+.
+.
+.
+.
+1 3 2 1 . 2
+CR2 . 43 3 1 4
+. 1
+.
+.
+9 18
+1
+2 6
+9
+1 . .
+1
+1
+DNG
+.
+.
+.
+89 1
+2
+GPR
+.
+.
+.
+.
+4 1 2 59
+5 5 .
+1
+NEF
+. .
+.
+89
+3
+NRW
+. 14 .
+.
+.
+. .
+3 3 . 11
+37 5 .
+1
+ORF
+. 84
+. 1
+.
+.
+.
+1 . . 1
+1
+1
+PEF
+.
+1
+95
+RAF
+. .
+.
+.
+92
+RW2
+.
+.
+.
+.
+95
+1
+3FR
+. 2
+. .
+.
+2
+53
+8 4 . 2
+1 3
+3
+1
+3
+JPG
+.
+.
+.
+.
+. . . .
+. . . 3
+7
+5
+4
+1
+4
+20
+34
+1
+TIFF
+. 10
+. 1 .
+. 1 . 6
+1 .
+23 1
+3
+HEIC 10
+. .
+90
+BMP
+.
+.
+.
+.
+2
+3
+42 .
+1
+GIF 4 2 3 1 . 1 . 3 .
+.
+.
+.
+.
+. . . 2
+4 3
+2
+2 17
+9
+10 1
+3 . 2
+1 .
+PNG 10
+.
+. . . 2
+3 5 . 1
+2 7
+15 .
+3 . 12 1
+1 . 1
+2 .
+AI 9
+.
+1 95
+EPS
+. .
+.
+.
+.
+.
+.
+.
+.
+86
+PSD 2
+.
+. 3
+. 1 .
+. 1 . 6
+9
+1 1
+20 1
+4
+MOV 11
+.
+. 1 . 7
+1 10
+1 1
+23 1
+1 1 .
+3
+MP4 10
+.
+.
+.
+.
+.
+. .
+3 2 1 1
+1 8
+6
+2
+23
+2
+4
+2
+3GP 12
+. 9
+.
+.
+. 1 . 6
+1 1
+21 1
+1 1 .
+5
+AVI 10
+.
+.
+.
+.
+.
+.
+. .
+1 2 1
+6
+3
+1
+4
+23
+3
+3
+MKV 13
+.
+.
+1 8
+5
+2 .
+5
+3 4 1 1
+2
+OGV 11 . 3 1 2 4
+. 7
+.
+.
+. 1 . 3
+1 .
+10 1
+1 1 .
+21
+WEBM 12
+. .
+4 3 2 2
+1 15
+11 .
+2 1
+4 . 3 . 1 1 .
+2
+APK 14
+. . . 3
+3 4 . 2
+5 4
+15 .
+1
+1 . . . 1 . 20
+JAR 8
+.
+. 1 . . 4
+2 10
+16 . 1 2 .
+2 . 1 . 2 .
+MSI 10 . 3 5 . 1
+3 3 2 1
+2 12
+16 .
+2 1
+3 . 2 . 2 1
+1 . . 4
+DMG 11
+. 10
+.
+. 1 .
+. 1 1 6
+1 1
+24 1
+3
+7Z 10
+.
+.
+. 1 .
+. 1 1 6
+1 9
+2 2
+27 1
+2
+BZ2 9
+.
+.
+.
+.
+.
+.
+.
+. . 7
+11
+2
+6
+2
+13
+21
+1
+2
+2
+2
+1
+DEB
+. 1 . 4
+3 6 1 1
+2 9
+16 .
+3 .
+2 . 2
+2 .
+GZ 11
+.
+.
+.
+.
+. . 4
+9
+3
+4
+3
+1
+2
+11
+16
+2
+2
+2
+2
+1
+1
+PKG
+.
+. .
+. . . 5
+2 10
+3 5
+29 .
+1 . 1 . 1 .
+RAR 12
+.
+.
+.
+.
+.
+.
+.
+2 5 3 2
+2 9
+16
+1
+1
+3
+2 1
+1 . 4
+RPM 8
+.
+.
+. 1 .
+. 1 1 6
+1 10
+2 1
+23 1
+3
+XZ 10
+.
+.
+.
+.
+.
+.
+2 8
+2 8
+22 1
+1
+1
+2
+1
+1 1 . 5
+ZIP 10
+.
+.
+. 1 .
+. 1 . 6
+1 10
+1 1
+22 1
+3
+EXE 9
+.
+.
+.
+.
+.
+MACH-O
+.
+.
+.
+.
+.
+1
+1
+1
+ELF .
+.
+.
+.
+.
+.
+DLL
+.
+.
+.
+1 1
+1
+2
+1
+4
+DOC 12
+. .
+. . . 4
+2 10 . .
+3 6
+24 .
+1 . .
+2 . 1
+DOCX 13
+. 4
+. . . 1
+2 2 . .
+4
+10 1 .
+3
+1
+1 . .
+KEY 18
+. . . 2
+2 3 . 1
+1 5
+5 . . 2 .
+3 . 4
+2 . .
+PPT 15
+. .
+3 2 . . . . 13
+4
+10 1 .
+3
+2
+1 . .
+1
+PPTX 17
+XLS
+. .
+. . . .
+.
+.
+1
+2 2
+1
+2
+2
+1
+XLSX 8
+. 9
+. 1 . 6
+1 .
+20 1
+2 1 . . 4
+DJVU 10
+.
+.
+.
+.
+.
+.
+.
+10
+2
+9
+1
+4
+8
+17
+1
+2
+1
+2
+1
+1
+2
+EPUB
+. 2 . .
+. 1
+.
+.
+.
+.
+.
+.
+4 .
+MOBI 2
+. . . 3
+2 7 . .
+2 4
+16 . . 1 . .
+1 . 1 . 2 .
+PDF 9
+MD
+RTF
+.
+.
+TXT .
+.
+TEX
+.
+
+.
+.
+
+.
+9
+.
+.
+
+.
+
+.
+
+.
+.
+.
+1
+
+.
+.
+
+. 1
+.
+
+19 2
+3 .
+.
+.
+
+.
+5
+2
+. 1
+1
+
+.
+
+1
+.
+
+8
+.
+
+.
+
+.
+
+.
+
+1
+
+2
+
+1
+
+1
+
+.
+
+.
+
+.
+6
+1
+1
+3
+.
+1
+
+.
+
+.
+.
+.
+
+.
+.
+
+.
+
+.
+
+.
+
+1
+5
+
+.
+3 .
+18 1
+
+.
+.
+
+.
+.
+1
+
+1
+3
+6
+
+.
+.
+
+.
+
+.
+
+.
+.
+
+.
+.
+
+.
+.
+
+2
+1
+
+.
+
+1
+.
+.
+
+.
+.
+
+8
+5
+5
+
+.
+
+.
+.
+.
+
+.
+
+.
+1
+.
+
+.
+4
+17 1
+4
+18 1
+.
+3 .
+4
+16 1
+. . 3 .
+. . 1
+2
+14 .
+. . 2
+1 . 5 .
+1 . 7 .
+1 . 5 .
+5
+19 1
+4
+15 1
+2
+7 .
+2
+9 .
+1 . 7 .
+4
+10 .
+2 2 9 .
+5
+19 1
+3
+9 1
+5
+18 1
+.
+
+1
+
+3
+.
+.
+.
+
+1
+9
+2
+3
+1
+.
+
+4
+2
+.
+3
+
+.
+.
+.
+.
+
+.
+17 1
+10 .
+2
+10 .
+
+.
+.
+.
+.
+.
+
+.
+.
+.
+
+.
+
+.
+
+.
+.
+
+.
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+.
+
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+.
+
+.
+.
+
+.
+.
+
+.
+.
+
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+.
+
+.
+.
+.
+.
+
+.
+.
+74 9 5 .
+.
+8 65 4 3
+.
+6 7 67 1
+. .
+1 . 44
+.
+.
+.
+.
+. . .
+4 2 14
+.
+. 10 .
+1 1 .
+.
+.
+1 1 14
+
+.
+.
+
+.
+.
+.
+
+.
+
+.
+
+.
+.
+
+.
+1
+1
+4
+1
+3
+12
+1
+5
+6
+5
+9
+1
+2
+3
+4
+6
+1
+6
+1
+2
+1
+
+.
+.
+.
+.
+.
+.
+.
+.
+
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+.
+.
+.
+. 1
+1
+5
+. 4 .
+3
+98
+65
+1 3
+2 .
+.
+.
+3 .
+
+.
+.
+
+1
+
+.
+
+1
+3
+1
+5
+
+.
+.
+.
+
+.
+.
+1
+
+2
+8
+. 2
+2
+
+1
+1
+
+2
+. 2
+
+.
+3
+
+.
+
+.
+
+.
+
+. 1 1 1
+.
+.
+.
+
+3
+.
+.
+
+9
+3
+1
+.
+
+.
+.
+
+.
+
+.
+
+1
+
+7
+
+.
+
+.
+
+.
+
+.
+
+.
+.
+.
+
+.
+
+. 2
+
+.
+
+4
+1
+1
+.
+
+.
+
+.
+
+1
+.
+.
+. 3 1 1
+. .
+. .
+
+.
+
+.
+1
+.
+
+. ARW
+10 CR2
+27 DNG
+.
+1 GPR
+.
+.
+2
+7 NEF
+.
+.
+.
+.
+2 NRW
+. 2 .
+.
+8 ORF
+.
+2 PEF
+1 RAF
+1
+2 RW2
+1
+3FR
+.
+.
+3
+JPG
+.
+TIFF
+2 .
+HEIC
+.
+1
+2
+BMP
+.
+.
+.
+1 4 1
+1
+5
+GIF
+.
+.
+.
+4 1
+PNG
+.
+.
+.
+.
+.
+.
+3 .
+AI
+.
+.
+.
+EPS
+.
+.
+1
+1 .
+PSD
+. 1 .
+.
+2
+MOV
+.
+2 .
+MP4
+. .
+2 3
+3
+1
+3GP
+. .
+.
+1 3
+1
+AVI
+.
+. 1 . 5
+4 3
+1
+MKV
+.
+. 1 . 10
+1 1
+2
+OGV
+.
+.
+1 4
+2
+2
+WEBM
+.
+. .
+.
+1 1
+1
+APK
+.
+. .
+.
+3 .
+1
+JAR
+.
+. .
+3 .
+MSI
+.
+.
+.
+3 .
+DMG
+2 .
+7Z
+.
+.
+2 .
+BZ2
+.
+.
+2 .
+DEB
+.
+.
+.
+.
+5 .
+GZ
+.
+.
+.
+4 .
+PKG
+.
+.
+2 .
+RAR
+.
+.
+2 . . .
+RPM
+.
+.
+2 .
+XZ
+.
+.
+.
+.
+.
+3 .
+ZIP
+.
+2 .
+EXE
+.
+. . .
+. MACH-O
+2
+. 1 . . ELF
+1
+. .
+. .
+.
+.
+. . 3 . . DLL
+2
+. .
+. 3
+5 1
+4
+1 1 . . . DOC
+.
+.
+.
+3 .
+DOCX
+.
+. . . 1
+1 1 . 2
+KEY
+. 1
+2 1
+4
+1 2 . 1
+PPT
+. .
+. 1 . .
+1 . . 2
+PPTX
+. .
+XLS
+. . . .
+.
+.
+XLSX
+.
+1 . 1 .
+1
+DJVU
+.
+.
+.
+2
+5 1
+EPUB
+. 72
+.
+1 .
+MOBI
+. . 11
+.
+.
+.
+. PDF
+3 .
+. MD
+77 . 6 7 . 3 1
+1
+. 90
+.
+3 3 .
+RTF
+.
+. TXT
+3 . 85 4
+.
+.
+.
+. TEX
+5 6 13 66
+2 1
+. 12
+84 .
+1
+JSON
+. . 3 3 5 4 . 74 1 1 2
+. HTML
+.
+99
+XML
+.
+99
+LOG
+1 1
+1 1 1 . 92
+CSV
+.
+96
+AIFF
+.
+.
+18 1
+FLAC
+1 34
+6
+2 2
+1
+M4A
+1 2 70 .
+MP3
+4
+55
+2 3
+3
+OGG
+99
+WAV
+4
+4
+73 3
+1
+WMA
+.
+.
+2 . .
+1 1
+4
+1 32 . . . PCAP
+1
+86 . . TTF
+.
+.
+. .
+1
+90
+DWG
+. 1 2 2
+.
+.
+2 .
+87 SQLITE
+.
+.
+
+.
+
+.
+.
+
+1
+3
+
+1
+. 1
+.
+
+.
+.
+
+. 2
+1
+.
+.
+
+.
+.
+
+.
+.
+1
+
+.
+
+1
+
+.
+
+.
+
+ARW
+CR2
+DNG
+GPR
+NEF
+NRW
+ORF
+PEF
+RAF
+RW2
+3FR
+JPG
+TIFF
+HEIC
+BMP
+GIF
+PNG
+AI
+EPS
+PSD
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV
+WEBM
+APK
+JAR
+MSI
+DMG
+7Z
+BZ2
+DEB
+GZ
+PKG
+RAR
+RPM
+XZ
+ZIP
+EXE
+MACH-O
+ELF
+DLL
+DOC
+DOCX
+KEY
+PPT
+PPTX
+XLS
+XLSX
+DJVU
+EPUB
+MOBI
+PDF
+MD
+RTF
+TXT
+TEX
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+FLAC
+M4A
+MP3
+OGG
+WAV
+WMA
+PCAP
+TTF
+DWG
+SQLITE
+
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+1 5
+FLAC 5
+1 4
+M4A 14
+. 2
+MP3 8
+OGG 11 . . 1
+WAV
+WMA 1 .
+. 3
+PCAP 7
+TTF
+.
+DWG
+SQLITE
+
+.
+1
+
+Predicted label
+
+Fig. 7. Confusion matrix for baseline NN-GF with block size of 512 bytes. Darker color means higher value and dot (.) means a non-zero value greater
+than 0.2%.
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+ix
+
+ARW
+CR2
+DNG
+GPR
+NEF
+NRW
+ORF
+PEF
+RAF
+RW2
+3FR
+JPG
+TIFF
+HEIC
+BMP
+GIF
+PNG
+AI
+EPS
+PSD
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV
+WEBM
+APK
+JAR
+MSI
+DMG
+7Z
+BZ2
+DEB
+GZ
+PKG
+RAR
+RPM
+XZ
+ZIP
+EXE
+MACH-O
+ELF
+DLL
+DOC
+DOCX
+KEY
+PPT
+PPTX
+XLS
+XLSX
+DJVU
+EPUB
+MOBI
+PDF
+MD
+RTF
+TXT
+TEX
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+FLAC
+M4A
+MP3
+OGG
+WAV
+WMA
+PCAP
+TTF
+DWG
+SQLITE
+
+Validation accuracy = 46.8
+. .
+1 . . 2 1
+2 1 . . 2
+1 . . .
+. . . 4 2
+. .
+1
+. . 3 . 4
+2 . 2 3 .
+. .
+. 1
+. .
+. .
+.
+.
+9
+.
+.
+2 . . 1
+. 1
+7
+. 1
+5
+
+.
+
+.
+.
+
+.
+.
+
+.
+
+.
+.
+
+.
+
+1
+
+.
+1
+
+.
+.
+
+.
+5 4 3 4 12
+. . . 5
+2
+. 1 .
+1
+
+.
+.
+
+6
+4
+4
+
+.
+.
+
+.
+
+.
+. .
+.
+.
+7 6 2 2 10 18 2
+. 32 3 1 26 15
+. 32 . 2 15 .
+. 1 57 7 10 . .
+. 1 1 3 58 4 .
+2 . . 71
+. 1 1 3 20 5 8 2
+. 2
+3 4
+53
+. 1 2 . 10 10 .
+1
+. 1 . 13 4 1
+.
+.
+. 2 . 5 24 . 1
+.
+3 1
+. . . 10 1 1
+. . 1 . 18 2 2
+. 1
+5 2 .
+. . . 6 1 1
+.
+. .
+. 1 . 7 7 . 3
+.
+1 1 .
+.
+.
+. .
+1
+.
+.
+1
+.
+2 3 14 5 18
+. . . 3 1 . 1
+. 3 2 6 9 5 4 .
+2 2 5 16 7 1 .
+. 2 2 4 14 6 5 1
+1 2 . 18 2
+1
+4 6
+. 3 1 . 7 3 1 1
+. . . 1 1 . .
+1 1 1 3 5 . 2
+
+.
+3
+1
+
+.
+.
+
+.
+.
+.
+.
+.
+
+.
+.
+.
+.
+.
+
+.
+.
+.
+
+.
+
+4
+
+.
+.
+
+.
+. 8
+. 3
+
+. 1
+.
+
+1
+.
+.
+.
+
+.
+
+.
+
+1
+.
+
+.
+1
+1
+2
+1
+.
+1
+4
+2
+2
+2
+1
+1
+1
+
+.
+.
+
+.
+
+.
+.
+.
+.
+
+.
+.
+.
+1
+.
+
+. 1
+.
+
+1
+.
+.
+.
+4
+.
+1
+.
+.
+
+1
+
+.
+.
+
+.
+.
+.
+.
+
+.
+
+.
+.
+.
+.
+.
+.
+.
+
+.
+.
+.
+.
+1
+1
+.
+1
+1
+1
+1
+1
+1
+.
+1
+
+. 2
+2 3 1 38
+. 1 . . 8
+1 . 19 2 8
+
+1
+
+. 1
+1
+. .
+
+1
+.
+.
+
+. 12
+
+1
+
+. 1
+
+.
+.
+
+3
+1
+2
+2
+.
+.
+1
+4
+4
+8
+3
+.
+9
+1
+
+.
+. 2 8
+1
+1
+. 2
+1 3
+. .
+. 2 2
+. .
+. 1
+
+.
+
+1
+
+.
+.
+1
+
+.
+
+.
+
+. ARW
+18 CR2
+5 DNG
+.
+GPR
+. 1
+.
+.
+. 3 NEF
+4 1 . .
+. .
+.
+.
+. NRW
+1 .
+7
+. 2 1
+.
+. ORF
+15 . .
+.
+.
+2 PEF
+.
+.
+1 .
+6 .
+1 . 2 . RAF
+.
+.
+1 RW2
+. .
+1
+3FR
+.
+.
+.
+.
+2 .
+JPG
+.
+.
+16
+1
+TIFF
+.
+.
+.
+93
+HEIC
+. 1
+.
+.
+.
+.
+.
+BMP
+.
+.
+.
+.
+.
+1 .
+9 3 7
+GIF
+.
+53 .
+6
+PNG
+.
+.
+. .
+. 31 .
+.
+.
+.
+3 .
+2
+5 . .
+AI
+.
+.
+.
+.
+1 .
+EPS
+. 1 1
+. .
+. .
+. 4
+. PSD
+1
+1 .
+.
+. .
+93
+MOV
+. .
+.
+43
+MP4
+.
+.
+. . .
+9
+3GP
+. .
+. 41
+.
+.
+.
+AVI
+.
+1
+8
+1 1 .
+6
+MKV
+.
+8 .
+1 1 4 1
+1
+OGV
+.
+22
+WEBM
+. . .
+. 16 .
+.
+1
+2 3 . . 2 1
+2
+APK
+.
+. 20 .
+.
+.
+3
+JAR
+.
+. .
+. 40 .
+.
+. MSI
+8 . .
+.
+. 56
+4 . .
+DMG
+.
+94
+7Z
+.
+19 2
+7 7 . .
+7
+BZ2
+.
+85
+1 . .
+DEB
+.
+.
+. 41 .
+8
+GZ
+.
+. 37 .
+6
+PKG
+.
+58 .
+3
+RAR
+.
+68 .
+2
+RPM
+.
+.
+92
+XZ
+.
+.
+43 .
+3 . .
+ZIP
+.
+. 1
+.
+.
+.
+.
+82
+EXE
+.
+.
+.
+. 1
+71 10 6 .
+2
+1
+2 MACH-O
+.
+. 3
+12 54 10 .
+1
+3
+3
+2 ELF
+. 1
+.
+.
+.
+.
+.
+. 1 3
+3 8 65 .
+1
+1
+2 DLL
+. . . 12
+. 4 . .
+. 8 .
+. DOC
+2
+1 . 5 .
+1 1 1 .
+.
+.
+.
+.
+56 1
+6
+DOCX
+. . 1
+. 10 .
+. .
+10 3 1
+2 1 2 .
+2 1
+KEY
+. 1 1 1
+.
+. 4 .
+. PPT
+15 . 1 1 12 .
+2 1 . .
+. . 1
+. 14 .
+.
+4 2 2
+4 . . .
+2
+PPTX
+. .
+.
+.
+. XLS
+96
+.
+.
+.
+.
+20 20 .
+2 . .
+XLSX
+.
+.
+84
+DJVU
+.
+.
+.
+.
+46 3
+12 . . .
+1
+EPUB
+.
+. .
+1 2
+10 . 69
+3 .
+MOBI
+. .
+. 40 .
+.
+1
+11
+3 . .
+1
+PDF
+.
+86 2 1 6
+2 .
+MD
+.
+2 87 . 6 1
+1
+RTF
+. 1
+.
+4
+2 . 84 2
+1
+TXT
+. 1
+.
+.
+19 7 7 58 . . .
+1 TEX
+1 7 . . 81 2 . . 3
+JSON
+.
+. HTML
+16 2
+5 1 59 4 1 6
+99
+XML
+.
+7 . 91 .
+LOG
+1 3
+1 . . 1 1 87
+CSV
+. 1
+.
+94
+1
+AIFF
+.
+12 .
+76 .
+FLAC
+.
+.
+11 .
+2 29 1
+5
+M4A
+.
+.
+. 2 77
+1 .
+MP3
+.
+2 2 11 37
+2
+OGG
+.
+39
+58
+WAV
+.
+.
+2
+95 .
+WMA
+.
+.
+. . .
+1 . . .
+2
+2
+69
+1 PCAP
+. 1 1 .
+.
+.
+.
+. 90
+. TTF
+. 1 1 .
+. .
+. . . .
+. 1 . 67
+DWG
+. . 1
+.
+.
+.
+1 1
+91 SQLITE
+.
+
+.
+
+.
+
+.
+.
+
+.
+. 3 4
+5 2
+
+.
+
+.
+.
+
+.
+.
+11 1 1 1
+.
+1 .
+
+.
+
+.
+
+.
+
+.
+
+1
+
+.
+
+ARW
+CR2
+DNG
+GPR
+NEF
+NRW
+ORF
+PEF
+RAF
+RW2
+3FR
+JPG
+TIFF
+HEIC
+BMP
+GIF
+PNG
+AI
+EPS
+PSD
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV
+WEBM
+APK
+JAR
+MSI
+DMG
+7Z
+BZ2
+DEB
+GZ
+PKG
+RAR
+RPM
+XZ
+ZIP
+EXE
+MACH-O
+ELF
+DLL
+DOC
+DOCX
+KEY
+PPT
+PPTX
+XLS
+XLSX
+DJVU
+EPUB
+MOBI
+PDF
+MD
+RTF
+TXT
+TEX
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+FLAC
+M4A
+MP3
+OGG
+WAV
+WMA
+PCAP
+TTF
+DWG
+SQLITE
+
+True label
+
+. 2
+2
+ARW 84 1
+. . . 2 . 1 3 2
+. .
+.
+CR2 . 29 2
+. 2 . 1
+. 3 1
+. .
+3 54
+DNG
+.
+.
+.
+87
+3
+1
+2
+GPR
+NEF 2 4 1 1 36 5 4 5 5 . 8 1
+1
+1 68
+3 6
+3
+NRW
+. . 8
+. .
+51 1
+ORF . . .
+. 1 . . 2
+.
+77
+1
+PEF
+3 9
+5 33
+19
+RAF 4 . 1
+.
+89
+2
+RW2 . 1
+. .
+2 . 1 4
+2 2
+81 1
+3FR .
+.
+. .
+.
+.
+1 4 1 .
+48
+JPG
+.
+.
+57
+TIFF
+.
+HEIC
+.
+.
+.
+.
+1
+91
+BMP
+. .
+.
+4
+1
+54
+GIF
+.
+.
+11
+PNG
+.
+. .
+.
+. . 10 7
+7
+AI .
+.
+6 88
+EPS
+.
+.
+. 1
+. 1 75
+PSD .
+.
+MOV
+.
+.
+1
+MP4 .
+.
+1
+3GP 1
+.
+.
+.
+AVI
+.
+MKV
+.
+.
+1
+1
+1
+OGV 1
+WEBM
+.
+.
+. 2
+.
+7
+APK 2
+.
+3
+JAR .
+. .
+.
+. .
+1
+5
+MSI .
+.
+.
+. 1
+.
+5
+DMG
+.
+7Z
+.
+1 .
+2
+1 .
+BZ2 5
+1
+DEB
+.
+. .
+16
+GZ
+.
+.
+.
+.
+1
+11
+PKG
+11
+RAR .
+.
+7
+RPM
+.
+XZ
+.
+. .
+12
+ZIP .
+.
+1
+EXE
+MACH-O
+.
+.
+.
+ELF
+.
+.
+. .
+DLL
+.
+.
+1
+DOC 5
+.
+.
+5
+DOCX .
+.
+.
+. .
+4
+1
+4 .
+KEY 7
+.
+. .
+. .
+3
+PPT 6
+. .
+. .
+.
+.
+3
+4 .
+PPTX 9
+XLS
+.
+. .
+15
+XLSX .
+DJVU
+.
+5
+EPUB
+.
+1
+MOBI
+. .
+. .
+. 3
+4
+PDF 5
+.
+MD
+RTF
+.
+TXT
+. .
+TEX
+1
+JSON
+. .
+HTML
+XML
+LOG
+1 .
+CSV
+.
+. .
+AIFF
+.
+.
+.
+.
+1
+FLAC
+.
+.
+.
+M4A
+.
+. 3
+MP3 .
+.
+2
+OGG 3 2
+WAV
+WMA
+PCAP
+.
+.
+.
+TTF
+. . 2
+.
+. 5
+. .
+1 . 4
+DWG
+.
+SQLITE
+
+Predicted label
+
+Fig. 8. Confusion matrix for baseline NN-GF with block size of 4096 bytes. Darker color means higher value and dot (.) means a non-zero value greater
+than 0.2%.
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+x
+
+ARW
+CR2
+DNG
+GPR
+NEF
+NRW
+ORF
+PEF
+RAF
+RW2
+3FR
+JPG
+TIFF
+HEIC
+BMP
+GIF
+PNG
+AI
+EPS
+PSD
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV
+WEBM
+APK
+JAR
+MSI
+DMG
+7Z
+BZ2
+DEB
+GZ
+PKG
+RAR
+RPM
+XZ
+ZIP
+EXE
+MACH-O
+ELF
+DLL
+DOC
+DOCX
+KEY
+PPT
+PPTX
+XLS
+XLSX
+DJVU
+EPUB
+MOBI
+PDF
+MD
+RTF
+TXT
+TEX
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+FLAC
+M4A
+MP3
+OGG
+WAV
+WMA
+PCAP
+TTF
+DWG
+SQLITE
+
+Validation accuracy = 64.4
+.
+ARW 97
+.
+.
+.
+82 7
+CR2
+.
+2
+81
+1
+DNG
+98
+GPR
+. .
+.
+89 . 1 .
+NEF
+.
+. 96
+. .
+NRW
+.
+.
+.
+83 2
+ORF
+1 96 .
+PEF
+. . . 97
+RAF
+.
+96
+RW2
+
+DOCX
+KEY 3
+PPT 2
+PPTX 5
+
+.
+.
+.
+
+.
+.
+
+.
+
+.
+.
+
+.
+
+.
+.
+
+.
+.
+
+.
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+1
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+.
+
+1
+1
+
+1
+1
+.
+
+.
+
+1
+
+2
+
+90
+. 2
+
+.
+
+2
+.
+.
+
+.
+
+.
+
+.
+
+1
+
+.
+.
+4 15
+
+.
+
+2
+
+.
+
+.
+
+.
+.
+
+.
+
+1
+
+1
+.
+.
+
+.
+
+1
+.
+
+1
+.
+
+.
+
+1
+.
+.
+
+5
+1
+1
+1
+1
+2
+1
+1
+1
+2
+1
+1
+2
+1
+
+.
+
+1
+1
+1
+.
+.
+
+.
+.
+.
+.
+
+.
+
+.
+
+.
+.
+.
+.
+
+2
+1
+3
+2
+
+.
+.
+.
+
+.
+
+1
+2
+.
+
+.
+.
+.
+
+.
+
+.
+.
+
+.
+
+.
+.
+
+1
+2
+
+.
+
+1
+
+.
+.
+
+1
+1
+
+1
+1
+1
+.
+1
+1
+.
+1
+.
+
+.
+2
+1
+1
+1
+.
+.
+
+.
+.
+.
+.
+.
+
+1
+.
+1
+.
+1
+.
+.
+.
+
+.
+
+.
+
+.
+.
+.
+.
+
+.
+
+.
+1
+.
+.
+
+2
+
+.
+
+4
+
+1
+.
+
+.
+.
+
+.
+
+.
+
+.
+.
+
+.
+.
+.
+
+.
+
+1
+.
+.
+.
+2
+1
+.
+.
+.
+1
+.
+2
+.
+1
+
+.
+
+.
+
+84 1
+. 1 . . . 1 . 2 1
+1 47 2
+. 4 . . . 1 1 2 1
+1 4 25 .
+. 98
+.
+.
+93
+. . 1
+8 15 . 2 . . 4 . .
+. 1 1
+4 14 . 2 . . 4 . .
+. .
+. 91 .
+.
+. . 1
+3 13 . 13 . . 4 . .
+. . . 90 1 . .
+. 1 .
+. 1 . 1 67 . 1 .
+. . 1
+2 9 . 2 . . 39 . .
+. 3 2
+. 1 . 1 . 2 . 32 2
+. 3 . . . 1 1 3 36
+1 2 2
+. 1 3 2
+1 6 . 1 . 1 2 8 1
+1 5 3
+1 4 . . 1 2 1 8 2
+. 1 1
+4 15 . 2 . . 4 . .
+. 1 1
+3 12 . 2 . 1 3 . .
+. 3 2
+1 7 . 1 . 1 2 5 2
+1 5 3
+1 5 . 1 1 2 1 3 2
+1 4 2
+1 4 . 1 . 1 1 8 3
+. 1 2
+2 9 . 1 . . 2 1 1
+. 3 2
+1 6 . 1 . 1 2 8 2
+. 1 1
+4 16 . 2 . . 3 . .
+. 3 2
+1 7 . 1 . 1 2 2 1
+. 1 1
+3 14 . 2 . . 3 . .
+.
+
+1
+
+.
+
+1
+.
+.
+.
+
+6
+1
+1
+1
+
+.
+.
+.
+.
+
+1
+.
+.
+.
+
+.
+.
+.
+.
+
+3 13
+1 5
+. 1
+1 7
+
+.
+.
+
+3
+1
+.
+
+.
+.
+
+.
+
+1
+
+.
+
+.
+
+5
+
+.
+.
+
+1
+1
+
+.
+.
+
+.
+.
+
+.
+.
+.
+
+.
+.
+.
+.
+
+1
+1
+5
+2
+.
+.
+
+2
+1
+1
+6
+.
+.
+
+2
+1
+2
+.
+
+1
+1
+2
+.
+
+1
+.
+
+2
+.
+.
+.
+
+1
+.
+
+.
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+.
+.
+.
+
+.
+
+.
+.
+.
+.
+
+1
+.
+
+7
+.
+7
+
+.
+.
+1
+.
+
+.
+.
+.
+.
+
+.
+
+2
+2
+4
+2
+.
+.
+
+3
+.
+1
+.
+
+.
+
+2
+
+2
+
+5
+
+3
+
+.
+
+.
+
+.
+
+1
+2
+
+3
+3
+
+.
+.
+
+5
+5
+.
+
+2
+2
+.
+
+1
+1
+.
+
+.
+
+5
+.
+.
+
+2
+.
+.
+
+1
+.
+
+3
+1
+2
+3
+2
+6
+8
+4
+2
+3
+5
+3
+5
+3
+5
+
+1
+3
+2
+5
+6
+2
+2
+9
+3
+5
+3
+4
+2
+3
+2
+
+.
+
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+.
+
+.
+
+2
+.
+
+1
+2
+.
+
+2
+
+2
+
+.
+3
+.
+.
+
+.
+.
+
+.
+
+.
+
+1
+
+.
+
+.
+.
+
+.
+
+.
+
+7
+
+.
+.
+
+. ARW
+. CR2
+. DNG
+GPR
+2 NEF
+. NRW
+
+.
+.
+
+ORF
+PEF
+. RAF
+1 RW2
+
+.
+
+1
+1
+2
+2
+3
+5
+2
+1
+4
+11
+6
+2
+4
+1
+3
+1
+
+.
+.
+
+1
+1
+.
+1
+
+.
+.
+5
+1
+.
+
+.
+
+1
+3
+
+.
+.
+
+.
+
+8
+
+.
+
+1
+2
+
+2
+
+5
+6
+.
+
+2
+3
+
+6
+7
+
+5
+.
+.
+
+2
+
+7
+
+3
+1
+3
+4
+3
+6
+7
+6
+3
+3
+12
+4
+6
+5
+5
+
+.
+1
+.
+1
+1
+
+.
+.
+1
+7
+.
+
+.
+
+.
+.
+
+1
+.
+
+1
+1
+
+1
+.
+
+.
+.
+.
+.
+.
+
+4
+1
+.
+2
+
+1
+1
+2
+2
+
+1
+.
+.
+.
+
+.
+.
+.
+.
+
+.
+.
+.
+.
+
+.
+.
+
+.
+
+1
+.
+
+1
+.
+
+.
+.
+
+.
+.
+.
+
+1
+
+1
+
+.
+
+.
+
+.
+
+3
+.
+.
+.
+
+2
+.
+1
+1
+
+3
+1
+2
+1
+
+.
+.
+
+4
+2
+.
+
+1
+1
+.
+
+1
+3
+.
+
+.
+
+.
+
+3
+
+1
+
+2
+
+.
+
+.
+
+1
+.
+.
+.
+
+1
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+.
+
+1
+
+1
+
+.
+
+.
+
+.
+
+.
+.
+.
+.
+
+.
+.
+
+4
+
+.
+
+1
+
+2
+.
+
+.
+.
+.
+
+1
+.
+
+.
+
+.
+
+4
+
+.
+
+.
+.
+
+.
+
+.
+
+1
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+1
+.
+
+.
+
+2
+
+6
+.
+.
+
+1
+.
+
+5
+3
+1
+3
+
+.
+
+.
+
+1
+1
+1
+2
+2
+3
+3
+4
+4
+3
+4
+2
+3
+16
+3
+
+4
+1
+2
+3
+2
+8
+7
+4
+2
+3
+5
+4
+8
+3
+9
+
+.
+
+.
+.
+
+3
+1
+1
+.
+
+3
+.
+.
+.
+
+2
+3
+.
+
+6
+3
+.
+
+2
+
+4
+
+.
+
+1
+
+1
+
+2
+
+.
+
+.
+
+1
+
+2
+.
+
+.
+
+.
+
+.
+
+1
+
+1
+
+2
+
+.
+.
+
+3FR
+JPG
+TIFF
+.
+.
+.
+3
+7 6
+11 .
+HEIC
+1
+BMP
+.
+.
+.
+.
+1
+4
+GIF
+. . 4
+.
+.
+1 . 2 1
+6 .
+PNG
+. 2 6
+.
+.
+.
+3 . 2 .
+9 .
+AI
+EPS
+. .
+1
+PSD
+. .
+.
+. 9 .
+3
+7 5
+3
+MOV
+.
+.
+.
+3
+7 6
+11 . . .
+MP4
+.
+. .
+.
+1 .
+3GP
+.
+.
+.
+3
+7 5
+9 .
+AVI
+.
+.
+. .
+.
+MKV
+.
+. .
+.
+1 .
+2 . . 6
+OGV
+.
+.
+.
+2
+5 4
+7 .
+WEBM
+. 1 2
+.
+.
+1 . 3 1
+4 . 1 .
+APK
+.
+.
+1 . . .
+1 5
+8 .
+JAR
+.
+. 2 5
+.
+.
+.
+2 . 1 .
+9 .
+MSI
+. 2 5
+.
+.
+.
+.
+2 . 3 1
+8 .
+DMG
+.
+.
+.
+3
+6 6
+12 .
+7Z
+. .
+.
+.
+.
+3
+5 5
+13 .
+BZ2
+.
+.
+.
+3 . 1 .
+4 5
+8 .
+DEB
+. 3 8
+.
+.
+.
+3 . 1 .
+11 .
+GZ
+. 2 5
+.
+.
+.
+2 . 1 1
+8 .
+PKG
+. .
+.
+.
+4
+4 6
+12 .
+RAR
+. 3 5
+.
+.
+2 . 1 .
+8 .
+RPM
+. .
+.
+.
+4
+7 6
+11 .
+XZ
+. 3 . 1 .
+.
+.
+.
+.
+3 6
+10 .
+ZIP
+.
+. .
+.
+.
+3
+6 6
+11 .
+EXE
+93 1 .
+2
+MACH-O
+. 87 1
+.
+.
+. .
+.
+1 .
+ELF
+. 1 91 .
+.
+2 .
+DLL
+. . .
+.
+.
+.
+91
+DOC
+. 14
+. .
+.
+.
+.
+3 12
+10 .
+DOCX
+. 2
+.
+.
+.
+2 . 35 5 16
+2 .
+KEY
+. 2 1 1 44 2
+.
+.
+.
+.
+1 2
+3 .
+PPT
+. 1
+.
+.
+.
+1 . 11 5 38
+1
+PPTX
+.
+99
+XLS
+.
+96
+XLSX
+.
+.
+3
+17 5
+9 . . .
+DJVU
+. 5 . . .
+.
+.
+2 29
+12 .
+EPUB
+. 1
+.
+. 7 72
+3
+2
+MOBI
+. 2 . 2 1
+.
+.
+3 5
+21
+10 .
+PDF
+. .
+.
+. MD
+97
+.
+99
+RTF
+.
+.
+.
+94 1
+TXT
+1 97
+TEX
+99
+JSON
+.
+. .
+.
+98
+HTML
+99
+XML
+99
+LOG
+99
+CSV
+95
+AIFF
+.
+.
+1
+1 4
+66 .
+FLAC
+. .
+.
+1 92
+M4A
+.
+1
+94
+MP3
+.
+.
+. .
+. . . 84
+.
+.
+OGG
+99
+WAV
+99
+WMA
+. 1 . 1 .
+.
+2 2
+4 .
+55
+PCAP
+. .
+98
+TTF
+.
+.
+.
+96
+DWG
+.
+.
+98 SQLITE
+3
+
+.
+
+2
+
+.
+
+1
+.
+
+.
+
+.
+
+.
+1
+.
+.
+.
+
+.
+
+.
+
+97
+.
+
+1
+2
+
+.
+
+.
+1
+
+.
+1
+
+.
+77
+
+.
+
+.
+.
+
+.
+.
+
+99
+
+1
+
+.
+.
+
+.
+
+.
+
+.
+
+.
+
+1
+
+2
+
+2
+
+.
+
+ARW
+CR2
+DNG
+GPR
+NEF
+NRW
+ORF
+PEF
+RAF
+RW2
+3FR
+JPG
+TIFF
+HEIC
+BMP
+GIF
+PNG
+AI
+EPS
+PSD
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV
+WEBM
+APK
+JAR
+MSI
+DMG
+7Z
+BZ2
+DEB
+GZ
+PKG
+RAR
+RPM
+XZ
+ZIP
+EXE
+MACH-O
+ELF
+DLL
+DOC
+DOCX
+KEY
+PPT
+PPTX
+XLS
+XLSX
+DJVU
+EPUB
+MOBI
+PDF
+MD
+RTF
+TXT
+TEX
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+FLAC
+M4A
+MP3
+OGG
+WAV
+WMA
+PCAP
+TTF
+DWG
+SQLITE
+
+XLS
+XLSX
+DJVU
+EPUB .
+MOBI
+PDF .
+MD
+RTF
+TXT
+TEX
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+FLAC
+M4A
+MP3
+OGG
+WAV
+WMA
+PCAP .
+TTF
+DWG
+SQLITE
+
+.
+.
+
+.
+
+.
+
+True label
+
+3FR
+JPG
+TIFF
+HEIC
+BMP
+GIF
+PNG
+AI
+EPS
+PSD 1
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV
+WEBM
+APK
+JAR .
+MSI
+DMG
+7Z
+BZ2
+DEB
+GZ
+PKG
+RAR
+RPM
+XZ
+ZIP
+EXE
+MACH-O
+ELF
+DLL
+DOC 1
+
+.
+
+Predicted label
+
+Fig. 9. Confusion matrix for baseline NN-CO with block size of 512 bytes. Darker color means higher value and dot (.) means a non-zero value greater
+than 0.2%.
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+xi
+
+ARW
+CR2
+DNG
+GPR
+NEF
+NRW
+ORF
+PEF
+RAF
+RW2
+3FR
+JPG
+TIFF
+HEIC
+BMP
+GIF
+PNG
+AI
+EPS
+PSD
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV
+WEBM
+APK
+JAR
+MSI
+DMG
+7Z
+BZ2
+DEB
+GZ
+PKG
+RAR
+RPM
+XZ
+ZIP
+EXE
+MACH-O
+ELF
+DLL
+DOC
+DOCX
+KEY
+PPT
+PPTX
+XLS
+XLSX
+DJVU
+EPUB
+MOBI
+PDF
+MD
+RTF
+TXT
+TEX
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+FLAC
+M4A
+MP3
+OGG
+WAV
+WMA
+PCAP
+TTF
+DWG
+SQLITE
+
+Validation accuracy = 75.3
+
+True label
+
+ARW 98
+.
+.
+95 1
+CR2
+1 96
+DNG
+99
+GPR
+. .
+.
+88 1
+5
+NEF
+.
+96
+1
+NRW
+97 . .
+ORF
+. 98 .
+PEF
+.
+1 . . 91
+1
+RAF
+.
+97
+RW2
+. .
+1 . .
+3
+92
+3FR
+. .
+.
+92
+JPG
+98
+TIFF
+.
+. 4
+3
+1
+HEIC
+99
+BMP
+98
+GIF
+.
+72 1
+PNG
+.
+.
+.
+3 50 1 .
+AI
+1 97
+EPS
+1
+95
+PSD .
+. .
+. 5
+2
+1
+MOV
+.
+. 62 . 1
+1
+MP4
+98 .
+3GP
+.
+.
+. 2 . 64
+AVI
+MKV
+OGV
+WEBM
+APK 1
+JAR
+MSI
+DMG
+7Z
+BZ2
+DEB
+GZ
+PKG
+RAR .
+
+.
+
+.
+.
+. 1
+. 1
+3
+.
+2
+. .
+. .
+.
+. 1
+3
+.
+2
+
+.
+
+.
+
+2 1
+. .
+. . 2
+. .
+.
+
+1
+
+.
+.
+1
+5
+.
+.
+6
+.
+
+.
+.
+.
+.
+
+.
+.
+.
+
+.
+.
+.
+
+.
+
+.
+.
+
+.
+1
+2
+1
+1
+.
+1
+.
+
+.
+. 1
+2 .
+. 3 1
+. 3 2
+.
+.
+.
+.
+1 1
+
+.
+.
+.
+.
+
+.
+.
+.
+.
+
+.
+4
+.
+.
+3
+2
+4
+1
+3
+.
+.
+1
+2
+3
+.
+4
+
+.
+.
+.
+
+.
+
+2
+.
+.
+
+.
+
+.
+
+.
+
+.
+
+3
+
+. 4
+.
+1
+
+1
+.
+
+.
+.
+
+. ARW
+. CR2
+
+.
+
+.
+
+DNG
+GPR
+1 NEF
+. NRW
+
+.
+.
+
+ORF
+PEF
+RAF
+.
+. RW2
+3FR
+.
+. .
+. 1 1
+.
+JPG
+.
+.
+TIFF
+.
+. 1 51
+. 5 1 1 2
+.
+1 1
+1
+15 2
+HEIC
+.
+BMP
+.
+GIF
+. 1 . 1 .
+. . 1
+.
+1 . . . 1
+3 2 2 .
+3 .
+PNG
+. . . . 2 . 3
+. 6 5 3 1
+. 2 1 1 .
+. 1 3
+.
+.
+2 .
+AI
+EPS
+.
+PSD
+.
+. . 1 50
+. 5 1 2 3
+. 1
+.
+1
+14 2
+MOV
+. . 17
+. 1 . . .
+. .
+.
+1
+6 .
+MP4
+3GP
+.
+. . 17
+. 1 . . 1
+. .
+.
+.
+5 .
+AVI
+99 .
+MKV
+. .
+.
+. .
+94
+2
+OGV
+.
+. . 10
+. 1 . . .
+.
+.
+71
+5 .
+WEBM
+.
+. 1 1 1 2 1
+. . 1
+.
+. . 1
+48 1 1 . 1
+8 8 1 .
+1 .
+1 .
+APK
+. 74 . . 2
+. .
+.
+. .
+8 2 . 2
+JAR
+.
+. 12 5 4 2
+. . 2 . 1 .
+.
+.
+1 2 1 . 26 2 11
+1 .
+4 3
+1
+MSI
+.
+. . 2 . 2 17 23 7 . 9 9 2 2
+.
+1 .
+1 . . .
+5 1
+DMG
+.
+. . 1 53
+. 5 1 1 3
+. 1
+.
+1
+1
+13 2
+7Z
+.
+. .
+. 10 3 75
+. . . .
+. .
+1 .
+BZ2
+. . . . 1 1 44
+. 11 2
+.
+.
+.
+1
+1 8 4 2 3
+1 1
+1 . .
+DEB
+. . 2 2 1 . 6
+. 53 8 3 5
+. 1 2
+.
+1 .
+1 . . .
+GZ
+.
+. . 4 1 2 1 4
+. 1 3
+.
+19 40 2 2
+1 .
+2 . . .
+PKG
+.
+. . . . 2 1 16
+. 11 3 17 4
+. 4 2
+.
+12 .
+4 . .
+1
+RAR
+.
+. 2 1 1 1 26
+. 19 8 3 10
+. 1
+.
+. 7 3
+.
+2
+RPM
+.
+. . 1 52
+. 6 2 1 3
+. 1
+.
+1
+1
+13 2
+XZ
+.
+. . 1 . 1 1 4
+. 1 2
+.
+. 4
+7 3 13 1
+36 .
+3 . 1 .
+ZIP
+. . . 1 1 44
+. 7 2 1 3
+. 4
+.
+.
+1
+1 . .
+12 2
+EXE
+.
+95 1 1
+MACH-O
+.
+.
+. 92 2
+.
+1
+ELF
+.
+.
+. . 1 94 .
+DLL
+.
+. .
+. 91
+. .
+.
+1
+DOC
+.
+. . 1 . 5
+.
+. 1 14
+.
+9 1 4 1
+1 .
+49
+DOCX
+.
+.
+.
+. . . 56 6 17
+.
+.
+1
+1 . .
+KEY
+. . 2 . 1 . .
+. 1 . 5 58 3
+. 1
+3 2 1 .
+1
+1
+PPT
+.
+. 1 . 26 7 32
+. 1
+.
+.
+2 . 1 . .
+3 1 1 .
+1
+PPTX
+.
+99
+XLS
+. .
+.
+97
+XLSX
+.
+. . . 37
+. 3 1 1 2
+. 1
+.
+.
+1
+34 1
+DJVU
+.
+. 1
+. .
+.
+.
+2
+4 1 1 .
+4
+1 74 .
+EPUB
+.
+.
+.
+1 .
+1
+1
+18 74
+MOBI
+.
+. 1 . . . 15
+. .
+. . 1 2 .
+.
+3 1 1 1
+4 1
+48
+PDF
+99
+MD
+99
+RTF
+.
+.
+.
+.
+. .
+1
+92
+TXT
+1 98
+TEX
+99
+JSON
+.
+99
+HTML
+99
+XML
+99
+LOG
+. CSV
+98
+.
+94
+3
+AIFF
+.
+.
+. .
+1 . .
+87
+1
+FLAC
+.
+1
+96
+M4A
+98
+MP3
+1
+1
+95
+OGG
+.
+24
+74
+WAV
+99
+WMA
+.
+. .
+.
+.
+95
+PCAP
+99
+TTF
+.
+98
+DWG
+.
+99 SQLITE
+4
+
+ARW
+CR2
+DNG
+GPR
+NEF
+NRW
+ORF
+PEF
+RAF
+RW2
+3FR
+JPG
+TIFF
+HEIC
+BMP
+GIF
+PNG
+AI
+EPS
+PSD
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV
+WEBM
+APK
+JAR
+MSI
+DMG
+7Z
+BZ2
+DEB
+GZ
+PKG
+RAR
+RPM
+XZ
+ZIP
+EXE
+MACH-O
+ELF
+DLL
+DOC
+DOCX
+KEY
+PPT
+PPTX
+XLS
+XLSX
+DJVU
+EPUB
+MOBI
+PDF
+MD
+RTF
+TXT
+TEX
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+FLAC
+M4A
+MP3
+OGG
+WAV
+WMA
+PCAP
+TTF
+DWG
+SQLITE
+
+RPM
+XZ
+ZIP .
+EXE
+MACH-O
+ELF
+DLL
+DOC 1
+DOCX
+KEY 2
+PPT 4
+PPTX 5
+XLS
+XLSX
+DJVU
+EPUB .
+MOBI .
+PDF 2
+MD
+RTF
+TXT
+TEX
+JSON
+HTML
+XML
+LOG
+CSV
+AIFF
+FLAC
+M4A
+MP3
+OGG
+WAV
+WMA
+PCAP
+TTF
+DWG
+SQLITE
+
+1
+.
+
+.
+
+Predicted label
+
+Fig. 10. Confusion matrix for baseline NN-CO with block size of 4096 bytes. Darker color means higher value and dot (.) means a non-zero value greater
+than 0.2%.
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+xii
+
+Validation accuracy = 87.9
+JPG
+ARW
+CR2
+DNG
+GPR
+NEF
+NRW
+ORF
+PEF
+RAF
+RW2
+3FR
+TIFF
+HEIC
+BMP
+GIF
+PNG
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV
+WEBM
+OTH
+
+.
+
+2
+
+4
+
+.
+
+. VEC
+
+3
+
+1
+
+9
+
+. VID
+
+ARC 3
+EXE .
+
+1
+
+13
+
+1
+.
+
+OFF 5
+
+2
+.
+
+9
+
+59
+
+3
+
+4
+
+5
+
+79
+
+4
+.
+
+1
+.
+
+2
+
+2
+
+8
+
+1
+
+71
+
+5
+
+.
+
+2
+
+7
+
+12
+
+3
+
+3
+
+66
+
+.
+
+AUD .
+OTH .
+
+.
+
+.
+
+2
+
+3
+
+.
+
+.
+
+2
+
+.
+
+.
+
+2
+
+2
+
+.
+
+.
+
+2
+
+RAW
+
+VEC
+
+VID
+
+ARC
+
+EXE
+
+OFF
+
+PUB
+
+99
+
+1 PUB
+. HR
+
+AUD
+
+87
+AUD
+. 89 OTH
+HR
+
+HR
+
+2 EXE
+. OFF
+
+OTH
+
+PUB 1
+
+5
+
+. ARC
+
+JPG
+ARW
+CR2
+DNG
+GPR
+NEF
+NRW
+ORF
+PEF
+RAF
+RW2
+3FR
+TIFF
+HEIC
+BMP
+GIF
+PNG
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV
+WEBM
+OTH
+
+OTH
+
+92
+1 1
+. 80 2 7
+. 1 67 11
+
+. 1
+. .
+.
+. JPG
+1
+JPG 93
+ARW . 98
+ARW
+.
+.
+. .
+. CR2
+94 2
+CR2 .
+.
+.
+.
+.
+.
+.
+.
+.
+.
+2
+92
+DNG
+DNG
+99
+GPR
+GPR
+.
+.
+.
+.
+.
+1
+95
+NEF
+NEF
+.
+.
+.
+97
+NRW
+NRW
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+93
+ORF
+ORF
+.
+.
+.
+.
+97
+PEF
+PEF
+99
+RAF
+RAF
+.
+97
+RW2 1
+RW2
+99
+3FR
+3FR
+.
+98
+TIFF
+TIFF
+.
+.
+.
+.
+.
+51
+1 16 19
+3
+1 1 HEIC
+HEIC
+.
+97
+1
+BMP
+BMP
+. GIF
+97 . . .
+GIF
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+91
+2 PNG
+PNG
+.
+.
+. 5
+. 69 14 . 3 . . 1 2 MOV
+MOV
+.
+.
+.
+.
+.
+.
+.
+5
+12 70
+3
+1 2 MP4
+MP4
+.
+.
+. . . 94 . . . . . 3GP
+3GP
+.
+.
+.
+.
+.
+.
+6
+1 15 18
+50
+1 2 AVI
+AVI
+. . .
+95 . . . MKV
+MKV
+.
+.
+.
+.
+.
+.
+.
+.
+3 1 1 1
+3 78 . 5 OGV
+OGV
+.
+.
+. 4
+. 11 11 . 2 .
+64 1 WEBM
+WEBM
+. .
+.
+. .
+. 1 . . 3 4 4 . 1 . 1 . 75 OTH
+OTH .
+
+True label
+
+AUD
+
+HR
+
+RAW
+
+PUB
+
+.
+
+OFF
+
+EXE
+
+ARC
+
+1
+
+3
+
+BMP
+
+1
+
+5
+.
+
+RAW 1
+
+True label
+
+7
+
+. BMP
+
+1
+
+VID 1
+
+3
+
+.
+
+BMP 74
+VEC 1
+
+1
+.
+
+VID
+
+VEC
+
+RAW
+
+BMP
+
+Validation accuracy = 78.9
+
+Predicted label
+
+Predicted label
+
+(a) Scenario #2
+
+(b) Scenario #3
+
+RAW
+
+VID
+.
+
+RAW 2
+
+94
+
+1
+
+.
+
+1 RAW
+
+VID
+
+.
+
+.
+
+90
+
+2
+
+5 VID
+
+5_BMPS
+
+.
+
+.
+
+8
+
+85
+
+5 5_BMPS
+
+OTH 1
+
+.
+
+12
+
+2
+
+82 OTH
+
+RAW
+
+VID
+
+5_BMPS
+
+OTH
+
+OTH
+
+JPG
+
+.
+
+. JPG
+
+OTH
+
+JPG
+
+. JPG
+
+.
+
+99 OTH
+OTH
+
+98 OTH
+
+JPG 99
+
+JPG
+
+OTH 1
+
+True label
+
+. JPG
+
+OTH
+
+JPG 99
+
+JPG
+
+Validation accuracy = 99.3
+
+OTH
+
+JPG
+
+Validation accuracy = 99.0
+
+True label
+
+True label
+
+JPG 98
+
+JPG
+
+5_BMPS
+
+Validation accuracy = 90.2
+
+OTH
+
+Predicted label
+
+Predicted label
+
+Predicted label
+
+(c) Scenario #4
+
+(d) Scenario #5
+
+(e) Scenario #6
+
+Fig. 11. Confusion matrices of the remaining five scenarios with block size of 512 bytes. Darker color means higher value and dot (.) means a non-zero
+value greater than 0.2%.
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+xiii
+
+Validation accuracy = 94.6
+
+2
+
+72
+
+5
+
+EXE 3
+
+2
+.
+
+2
+
+88
+
+OFF 2
+
+1
+.
+
+.
+
+ARC 8
+
+PUB 4
+
+1
+.
+
+6
+
+1
+
+3
+
+.
+
+.
+
+VID
+
+OTH .
+VEC
+
+.
+
+RAW
+
+.
+BMP
+
+AUD
+
+EXE
+
+2
+.
+
+ARC
+
+HR
+
+1
+
+RAW
+
+2
+
+.
+
+VEC
+
+2
+
+.
+
+VID
+
+6
+
+ARC
+
+2
+
+2
+.
+
+4
+
+.
+
+OFF
+
+83
+. 99
+
+.
+
+PUB
+
+1
+.
+80
+1
+
+EXE
+
+HR
+99
+
+AUD
+98 OTH
+
+Predicted label
+
+OTH
+
+2
+
+.
+
+AUD
+
+3
+
+BMP
+
+HR
+
+84
+.
+
+.
+
+1
+
+.
+
+PUB
+
+.
+
+OFF
+
+True label
+
+VID 4
+
+2
+
+JPG
+ARW
+CR2
+DNG
+GPR
+NEF
+NRW
+ORF
+PEF
+RAF
+RW2
+3FR
+TIFF
+HEIC
+BMP
+GIF
+PNG
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV
+WEBM
+OTH
+
+PUB
+
+1
+.
+
+JPG
+ARW
+CR2
+DNG
+GPR
+NEF
+NRW
+ORF
+PEF
+RAF
+RW2
+3FR
+TIFF
+HEIC
+BMP
+GIF
+PNG
+MOV
+MP4
+3GP
+AVI
+MKV
+OGV
+WEBM
+OTH
+
+OFF
+
+1
+
+. JPG
+JPG 98
+ARW . 99
+ARW
+.
+. CR2
+96 .
+CR2 1
+.
+.
+.
+.
+98
+DNG
+DNG
+99
+GPR
+GPR
+.
+.
+.
+1
+97
+NEF
+NEF
+.
+99
+NRW
+NRW
+.
+.
+.
+.
+97
+ORF
+ORF
+99
+PEF
+PEF
+.
+.
+.
+.
+.
+94
+2 RAF
+RAF
+98
+RW2 1
+RW2
+99
+3FR
+3FR
+99
+TIFF
+TIFF
+.
+70
+18 5
+2
+1 1 HEIC
+HEIC
+99
+BMP
+BMP
+99
+GIF
+GIF
+.
+.
+98
+PNG
+PNG
+.
+.
+12
+76 4
+2
+1 MOV
+MOV
+.
+.
+.
+.
+3
+4 89
+MP4
+MP4
+99
+3GP
+3GP
+.
+.
+.
+.
+.
+5
+5 1
+85
+AVI
+AVI
+99
+MKV
+MKV
+.
+.
+98
+OGV
+OGV
+.
+.
+.
+3
+4 1
+89
+WEBM
+WEBM
+. 2
+. . 3 . 79 OTH
+3 3 1
+OTH 1
+
+True label
+
+EXE
+
+2
+
+OTH
+
+ARC
+
+.
+
+AUD
+
+VID
+
+BMP 90 . .
+RAW . 98
+VEC . . 91
+
+HR
+
+VEC
+
+RAW
+
+BMP
+
+Validation accuracy = 89.8
+
+Predicted label
+
+(a) Scenario #2
+
+(b) Scenario #3
+
+2
+
+4
+
+89 OTH
+OTH
+
+JPG 99
+
+. JPG
+
+.
+
+99 OTH
+
+OTH
+
+OTH
+
+JPG
+JPG 99
+
+. JPG
+
+.
+
+99 OTH
+OTH
+
+.
+
+Validation accuracy = 99.6
+
+JPG
+
+OTH 2
+
+5_BMPS
+
+5 5_BMPS
+
+VID
+
+92
+
+RAW
+
+2
+JPG
+
+5_BMPS
+
+Validation accuracy = 99.2
+
+True label
+
+4 VID
+
+93
+
+OTH
+
+2
+
+VID
+
+OTH
+
+. RAW
+
+JPG
+
+.
+
+JPG
+
+95
+
+. JPG
+
+True label
+
+RAW 3
+
+OTH
+
+.
+
+5_BMPS
+
+RAW
+
+JPG 99
+
+VID
+
+JPG
+True label
+
+Validation accuracy = 94.1
+
+OTH
+
+Predicted label
+
+Predicted label
+
+Predicted label
+
+(c) Scenario #4
+
+(d) Scenario #5
+
+(e) Scenario #6
+
+Fig. 12. Confusion matrices of the remaining five scenarios with block size of 4096 bytes. Darker color means higher value dot (.) means a non-zero value
+greater than 0.2%.
+
+IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY
+
+xiv
+
+TABLE I
+F ILE T YPES S TUDIED ALONG WITH THEIR DESCRIPTION AND SOURCES1 .
+
+Filetype
+
+Description
+
+Source(s)
+
+RAR
+
+Roshal Archive by Microsoft
+
+archive.org
+
+RPM
+
+RPM package manager (Red
+Hat)
+
+installers taken from open
+source developers’ website
+
+XZ
+
+XZ (GNU LGPL/GPL)
+
+installers taken from open
+source developers’ website
+
+ZIP
+
+ZIP archive
+
+self-compressed
+
+DJVU
+
+Digital Document Format by
+Yann LeCun
+
+commons.wikimedia.org
+
+photographyblog.com
+
+EPUB
+
+Electronic Publication for
+iBooks
+
+gutenberg.org
+
+Raw Olympus camera images
+
+rawsamples.ch/index.php
+
+MOBI
+
+Kindle E-book
+
+gutenberg.org
+
+PEF
+
+Raw Pentax camera images
+
+dpreview.com
+
+DOC
+
+Microsoft Office (2007) Word
+
+converted from .epub files
+
+RAF
+
+Raw Fuji camera images
+
+rawsamples.ch/index.php
+
+DOCX
+
+Microsoft Office (2013) Word
+
+gutenberg.org
+
+RW2
+
+Raw Panasonic camera images
+
+rawsamples.ch/index.php
+
+3FR
+
+Raw Hasselblad camera images
+
+hasselblad.com
+
+MD
+
+Markdown
+
+converted from HTML,
+github repositories
+
+TIFF
+
+Tagged Image File Format
+
+rawsamples.ch/index.php
+
+RTF
+
+Rich text format
+
+converted from .txt files
+
+HEIC
+
+High Efficiency Image Format
+based on video frames
+
+Encoded from JPG images
+from Nokiatech
+
+TXT
+
+Text file
+
+gutenberg.org
+
+BMP
+
+Bitmap images
+
+3axis.co/free-bmp-files
+
+PDF
+
+Portable Document Format
+
+arXiv.org, gutenberg.org,
+commons.wikimedia.org
+
+GIF
+
+Graphic Interchange Format
+
+commons.wikimedia.org
+
+KEY
+
+macOS keynote presentation
+
+converted from .pptx files
+
+PNG
+
+Portable Network Graphics
+
+commons.wikimedia.org,
+archive.org
+
+PPT
+
+Microsoft Office (2007)
+Powerpoint
+
+kmworld.com
+
+PPTX
+
+Microsoft Office (2013)
+Powerpoint
+
+pptx-templates.com,
+kmworld.com
+
+LOG
+
+Log files
+
+self syslogs
+
+JSON
+
+JavaScript Object Notation for
+database
+
+kaggle.com, github.com
+
+Filetype
+
+Description
+
+Source(s)
+
+JPG
+
+Joint Photographers Experts
+Group (JPEG)
+
+dpreview.com, self-shot
+
+ARW
+
+Raw Sony camera images
+
+wesaturate.com
+
+CR2
+
+Raw Canon camera images
+
+wesaturate.com
+
+DNG
+
+Raw Adobe camera images
+
+wesaturate.com
+
+GPR
+
+Raw GoPro camera images
+
+self-shot with GoPro Hero 6
+Black
+
+NEF
+
+Raw Nikon camera images
+
+loki.disi.unitn.it/raise
+
+NRW
+
+Raw Nikon camera images
+
+ORF
+
+AI
+
+Adobe Illustrator vector image
+
+3axis.co/free-ai-files
+
+EPS
+
+Encapsulated PostScript vector
+
+free-vectors.com
+
+PSD
+
+Photoshop vector file
+
+livven.me/psds/
+
+MOV
+
+QuickTime File Format
+
+self-shot98
+
+MP4
+
+MPEG-4 Part 14
+
+archive.org, self-shot
+
+DWG
+
+CAD drawing
+
+dwgmodels.com
+
+3GP
+
+Multimedia container videos
+format
+
+archive.org
+
+SQLITE
+
+SQL database
+
+kaggle.com
+
+AVI
+
+Audio Video Interleave
+container format
+
+archive.org
+
+Comma-separated values
+
+kaggle.com, who.int
+
+XLS
+
+Microsoft Office (2007) Excel
+
+converted from .csv files
+
+MKV
+
+Matroska Multimedia Container
+
+archive.org
+
+XLSX
+
+Microsoft Office (2013) Excel
+
+converted from .csv files
+
+OGV
+
+Ogg Vorbis video encoding
+format
+
+commons.wikimedia.org
+
+AIFF
+
+Audio Interchange File Format
+
+Converted from .flac files
+
+WEBM
+
+Web videos
+
+commons.wikimedia.org
+
+FLAC
+
+Free Lossless Audio Codec
+
+commons.wikimedia.org,
+converted from .wav files
+
+APK
+
+Android application package
+
+archive.org
+
+M4A
+
+Audio-only MPEG-4
+
+freemusicarchive.org
+
+Windows executable
+
+installers taken from open
+source developers’ website
+
+MP3
+
+MPEG-1/2 Audio Layer III
+
+freemusicarchive.org
+
+Java class package (compiled)
+
+jar-download.com
+
+OGG
+
+Audio container format
+developed by Xiph.Org
+
+commons.wikimedia.org
+
+MSI
+
+Windows Installer
+
+installers taken from open
+source developers’ website
+
+WAV
+
+Waveform Audio File format
+
+commons.wikimedia.org
+
+DMG
+
+macOS application package
+
+installers taken from open
+source developers’ website
+
+WMA
+
+Windows Media Audio
+developed by Microsoft
+
+converted from .wav files
+
+7Z
+
+7-zip archive
+
+rawsamples.ch
+
+HTML
+
+HyperText Markup Language
+
+waybackmachine.org
+
+Burrows–Wheeler archive
+
+installers taken from open
+source developers’ website
+
+XML
+
+Extensible Markup Language
+
+gutenberg.org
+
+PCAP
+
+DEB
+
+Linux/Unix application package
+
+installers taken from open
+source developers’ website
+
+Wireshark captured network
+packets
+
+Capture-the-flag events from
+github.com
+
+Dynamic Link Library
+(Windows Executable)
+
+dlldump.com
+
+GNU Gzip
+
+installers taken from open
+source developers’ website
+
+DLL
+
+GZ
+
+ELF
+
+Linux executable
+
+PKG
+
+macOS compressed installer
+
+installers taken from open
+source developers’ website
+
+Capture-the-flag events from
+github.com
+
+MACH-O
+
+macOS executable
+
+Anaconda virtual env.
+
+TTF
+
+True-type font
+
+dafont.com
+
+LATEX
+
+arXiv.org
+
+EXE
+JAR
+
+BZ2
+
+1 All the links in the table have been accessed on or before 31st March, 2019.
+
+CSV
+
+TEX
+
+

@@ -6,11 +6,13 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import LambdaLR, CosineAnnealingLR
 from model import CNN_4L
+from fifty_model import FiFTy
 from dataset import VFF16Dataset
 import argparse
 
 def train():
-    parser = argparse.ArgumentParser(description="Train CNN-4L for File Fragment Classification.")
+    parser = argparse.ArgumentParser(description="Train Model for File Fragment Classification.")
+    parser.add_argument("--model", type=str, default="cnn_4l", choices=["cnn_4l", "fifty"], help="Model architecture to use.")
     parser.add_argument("--data-dir", type=str, required=True, help="Path to the dataset root (containing class subfolders).")
     parser.add_argument("--sector-size", type=int, default=512, help="Sector size (512 or 4096).")
     parser.add_argument("--batch-size", type=int, default=512, help="Batch size.")
@@ -40,7 +42,12 @@ def train():
 
     # 3. Model, Loss, Optimizer
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = CNN_4L(seq_len=args.sector_size, num_classes=num_classes, num_layers=args.num_layers).to(device)
+    
+    if args.model == "fifty":
+        model = FiFTy(num_classes=num_classes).to(device)
+    else:
+        model = CNN_4L(seq_len=args.sector_size, num_classes=num_classes, num_layers=args.num_layers).to(device)
+        
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=0.9, weight_decay=0.1)
 
@@ -118,10 +125,11 @@ def train():
         import csv
         file_exists = os.path.isfile(args.log_csv)
         with open(args.log_csv, 'a', newline='') as f:
-            writer = csv.DictWriter(f, fieldnames=["num_classes", "num_layers", "loss", "train_acc", "val_acc"])
+            writer = csv.DictWriter(f, fieldnames=["model", "num_classes", "num_layers", "loss", "train_acc", "val_acc"])
             if not file_exists:
                 writer.writeheader()
             writer.writerow({
+                "model": args.model,
                 "num_classes": num_classes,
                 "num_layers": args.num_layers,
                 "loss": f"{total_loss/len(train_loader):.4f}",

@@ -4,6 +4,7 @@
 CLASSES_LIST=(3 5 7 10)
 LAYERS_LIST=(4 8)
 EPOCHS=10
+MODEL="fifty" # Options: "cnn_4l" or "fifty"
 RESULTS_CSV="experiment_results.csv"
 
 # Clear previous results
@@ -30,6 +31,7 @@ for num_classes in "${CLASSES_LIST[@]}"; do
 
         # 3. Train Model
         python src/train.py \
+            --model $MODEL \
             --data-dir ./data/generated/512 \
             --sector-size 512 \
             --batch-size 256 \
