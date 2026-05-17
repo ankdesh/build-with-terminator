@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Dict, Any, List
 
-class WorkerBase(ABC):
+class BaseExecutor(ABC):
     @property
     @abstractmethod
     def name(self) -> str:
@@ -10,7 +10,7 @@ class WorkerBase(ABC):
 
     @abstractmethod
     def capabilities(self) -> List[str]:
-        """Returns the list of actions this worker supports."""
+        """Returns the list of actions this executor supports."""
         pass
 
     @abstractmethod

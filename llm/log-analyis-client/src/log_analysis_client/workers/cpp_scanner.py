@@ -1,9 +1,9 @@
 import sys
 import os
 from typing import Dict, Any, List
-from log_analysis_client.workers.base import WorkerBase
+from executors.base import BaseExecutor
 
-class CppScannerWorker(WorkerBase):
+class CppScannerExecutor(BaseExecutor):
     def __init__(self, log_path: str):
         self.log_path = os.path.abspath(log_path)
         self.scanner = None

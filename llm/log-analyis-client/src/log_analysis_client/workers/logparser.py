@@ -1,4 +1,4 @@
-from log_analysis_client.workers.base import WorkerBase
+from executors.base import BaseExecutor
 from typing import Dict, Any, List
 import pandas as pd
 from logparser.Drain import LogParser
@@ -6,7 +6,7 @@ import os
 import shutil
 import ast
 
-class LogparserWorker(WorkerBase):
+class LogparserExecutor(BaseExecutor):
     def __init__(self):
         self._parsed_df = None
         self._templates_df = None

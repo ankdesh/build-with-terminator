@@ -1,6 +1,6 @@
 import pytest
 import os
-from log_analysis_client.workers.stats import StatsWorker
+from executors.stats import StatsExecutor
 
 @pytest.fixture
 def sample_log_file(tmp_path):
@@ -25,9 +25,9 @@ def test_stats_worker_get_stats(sample_log_file):
     """
     Verifies that get_stats correctly computes the line count and file size.
     """
-    worker = StatsWorker()
+    executor = StatsExecutor()
     
-    result = worker.execute("get_stats", {"target_file": sample_log_file})
+    result = executor.execute("get_stats", {"target_file": sample_log_file})
     
     assert result["status"] == "success"
     assert result["line_count"] == 5
@@ -38,21 +38,21 @@ def test_stats_worker_get_sample(sample_log_file):
     Verifies that get_sample respects the limit parameter and returns
     the correct number of lines, even when the limit exceeds the file size.
     """
-    worker = StatsWorker(default_n=2)
+    executor = StatsExecutor(default_n=2)
     
     # Test default limit
-    result_default = worker.execute("get_sample", {"target_file": sample_log_file})
+    result_default = executor.execute("get_sample", {"target_file": sample_log_file})
     assert result_default["status"] == "success"
     assert result_default["returned_count"] == 2
     assert len(result_default["lines"]) == 2
     assert result_default["lines"] == ["Line 1", "Line 2"]
     
     # Test explicit limit smaller than file
-    result_explicit = worker.execute("get_sample", {"target_file": sample_log_file, "limit": 3})
+    result_explicit = executor.execute("get_sample", {"target_file": sample_log_file, "limit": 3})
     assert result_explicit["returned_count"] == 3
     assert len(result_explicit["lines"]) == 3
     
     # Test limit greater than file size
-    result_exceed = worker.execute("get_sample", {"target_file": sample_log_file, "limit": 100})
+    result_exceed = executor.execute("get_sample", {"target_file": sample_log_file, "limit": 100})
     assert result_exceed["returned_count"] == 5
     assert len(result_exceed["lines"]) == 5

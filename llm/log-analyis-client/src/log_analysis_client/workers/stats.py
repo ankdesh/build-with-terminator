@@ -1,8 +1,8 @@
 import os
 from typing import Dict, Any, List
-from log_analysis_client.workers.base import WorkerBase
+from executors.base import BaseExecutor
 
-class StatsWorker(WorkerBase):
+class StatsExecutor(BaseExecutor):
     """
     A Python worker responsible for extracting general statistics and preview 
     samples from log files.

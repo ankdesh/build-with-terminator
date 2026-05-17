@@ -1,8 +1,8 @@
 import pytest
-from log_analysis_client.workers.base import WorkerBase
+from executors.base import BaseExecutor
 from typing import Dict, Any, List
 
-class DummyWorker(WorkerBase):
+class DummyExecutor(BaseExecutor):
     @property
     def name(self) -> str:
         return "dummy"
@@ -15,14 +15,14 @@ class DummyWorker(WorkerBase):
             return {"status": "success", "echo": args.get("msg")}
         raise ValueError("Unsupported")
 
-def test_worker_base():
-    worker = DummyWorker()
-    assert worker.name == "dummy"
-    assert "do_something" in worker.capabilities()
+def test_executor_base():
+    executor = DummyExecutor()
+    assert executor.name == "dummy"
+    assert "do_something" in executor.capabilities()
     
-    result = worker.execute("do_something", {"msg": "hello"})
+    result = executor.execute("do_something", {"msg": "hello"})
     assert result["status"] == "success"
     assert result["echo"] == "hello"
     
     with pytest.raises(ValueError):
-        worker.execute("unknown", {})
+        executor.execute("unknown", {})

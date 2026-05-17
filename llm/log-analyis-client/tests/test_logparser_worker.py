@@ -1,6 +1,6 @@
 import pytest
 import os
-from log_analysis_client.workers.logparser import LogparserWorker
+from executors.logparser import LogparserExecutor
 
 def test_logparser_worker(tmp_path):
     # Create dummy log file
@@ -11,16 +11,16 @@ def test_logparser_worker(tmp_path):
 """
     log_file.write_text(log_content)
     
-    worker = LogparserWorker()
+    executor = LogparserExecutor()
     # Mock the out dir to tmp_path to avoid littering
-    worker._out_dir = str(tmp_path / "out")
-    os.makedirs(worker._out_dir, exist_ok=True)
+    executor._out_dir = str(tmp_path / "out")
+    os.makedirs(executor._out_dir, exist_ok=True)
     
-    assert worker.name == "logparser"
-    assert "parse_templates" in worker.capabilities()
+    assert executor.name == "logparser"
+    assert "parse_templates" in executor.capabilities()
     
     # 1. Parse templates
-    result = worker.execute("parse_templates", {
+    result = executor.execute("parse_templates", {
         "target_file": str(log_file),
         "log_format": "<Date> <Time> <Level> <Content>",
         "algorithm": "drain"
@@ -31,7 +31,7 @@ def test_logparser_worker(tmp_path):
     assert result["total_lines_parsed"] == 3
     
     # 2. Get templates
-    templates_result = worker.execute("get_templates", {
+    templates_result = executor.execute("get_templates", {
         "limit": 5
     })
     
@@ -50,7 +50,7 @@ def test_logparser_worker(tmp_path):
     event_id = error_template["EventId"]
     
     # 3. Query parameters
-    params_result = worker.execute("query_parameters", {
+    params_result = executor.execute("query_parameters", {
         "event_id": event_id
     })
     
