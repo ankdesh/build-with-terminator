@@ -38,7 +38,7 @@ wheels = [
 ]
 
 [[package]]
-name = "log-analyis-client"
+name = "log-analysis-client"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

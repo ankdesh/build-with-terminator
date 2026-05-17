@@ -1,4 +1,4 @@
-from worker_base import WorkerBase
+from log_analysis_client.workers.base import WorkerBase
 from typing import Dict, Any, List
 import pandas as pd
 from logparser.Drain import LogParser

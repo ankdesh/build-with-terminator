@@ -24,6 +24,7 @@ The mission of this project is to create a robust, extensible CLI client that ac
     *   **Python Workers**: For stateful data management and pure Python processing (e.g., `LogparserWorker` for log templates, `LlmWorker` for data inference).
     *   **C++ Integration & Performance Workers**: Compiled as shared libraries (`.so`/`.pyd`) for time-critical tasks (e.g., heavy log parsing, high-speed filtering) via `pybind11`.
 *   **Documentation Standards**: 
+    *   **General**: Add extensive comments to understand the semantics and rationale for any design decision.
     *   **C++ Code**: ALL C++ code must be thoroughly commented. Header files must describe class responsibilities and public API contracts. Implementation files must explain complex logic, threading behavior, and memory management decisions.
 *   **Testing Standards**: 
     *   **Unit Tests**: Comprehensive unit tests (using `pytest` for Python-facing components) MUST be written for all new features. Tests should serve as both verification of correctness and documentation of intended usage.

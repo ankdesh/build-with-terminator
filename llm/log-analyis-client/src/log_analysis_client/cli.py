@@ -45,7 +45,7 @@ class Orchestrator:
     def _load_workers(self):
         """Load all available workers into the registry."""
         try:
-            from cpp_scanner_worker import CppScannerWorker
+            from log_analysis_client.workers.cpp_scanner import CppScannerWorker
             scanner_worker = CppScannerWorker(self.log_path)
             self.workers[scanner_worker.name] = scanner_worker
             print(f"[*] Loaded worker: {scanner_worker.name}")
@@ -53,12 +53,20 @@ class Orchestrator:
             print(f"[!] Warning: Could not load C++ worker module: {e}")
             
         try:
-            from logparser_worker import LogparserWorker
+            from log_analysis_client.workers.logparser import LogparserWorker
             logparser_worker = LogparserWorker()
             self.workers[logparser_worker.name] = logparser_worker
             print(f"[*] Loaded worker: {logparser_worker.name}")
         except Exception as e:
             print(f"[!] Warning: Could not load Logparser worker: {e}")
+
+        try:
+            from log_analysis_client.workers.stats import StatsWorker
+            stats_worker = StatsWorker()
+            self.workers[stats_worker.name] = stats_worker
+            print(f"[*] Loaded worker: {stats_worker.name}")
+        except Exception as e:
+            print(f"[!] Warning: Could not load Stats worker: {e}")
 
     async def start(self):
         """Starts the Orchestrator loop."""

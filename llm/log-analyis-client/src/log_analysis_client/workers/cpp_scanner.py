@@ -1,7 +1,7 @@
 import sys
 import os
 from typing import Dict, Any, List
-from worker_base import WorkerBase
+from log_analysis_client.workers.base import WorkerBase
 
 class CppScannerWorker(WorkerBase):
     def __init__(self, log_path: str):

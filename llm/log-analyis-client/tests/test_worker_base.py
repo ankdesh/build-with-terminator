@@ -1,5 +1,5 @@
 import pytest
-from worker_base import WorkerBase
+from log_analysis_client.workers.base import WorkerBase
 from typing import Dict, Any, List
 
 class DummyWorker(WorkerBase):

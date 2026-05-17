@@ -1,6 +1,6 @@
 import pytest
 import os
-from logparser_worker import LogparserWorker
+from log_analysis_client.workers.logparser import LogparserWorker
 
 def test_logparser_worker(tmp_path):
     # Create dummy log file
