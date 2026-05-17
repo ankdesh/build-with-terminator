@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Any, List
+from typing import Any
+
 
 class BaseExecutor(ABC):
     @property
@@ -9,12 +10,12 @@ class BaseExecutor(ABC):
         pass
 
     @abstractmethod
-    def capabilities(self) -> List[str]:
+    def capabilities(self) -> list[str]:
         """Returns the list of actions this executor supports."""
         pass
 
     @abstractmethod
-    def execute(self, action: str, args: Dict[str, Any]) -> Dict[str, Any]:
+    def execute(self, action: str, args: dict[str, Any]) -> dict[str, Any]:
         """
         Executes a specific action.
         Returns a dictionary containing the results.

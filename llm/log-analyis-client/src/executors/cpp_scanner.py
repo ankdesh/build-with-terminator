@@ -1,7 +1,9 @@
-import sys
 import os
-from typing import Dict, Any, List
+import sys
+from typing import Any
+
 from executors.base import BaseExecutor
+
 
 class CppScannerExecutor(BaseExecutor):
     def __init__(self, log_path: str):
@@ -15,21 +17,22 @@ class CppScannerExecutor(BaseExecutor):
         build_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "build"))
         if build_dir not in sys.path:
             sys.path.append(build_dir)
-        
+
         try:
             import executor
+
             self.scanner = executor.Scanner(self.log_path)
         except ImportError as e:
-            raise RuntimeError(f"Could not load C++ executor module: {e}")
+            raise RuntimeError(f"Could not load C++ executor module: {e}") from e
 
     @property
     def name(self) -> str:
         return "scanner"
 
-    def capabilities(self) -> List[str]:
+    def capabilities(self) -> list[str]:
         return ["scan", "get_data"]
 
-    def execute(self, action: str, args: Dict[str, Any]) -> Dict[str, Any]:
+    def execute(self, action: str, args: dict[str, Any]) -> dict[str, Any]:
         if action == "scan":
             pattern = args.get("pattern", "")
             results = self.scanner.scan(pattern)
