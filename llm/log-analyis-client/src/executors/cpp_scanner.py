@@ -11,15 +11,16 @@ class CppScannerExecutor(BaseExecutor):
 
     def _load_worker(self):
         """Dynamic loading of the C++ shared library."""
-        build_dir = os.path.join(os.getcwd(), "build")
+        # Find the project root build directory (assumes we are in src/executors)
+        build_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "build"))
         if build_dir not in sys.path:
             sys.path.append(build_dir)
         
         try:
-            import worker
-            self.scanner = worker.Scanner(self.log_path)
+            import executor
+            self.scanner = executor.Scanner(self.log_path)
         except ImportError as e:
-            raise RuntimeError(f"Could not load C++ worker module: {e}")
+            raise RuntimeError(f"Could not load C++ executor module: {e}")
 
     @property
     def name(self) -> str:

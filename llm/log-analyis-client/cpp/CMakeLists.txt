@@ -14,11 +14,11 @@ list(APPEND CMAKE_PREFIX_PATH "${PYBIND11_CMAKE_DIR}")
 find_package(pybind11 REQUIRED)
 
 # Create the module
-pybind11_add_module(worker 
+pybind11_add_module(executor 
     main.cpp 
     gmm.cpp 
     parallel_scanner.cpp
 )
 
 # Install destination
-install(TARGETS worker DESTINATION .)
+install(TARGETS executor DESTINATION .)

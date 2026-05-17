@@ -8,12 +8,12 @@ import asyncio
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "build"))
 
 @pytest.fixture(scope="session")
-def compiled_worker():
+def compiled_executor():
     try:
-        import worker
-        return worker
+        import executor
+        return executor
     except ImportError:
-        pytest.fail("Worker extension not found in build directory. Run cmake and make first.")
+        pytest.fail("Executor extension not found in build directory. Run cmake and make first.")
 
 @pytest.fixture
 def log_file(tmp_path):
@@ -27,9 +27,9 @@ def log_file(tmp_path):
                 f.write(f"Line {i}: [INFO] Everything is fine\n")
     return str(path)
 
-def test_parallel_scan_accuracy(compiled_worker, log_file):
+def test_parallel_scan_accuracy(compiled_executor, log_file):
     """Verifies that the parallel scanner finds the correct number of matches."""
-    scanner = compiled_worker.Scanner(log_file)
+    scanner = compiled_executor.Scanner(log_file)
     matches = scanner.scan("ERROR")
     
     # We wrote 10 lines with "ERROR" (0, 100, 200, ..., 900)
@@ -40,9 +40,9 @@ def test_parallel_scan_accuracy(compiled_worker, log_file):
     data = scanner.get_data(first_match.offset, first_match.length)
     assert b"Line 0: [ERROR]" in bytes(data)
 
-def test_zero_copy_memoryview(compiled_worker, log_file):
+def test_zero_copy_memoryview(compiled_executor, log_file):
     """Verifies that get_data returns a functional memoryview."""
-    scanner = compiled_worker.Scanner(log_file)
+    scanner = compiled_executor.Scanner(log_file)
     matches = scanner.scan("Line 100:")
     assert len(matches) == 1
     
@@ -53,10 +53,10 @@ def test_zero_copy_memoryview(compiled_worker, log_file):
     content = bytes(mview).decode('utf-8').strip()
     assert content == "Line 100: [ERROR] Something went wrong"
 
-def test_global_memory_manager_sharing(compiled_worker, log_file):
+def test_global_memory_manager_sharing(compiled_executor, log_file):
     """Verifies that multiple scanners can use the same file via GMM."""
-    scanner1 = compiled_worker.Scanner(log_file)
-    scanner2 = compiled_worker.Scanner(log_file)
+    scanner1 = compiled_executor.Scanner(log_file)
+    scanner2 = compiled_executor.Scanner(log_file)
     
     matches1 = scanner1.scan("ERROR")
     matches2 = scanner2.scan("ERROR")
@@ -65,7 +65,7 @@ def test_global_memory_manager_sharing(compiled_worker, log_file):
     assert matches1[0].offset == matches2[0].offset
 
 @pytest.mark.asyncio
-async def test_cancellation(compiled_worker, tmp_path):
+async def test_cancellation(compiled_executor, tmp_path):
     """Verifies that a long-running scan can be interrupted."""
     # Create a larger file to ensure the scan takes some detectable time
     massive_log = tmp_path / "massive.log"
@@ -73,7 +73,7 @@ async def test_cancellation(compiled_worker, tmp_path):
         for i in range(500000):
             f.write(f"Line {i} some random filler text for the scanner to churn through\n")
     
-    scanner = compiled_worker.Scanner(str(massive_log))
+    scanner = compiled_executor.Scanner(str(massive_log))
     
     loop = asyncio.get_running_loop()
     # Run in executor to simulate async environment
@@ -88,7 +88,7 @@ async def test_cancellation(compiled_worker, tmp_path):
     # If cancelled, it should return 0 results
     assert len(results) == 0
 
-def test_invalid_path(compiled_worker):
+def test_invalid_path(compiled_executor):
     """Verifies that an invalid path raises a runtime error."""
     with pytest.raises(RuntimeError):
-        compiled_worker.Scanner("/path/to/non/existent/file")
+        compiled_executor.Scanner("/path/to/non/existent/file")

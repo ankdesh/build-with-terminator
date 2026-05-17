@@ -76,7 +76,7 @@ private:
 /**
  * pybind11 Module Declaration
  */
-PYBIND11_MODULE(worker, m) {
+PYBIND11_MODULE(executor, m) {
     m.doc() = "High-performance worker runtime with Shared Memory and Parallel Scanning.";
 
     // Export the Match struct as a simple Python object.

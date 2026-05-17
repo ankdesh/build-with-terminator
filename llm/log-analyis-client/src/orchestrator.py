@@ -1,39 +1,7 @@
 import asyncio
-import sys
 import os
 import time
 import concurrent.futures
-
-# --- Mock Python Tool ---
-
-async def python_aggregation_tool(scanner, results):
-    """
-    A mock Python tool that demonstrates zero-copy access to the GMM-mapped memory.
-    It takes raw offsets from C++ and reads the data directly via memoryview.
-    """
-    print(f"\n[Python Tool] Starting aggregation of {len(results)} matches...")
-    
-    # We only process a few to keep the output clean
-    limit = 5
-    aggregated_data = []
-    
-    for i, match in enumerate(results[:limit]):
-        # ZERO-COPY ACCESS:
-        # We call get_data() which returns a memoryview pointing to the shared mmap buffer.
-        mview = scanner.get_data(match.offset, match.length)
-        
-        # We only decode to string when we actually need to print/process it.
-        line_text = bytes(mview).decode('utf-8', errors='ignore').strip()
-        aggregated_data.append(line_text)
-        print(f"  [Aggregator] Processed line {i+1}: {line_text[:60]}...")
-
-    return {
-        "status": "success",
-        "processed_count": min(len(results), limit),
-        "total_available": len(results)
-    }
-
-# --- Orchestrator Implementation ---
 
 class Orchestrator:
     def __init__(self, log_path):
@@ -41,6 +9,8 @@ class Orchestrator:
         self.queue = asyncio.Queue()
         self.executors = {}
         self._load_executors()
+        self.executor_task = None
+        self.last_results = []
 
     def _load_executors(self):
         """Load all available executors into the registry."""
@@ -69,31 +39,27 @@ class Orchestrator:
             print(f"[!] Warning: Could not load Stats executor: {e}")
 
     async def start(self):
-        """Starts the Orchestrator loop."""
+        """Starts the Orchestrator consumer loop in the background."""
         print("[*] Orchestrator started. Waiting for instructions...")
-        
-        # Start the background consumer task for the instruction queue
-        self.worker_task = asyncio.create_task(self._instruction_consumer())
-        
-        # Simulate Agent instructions using the new worker format
-        print("[Agent] Sending instruction: SCAN for 'ERROR' on C++ executor")
-        await self.queue.put({"action": "scan", "executor": "scanner", "pattern": "ERROR"})
-        
-        print("[Agent] Sending instruction: AGGREGATE results using Python tool")
-        await self.queue.put({"action": "aggregate"})
-        
-        # Wait for queue to be processed
-        await self.queue.join()
-        
-        # Shutdown
+        self.executor_task = asyncio.create_task(self._instruction_consumer())
+
+    async def stop(self):
+        """Gracefully shuts down the Orchestrator."""
         await self.queue.put({"action": "exit"})
-        await self.worker_task
+        if self.executor_task:
+            await self.executor_task
         print("[*] Orchestrator shutdown complete.")
+
+    async def send_instruction(self, instruction: dict):
+        """Enqueue an instruction for the Orchestrator to process."""
+        await self.queue.put(instruction)
+
+    async def wait_until_idle(self):
+        """Wait until all queued instructions are processed."""
+        await self.queue.join()
 
     async def _instruction_consumer(self):
         """Processes the command queue sequentially."""
-        last_results = []
-        
         while True:
             cmd = await self.queue.get()
             action = cmd.get("action")
@@ -106,18 +72,6 @@ class Orchestrator:
             print(f"\n[Queue] Processing action: {action} on executor: {executor_name}")
             
             try:
-                # Handle old mock instructions explicitly for now or adapt them
-                if action == "aggregate":
-                    if not last_results:
-                        print("[!] No scan results available to aggregate.")
-                    else:
-                        # Polyglot Dispatch: Hand off the C++ scanner and results to the Python tool
-                        scanner_executor = self.executors.get("scanner")
-                        if scanner_executor:
-                            await python_aggregation_tool(scanner_executor.scanner, last_results)
-                    self.queue.task_done()
-                    continue
-
                 if not executor_name or executor_name not in self.executors:
                     print(f"[!] Error: Executor '{executor_name}' not found.")
                     self.queue.task_done()
@@ -142,41 +96,11 @@ class Orchestrator:
                 print(f"[*] Executor '{executor_name}' completed '{action}' in {elapsed:.4f}s")
                 print(f"[*] Result: {result}")
                 
-                # Save raw results for legacy aggregate step if this was a scan
+                # Save raw results for potential downstream operations
                 if action == "scan" and "raw_results" in result:
-                    last_results = result["raw_results"]
+                    self.last_results = result["raw_results"]
                 
             except Exception as e:
                 print(f"[!] Error processing instruction {action}: {e}")
             
             self.queue.task_done()
-
-# --- Setup and Execution ---
-
-async def setup_test_environment():
-    """Creates a dummy log file to verify parallel scanning."""
-    log_file = "large_test.log"
-    print(f"[*] Generating test log: {log_file}...")
-    
-    with open(log_file, "w") as f:
-        for i in range(50000):
-            if i % 5000 == 0:
-                f.write(f"TIMESTAMP-{i} [ERROR] Critical failure in subsystem {i//5000}\n")
-            elif i % 1000 == 0:
-                f.write(f"TIMESTAMP-{i} [WARN] Unusual latency detected\n")
-            else:
-                f.write(f"TIMESTAMP-{i} [INFO] System heartbeat healthy\n")
-    
-    return log_file
-
-async def main():
-    test_log = await setup_test_environment()
-    
-    orchestrator = Orchestrator(test_log)
-    await orchestrator.start()
-
-if __name__ == "__main__":
-    try:
-        asyncio.run(main())
-    except KeyboardInterrupt:
-        pass
