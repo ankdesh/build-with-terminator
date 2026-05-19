@@ -9,7 +9,7 @@ TBD: Ability to run structure-extraction algorithms on log files and query the r
 The system MUST be able to parse log files using the Drain algorithm to extract log templates and structured parameters.
 
 #### Scenario: Successful full-file parsing
-- **WHEN** the `parse_templates` instruction is dispatched to the `LogparserWorker` with a target file and log format
+- **WHEN** the `parse_templates` instruction is dispatched to the `TemplateExtractorExecutor` with a target file and log format
 - **THEN** the worker reads the file, extracts the templates, and stores the resulting structured data in memory
 
 ### Requirement: Query top templates

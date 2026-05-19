@@ -1,9 +1,9 @@
 import os
 
-from executors.logparser import LogparserExecutor
+from executors.template_extractor import TemplateExtractorExecutor
 
 
-def test_logparser_worker(tmp_path):
+def test_template_extractor_executor(tmp_path):
     # Create dummy log file
     log_file = tmp_path / "test.log"
     log_content = """2026-05-06 10:00:00 INFO User 123 logged in
@@ -12,12 +12,12 @@ def test_logparser_worker(tmp_path):
 """
     log_file.write_text(log_content)
 
-    executor = LogparserExecutor()
+    executor = TemplateExtractorExecutor()
     # Mock the out dir to tmp_path to avoid littering
     executor._out_dir = str(tmp_path / "out")
     os.makedirs(executor._out_dir, exist_ok=True)
 
-    assert executor.name == "logparser"
+    assert executor.name == "template_extractor"
     assert "parse_templates" in executor.capabilities()
 
     # 1. Parse templates

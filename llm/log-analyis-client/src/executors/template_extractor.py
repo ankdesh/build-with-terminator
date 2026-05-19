@@ -8,7 +8,7 @@ from logparser.Drain import LogParser
 from executors.base import BaseExecutor
 
 
-class LogparserExecutor(BaseExecutor):
+class TemplateExtractorExecutor(BaseExecutor):
     def __init__(self):
         self._parsed_df = None
         self._templates_df = None
@@ -17,10 +17,10 @@ class LogparserExecutor(BaseExecutor):
 
     @property
     def name(self) -> str:
-        return "logparser"
+        return "template_extractor"
 
     def capabilities(self) -> list[str]:
-        return ["parse_templates", "get_templates", "query_parameters"]
+        return ["parse_templates", "get_templates", "query_parameters", "get_parsed_info"]
 
     def execute(self, action: str, args: dict[str, Any]) -> dict[str, Any]:
         if action == "parse_templates":
@@ -29,6 +29,8 @@ class LogparserExecutor(BaseExecutor):
             return self._get_templates(args)
         elif action == "query_parameters":
             return self._query_parameters(args)
+        elif action == "get_parsed_info":
+            return self._get_parsed_info(args)
         else:
             raise ValueError(f"Unsupported action: {action}")
 
@@ -121,3 +123,14 @@ class LogparserExecutor(BaseExecutor):
                 parameters.append([param_str])
 
         return {"status": "success", "event_id": event_id, "parameters": parameters}
+
+    def _get_parsed_info(self, args: dict[str, Any]) -> dict[str, Any]:
+        if self._parsed_df is None or self._templates_df is None:
+            raise ValueError("No parsed data available. Call parse_templates first.")
+
+        return {
+            "status": "success",
+            "df": self._parsed_df,
+            "schema": list(self._parsed_df.columns),
+            "templates": self._templates_df.to_dict("records"),
+        }

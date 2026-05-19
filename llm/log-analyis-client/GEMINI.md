@@ -15,11 +15,18 @@ The mission of this project is to create a robust, extensible CLI client that ac
 5.  **Operational Excellence**: Ensure a reliable CLI experience with clear arguments and predictable behavior.
 
 ## Part 2: High-Level Architecture (Workflow Engine)
-The client operates on a standardized orchestration paradigm:
+The client operates on a standardized orchestration paradigm composed of three planes:
 *   **Instruction**: A granular, declarative JSON/dictionary describing a specific operation (e.g., `{"action": "scan", "executor": "scanner", "pattern": "ERROR"}`).
-*   **Instruction Trace (Workflow)**: A deterministic sequence of Instructions. This serves as a reproducible runbook that defines the full analysis pipeline for a log file.
-*   **Executor**: A discrete, isolated component that registers with the Orchestrator to handle specific actions. Executors operate on the Data Plane. They do not decide *what* to do, only *how* to do it.
+*   **Instruction Trace (Workflow)**: A deterministic sequence of Instructions, loaded from a `.yaml` workflow file. This serves as a reproducible runbook that defines the full analysis pipeline for a log file.
+*   **Executor**: A discrete, isolated component that registers with the Orchestrator to handle specific actions. Executors operate on the Data Plane. They do not decide *what* to do, only *how* to do it. Currently implemented executors include:
+    *   `scanner` (`CppScannerExecutor`): Fast native C++ search and GMM indexing.
+    *   `template_extractor` (`TemplateExtractorExecutor`): Log template parsing (Drain algorithm) and structure querying.
+    *   `llm` (`LlmExecutor`): Generates Python scripts or summaries using local LLMs.
+    *   `python_runner` (`PythonRunnerExecutor`): Securely executes generated Python strings.
 *   **Orchestrator**: The central Control Plane loop. It acts as the runtime, picking up instructions from the queue, invoking the requested Executor, managing state, and dispatching tasks asynchronously.
+*   **Context Plane (State Sharing)**: The Orchestrator manages a central context dictionary (`self.context`).
+    *   **Output Capture**: Instructions can define an `output_key` to save execution results into `self.context`.
+    *   **Variable Interpolation**: String arguments prefixed with `$` (e.g., `$parsed_data.df` or `$gen_code.code`) are recursively resolved from `self.context` before dispatch to the Executor, enabling smooth data flow between disparate executors.
 
 ## Part 3: Code-Level Practices & Standards
 *   **Directory Structure**: We maintain a flat, clean `src/` package layout.
@@ -32,6 +39,8 @@ The client operates on a standardized orchestration paradigm:
 *   **Performance & Polyglot Integration**: 
     *   Time-critical data scanning is written in C++ and compiled as a shared library (`executor.so`) using `pybind11`. 
     *   Data transfer from C++ to Python must minimize overhead, heavily utilizing **Zero-Copy Memory Access** patterns (e.g., passing `memoryview` objects pointing to `mmap` buffers rather than copying strings).
+*   **Executor Safety & Security Guardrails**:
+    *   **Python Execution Safety**: `PythonRunnerExecutor` MUST perform static analysis on any executed code blocks via AST parsing (`ast.parse`) before running them. It MUST block imports of system-level modules (e.g., `os`, `sys`, `subprocess`, `shutil`) by throwing a `ValueError` to prevent malicious behavior during automated execution.
 *   **Testing**: 
     *   Use `pytest` and `pytest-asyncio` for comprehensive unit testing.
     *   Tests should simulate the Orchestrator loop using mocked instructions. Test files must reflect the Executor nomenclature (e.g., `test_orchestrator.py`, `test_stats_executor.py`).

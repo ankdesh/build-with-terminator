@@ -8,6 +8,7 @@ class Orchestrator:
         self.log_path = os.path.abspath(log_path)
         self.queue = asyncio.Queue()
         self.executors = {}
+        self.context = {}
         self._load_executors()
         self.executor_task = None
         self.last_results = []
@@ -24,13 +25,13 @@ class Orchestrator:
             print(f"[!] Warning: Could not load C++ executor module: {e}")
 
         try:
-            from executors.logparser import LogparserExecutor
+            from executors.template_extractor import TemplateExtractorExecutor
 
-            logparser_executor = LogparserExecutor()
-            self.executors[logparser_executor.name] = logparser_executor
-            print(f"[*] Loaded executor: {logparser_executor.name}")
+            template_extractor = TemplateExtractorExecutor()
+            self.executors[template_extractor.name] = template_extractor
+            print(f"[*] Loaded executor: {template_extractor.name}")
         except Exception as e:
-            print(f"[!] Warning: Could not load Logparser executor: {e}")
+            print(f"[!] Warning: Could not load Template Extractor executor: {e}")
 
         try:
             from executors.stats import StatsExecutor
@@ -40,6 +41,24 @@ class Orchestrator:
             print(f"[*] Loaded executor: {stats_executor.name}")
         except Exception as e:
             print(f"[!] Warning: Could not load Stats executor: {e}")
+
+        try:
+            from executors.llm import LlmExecutor
+
+            llm_executor = LlmExecutor()
+            self.executors[llm_executor.name] = llm_executor
+            print(f"[*] Loaded executor: {llm_executor.name}")
+        except Exception as e:
+            print(f"[!] Warning: Could not load LLM executor: {e}")
+
+        try:
+            from executors.python_runner import PythonRunnerExecutor
+
+            python_runner = PythonRunnerExecutor()
+            self.executors[python_runner.name] = python_runner
+            print(f"[*] Loaded executor: {python_runner.name}")
+        except Exception as e:
+            print(f"[!] Warning: Could not load Python Runner executor: {e}")
 
     async def start(self):
         """Starts the Orchestrator consumer loop in the background."""
@@ -90,14 +109,33 @@ class Orchestrator:
                 loop = asyncio.get_running_loop()
                 start_ts = time.time()
 
-                # Extract args (everything except 'action' and 'executor')
-                args = {k: v for k, v in cmd.items() if k not in ("action", "executor")}
+                # Extract args (everything except 'action', 'executor', and 'output_key')
+                args = {k: v for k, v in cmd.items() if k not in ("action", "executor", "output_key")}
 
-                result = await loop.run_in_executor(None, executor.execute, action, args)
+                # Resolve any context references ($var) in args
+                resolved_args = self._resolve_val(args)
+
+                result = await loop.run_in_executor(None, executor.execute, action, resolved_args)
 
                 elapsed = time.time() - start_ts
                 print(f"[*] Executor '{executor_name}' completed '{action}' in {elapsed:.4f}s")
-                print(f"[*] Result: {result}")
+
+                # Print result outputs if they exist in the return dict
+                if isinstance(result, dict):
+                    if "result" in result and result["result"] is not None:
+                        print(f"[*] Result Value:\n{result['result']}")
+                    if result.get("stdout"):
+                        print(f"[*] Standard Output:\n{result['stdout']}")
+                    if result.get("stderr"):
+                        print(f"[!] Standard Error:\n{result['stderr']}")
+                    if result.get("code"):
+                        print(f"[*] Generated Code:\n{result['code']}")
+
+                # Save to context if output_key is provided
+                output_key = cmd.get("output_key")
+                if output_key:
+                    self.context[output_key] = result
+                    print(f"[*] Saved output to context key: '{output_key}'")
 
                 # Save raw results for potential downstream operations
                 if action == "scan" and "raw_results" in result:
@@ -107,3 +145,22 @@ class Orchestrator:
                 print(f"[!] Error processing instruction {action}: {e}")
 
             self.queue.task_done()
+
+    def _resolve_val(self, val):
+        """Recursively resolves $ context variables in arguments."""
+        if isinstance(val, str) and val.startswith("$"):
+            # Extract path (remove '$' prefix)
+            path = val[1:]
+            parts = path.split(".")
+            current = self.context
+            for part in parts:
+                if isinstance(current, dict) and part in current:
+                    current = current[part]
+                else:
+                    return None
+            return current
+        elif isinstance(val, dict):
+            return {k: self._resolve_val(v) for k, v in val.items()}
+        elif isinstance(val, list):
+            return [self._resolve_val(v) for v in val]
+        return val
