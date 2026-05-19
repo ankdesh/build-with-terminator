@@ -1,0 +1,3 @@
+- action: "get_stats"
+  executor: "stats"
+  target_file: "datasets/loghub_raw_logs_2k/Apache_2k.log"

@@ -1,0 +1,11 @@
+- action: "parse_templates"
+  executor: "logparser"
+  target_file: "datasets/loghub_raw_logs_2k/HDFS_2k.log"
+  log_format: "<Date> <Time> <Pid> <Level> <Component>: <Content>"
+  algorithm: "drain"
+
+- action: "get_templates"
+  executor: "logparser"
+  limit: 10
+  sort_by: "Occurrences"
+  order: "desc"
