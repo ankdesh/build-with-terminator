@@ -1,0 +1,45 @@
+[project]
+name = "minigrid-learn"
+version = "0.1.0"
+description = "An extensible learning pipeline for reinforcement learning experiments in MiniGrid."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "gymnasium>=1.2,<2",
+    "matplotlib>=3.10,<4",
+    "minigrid>=3.0,<4",
+    "numpy>=2.0,<3",
+    "pandas>=2.3,<4",
+    "seaborn>=0.13,<1",
+    "stable-baselines3>=2.7,<3",
+    "tensorboard>=2.20,<3",
+    "torch>=2.7,<3",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4,<10",
+    "ruff>=0.12,<1",
+]
+
+[project.scripts]
+minigrid-learn = "minigrid_learn.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/minigrid_learn"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+

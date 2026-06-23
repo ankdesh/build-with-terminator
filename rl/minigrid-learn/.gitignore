@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# Large/reproducible experiment outputs. Curated reports remain tracked.
+artifacts/*
+!artifacts/.gitkeep
+runs/
+
+# Local and editor files
+.env
+.DS_Store
+.idea/
+.vscode/
+

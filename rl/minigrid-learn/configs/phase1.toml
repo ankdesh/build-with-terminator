@@ -1,0 +1,38 @@
+[project]
+artifact_root = "artifacts/phase1"
+report_root = "reports/phase1"
+
+[training]
+total_timesteps = 500000
+learning_rate = 0.00025
+n_steps = 1024
+batch_size = 256
+n_epochs = 10
+gamma = 0.99
+gae_lambda = 0.95
+clip_range = 0.2
+ent_coef = 0.01
+vf_coef = 0.5
+max_grad_norm = 0.5
+eval_freq = 10000
+n_eval_episodes = 20
+checkpoint_freq = 50000
+consecutive_threshold_evals = 3
+device = "auto"
+
+[policy]
+features_dim = 128
+
+[[environments]]
+id = "MiniGrid-Empty-8x8-v0"
+slug = "empty-8x8"
+reward_threshold = 0.90
+
+[[environments]]
+id = "MiniGrid-Dynamic-Obstacles-8x8-v0"
+slug = "dynamic-obstacles-8x8"
+reward_threshold = 0.75
+
+[experiments]
+seeds = [0, 1, 2]
+
