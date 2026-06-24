@@ -1,0 +1,27 @@
+{
+  "design": "mac_unit",
+  "target": "sky130",
+  "flow": "direct_yowasp_yosys_logic_synthesis",
+  "topmodule": "mac_unit",
+  "clock_period_ns": 10.0,
+  "liberty": [
+    "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/sky130/inputs/sky130_fd_sc_hd__ff_100C_1v95.lib"
+  ],
+  "artifacts": {
+    "workdir": "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/sky130",
+    "yosys_script": "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/sky130/synth.ys",
+    "yosys_log": "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/sky130/yosys.log",
+    "netlist_verilog": "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/sky130/outputs/mac_unit.vg",
+    "netlist_json": "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/sky130/outputs/mac_unit.netlist.json",
+    "stat_json": "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/sky130/reports/stat.json"
+  },
+  "metrics": {
+    "errors": 0,
+    "warnings": null,
+    "cellarea": 10741.552,
+    "cells": 1483,
+    "nets": 1519,
+    "pins": 77,
+    "registers": null
+  }
+}

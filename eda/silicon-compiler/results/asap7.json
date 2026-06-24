@@ -1,0 +1,31 @@
+{
+  "design": "mac_unit",
+  "target": "asap7",
+  "flow": "direct_yowasp_yosys_logic_synthesis",
+  "topmodule": "mac_unit",
+  "clock_period_ns": 10.0,
+  "liberty": [
+    "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/asap7/inputs/asap7sc7p5t_AO_RVT_FF_nldm.lib",
+    "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/asap7/inputs/asap7sc7p5t_INVBUF_RVT_FF_nldm.lib",
+    "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/asap7/inputs/asap7sc7p5t_OA_RVT_FF_nldm.lib",
+    "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/asap7/inputs/asap7sc7p5t_SEQ_RVT_FF_nldm.lib",
+    "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/asap7/inputs/asap7sc7p5t_SIMPLE_RVT_FF_nldm.lib"
+  ],
+  "artifacts": {
+    "workdir": "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/asap7",
+    "yosys_script": "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/asap7/synth.ys",
+    "yosys_log": "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/asap7/yosys.log",
+    "netlist_verilog": "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/asap7/outputs/mac_unit.vg",
+    "netlist_json": "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/asap7/outputs/mac_unit.netlist.json",
+    "stat_json": "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/asap7/reports/stat.json"
+  },
+  "metrics": {
+    "errors": 0,
+    "warnings": null,
+    "cellarea": 149.82408,
+    "cells": 1451,
+    "nets": 1487,
+    "pins": 77,
+    "registers": null
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "design": "mac_unit",
+  "target": "freepdk45",
+  "flow": "direct_yowasp_yosys_logic_synthesis",
+  "topmodule": "mac_unit",
+  "clock_period_ns": 10.0,
+  "liberty": [
+    "/home/ankdesh/.sc/cache/lambdapdk-v0.2.14-5bd343ab3baa2da4/lambdapdk/freepdk45/libs/nangate45/nldm/NangateOpenCellLibrary_typical.lib"
+  ],
+  "artifacts": {
+    "workdir": "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/freepdk45",
+    "yosys_script": "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/freepdk45/synth.ys",
+    "yosys_log": "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/freepdk45/yosys.log",
+    "netlist_verilog": "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/freepdk45/outputs/mac_unit.vg",
+    "netlist_json": "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/freepdk45/outputs/mac_unit.netlist.json",
+    "stat_json": "/home/ankdesh/explore/build-with-terminator/eda/silicon-compiler/build/direct/freepdk45/reports/stat.json"
+  },
+  "metrics": {
+    "errors": 0,
+    "warnings": null,
+    "cellarea": 2154.334,
+    "cells": 1821,
+    "nets": 1898,
+    "pins": 77,
+    "registers": null
+  }
+}
