@@ -52,3 +52,19 @@ Run the setup tests:
 
 For more details, see `docs/yosys_synthesis_setup.md`.
 
+## Design Compiler Setup
+
+Generate Synopsys Design Compiler Tcl and preflight reports without requiring a DC binary or license:
+
+```bash
+.venv/bin/python scripts/setup_dc.py --target all
+```
+
+Update `config/dc_config.json` when `dc_shell` and license details are available. Then run a target with:
+
+```bash
+.venv/bin/python scripts/setup_dc.py --target freepdk45 --run
+```
+
+DC preflight reports are written to `results/dc/`; generated Tcl is written to `build/dc/<target>/scripts/dc_synth.tcl`. See `docs/dc_setup.md`.
+

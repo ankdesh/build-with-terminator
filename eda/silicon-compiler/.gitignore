@@ -6,6 +6,7 @@ __pycache__/
 
 # SiliconCompiler/Yosys generated outputs
 build/
+results/
 
 # Local OS/editor noise
 .DS_Store

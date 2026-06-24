@@ -22,3 +22,17 @@ uv sync
 | `asap7` | pass | 1451 | 149.82408 | 1487 | 77 | `results/asap7.json` |
 
 The flow stops after Yosys logic synthesis. It does not run floorplanning, placement, CTS, routing, extraction, signoff, or STA.
+
+## Design Compiler Preflight
+
+DC preflight was run without a DC binary or license, so no synthesis execution was attempted. The available validation generated Tcl and confirmed RTL and Liberty availability for all three targets.
+
+```bash
+.venv/bin/python scripts/setup_dc.py --target all
+```
+
+| Target | Status | RTL exists | Liberty exists | Tcl generated | DC found | License env | Result file |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `freepdk45` | `preflight_only` | yes | yes | yes | no | no | `results/dc/freepdk45.json` |
+| `sky130` | `preflight_only` | yes | yes | yes | no | no | `results/dc/sky130.json` |
+| `asap7` | `preflight_only` | yes | yes | yes | no | no | `results/dc/asap7.json` |

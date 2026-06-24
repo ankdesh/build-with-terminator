@@ -1,0 +1,43 @@
+{
+  "dc_shell_bin": "dc_shell",
+  "license_env": {
+    "SNPSLMD_LICENSE_FILE": "",
+    "LM_LICENSE_FILE": ""
+  },
+  "design": {
+    "name": "mac_unit",
+    "top": "mac_unit",
+    "rtl": ["rtl/mac_unit.v"],
+    "clock_name": "clk",
+    "clock_period_ns": 10.0,
+    "reset_name": "rst_n"
+  },
+  "compile": {
+    "command": "compile_ultra",
+    "ungroup": false,
+    "incremental": false
+  },
+  "targets": {
+    "freepdk45": {
+      "enabled": true,
+      "liberty_corner": "typical",
+      "target_library_override": [],
+      "link_library_extra": [],
+      "dc_setup_extra_tcl": []
+    },
+    "sky130": {
+      "enabled": true,
+      "liberty_corner": "slow",
+      "target_library_override": [],
+      "link_library_extra": [],
+      "dc_setup_extra_tcl": []
+    },
+    "asap7": {
+      "enabled": true,
+      "liberty_corner": "slow",
+      "target_library_override": [],
+      "link_library_extra": [],
+      "dc_setup_extra_tcl": []
+    }
+  }
+}
