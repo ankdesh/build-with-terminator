@@ -44,6 +44,10 @@ The client operates on a standardized orchestration paradigm composed of three p
 *   **Testing**: 
     *   Use `pytest` and `pytest-asyncio` for comprehensive unit testing.
     *   Tests should simulate the Orchestrator loop using mocked instructions. Test files must reflect the Executor nomenclature (e.g., `test_orchestrator.py`, `test_stats_executor.py`).
+*   **Project-Specific Data & Output Isolation**:
+    *   Since this repository serves as common infrastructure for multiple workflow-based projects, **no project-specific folders, dataset folders, or output directories** (e.g. `logparser_output`, `.workflows`, custom dataset folders, or execution traces) should be created in or committed to the repository root.
+    *   Executors, agents, and CLI commands must accept configurable output directories or dynamically resolve output paths relative to the target log file or runtime work directories, rather than hardcoding relative paths that default to the repository root.
+    *   Temporary and generated files must be cleaned up or written to gitignored paths (e.g. `outputs/`, `.tmp/`) to ensure the common infrastructure workspace remains clean and decoupled from individual analysis projects.
 *   **Documentation Standards**: 
     *   Add extensive comments to understand the semantics and rationale for any design decision.
     *   ALL C++ code must be thoroughly commented. Header files must describe class responsibilities and public API contracts.

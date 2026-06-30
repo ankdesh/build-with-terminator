@@ -1,9 +1,6 @@
 # workflow-execution
 
-## Purpose
-TBD: Capability to parse a YAML instruction trace and feed it to the Orchestrator for sequential execution.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Parse YAML Traces
 The system SHALL parse a valid YAML workflow file into a deterministic sequence of instructions recognized by the Orchestrator.
@@ -11,6 +8,8 @@ The system SHALL parse a valid YAML workflow file into a deterministic sequence 
 #### Scenario: Valid YAML trace is parsed
 - **WHEN** a syntactically correct YAML trace file is provided
 - **THEN** it is translated into a list of Instruction objects or dictionaries
+
+## ADDED Requirements
 
 ### Requirement: Final Result Presentation
 The system SHALL check the orchestrator's context upon completion. If a `RESULT` key is populated, it SHALL print it prominently as the `Final Answer`. Otherwise, it SHALL print a summary of all output keys.

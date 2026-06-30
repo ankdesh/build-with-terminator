@@ -1,0 +1,10 @@
+- action: "parse_templates"
+  executor: "template_extractor"
+  log_format: "<Date> <Time> <Pid> <Level> <Component>: <Content>"
+  algorithm: "drain"
+
+- action: "get_templates"
+  executor: "template_extractor"
+  limit: 10
+  sort_by: "Occurrences"
+  order: "desc"

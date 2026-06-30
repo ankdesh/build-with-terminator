@@ -1,0 +1,20 @@
+- action: "parse_templates"
+  executor: "template_extractor"
+  log_format: "<Date> <Time> <Pid> <Level> <Component>: <Content>"
+
+- action: "get_parsed_info"
+  executor: "template_extractor"
+  output_key: "parsed_data"
+
+- action: "gen_pycode_fromtemplate"
+  executor: "llm"
+  df_schema: "$parsed_data.schema"
+  templates: "$parsed_data.templates"
+  query: "{{ query }}"
+  output_key: "analysis_code"
+
+- action: "execute_python"
+  executor: "python_runner"
+  code: "$analysis_code.code"
+  inputs:
+    df: "$parsed_data.df"

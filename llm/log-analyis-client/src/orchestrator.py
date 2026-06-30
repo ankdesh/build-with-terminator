@@ -115,6 +115,10 @@ class Orchestrator:
                 # Resolve any context references ($var) in args
                 resolved_args = self._resolve_val(args)
 
+                # Global Log Path Injection: inject self.log_path as target_file if not provided
+                if not resolved_args.get("target_file"):
+                    resolved_args["target_file"] = self.log_path
+
                 result = await loop.run_in_executor(None, executor.execute, action, resolved_args)
 
                 elapsed = time.time() - start_ts

@@ -1,9 +1,6 @@
 # cli-interface
 
-## Purpose
-TBD: Core capability handling command-line arguments and subcommands (analysis, execute).
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Analysis Mode Invocation
 The CLI SHALL provide an `analysis` command that accepts a text-based request, a target log file, and an optional output path.

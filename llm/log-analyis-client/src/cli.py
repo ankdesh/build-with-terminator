@@ -6,6 +6,7 @@ import sys
 import yaml
 
 from orchestrator import Orchestrator
+from analysis_agent import AnalysisAgent
 
 
 def parse_yaml_workflow(file_path: str) -> list[dict]:
@@ -51,16 +52,18 @@ async def handle_execute(args):
 
     await orchestrator.stop()
 
+    # Final Result Presentation: check context upon completion
+    if "RESULT" in orchestrator.context:
+        print(f"Final Answer: {orchestrator.context['RESULT']}")
+    else:
+        print("Execution Context Summary:")
+        for key in sorted(orchestrator.context.keys()):
+            print(f"- {key}")
+
 
 async def handle_analysis(args):
-    request_str = args.request
-    log_path = args.log
-
-    print("[*] Analysis Mode (Placeholder)")
-    print(f"[*] Request: '{request_str}'")
-    print(f"[*] Target Log: {log_path}")
-    print("[*] Note: LLM Planner integration will be implemented in a future change.")
-    print("[*] Exiting analysis mode.")
+    agent = AnalysisAgent(log_path=args.log, query=args.request, output_path=args.output)
+    await agent.run()
 
 
 def main():
@@ -74,10 +77,16 @@ def main():
 
     # analysis subparser
     analysis_parser = subparsers.add_parser(
-        "analysis", help="Generate a workflow trace using LLM Planner (placeholder)"
+        "analysis", help="Start conversational interactive LLM analysis loop"
     )
-    analysis_parser.add_argument("--request", required=True, help="Text request for the LLM Planner")
+    analysis_parser.add_argument("--request", required=True, help="Text request for the log analysis")
     analysis_parser.add_argument("--log", required=True, help="Path to the target log file")
+    analysis_parser.add_argument(
+        "--output",
+        required=False,
+        default=None,
+        help="Optional path to save the generated deterministic trace (defaults to .workflows/)"
+    )
 
     args = parser.parse_args()
 

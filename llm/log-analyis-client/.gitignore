@@ -1,0 +1,7 @@
+.workflows/
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+*.so
+build/
+logparser_output/
