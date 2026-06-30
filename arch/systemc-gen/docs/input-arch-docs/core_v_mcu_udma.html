@@ -1,0 +1,1327 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="readthedocs-addons-api-version" content="1"><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Micro-DMA Subsystem &mdash; CORE-V MCU  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <script src="../_static/js/versions.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eFPGA SubSystem" href="efpga_subsystem.html" />
+    <link rel="prev" title="Core Complex Subsystem" href="core_complex_subsystem.html" /> 
+<script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="openhw-group-core-v-mcu" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/doc-src/udma_subsystem.html" /><meta name="readthedocs-http-status" content="200" /></head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #DDDDDD" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CORE-V MCU
+              <img src="../_static/openhw-landscape.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="switch-menus">
+                <div class="version-switch"></div>
+                <div class="language-switch"></div>
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">CORE-V-MCU Introduction:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">CORE-V-MCU Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terminology.html">Terminology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="open-source-development-at-openhw.html">Open Source Development at the OpenHW Group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="high_level_architecture.html">High Level Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="device_characteristics.html">Device Characteristics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="package_information.html">Package Information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integration.html">CORE-V-MCU Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io_assignment_tables.html">I/O Assignment Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="startup.html">Start-up</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mmap.html">Memory Map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interrupts.html">Interrupt Strategy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clock_domains.html">Clock Domains</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debug_approach.html">Debug Approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluation_kits.html">Evaluation Kits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="software_support.html">Software Support</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">CORE-V-MCU Bus Interconnect:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tcdm_interconnect.html">TCDM Interconnect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="apb_peripheral_interconnect.html">APB Peripheral Interconnect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">CORE-V-MCU Subsystems:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="core_complex_subsystem.html">Core Complex Subsystem</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Micro-DMA Subsystem</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#credit">Credit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#udma-core-features">uDMA core Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#udma-core-architecture">uDMA core Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rx-channels-write-to-l2-memory">RX Channels (Write to L2 Memory)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tx-channels-read-from-l2-memory">TX Channels (Read from L2 Memory)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tcdm-interface">TCDM Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-interface">Configuration Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#event-detection">Event Detection</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#udma-core-peripheral-to-channel-mapping">uDMA core Peripheral to channel mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#udma-core-csrs">uDMA core CSRs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#udma-clk-en">UDMA_CLK_EN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#udma-cfg-evt">UDMA_CFG_EVT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#udma-rst">UDMA_RST</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#firmware-guidelines">Firmware Guidelines:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#soft-reset">Soft-Reset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clock">Clock</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Event Detection</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pin-diagram">Pin Diagram</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">uDMA Subsystem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#udma-subsystem-to-tcdm-l2-if-interconnect-interface">uDMA Subsystem to TCDM(L2 IF) Interconnect interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#test-interface">Test Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clock-and-reset">Clock and Reset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apb-bus-interface">APB Bus Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#event-detection-interface-between-udma-subsystem-and-apb-event-controller">Event Detection Interface between uDMA Subsystem and APB event controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#udma-subsystem-to-efpga-tx-interface">uDMA Subsystem to eFPGA Tx interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#udma-subsystem-to-efpga-rx-interface">uDMA Subsystem to eFPGA Rx interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#udma-subsystem-to-efpga-setup-interface">uDMA Subsystem to eFPGA setup interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#udma-subsystem-peripheral-io-interface">uDMA Subsystem Peripheral IO interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#interface-for-events-from-udma-peripheral-to-apb">Interface for events from uDMA peripheral to APB.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#udma-core">uDMA Core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Clock and Reset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dft-design-for-test-signal">DFT (Design for Test) signal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">APB Bus Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#event-detection-interface">Event detection Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#event-broadcast-interface">Event broadcast Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#udma-peripheral-clock-interface">uDMA Peripheral clock Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#udma-peripheral-reset-interface">uDMA  Peripheral reset Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#udma-peripheral-csr-interface">uDMA Peripheral CSR Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rx-l2-interface">RX L2 Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tx-l2-interface">TX L2 Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rx-channel-interface">RX Channel Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tx-channel-interface">TX Channel Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tx-external-efpga-channel-interface">TX External(eFPGA) Channel Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rx-external-efpga-channel-interface">RX External(eFPGA) Channel Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stream-output-interface">Stream Output Interface</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="efpga_subsystem.html">eFPGA SubSystem</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">CORE-V-MCU IP Blocks:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ip-blocks/apb_adv_timer.html">APB ADVANCED TIMER</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ip-blocks/apb_soc_ctrl.html">APB SoC controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ip-blocks/apb_fll_if.html"><strong>APB FLL Interface CSRs</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="ip-blocks/apb_gpio.html">APB GPIO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ip-blocks/apb_timer.html">APB Timer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ip-blocks/apb_i2cs.html">APB I2C SLAVE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ip-blocks/apb_event_cntrl.html">APB EVENT CONTROL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ip-blocks/udma_cam.html">uDMA CAMERA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ip-blocks/udma_i2cm.html">UDMA I2C Master</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ip-blocks/udma_sdio.html">UDMA SDIO(SD Input/Output) INTERFACE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ip-blocks/udma_qspim.html">UDMA QSPI Master</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ip-blocks/udma_uart.html">uDMA UART</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #DDDDDD" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CORE-V MCU</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Micro-DMA Subsystem</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/doc-src/udma_subsystem.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="micro-dma-subsystem">
+<span id="udma-subsystem"></span><h1>Micro-DMA Subsystem<a class="headerlink" href="#micro-dma-subsystem" title="Link to this heading"></a></h1>
+<p>The CORE-V-MCU’s micro-DMA (uDMA) subsystem, is an intelligent, lightweight and completely autonomous Direct Memory Access controller capable of handling complex I/O schemes.
+Its primary purpose is to reduce the CPU overhead used to control I/O peripherals.</p>
+<p>Refer to  <a class="reference external" href="https://docs.openhwgroup.org/projects/core-v-mcu/doc-src/high_level_architecture.html">High Level Architecture</a> diagram for high-level block diagram of the uDMA Subsystem.</p>
+<p>uDMA Subsystem is consist of below component:-</p>
+<ul class="simple">
+<li><p>1 instance of uDMA Core: It controls the data transfer between peripherals and TCDM memory</p></li>
+<li><dl class="simple">
+<dt>I/O Peripherals</dt><dd><ul>
+<li><p>2 instances of <a class="reference external" href="https://github.com/openhwgroup/core-v-mcu/blob/master/docs/doc-src/ip-blocks/udma_uart.rst">UART</a>.</p></li>
+<li><p>2 instances of <a class="reference external" href="https://github.com/openhwgroup/core-v-mcu/blob/master/docs/doc-src/ip-blocks/udma_qspim.rst">QSPI</a> Master.</p></li>
+<li><p>2 instances of <a class="reference external" href="https://github.com/openhwgroup/core-v-mcu/blob/master/docs/doc-src/ip-blocks/udma_qspim.rst">I2C</a> Master.</p></li>
+<li><p>1 instances of <a class="reference external" href="https://github.com/openhwgroup/core-v-mcu/blob/master/docs/doc-src/ip-blocks/udma_sdio.rst">SDIO</a>.</p></li>
+<li><p>1 instance of <a class="reference external" href="https://github.com/openhwgroup/core-v-mcu/blob/master/docs/doc-src/ip-blocks/udma_cam.rst">CAMERA</a>.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>The CSRs of the peripherals are not directly accessible via the APB bus. Rather, the control plane interface to each peripheral is managed by the uDMA core within the uDMA subsystem.
+This is transparent to the programmer as all peripheral CSRs appear within the uDMA Subsystem’s memory region.
+I/O operations of the peripherals are controlled by the uDMA core. This is not transparent to the programmer.</p>
+<p>uDMA core is discussed in greater detail in the current chapter.</p>
+<section id="credit">
+<h2>Credit<a class="headerlink" href="#credit" title="Link to this heading"></a></h2>
+<p>The following is based on the uDMA core User Manual which can be found on GitHub in the PULP-Platform
+<a class="reference external" href="https://github.com/pulp-platform/udma_core/tree/pulpissimo_v1.0_fix">Micro-DMA Core</a> repository.
+The author of the uDMA User Manual is Antonio Pullini, then of ETHZ.</p>
+</section>
+<section id="udma-core-features">
+<h2>uDMA core Features<a class="headerlink" href="#udma-core-features" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Tx/Rx Channels: Used for transmitting and receiving data to and from peripherals like I2C, UART, CAMERA etc.</p></li>
+<li><p>TCDM Interface: Read/Write data from/to interleaved(L2) memory.</p></li>
+<li><p>APB Interface: Through this interface the CPU can access the CSRs of uDMA subsystem (uDMA Core and peripherals).</p></li>
+<li><p>Configuration Interface (CFG IF): uDMA Core gets the channel(TX/RX) configuration from the uDMA Peripheral channel configuration registers.</p></li>
+<li><p>Double Buffering: uDMA Core reads the channel configuration registers from uDMA Peripherals and creates its local copy for operation, improving throughput.</p></li>
+<li><p>Provides reset signal to uDMA Peripherals.</p></li>
+<li><p>Enables Peripheral clock to uDMA Peripherals.</p></li>
+<li><p>Detects compare event for apb event controller based on Compare value present in UDMA_CFG_EVT CSR. Generates event to uDMA peripherals.</p></li>
+</ul>
+</section>
+<section id="udma-core-architecture">
+<h2>uDMA core Architecture<a class="headerlink" href="#udma-core-architecture" title="Link to this heading"></a></h2>
+<p>The Figure below is a high-level block diagram of the uDMA core.
+The main components are the Tx channels, the Rx channels, the interface to the TCDM Interconnect and the configuration interface (CFG IF).
+The Tx/Rx channels connect to a set of peripherals.
+Individual peripherals may have one or more Tx or Rx channels depending on the need.
+As an example, the I2C master will require one TX and one RX channel while the camera interface (CPI) needs only one Rx channel.
+The interface between the uDMA core and the peripherals implements a simple valid/ready protocol.
+The peripherals ride the valid signal of the Rx channels when having data available and raise the ready signal of a tx channel when requesting data from the memory.
+Software control of both the uDMA core and its peripherals is via the APB interconnect driving the CFG IF.</p>
+<figure class="align-center" id="udma-core-block-diagram">
+<img alt="" src="../_images/uDMA_core_block_diagram.png" />
+<figcaption>
+<p><span class="caption-text">Micro-DMA core Block Diagram</span><a class="headerlink" href="#udma-core-block-diagram" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>uDMA core write/read data to and from uDMA peripheral and L2 memory via data pins. In the above block diagram all data pins are an array of 32 pins.</p>
+<p>Note that it is not mandatory for core to always read/write 32 bits of data. Data size of each transaction performed by Rx/Tx channel can be configured using 2-bit data size register.</p>
+<p>Refer to Pin description section in the current chapter for more information.</p>
+<p>Each uDMA core channel, both Tx and Rx, has dedicated resources in the configuration interface and internal to the Tx/Rx channel logic of the uDMA core itself.
+The hardware resources associated with each channel are:</p>
+<ul class="simple">
+<li><p>32-bit address register storing the address of the following transfer.</p></li>
+<li><p>16-bit bytes left register storing the number of bytes left in the current transfer.</p></li>
+<li><p>2-bit data size register keeping the amount of bytes to be transferred at each uDMA core transfer. Possible values are 1, 2, and 4.</p></li>
+</ul>
+<p>uDMA core copies these values from the configuration interface of the peripheral and makes a local copy; let us refer to this local copy as ‘current CSR’. In parallel, software may update the registers in the configuration interface of the peripheral for the next transaction; let us refer to these values as ‘configuration CSR’.
+The local copy 32-bit address register inside the uDMA core contains the current pointer to the L2 buffer. The address register stored in the configuration interface is the starting address of the next transfer
+The local copy of the 16-bit byte left register inside the uDMA core specifies the number of remaining bytes in the current transfer. The byte left register stored in the configuration interface is the transfer size in bytes for the next transfer.
+Last, the local copy of the 2-bit data size register specifies the number of bytes to be transferred at each data transfer for the current transfer. The data size register stored in the configuration interface is the number of bytes to be transferred at each data transfer for the next transfer.
+The uDMA core read/write the data from both uDMA Peripheral and L2 memory in the multiple of value of the 2-bit data size register i.e. 1, 2 and 4. For example, if uDMA core receives a request to read/write ‘m’ bytes from/to L2 memmory then it read/write the ‘m’ bytes data in the multiples of value of 2-bit data size register.</p>
+<p>Configuration CSR and current CSRs are accessible at the same address in the uDMA core configuration space. If the software writes to the channel configuration registers of a peripheral through the ABP bus, these will be written to the configuration interface and will not modify the local current CSR in the uDMA core.
+If the software reads the values of the configuration registers through the APB bus, it will get the local current CSR values from the uDMA core, i.e., values corresponding to the current transfer; it will not get the configuration CSR values stored in the configuration interface of the peripheral.
+If there is no transaction, running resources are copied from the Configuration CSR  to the current CSR as soon as the enable bit of configuration CSR is set. If a transfer is ongoing, they are latched as soon as the current transfer is over. Those 2 sets of registers for each channel and the queueing mechanism eases the implementation of double buffering.</p>
+<p>At the first setup of the transfer, the software can start the first transfer with a target address and soon after queue another transfer with a second target address.
+As soon as the first transfer is over, the software can queue a transaction with the first target address again and process the first chunk of data while the second chunk is transferred to the second target address in the background.</p>
+<p><strong>TX and RX channel FIFO</strong></p>
+<p>uDMA Core TX and RX channel internally usses a FIFO to store the data for internal processing. Below is the interface diagram of the FIFO: -</p>
+<figure class="align-center" id="udma-core-tx-rx-fifo">
+<img alt="" src="../_images/uDMA_core_Tx_Rx_FIFO.png" />
+<figcaption>
+<p><span class="caption-text">Micro-DMA core Tx and RX channel FIFO</span><a class="headerlink" href="#udma-core-tx-rx-fifo" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>RX FIFO is a 4-depth fifo and have 60-bit data len. Data is organised as below: -</p>
+<p><code class="docutils literal notranslate"><span class="pre">data</span> <span class="pre">organization</span> <span class="pre">=</span> <span class="pre">{l2_bytes(2-bit),is_stream(1bit),stream_id(2bits),destinationSize(2-bit),dataSize(2-bit),addr(19-bit),data(32-bit)}</span></code></p>
+<ul class="simple">
+<li><p>data:            Represents the data received from uDMA peripheral</p></li>
+<li><p>addr:            L2 memory address to store data</p></li>
+<li><p>dataSize:        Number of bytes to be transmitted to L2 memory in one iteration</p></li>
+<li><p>destinationSize: L2 memory ID (i.e. interleaved, boot rom etc.)</p></li>
+<li><p>stream_id:       Id of channel for which stream is enabled</p></li>
+<li><p>is_stream:       Depicts whether streaming mode is enabled or not</p></li>
+<li><p>l2_bytes:        Current size of data that needs to store in L2 memory</p></li>
+</ul>
+<p><cite>dataSize</cite> and <cite>l2_bytes</cite> are used to decide byte enables while transmitting the data to L2 interface. If Rx channel is configure to transmit 4 bytes of data in one iteration, however only 3 bytes of actual data is left to transmit then dataSize will have value 4 and l2_bytes will be 3.</p>
+<p>When the RX channel receives a request to write to L2 memory, it formats the incoming data from the peripheral as described above and stores it in its internal FIFO. Once granted access from the L2 interface, the RX channel retrieves the data from the FIFO, decodes it, and drives the L2 interface signals accordingly.</p>
+<p>TX FIFO is a 4-depth fifo and have 60-bit data len. Data is organised as below:</p>
+<p><code class="docutils literal notranslate"><span class="pre">data</span> <span class="pre">organization</span> <span class="pre">=</span>&#160; <span class="pre">{destinationSize(2-bit),ChannelID(4-bit),dataSize(2-bit),addr(19-bit)}</span></code></p>
+<ul class="simple">
+<li><p>addr:            L2 memory address to read data</p></li>
+<li><p>dataSize:        Number of bytes to be read from L2 memory in one iteration</p></li>
+<li><p>ChannelID:       ID of TX channel trying to read from L2 memory</p></li>
+<li><p>destinationSize: L2 memory ID (i.e. interleaved, boot rom etc.)</p></li>
+</ul>
+<p>When the TX channel receives a request to read from L2 memory, it formats the incoming request from the peripheral as described above and stores it in its internal FIFO. Once granted access from the L2 interface, the TX channel retrieves the data from the FIFO, decodes it, and drives the L2 interface signals accordingly.</p>
+<p><strong>Push operation</strong></p>
+<p>The FIFO asserts the ready signal when there is available space to accept new data. When an active valid signal is received, the data is written into the FIFO.
+The ready signal is kept asserted as long as the FIFO has space for more data. IF the FIFO is full, push operation will be stalled until the FIFO has empty space and valid line is high.</p>
+<p><strong>Pop operation</strong></p>
+<p>The FIFO asserts the valid signal to indicate that valid data is available on the data lines. A module waiting for data should read the data lines only when valid pin is high and drive the ready
+signal to high and reset it in next clock cycle. When FIFO receives an active ready signal, indicating that the data has been read, it updates the data lines with new data if FIFO is not empty.
+If the FIFO is empty, the valid signal is deasserted.</p>
+<section id="rx-channels-write-to-l2-memory">
+<h3>RX Channels (Write to L2 Memory)<a class="headerlink" href="#rx-channels-write-to-l2-memory" title="Link to this heading"></a></h3>
+<p>The Rx Channel block handle the data transfer from peripherals to L2 memory. The Rx channel is enabled/disabled using the channel configuration register of the connected peripheral.
+When a uDMA peripheral has available data it raises the valid signal of its associated channel. If the corresponding channel is active(i.e. enabled by uDMA peripheral) then the channel is picked by arbitor.
+RX channel invokes the arbitrator based on below conditions combined:-
+- ready signal is received from peripheral
+- Channel is enabled by Peripheral</p>
+<p>The Rx channel block arbitrate all the valid signals with a fair round robin algorithm to select the winning channel. The arbiter runs round robin algorithm at each clock cycle. This gives all uDMA peripherals a fair chance to transmit the data into L2 memory.</p>
+<p>The ID of the winning channel is used to select the uDMA peripheral whose data needs to be sent to L2 memory. Rx channel reads the peripheral data in a local variable. If the RX channel has FIFO space and wins arbitration, it asserts the ready signal to the peripheral to read more data; otherwise, it deasserts the signal.
+The uDMA Peripheral keeps the valid pin high until it has data to transfer to L2 memory. uDMA Peripheral upon receiving ready signal updates the data lines with new data.
+Both ID and data are sampled and sent to the next pipeline stage.</p>
+<p>In the next pipeline stage the stored ID determines the current pointer of L2 memory, the channel data size and the remaining transfer bytes for the channel.
+Pointer(L2 memory address where data should be written), data size, and the data itself are pushed into a Rx FIFO. The data format of RX FIFO is already explained in the FIFO section. In parallel, in the same cycle the next pointer and the number of bytes left for transfers are updated.</p>
+<p>Rx channel performs address alignment, calculates byte enable and sends req signal to TCDM interconnect(L2 interface) to notify TCDM that it wants to write data to L2 memory. L2 interface reads the data and issues l2_gnt_i (grant) signal.
+RX channel after recieving the GNT signal, when its RX FIFO has data, will raise the req signal and update L2 data lines with the new data.</p>
+<p>Rx channel keeps req signal high until FIFO has data.</p>
+<figure class="align-center" id="udma-core-rx-channel-block-diagram">
+<img alt="" src="../_images/uDMA_core_rx_chan_block_diagram.png" />
+<figcaption>
+<p><span class="caption-text">Micro-DMA core Rx Channel</span><a class="headerlink" href="#udma-core-rx-channel-block-diagram" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="udma-core-rx-channel-protocol">
+<img alt="" src="../_images/uDMA_core_rx_chan_protocol.png" />
+<figcaption>
+<p><span class="caption-text">Micro-DMA core Rx Channel Protocol</span><a class="headerlink" href="#udma-core-rx-channel-protocol" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Refer to TCDM Interface section in the current chapter and <a class="reference external" href="https://github.com/openhwgroup/core-v-mcu/blob/master/docs/doc-src/tcdm_interconnect.rst">TCDM interconnect</a> chapter for more information about TCDM functionality..</p>
+<p>To reduce the complexity of the backpropagating the stalls(delays) to the peripherals, each channel, once winning an arbitration, is disabled until its data is pushed into the Rx fifo.</p>
+<p>If the continuous mode is enabled for the RX channel by the uDMA peripheral, then after completing the Rx operation, the core will read the channel configuration from the peripheral and update its current CSR.
+Once the CSRs are updated, the core will automatically resume the RX operation as per the latest CSRs configuration.</p>
+<p><strong>L2 memory address Generation/Alignment</strong></p>
+<p>The RX channel aligns the address received from the uDMA peripheral before placing it on the address lines of the L2 interface.</p>
+<ul class="simple">
+<li><p>For a 2-byte transfer size, if bits 1:0 of the received address are set, the address is considered unaligned.-</p></li>
+<li><p>For a 4-byte transfer size, if either bit 0 or bit 1 of the received address is set, the address is considered unaligned.</p></li>
+</ul>
+<p>uDMA core splits the unaligned access into multiple aligned accesses and update the byte enable accordingly.
+uDMA Rx chanel applies below address selection logic before putting them on address lines of L2 IF:-</p>
+<p><code class="docutils literal notranslate"><span class="pre">Aligned</span> <span class="pre">Access</span></code></p>
+<ul class="simple">
+<li><p>Drop alignment bits(e.g., [1:0] bits for 4-byte alignment) from address received from the uDMA peripheral.</p></li>
+<li><p>Append alignment zeroes at LSB → this forms an aligned byte address.</p></li>
+<li><p>Upper bits are zero-padded to make a full 32-bit address.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">Unaligned</span> <span class="pre">Access</span></code></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Calculate next aligned word :</dt><dd><ul>
+<li><p>Drop alignment bits(e.g., [1:0] bits for 4-byte alignment) from address received from the uDMA peripheral.</p></li>
+<li><p>Add +1 to the address to get the next aligned word access.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Append alignment zeroes at LSB → this forms an aligned byte address.</p></li>
+<li><p>Upper bits are zero-padded to make a full 32-bit address.</p></li>
+<li><p>This is needed when the unaligned access spans two words, and the second part must be fetched separately</p></li>
+</ul>
+<p>This logic ensures that even if an unaligned memory request comes in, the RX channel properly generates aligned L2 accesses, potentially issuing two writes if needed (current word + next word).</p>
+<p>The uDMA subsystem can access only the interleaved memory regions of the Core-V-MCU. To enforce this, the uDMA core forcibly sets bits
+31:24 of the address to 8’h1C, ensuring that the address targets the interleaved memory space. The lin_ch_destination_i pin is used to
+select the specific target memory within the available L2 memory banks.</p>
+<p><strong>Byte enable</strong></p>
+<p>uDMA core also support byte enable that mask the data so that specific bytes should be written to L2 memory. uDMA core pass this information to L2 interface via 4(L2_DATA_WIDTH/8, in the current version L2_DATA_WIDTH is 32) bit wide byte-enable pin. Rx channel uses  [2:0]  and [1:0]  bits of L2 memory address received from the uDMA peripheral to calculte byte enable for 64 and 32 bit data respectively.</p>
+<p><code class="docutils literal notranslate"><span class="pre">s_addr</span></code> represents the current L2 memory address used RX channel to perform write operation.</p>
+<ul class="simple">
+<li><p>Data line: 64 bit,  Transfer size : 1 byte</p></li>
+</ul>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>s_addr[2:0]</p></th>
+<th class="head"><p>Bye enable</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>3’b000</p></td>
+<td><p>8’b00000001</p></td>
+</tr>
+<tr class="row-odd"><td><p>3’b001</p></td>
+<td><p>8’b00000010</p></td>
+</tr>
+<tr class="row-even"><td><p>3’b010</p></td>
+<td><p>8’b00000100</p></td>
+</tr>
+<tr class="row-odd"><td><p>3’b011</p></td>
+<td><p>8’b00001000</p></td>
+</tr>
+<tr class="row-even"><td><p>3’b100</p></td>
+<td><p>8’b00010000</p></td>
+</tr>
+<tr class="row-odd"><td><p>3’b101</p></td>
+<td><p>8’b00100000</p></td>
+</tr>
+<tr class="row-even"><td><p>3’b110</p></td>
+<td><p>8’b01000000</p></td>
+</tr>
+<tr class="row-odd"><td><p>3’b111</p></td>
+<td><p>8’b10000000</p></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>Data line: 64 bit, Transfer size : 2 bytes</p></li>
+</ul>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>s_addr[2:1]</p></th>
+<th class="head"><p>Bye enable</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2’b00</p></td>
+<td><p>8’b00000011</p></td>
+</tr>
+<tr class="row-odd"><td><p>2’b01</p></td>
+<td><p>8’b00001100</p></td>
+</tr>
+<tr class="row-even"><td><p>2’b10</p></td>
+<td><p>8’b00110000</p></td>
+</tr>
+<tr class="row-odd"><td><p>2’b11</p></td>
+<td><p>8’b11000000</p></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>Data line: 64 bit, Transfer size : 4 bytes</p></li>
+</ul>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>s_addr[2]</p></th>
+<th class="head"><p>Bye enable</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1’b0</p></td>
+<td><p>8’b00001111</p></td>
+</tr>
+<tr class="row-odd"><td><p>1’b1</p></td>
+<td><p>8’b11110000</p></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>Data line: 32 bit, Transfer size : 1 bytes</p></li>
+</ul>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>s_addr[1:0]</p></th>
+<th class="head"><p>Bye enable</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2’b00</p></td>
+<td><p>4’b0001</p></td>
+</tr>
+<tr class="row-odd"><td><p>2’b01</p></td>
+<td><p>4’b0010</p></td>
+</tr>
+<tr class="row-even"><td><p>2’b10</p></td>
+<td><p>4’b0100</p></td>
+</tr>
+<tr class="row-odd"><td><p>2’b11</p></td>
+<td><p>4’b1000</p></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>Data line: 32 bit, Transfer size : 2 bytes and byte pending to transmit : 1</p></li>
+</ul>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>s_addr[1:0]</p></th>
+<th class="head"><p>Bye enable</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2’b00</p></td>
+<td><p>4’b0001</p></td>
+</tr>
+<tr class="row-odd"><td><p>2’b01</p></td>
+<td><p>4’b0010</p></td>
+</tr>
+<tr class="row-even"><td><p>2’b10</p></td>
+<td><p>4’b0100</p></td>
+</tr>
+<tr class="row-odd"><td><p>2’b11</p></td>
+<td><p>if_address_alligned ? 4’b1000 : 4’b0000</p></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>Data line: 32 bit, Transfer size : 2 bytes and byte pending to transmit : 2</p></li>
+</ul>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>s_addr[1:0]</p></th>
+<th class="head"><p>Bye enable</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2’b00</p></td>
+<td><p>4’b0011</p></td>
+</tr>
+<tr class="row-odd"><td><p>2’b01</p></td>
+<td><p>4’b0110</p></td>
+</tr>
+<tr class="row-even"><td><p>2’b10</p></td>
+<td><p>4’b1100</p></td>
+</tr>
+<tr class="row-odd"><td><p>2’b11</p></td>
+<td><p>if_address_alligned ? 4’b1000 : 4’b0001</p></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>Data line: 32 bit, Transfer size : 4 bytes and byte pending to transmit : 3</p></li>
+</ul>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>s_addr[1:0]</p></th>
+<th class="head"><p>Bye enable</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2’b00</p></td>
+<td><p>4’b0111</p></td>
+</tr>
+<tr class="row-odd"><td><p>2’b01</p></td>
+<td><p>if_address_alligned ? 4’b1110 : 4’b0000</p></td>
+</tr>
+<tr class="row-even"><td><p>2’b10</p></td>
+<td><p>if_address_alligned ? 4’b1100 : 4’b0001</p></td>
+</tr>
+<tr class="row-odd"><td><p>2’b11</p></td>
+<td><p>if_address_alligned ? 4’b1000 : 4’b0011</p></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>Data line: 32 bit, Transfer size : 4 bytes and byte pending to transmit : 4</p></li>
+</ul>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>s_addr[1:0]</p></th>
+<th class="head"><p>Bye enable</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2’b00</p></td>
+<td><p>4’b1111</p></td>
+</tr>
+<tr class="row-odd"><td><p>2’b01</p></td>
+<td><p>if_address_alligned ? 4’b1110 : 4’b0001</p></td>
+</tr>
+<tr class="row-even"><td><p>2’b10</p></td>
+<td><p>if_address_alligned ? 4’b1100 : 4’b0011</p></td>
+</tr>
+<tr class="row-odd"><td><p>2’b11</p></td>
+<td><p>if_address_alligned ? 4’b1000 : 4’b0111</p></td>
+</tr>
+</tbody>
+</table>
+<p>Each bit of byte enable corresponds to valid byte on data lines. For example, if the byte enale for 64 bit wide data line is 8’b00000001, the valid data is 64’b00000000_00000000_00000000_00000000_00000000_00000000_00000000_XXXXXXXX {X - 0/1}.
+The default byte enable mask is 0x0.</p>
+<p>If the continuous mode is enabled for the RX channel by the uDMA peripheral, then after completing the Rx operation, the core will read the channel configuration from the peripheral and update its current CSR.
+Once the CSRs are updated, the core will automatically resume the RX operation as per the given input.</p>
+<p><strong>RX Event</strong></p>
+<p>After pushing the last byte RX FIFO, uDMA UART raises an event to notify uDMA peripheral that all requested bytes has been transferred.</p>
+</section>
+<section id="tx-channels-read-from-l2-memory">
+<h3>TX Channels (Read from L2 Memory)<a class="headerlink" href="#tx-channels-read-from-l2-memory" title="Link to this heading"></a></h3>
+<p>The TX Channels block handles the data transfer in the opposite direction, from L2 memory to peripherals. The Tx channel is enabled/disabled using the channel configuration register of the connected peripheral.
+When a peripheral is ready to receive data from L2 memory in its internal buffer, it raises a REQ signal to inform the uDMA core that it can accept new data.</p>
+<p>The uDMA core, similarly to what is done in the RX channels, arbitrates the data requests coming from the active channels and latches the result of the arbitration(channel ID) to be used in the stage.
+TX channel invokes the arbitrator based on below conditions combined:-
+- REQ signal is received from peripheral
+- Channel is enabled by Peripheral</p>
+<p>The arbiter runs round robin algorithm at the end of each clock. This gives all uDMA peripherals a fair chance to read the data from L2 memory.
+During the next pipe stage the ID of the winner is used to select the corresponding resources and the pointer, datasize and channel ID are sent to the tx fifo. The data format of TX FIFO is already explained in the FIFO section.
+If space is available in the core’s TX FIFO, the uDMA core issues a GNT (grant) signal to the peripheral whose channel ID has been selected by the arbiter.</p>
+<p>In parallel the new address and the number of bytes left are updated. In the tx channel, the channel ID is also pushed in the tx fifo as it is needed to demux the data to the proper channel on the response path.
+Tx channel sends req signal to TCDM interconnect(L2 interface) bassed on below conditions combined: -
+- TX FIFO of the channel has space
+- Ready signal from peripheral is received indicating that the peripheral FIFO has space.</p>
+<p>Tx channel also shares the L2 memory address to TCDM interconnect via 32 bit wide address line.
+Refer to TCDM Interface section in the current chapter and <a class="reference external" href="https://github.com/openhwgroup/core-v-mcu/blob/master/docs/doc-src/tcdm_interconnect.rst">TCDM interconnect</a> chapter for more information about TCDM functionality.
+L2 interface issues l2_gnt_i (grant) signal to acknowledge that it has received the request from TX channel.
+TCDM interconnect issues a valid signal to Tx channel after receiving data from L2 memory. Tx channel reads the data from L2 interface and perform the data allignment. TX channel uses the channel ID stored in the TX FIFO to select the uDMA peripheral and update the valid signal and data lines of the corresponding peripheral.
+The peripheral in response to valid signal reads the data lines raise the ready signal if its FIFO has space and REQ signal to inform the uDMA core that it can accept new data.</p>
+<p>Due to the blocking nature of the simple valid/req protocol at the uDMA core boundaries, each tx channel is stalled until the data is fetched from the memory.
+This implies that with no contention we can fetch one data every 4 cycles.
+This sets the maximum bandwidth of a TX channel to 1/4th of the L2 bandwidth but this is not a limit in the current IO subsystem since S/P conversion absorbs the latency.</p>
+<figure class="align-center" id="udma-core-tx-channel-block-diagram">
+<img alt="" src="../_images/uDMA_core_tx_chan_block_diagram.png" />
+<figcaption>
+<p><span class="caption-text">Micro-DMA core Tx Channel</span><a class="headerlink" href="#udma-core-tx-channel-block-diagram" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="udma-core-tx-channel-protocol">
+<img alt="" src="../_images/uDMA_core_tx_chan_protocol.png" />
+<figcaption>
+<p><span class="caption-text">Micro-DMA core Tx Channel Protocol</span><a class="headerlink" href="#udma-core-tx-channel-protocol" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>If the continuous mode is enabled for the TX channel by the uDMA peripheral, then after completing the Tx operation, the core will read the channel configuration from the peripheral and update its current CSR.
+Once the CSRs are updated, the core will automatically resume the TX operation as per the latest CSRs configuration.</p>
+<p>L2 memory address Generation/Alignment logic is same as Rx channel.</p>
+<p><strong>Byte enable</strong>
+L2 interface does not proivde the byte enable information to Tx channel. The L2 IF pin is hardcoded with value 0x0. Tx channel uses  [2:0]  and [1:0]  bits of L2 memory address received from the uDMA peripheral to calculte byte enable for 64 and 32 bit data respectively.</p>
+<p><code class="docutils literal notranslate"><span class="pre">r_addr</span></code> represents the current L2 memory address being accessed by Tx channel to perform read operation.</p>
+<ul class="simple">
+<li><p>Byte enable mask for 64 bit data line is same as Rx channel.</p></li>
+<li><p>Data line: 32 bit, Transfer size : 1 bytes</p></li>
+</ul>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>r_addr[1:0]</p></th>
+<th class="head"><p>data</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2’b00</p></td>
+<td><p>32’b00000000_00000000_00000000_XXXXXXXX</p></td>
+</tr>
+<tr class="row-odd"><td><p>2’b01</p></td>
+<td><p>32’b00000000_00000000_XXXXXXXX_00000000</p></td>
+</tr>
+<tr class="row-even"><td><p>2’b10</p></td>
+<td><p>32’b00000000_XXXXXXXX_00000000_00000000</p></td>
+</tr>
+<tr class="row-odd"><td><p>2’b11</p></td>
+<td><p>32’bXXXXXXXX_00000000_00000000_00000000</p></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>Data line: 32 bit, Transfer size : 2 bytes</p></li>
+</ul>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>r_addr[1:0]</p></th>
+<th class="head"><p>data</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2’b00</p></td>
+<td><p>32’b00000000_00000000_XXXXXXXX_XXXXXXXX</p></td>
+</tr>
+<tr class="row-odd"><td><p>2’b01</p></td>
+<td><p>32’b00000000_XXXXXXXX_XXXXXXXX_00000000</p></td>
+</tr>
+<tr class="row-even"><td><p>2’b10</p></td>
+<td><p>32’bXXXXXXXX_XXXXXXXX_00000000_00000000</p></td>
+</tr>
+<tr class="row-odd"><td><p>2’b11</p></td>
+<td><dl class="simple">
+<dt>if_address_alligned ? 32’bXXXXXXXX_00000000_00000000_00000000</dt><dd><p>: 32’b00000000_00000000_00000000_XXXXXXXX</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>Data line: 32 bit, Transfer size : 4 bytes</p></li>
+</ul>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>r_addr[1:0]</p></th>
+<th class="head"><p>Bye enable</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2’b00</p></td>
+<td><p>32’bXXXXXXXX_XXXXXXXX_XXXXXXXX_XXXXXXXX</p></td>
+</tr>
+<tr class="row-odd"><td><p>2’b01</p></td>
+<td><dl class="simple">
+<dt>if_address_alligned ? 32’bXXXXXXXX_XXXXXXXX_XXXXXXXX_00000000 :</dt><dd><p>32’b00000000_00000000_00000000_XXXXXXXX</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td><p>2’b10</p></td>
+<td><dl class="simple">
+<dt>if_address_alligned ? 32’bXXXXXXXX_XXXXXXXX_00000000_00000000 :</dt><dd><p>32’b00000000_00000000_XXXXXXXX_XXXXXXXX</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-odd"><td><p>2’b11</p></td>
+<td><dl class="simple">
+<dt>if_address_alligned ? 32’bXXXXXXXX_00000000_00000000_00000000 :</dt><dd><p>32’b00000000_XXXXXXXX_XXXXXXXX_XXXXXXXX</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>TX Event</strong></p>
+<p>After pushing the last byte TX FIFO, uDMA core raises an event to notify uDMA peripheral that all requested bytes has been transferred.</p>
+</section>
+<section id="tcdm-interface">
+<h3>TCDM Interface<a class="headerlink" href="#tcdm-interface" title="Link to this heading"></a></h3>
+<p>The TCDM Interface arbitrates between the access requests originated from the Tx or Rx channels.
+Among with the arbitration the TCDM interface generates the proper byte enables and puts the data to the proper lanes when accessing the L2 memories.
+An incoming write request from the Rx channels is sent to the L2 only if there is no pending read request from the TX channels or if the priority is assigned to the RX channels.
+The priority is flipped from Tx to Rx or vice versa when there is a conflict between read or write requests.</p>
+</section>
+<section id="configuration-interface">
+<h3>Configuration Interface<a class="headerlink" href="#configuration-interface" title="Link to this heading"></a></h3>
+<p>Configuration interface is driven by the CORE-V-MCU’s APB Peripheral Interconnect bus.
+Although the current implementation of the CORE-V-MCU supports only nine uDMA peripherals, the uDMA subsystem allows for up to fifteen.
+Each peripheral can have up to a maximum of 32 32-bit configuration registers.
+This includes the registers needed to configure the uDMA core channels dedicated to the peripheral.
+The uDMA address space consists in 2KB.
+The first 128*15 bytes are dedicated to the 15 peripherals while the last 32 configuration registers are dedicated to the uDMA configuration.</p>
+</section>
+<section id="event-detection">
+<h3>Event Detection<a class="headerlink" href="#event-detection" title="Link to this heading"></a></h3>
+<p>Event detection is implemented via valid/ready signals. uDMA core sends event ready signal to APB event controller to initiate event detection. In the current implementation, the ready signal is always high, which means the uDMA core is consistently ready to perform event detection.
+The APB event controller, depending upon its configuration, drives the valid signal and sends event data to the uDMA core in response to the ready signal. uDMA core compares the event-data received from APB event controller over 8-bit wide event-data-port with the value present in the event detection register of uDMA core along with the valid signal.
+The event detection register is composed of four 8-bit bitfields : CMP_EVENT0, CMP_EVENT1, CMP_EVENT2, and CMP_EVENT3. Each field corresponds to a specific output event signal (event_o[0] through event_o[3]). When an incoming value matches the value stored in one of these bitfields, the corresponding output event is asserted. For example, a match with CMP_EVENT0 will raise event_o[0].
+uDMA core broadcasts the event detection signal to uDMA peripherals which support event detection functionality. It is up to the uDMA peripheral to accept or ignore the signal.
+Currently, event detection is supported for I2C and SPIM.</p>
+<figure class="align-center" id="udma-core-event-detection">
+<img alt="" src="../_images/uDMA_core_event_detection.png" />
+<figcaption>
+<p><span class="caption-text">Micro-DMA core Event detection block diagram</span><a class="headerlink" href="#udma-core-event-detection" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="udma-core-peripheral-to-channel-mapping">
+<h2>uDMA core Peripheral to channel mapping<a class="headerlink" href="#udma-core-peripheral-to-channel-mapping" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Peripheral</p></th>
+<th class="head"><p>Tx Channel(s)</p></th>
+<th class="head"><p>Rx Channel(s)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>UART_0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>UART_1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>QSPI_0</p></td>
+<td><p>2, 3</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>QSPI_1</p></td>
+<td><p>4, 5</p></td>
+<td><p>3</p></td>
+</tr>
+<tr class="row-even"><td><p>I2CM_0</p></td>
+<td><p>6</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>I2CM_1</p></td>
+<td><p>7</p></td>
+<td><p>5</p></td>
+</tr>
+<tr class="row-even"><td><p>SDIO</p></td>
+<td><p>8</p></td>
+<td><p>6</p></td>
+</tr>
+<tr class="row-odd"><td><p>CAMERA</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-even"><td><p>EXT_PERIPH (eFPGA)</p></td>
+<td><p>9</p></td>
+<td><p>8</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="udma-core-csrs">
+<h2>uDMA core CSRs<a class="headerlink" href="#udma-core-csrs" title="Link to this heading"></a></h2>
+<p>Refer to <a class="reference external" href="https://github.com/openhwgroup/core-v-mcu/blob/master/docs/doc-src/mmap.rst">Memory Map</a> for peripheral domain address of the uDMA core CSRs.
+The uDMA core implements three CSRs to:</p>
+<ul class="simple">
+<li><p>enable or disable the peripheral clocks</p></li>
+<li><p>set compare value for the event matching mechanism</p></li>
+<li><p>reset the periperal controller</p></li>
+</ul>
+<p>uDMA core CSRs are non-volatile in nature, their values are not changed by the hardware.
+uDMA core CSRs are defined below.</p>
+<p>Details of Register access type are explained <a class="reference external" href="https://docs.openhwgroup.org/projects/core-v-mcu/doc-src/mmap.html#csr-access-types">here</a></p>
+<section id="udma-clk-en">
+<h3>UDMA_CLK_EN<a class="headerlink" href="#udma-clk-en" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Offset: 0x0</p></li>
+<li><p>Type  : non-volatile</p></li>
+</ul>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Bits</p></th>
+<th class="head"><p>Access</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>PERIPH_CLK_ENABLE</p></td>
+<td><p>31:0</p></td>
+<td><p>RW</p></td>
+<td><p>0x0</p></td>
+<td><p>Enable for uDMA Subsystem peripheral clocks, Bit mappings are as follows</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>UART0   0</p></li>
+<li><p>UART1   1</p></li>
+<li><p>QSPIM0  2</p></li>
+<li><p>QSPIM1 need to confirm</p></li>
+<li><p>I2CM0   3</p></li>
+<li><p>I2CM1   4</p></li>
+<li><p>SDIO0   5</p></li>
+<li><p>CAM0    5</p></li>
+</ul>
+</div></blockquote>
+<p>see core-v-mcu_config ‘Peripheral clock enable masks’ for more
+information of bit positions</p>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="udma-cfg-evt">
+<h3>UDMA_CFG_EVT<a class="headerlink" href="#udma-cfg-evt" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Offset: 0x4</p></li>
+<li><p>Type  : non-volatile</p></li>
+</ul>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Bits</p></th>
+<th class="head"><p>Access</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>CMP_EVENT3</p></td>
+<td><p>31:24</p></td>
+<td><p>RW</p></td>
+<td><p>0x00</p></td>
+<td><p>Compare value for event detection</p></td>
+</tr>
+<tr class="row-odd"><td><p>CMP_EVENT2</p></td>
+<td><p>23:16</p></td>
+<td><p>RW</p></td>
+<td><p>0x01</p></td>
+<td><p>Compare value for event detection</p></td>
+</tr>
+<tr class="row-even"><td><p>CMP_EVENT1</p></td>
+<td><p>15:8</p></td>
+<td><p>RW</p></td>
+<td><p>0x02</p></td>
+<td><p>Compare value for event detection</p></td>
+</tr>
+<tr class="row-odd"><td><p>CMP_EVENT0</p></td>
+<td><p>7:0</p></td>
+<td><p>RW</p></td>
+<td><p>0x03</p></td>
+<td><p>Compare value for event detection</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="udma-rst">
+<h3>UDMA_RST<a class="headerlink" href="#udma-rst" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Offset: 0x8</p></li>
+<li><p>Type  : non-volatile</p></li>
+</ul>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Bits</p></th>
+<th class="head"><p>Access</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>PERIPH_RESET</p></td>
+<td><p>31:0</p></td>
+<td><p>RW</p></td>
+<td><p>0x0</p></td>
+<td><p>Reset for uDMA Subsystem Peripherals,Bit mappings are as follows</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>UART0   0</p></li>
+<li><p>UART1   1</p></li>
+<li><p>QSPIM0  2</p></li>
+<li><p>QSPIM1 need to confirm</p></li>
+<li><p>I2CM0   3</p></li>
+<li><p>I2CM1   4</p></li>
+<li><p>SDIO0   5</p></li>
+<li><p>CAM0    5</p></li>
+</ul>
+</div></blockquote>
+<p>see core-v-mcu_config ‘Peripheral clock enable masks’ for more
+information of bit positions</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Most of the CSRs associated with the Micro-DMA are actually uDMA peripheral CSRs.
+While the uDMA subsystem implements the selection logic for uDMA peripheral CSRs, this is transparent to the user.</p>
+</div>
+</section>
+</section>
+<section id="firmware-guidelines">
+<h2>Firmware Guidelines:<a class="headerlink" href="#firmware-guidelines" title="Link to this heading"></a></h2>
+<section id="soft-reset">
+<h3>Soft-Reset<a class="headerlink" href="#soft-reset" title="Link to this heading"></a></h3>
+<p>Software can issue a reset to uDMA peripherals by setting an appropriate bit of the PERIPH_RESET register of the uDMA core.</p>
+</section>
+<section id="clock">
+<h3>Clock<a class="headerlink" href="#clock" title="Link to this heading"></a></h3>
+<p>Software can enable/disable the peripheral clock of uDMA peripherals by setting an appropriate bit of the PERIPH_CLK_ENABLE register of the uDMA core.</p>
+</section>
+<section id="id2">
+<h3>Event Detection<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Configure APB event controller to generate software events. APB event controller will pass the event ID to uDMA core.</p></li>
+<li><p>Update UDMA_CFG_EVT register with the expected ID.</p></li>
+<li><p>uDMA core compares the value recived from APB event controller with the value present in UDMA_CFG_EVT register.</p></li>
+<li><p>If the values are equal it generates an event to uDMA peripherals.</p></li>
+</ul>
+</section>
+</section>
+<section id="pin-diagram">
+<h2>Pin Diagram<a class="headerlink" href="#pin-diagram" title="Link to this heading"></a></h2>
+<section id="id3">
+<h3>uDMA Subsystem<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<figure class="align-center" id="udma-subsystem-pin-diagram">
+<img alt="" src="../_images/uDMA_subsystem_pin_diagram.png" />
+<figcaption>
+<p><span class="caption-text">uDMA Subsystem Pin Diagram</span><a class="headerlink" href="#udma-subsystem-pin-diagram" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The interfaces mentioned in above Pin diagram allows uDMA Subsystem core and peripheral to communicate to module present outside of uDMA Subsystem.
+Below is the brief description of pins.</p>
+</section>
+<section id="udma-subsystem-to-tcdm-l2-if-interconnect-interface">
+<h3>uDMA Subsystem to TCDM(L2 IF) Interconnect interface<a class="headerlink" href="#udma-subsystem-to-tcdm-l2-if-interconnect-interface" title="Link to this heading"></a></h3>
+<p><strong>Read Interface to TCDM(L2 IF) Interconnect</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">L2_ro_wen_o</span></code>: Write enable, this signal is hardcoded to value 1.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">L2_ro_req_o</span></code>: Read request signal</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">L2_ro_gnt_i</span></code>: Read grant signal</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">L2_ro_addr_o</span></code>: Address to read from</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">L2_ro_be_o</span></code>: Byte enable</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">L2_ro_wdata_o</span></code>: Write data, this signal is hardcoded to 0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">L2_ro_rvalid_i</span></code>: Read valid</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">L2_ro_rdata_i</span></code>: Data read from memory</p></li>
+</ul>
+<p>These interfaces are driven by uDMA core on request path and L2 IF on response path. uDMA core initiate the transaction on this interface when it want to read data from L2 memory.
+This interface does not support writing to the L2 memory, hence L2_ro_wen_o and L2_ro_wdata_o pins are currently unused. The Write Enable ‘L2_ro_wen_o’ is hardcoded to 1, and the Write Data ‘L2_ro_wdata_o’ is hardcoded to 0.
+Byte Enable ‘L2_ro_be_o’ pin is hardcoded to value 0. The LSB bits of L2 memory address ‘L2_ro_addr_o’ is used to calculate byte enables.</p>
+<p><strong>Write Interface to TCDM(L2 IF) Interconnect</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">L2_wo_wen_o</span></code>: Write enable, this signl is hardcoded to value 0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">L2_wo_req_o</span></code>: Write request signal</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">L2_wo_gnt_i</span></code>: Write grant signal</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">L2_wo_addr_o</span></code>: Address to write to</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">L2_wo_wdata_o</span></code>: Data to write</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">L2_wo_be_o</span></code>: Byte enable</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">L2_wo_rvalid_i</span></code>: Read valid</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">L2_wo_rdata_i</span></code>: Read data</p></li>
+</ul>
+<p>These interfaces are driven by uDMA core on request path and L2 IF on response path. uDMA core initiate the transaction on this interface when it want to write data to L2 memory.
+This interface does not support reading from the L2 memory, hence  L2_wo_rvalid_i and L2_wo_rdata_i pins are currently unused. The Write Enable ‘L2_ro_wen_o’ is hardcoded to 0.
+The L2_wo_rvalid_i and L2_wo_rdata_i pins are not read by any uDMA subsystem module.</p>
+</section>
+<section id="test-interface">
+<h3>Test Interface<a class="headerlink" href="#test-interface" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dft_test_mode_i</span></code>: Design-for-test mode signal</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dft_cg_enable_i</span></code>: Clock gating enable during test</p></li>
+</ul>
+<p>dft_test_mode_i is generally used to put uDMA Subsytem peripheral into test mode. dft_test_mode_i is used spim by and camera peripherals
+dft_cg_enable_i is used to control clock gating such that clock behavior can be tested. dft_cg_enable_i is used by uDMA core, spim and camera peripherals.</p>
+</section>
+<section id="clock-and-reset">
+<h3>Clock and Reset<a class="headerlink" href="#clock-and-reset" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sys_clk_i</span></code>: System clock</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">efpga_clk_i</span></code>: eFPGA domain clock</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">periph_clk_i</span></code>: Peripheral clock</p></li>
+</ul>
+<p>These interfaces are used by uDMA Subsystem to synchronize itself with rest of system.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sys_resetn_i</span></code>: System reset (active low)</p></li>
+</ul>
+</section>
+<section id="apb-bus-interface">
+<h3>APB Bus Interface<a class="headerlink" href="#apb-bus-interface" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">udma_apb_paddr</span></code>: APB address</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">udma_apb_pwdata</span></code>: APB write data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">udma_apb_pwrite</span></code>: Write enable</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">udma_apb_psel</span></code>: Peripheral select</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">udma_apb_penable</span></code>: APB enable signal</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">udma_apb_prdata</span></code>: APB read data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">udma_apb_pready</span></code>: APB ready</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">udma_apb_pslverr</span></code>: APB slave error</p></li>
+</ul>
+<p>The APB bus accesses the registers of the uDMA core and its peripherals through this interface. However, uDMA core peripherals are not directly accessible via the APB bus.
+The CSRs of uDMA peripherals are managed by the uDMA core.</p>
+</section>
+<section id="event-detection-interface-between-udma-subsystem-and-apb-event-controller">
+<h3>Event Detection Interface between uDMA Subsystem and APB event controller<a class="headerlink" href="#event-detection-interface-between-udma-subsystem-and-apb-event-controller" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">event_valid_i</span></code>: Incoming event valid</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">event_data_i</span></code>: Event data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">event_ready_o</span></code>: Event ready to accept</p></li>
+</ul>
+<p>The uDMA core uses above interface to detect events from the APB event controller.</p>
+</section>
+<section id="udma-subsystem-to-efpga-tx-interface">
+<h3>uDMA Subsystem to eFPGA Tx interface<a class="headerlink" href="#udma-subsystem-to-efpga-tx-interface" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">efpga_data_tx_valid_o</span></code>: TX data valid</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">efpga_data_tx_ready_i</span></code>: uDMA Subsystem ready for TX</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">efpga_data_tx_o</span></code>: TX data (32-bit)</p></li>
+</ul>
+</section>
+<section id="udma-subsystem-to-efpga-rx-interface">
+<h3>uDMA Subsystem to eFPGA Rx interface<a class="headerlink" href="#udma-subsystem-to-efpga-rx-interface" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">efpga_data_rx_valid_i</span></code>: RX data valid</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">efpga_data_rx_ready_o</span></code>: uDMA Subsystem ready to receive</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">efpga_data_rx_i</span></code>: RX data (32-bit)</p></li>
+</ul>
+</section>
+<section id="udma-subsystem-to-efpga-setup-interface">
+<h3>uDMA Subsystem to eFPGA setup interface<a class="headerlink" href="#udma-subsystem-to-efpga-setup-interface" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">efpga_setup_i</span></code>: Setup/config data to uDMA Subsystem</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">efpga_setup_o</span></code>: Setup/config data to peripheral</p></li>
+</ul>
+</section>
+<section id="udma-subsystem-peripheral-io-interface">
+<h3>uDMA Subsystem Peripheral IO interface<a class="headerlink" href="#udma-subsystem-peripheral-io-interface" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">perio_in_i</span></code>: Peripheral inputs</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">perio_out_o</span></code>: Peripheral outputs</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">perio_oe_o</span></code>: Peripheral output enables</p></li>
+</ul>
+<p>uDMA peripherals, such as uDMA UART and uDMA I2C, use these interfaces to perform I/O operations. These interfaces extend to the boundary of the core-v-mcu.</p>
+</section>
+<section id="interface-for-events-from-udma-peripheral-to-apb">
+<h3>Interface for events from uDMA peripheral to APB.<a class="headerlink" href="#interface-for-events-from-udma-peripheral-to-apb" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">events_o</span></code>: Output events (128 bits: 4 events × 32 peripherals)</p></li>
+</ul>
+<p>uDMA peripherals (such as the uDMA UART) use this interface to communicate events (e.g., parity errors, data received, etc.) to the APB event controller.</p>
+</section>
+<section id="udma-core">
+<h3>uDMA Core<a class="headerlink" href="#udma-core" title="Link to this heading"></a></h3>
+<figure class="align-center" id="udma-core-pin-diagram">
+<img alt="" src="../_images/uDMA_core_pin_diagram.png" />
+<figcaption>
+<p><span class="caption-text">uDMA CORE Pin Diagram</span><a class="headerlink" href="#udma-core-pin-diagram" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The interfaces mentioned in above pin diagram are either connected with uDMA subsytem or uDMA core. uDMA core is an internal module of uDMA Subsytem.</p>
+<p>Below is the brief description of pins.</p>
+</section>
+<section id="id4">
+<h3>Clock and Reset<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sys_clk_i</span></code>: System clock</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">periph_clk_i</span></code>: Peripheral clock</p></li>
+</ul>
+<p>These interfaces are used by uDMA core to synchronize itself with rest of system.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">HRESETn</span></code>: Active low reset signal</p></li>
+</ul>
+</section>
+<section id="dft-design-for-test-signal">
+<h3>DFT (Design for Test) signal<a class="headerlink" href="#dft-design-for-test-signal" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dft_cg_enable_i</span></code>: Enables or disables clock gating for test (useful for controlling the behavior of clocks for testing).</p></li>
+</ul>
+</section>
+<section id="id5">
+<h3>APB Bus Interface<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">PADDR</span></code>: APB address bus.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PWDATA</span></code>: APB write data.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PWRITE</span></code>: APB write enable signal.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PSEL</span></code>: APB select signal.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PENABLE</span></code>: APB enable signal.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PRDATA</span></code>: APB read data output.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PREADY</span></code>: APB ready signal indicating transaction completion.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PSLVERR</span></code>: APB slave error signal.</p></li>
+</ul>
+</section>
+<section id="event-detection-interface">
+<h3>Event detection Interface<a class="headerlink" href="#event-detection-interface" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">event_valid_i</span></code>: Event valid input signal.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">event_data_i</span></code>: Event data input (8 bits).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">event_ready_o</span></code>: Event ready output signal.</p></li>
+</ul>
+<p>uDMA core uses these interface to perform event detection from APB event controller.</p>
+</section>
+<section id="event-broadcast-interface">
+<h3>Event broadcast Interface<a class="headerlink" href="#event-broadcast-interface" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">event_o</span></code>: Encoded event output (4 bits).</p></li>
+</ul>
+<p>If an event from APB event controller is confirmed then uDMA Core broadcast the detected events to uDMA peripheral(like I2C etc.) using event_o pin.</p>
+</section>
+<section id="udma-peripheral-clock-interface">
+<h3>uDMA Peripheral clock Interface<a class="headerlink" href="#udma-peripheral-clock-interface" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">periph_per_clk_o</span></code>: Used to provide system clock to uDMA peripheral. uDMA core uses UDMA_CLK_EN register to enable/disable peripheral clock.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">periph_sys_clk_o</span></code>: Used to provide system clock to uDMA peripheral.</p></li>
+</ul>
+</section>
+<section id="udma-peripheral-reset-interface">
+<h3>uDMA  Peripheral reset Interface<a class="headerlink" href="#udma-peripheral-reset-interface" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">periph_rst_value_o</span></code>: Reset value for each uDMA peripheral. uDMA core uses UDMA_RST register to enable/disable peripheral reset.</p></li>
+</ul>
+<p>Using this interface uDMA core issues reset signal to uDMA peripherals.</p>
+</section>
+<section id="udma-peripheral-csr-interface">
+<h3>uDMA Peripheral CSR Interface<a class="headerlink" href="#udma-peripheral-csr-interface" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">periph_data_to_o</span></code>: Data output to peripherals.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">periph_addr_o</span></code>: Address to peripherals.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">periph_rwn_o</span></code>: Read/not-write control to peripherals.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">periph_data_from_i</span></code>: Data input from peripherals.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">periph_valid_o</span></code>: Valid signal for peripheral communication.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">periph_ready_i</span></code>: Ready signal from peripherals</p></li>
+</ul>
+<p>The uDMA core uses these signals to manage uDMA peripherals control and status registers (CSRs). It receives read and write requests for uDMA peripherals through the APB bus.</p>
+</section>
+<section id="rx-l2-interface">
+<h3>RX L2 Interface<a class="headerlink" href="#rx-l2-interface" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_l2_req_o</span></code>: Read request to L2 memory.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_l2_gnt_i</span></code>: Grant signal from L2 memory.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_l2_addr_o</span></code>: Address to read from in L2 memory.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_l2_be_o</span></code>: Byte enable for L2 memory access.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_l2_wdata_o</span></code>: Write data to L2 memory.</p></li>
+</ul>
+<p>This interface is used by the uDMA core to write the data to the L2 memory.
+It does not require the Write Enable, Read Valid &amp; Read Data signals of the TCDM protocol, hence these pins are not provided at this interface.</p>
+</section>
+<section id="tx-l2-interface">
+<h3>TX L2 Interface<a class="headerlink" href="#tx-l2-interface" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_l2_req_o</span></code>: Write request to L2 memory.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_l2_gnt_i</span></code>: Grant signal from L2 memory.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_l2_addr_o</span></code>: Address to write to in L2 memory.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_l2_rdata_i</span></code>: Read data from L2 memory.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_l2_rvalid_i</span></code>: Read valid signal from L2.</p></li>
+</ul>
+<p>This interface is used by the uDMA core to read the data from the L2 memory. It does not require the Write Enable and Write Data signals of the TCDM protocol, hence tehse pins are not provided at this interface.
+The Byte Enable signal of the TCDM protocol is not used, hence this pin is not provided in this interface. The LSB bits of address ‘tx_l2_addr_o’ is used to calculate byte enables.</p>
+</section>
+<section id="rx-channel-interface">
+<h3>RX Channel Interface<a class="headerlink" href="#rx-channel-interface" title="Link to this heading"></a></h3>
+<p><strong>RX Channel Data and Control Signals</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_lin_valid_i</span></code>: Valid input signal for RX channels.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_lin_data_i</span></code>: Data input for RX channels.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_lin_datasize_i</span></code>: Data size for RX channels.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_lin_ready_o</span></code>: Ready output signal from RX.</p></li>
+</ul>
+<p><strong>RX Channel Config Interface from uDMA Core to uDMA Peripheral</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_lin_en_o</span></code>: Enable signal for RX channels.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_lin_pending_o</span></code>: Pending status for RX channels.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_lin_curr_addr_o</span></code>: Current address being read from.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_lin_bytes_left_o</span></code>: Bytes left to transfer.</p></li>
+</ul>
+<p><strong>RX Channel Config Interface from uDMA Peripheral to uDMA Core</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_lin_destination_i</span></code>: Used to select L2 memory (interleaved). This interface is hardcode with value 0 within uDMA SS. A value 0 represents 0x1C.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_lin_cfg_startaddr_i</span></code>: Start address configuration input.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_lin_cfg_size_i</span></code>: Transfer size configuration input.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_lin_cfg_continuous_i</span></code>: Continuous transfer mode input.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_lin_cfg_en_i</span></code>: Enable configuration for RX.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_lin_cfg_clr_i</span></code>: Clear configuration signal.</p></li>
+</ul>
+<p>The uDMA core uses input interfaces to read information from peripherals and create a local copy within uDMA core. uDMA core operates using local copy.
+The output interface is used to return the current values(via output interface) of local copy when the channel configuration CSRs of uDMA core peripheral are read.</p>
+<p><strong>Rx event</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_lin_events_o</span></code>: Event signal from RX.</p></li>
+</ul>
+<p>The uDMA core uses this interface to raise an event after reading data of size provided by rx_lin_cfg_size_i pin from L2 memory.</p>
+<p><strong>Stream inerface</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_lin_cfg_stream_i</span></code> Stream ID selection for RX.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_lin_cfg_stream_id_i</span></code>: Stream ID configuration input.</p></li>
+</ul>
+<p>More information is yet to be added.</p>
+</section>
+<section id="tx-channel-interface">
+<h3>TX Channel Interface<a class="headerlink" href="#tx-channel-interface" title="Link to this heading"></a></h3>
+<p><strong>TX Channel Data and Control Signals</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_lin_req_i</span></code>: Request signal for TX channel.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_lin_gnt_o</span></code>: Grant signal output for TX.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_lin_datasize_i</span></code>: TX data size input.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_lin_data_o</span></code>: TX data output.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_lin_valid_o</span></code>: Valid data output signal.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_lin_ready_i</span></code>: TX ready input signal.</p></li>
+</ul>
+<p><strong>TX Channel Config Interface from uDMA Core to uDMA Peripheral</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_lin_en_o</span></code>: Enable signal for TX channels.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_lin_pending_o</span></code>: TX pending status output.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_lin_curr_addr_o</span></code>: Current address being written to.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_lin_bytes_left_o</span></code>: Bytes remaining to transmit.</p></li>
+</ul>
+<p><strong>TX Channel Config Interface from uDMA Peripheral to uDMA Core</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_lin_destination_i</span></code>: Used to select L2 memory (interleaved). This interface is hardcode with value 0 within uDMA SS. A value 0 represents 0x1C.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_lin_cfg_startaddr_i</span></code>: Start address config for TX.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_lin_cfg_size_i</span></code>: TX transfer size config input.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_lin_cfg_continuous_i</span></code>: Continuous transfer mode enable.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_lin_cfg_en_i</span></code>: TX channel enable configuration input.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_lin_cfg_clr_i</span></code>: Clear config signal for TX.</p></li>
+</ul>
+<p>The uDMA core uses input interfaces to read information from peripherals and create a local copy within uDMA core. uDMA core operates using local copy.
+The output interface is used to return the current values of local copy when the channel configuration CSRs of uDMA core peripheral are read.</p>
+<p><strong>Rx event</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_lin_events_o</span></code>: Event signal output for TX.</p></li>
+</ul>
+<p>The uDMA core uses this interface to raise an event after reading data of size provided by tx_lin_cfg_size_i pin from L2 memory.</p>
+</section>
+<section id="tx-external-efpga-channel-interface">
+<h3>TX External(eFPGA) Channel Interface<a class="headerlink" href="#tx-external-efpga-channel-interface" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_ext_req_i</span></code>: Request signal input for external TX.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_ext_datasize_i</span></code>: Data size config for external TX.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_ext_destination_i</span></code>: Destination ID for external TX.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_ext_addr_i</span></code>: Address input for external TX.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_ext_gnt_o</span></code>: Grant signal for external TX.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_ext_valid_o</span></code>: Valid output signal for external TX.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_ext_data_o</span></code>: Data output for external TX.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tx_ext_ready_i</span></code>: Ready input for external TX.</p></li>
+</ul>
+</section>
+<section id="rx-external-efpga-channel-interface">
+<h3>RX External(eFPGA) Channel Interface<a class="headerlink" href="#rx-external-efpga-channel-interface" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_ext_addr_i</span></code>: External RX address input.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_ext_datasize_i</span></code>: External RX data size input.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_ext_destination_i</span></code>: External RX destination input.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_ext_stream_i</span></code>: Stream index for external RX.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_ext_stream_id_i</span></code>: Stream ID for external RX.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_ext_sot_i</span></code>: Start-of-transfer input for RX.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_ext_eot_i</span></code>: End-of-transfer input for RX.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_ext_valid_i</span></code>: Valid signal for external RX.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_ext_data_i</span></code>: Data input for external RX.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rx_ext_ready_o</span></code>: Ready signal output for external RX.</p></li>
+</ul>
+</section>
+<section id="stream-output-interface">
+<h3>Stream Output Interface<a class="headerlink" href="#stream-output-interface" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">stream_data_o</span></code>: Stream data output for each stream.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stream_datasize_o</span></code>: Data size per stream.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stream_valid_o</span></code>: Valid signal for each stream.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stream_sot_o</span></code>: Start-of-transfer for each stream.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stream_eot_o</span></code>: End-of-transfer for each stream.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stream_ready_i</span></code>: Ready signal for each stream input.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>eFPGA interface is not discussed in this document. It may be added in future.</p>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="core_complex_subsystem.html" class="btn btn-neutral float-left" title="Core Complex Subsystem" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="efpga_subsystem.html" class="btn btn-neutral float-right" title="eFPGA SubSystem" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022-present, OpenHW Group.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
