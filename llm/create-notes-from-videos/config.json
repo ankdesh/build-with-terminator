@@ -1,0 +1,17 @@
+{
+  "llm": {
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "temperature": 0.2
+  },
+  "whisper": {
+    "model_size": "base"
+  },
+  "capture": {
+    "interval": 10,
+    "threshold": 0.95
+  },
+  "pdf": {
+    "image_quality": 80
+  }
+}

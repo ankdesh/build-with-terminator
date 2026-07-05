@@ -34,6 +34,8 @@ As per our global guidelines:
 - `SessionProcessor`: Orchestrates the processing flow.
 - `AudioTranscriber`: Interfaces with `faster-whisper` to transcribe audio files.
 - `ImageComparator`: Computes SSIM between two screenshots to determine if the slide has changed.
+- `OpenAINotesGenerator`: Sends combined transcripts to OpenAI's API to generate 2-level hierarchical pointwise notes.
+- `PDFGenerator`: Compiles slides and notes into a publication-quality PDF, with support for JPEG image compression.
 
 ---
 

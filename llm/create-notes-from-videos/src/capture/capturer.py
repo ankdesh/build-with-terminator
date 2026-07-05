@@ -118,66 +118,87 @@ class ScreenAudioCapturer:
             logger.error(f"ffmpeg stderr: {e.stderr}")
 
     def run(self) -> None:
-        """Runs the capture loop."""
+        """Runs the capture loop, recording audio continuously and logging screenshot timestamps."""
+        import json
+        from datetime import datetime
         self.monitor_source = self._get_monitor_source()
         
+        # Determine the session prefix based on starting time
+        start_time_dt = datetime.now()
+        session_prefix = start_time_dt.strftime("%Y%m%d_%H%M%S")
+        
         logger.info(f"Starting capture session in: {self.output_dir}")
+        logger.info(f"Session Prefix: {session_prefix}")
         logger.info(f"Interval: {self.interval}s, Max Duration: {self.duration}s")
+        
+        continuous_audio_path = os.path.join(self.output_dir, f"{session_prefix}_continuous.wav")
+        timestamps_path = os.path.join(self.output_dir, f"{session_prefix}_timestamps.json")
+        
+        # Start a single continuous audio recording in the background
+        audio_cmd = [
+            "ffmpeg", "-y",
+            "-f", "pulse",
+            "-i", self.monitor_source
+        ]
+        if self.duration:
+            audio_cmd.extend(["-t", str(self.duration)])
+        audio_cmd.append(continuous_audio_path)
+        
+        logger.info("Starting continuous background audio recording...")
+        audio_process = subprocess.Popen(audio_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         
         start_time = time.time()
         index = 0
-        
-        # Take the initial screenshot at t=0
-        initial_img = os.path.join(self.output_dir, f"screenshot_{index:04d}.png")
-        self.capture_screenshot(initial_img)
-        
-        active_audio_process: Optional[subprocess.Popen] = None
+        timestamps_records = []
         
         try:
             while True:
+                # Responsive sleep loop to handle KeyboardInterrupt immediately
+                sleep_start = time.time()
+                while time.time() - sleep_start < self.interval:
+                    elapsed = time.time() - start_time
+                    if self.duration and elapsed >= self.duration:
+                        break
+                    time.sleep(0.1)
+                
                 elapsed = time.time() - start_time
                 if self.duration and elapsed >= self.duration:
                     logger.info("Target duration reached. Stopping capture.")
                     break
-
-                # Determine recording duration for this segment
-                segment_duration = self.interval
-                if self.duration:
-                    remaining = self.duration - elapsed
-                    if remaining < self.interval:
-                        segment_duration = int(remaining)
-                        if segment_duration <= 0:
-                            break
-
-                audio_path = os.path.join(self.output_dir, f"audio_{index:04d}.wav")
                 
-                # Start recording audio in background
-                audio_cmd = [
-                    "ffmpeg", "-y",
-                    "-f", "pulse",
-                    "-i", self.monitor_source,
-                    "-t", str(segment_duration),
-                    audio_path
-                ]
-                logger.debug(f"Starting audio recording segment {index} ({segment_duration}s)")
-                active_audio_process = subprocess.Popen(audio_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                img_name = f"{session_prefix}_part{index:04d}.png"
+                img_path = os.path.join(self.output_dir, img_name)
                 
-                # Wait for the audio segment to finish
-                active_audio_process.wait()
-                active_audio_process = None
+                logger.info(f"Capturing screenshot: {img_name} at {elapsed:.2f}s")
+                self.capture_screenshot(img_path)
                 
-                # Move to next index for the upcoming screenshot and segment
+                timestamps_records.append({
+                    "screenshot": img_name,
+                    "timestamp": elapsed
+                })
+                
                 index += 1
-                
-                # Take screenshot corresponding to the end of this audio segment
-                next_img = os.path.join(self.output_dir, f"screenshot_{index:04d}.png")
-                self.capture_screenshot(next_img)
                 
         except KeyboardInterrupt:
             logger.info("Capture session interrupted by user.")
         finally:
-            if active_audio_process and active_audio_process.poll() is None:
-                logger.info("Terminating active audio recording...")
-                active_audio_process.terminate()
-                active_audio_process.wait()
-            logger.info(f"Capture session finished. Total segments captured: {index}")
+            # 1. Stop the continuous audio recording and wait for it to flush
+            if audio_process and audio_process.poll() is None:
+                logger.info("Stopping continuous audio recording process...")
+                audio_process.terminate()
+                try:
+                    audio_process.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    logger.warning("Audio process did not terminate gracefully, killing it.")
+                    audio_process.kill()
+                    audio_process.wait()
+            
+            # 2. Write the timestamps metadata file
+            logger.info(f"Saving screenshot timestamps to: {timestamps_path}")
+            try:
+                with open(timestamps_path, "w", encoding="utf-8") as f:
+                    json.dump(timestamps_records, f, indent=2)
+            except Exception as e:
+                logger.error(f"Failed to save timestamps JSON: {e}")
+                
+            logger.info(f"Capture session finished. Total screenshots captured: {index + 1}")
