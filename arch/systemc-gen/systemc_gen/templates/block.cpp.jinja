@@ -1,0 +1,108 @@
+#include "{{ name }}.h"
+#include <cstring>
+
+// Constructor
+{{ name }}::{{ name }}(sc_core::sc_module_name nm) : sc_core::sc_module(nm) {
+    {% for bi in bus_interfaces if bi.interface_type == "target" %}
+    {{ bi.name }}.register_b_transport(this, &{{ name }}::{{ bi.name }}_b_transport);
+    {{ bi.name }}.register_get_direct_mem_ptr(this, &{{ name }}::{{ bi.name }}_get_direct_mem_ptr);
+    {{ bi.name }}.register_transport_dbg(this, &{{ name }}::{{ bi.name }}_transport_dbg);
+    {% endfor %}
+}
+
+{% for bi in bus_interfaces if bi.interface_type == "target" %}
+/**
+ * TLM-2.0 Blocking transport callback for socket: {{ bi.name }}
+ */
+void {{ name }}::{{ bi.name }}_b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_time& delay) {
+    tlm::tlm_command cmd = trans.get_command();
+    uint64_t adr = trans.get_address();
+    unsigned char* ptr = trans.get_data_ptr();
+    unsigned int len = trans.get_data_length();
+    unsigned char* byt = trans.get_byte_enable_ptr();
+    unsigned int wid = trans.get_streaming_width();
+
+    // Check byte enable and streaming width
+    if (byt != nullptr || wid < len) {
+        trans.set_response_status(tlm::TLM_BYTE_ENABLE_ERROR_RESPONSE);
+        return;
+    }
+
+    {% if registers %}
+    switch (adr) {
+        {% for reg in registers %}
+        case 0x{{ "%02X"|format(reg.address_offset) }}: {
+            if (cmd == tlm::TLM_READ_COMMAND) {
+                if (len <= sizeof(regs.{{ reg.name }}.value)) {
+                    std::memcpy(ptr, &regs.{{ reg.name }}.value, len);
+                    trans.set_response_status(tlm::TLM_OK_RESPONSE);
+                } else {
+                    trans.set_response_status(tlm::TLM_BURST_ERROR_RESPONSE);
+                }
+            } else if (cmd == tlm::TLM_WRITE_COMMAND) {
+                {% if reg.access == "read-only" %}
+                // Write to read-only register
+                trans.set_response_status(tlm::TLM_WRITE_FAILURE_RESPONSE);
+                {% else %}
+                if (len <= sizeof(regs.{{ reg.name }}.value)) {
+                    std::memcpy(&regs.{{ reg.name }}.value, ptr, len);
+                    trans.set_response_status(tlm::TLM_OK_RESPONSE);
+                } else {
+                    trans.set_response_status(tlm::TLM_BURST_ERROR_RESPONSE);
+                }
+                {% endif %}
+            }
+            break;
+        }
+        {% endfor %}
+        default:
+            trans.set_response_status(tlm::TLM_ADDRESS_ERROR_RESPONSE);
+            break;
+    }
+    {% else %}
+    // No registers defined
+    trans.set_response_status(tlm::TLM_ADDRESS_ERROR_RESPONSE);
+    {% endif %}
+}
+
+/**
+ * Direct memory pointer support. Not supported for standard register block access.
+ */
+bool {{ name }}::{{ bi.name }}_get_direct_mem_ptr(tlm::tlm_generic_payload& trans, tlm::tlm_dmi& dmi_data) {
+    return false;
+}
+
+/**
+ * Debug transport callback. Allows reading/writing registers without modifying simulated time or state.
+ */
+unsigned int {{ name }}::{{ bi.name }}_transport_dbg(tlm::tlm_generic_payload& trans) {
+    tlm::tlm_command cmd = trans.get_command();
+    uint64_t adr = trans.get_address();
+    unsigned char* ptr = trans.get_data_ptr();
+    unsigned int len = trans.get_data_length();
+    unsigned int bytes_copied = 0;
+
+    {% if registers %}
+    switch (adr) {
+        {% for reg in registers %}
+        case 0x{{ "%02X"|format(reg.address_offset) }}: {
+            bytes_copied = (len < sizeof(regs.{{ reg.name }}.value)) ? len : sizeof(regs.{{ reg.name }}.value);
+            if (cmd == tlm::TLM_READ_COMMAND) {
+                std::memcpy(ptr, &regs.{{ reg.name }}.value, bytes_copied);
+            } else if (cmd == tlm::TLM_WRITE_COMMAND) {
+                {% if reg.access != "read-only" %}
+                std::memcpy(&regs.{{ reg.name }}.value, ptr, bytes_copied);
+                {% else %}
+                bytes_copied = 0;
+                {% endif %}
+            }
+            break;
+        }
+        {% endfor %}
+        default:
+            break;
+    }
+    {% endif %}
+    return bytes_copied;
+}
+{% endfor %}

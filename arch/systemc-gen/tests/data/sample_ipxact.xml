@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spirit:component xmlns:spirit="http://www.spiritconsortium.org/spirit/1685/2009">
+  <spirit:vendor>acme</spirit:vendor>
+  <spirit:library>ip</spirit:library>
+  <spirit:name>timer_block</spirit:name>
+  <spirit:version>1.0</spirit:version>
+  <spirit:description>A mock timer block component for testing SystemC scaffold generation.</spirit:description>
+  
+  <spirit:busInterfaces>
+    <spirit:busInterface>
+      <spirit:name>s_apb</spirit:name>
+      <spirit:busType spirit:vendor="amba" spirit:library="AMBA4" spirit:name="APB" spirit:version="r0p0_0"/>
+      <spirit:slave/>
+      <spirit:description>APB configuration slave interface</spirit:description>
+    </spirit:busInterface>
+    <spirit:busInterface>
+      <spirit:name>m_axi</spirit:name>
+      <spirit:busType spirit:vendor="amba" spirit:library="AMBA4" spirit:name="AXI4" spirit:version="r0p0_0"/>
+      <spirit:master/>
+      <spirit:description>AXI4 master initiator interface</spirit:description>
+    </spirit:busInterface>
+  </spirit:busInterfaces>
+  
+  <spirit:model>
+    <spirit:ports>
+      <spirit:port>
+        <spirit:name>clk</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+        </spirit:wire>
+        <spirit:description>System clock signal</spirit:description>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>rst_n</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+        </spirit:wire>
+        <spirit:description>Active low system reset</spirit:description>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>irq</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+        </spirit:wire>
+        <spirit:description>Interrupt request line</spirit:description>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>cfg_data</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left>7</spirit:left>
+            <spirit:right>0</spirit:right>
+          </spirit:vector>
+        </spirit:wire>
+        <spirit:description>8-bit extra config data bus</spirit:description>
+      </spirit:port>
+    </spirit:ports>
+  </spirit:model>
+  
+  <spirit:memoryMaps>
+    <spirit:memoryMap>
+      <spirit:name>apb_map</spirit:name>
+      <spirit:addressBlock>
+        <spirit:name>regs</spirit:name>
+        <spirit:baseAddress>0x0</spirit:baseAddress>
+        <spirit:range>4096</spirit:range>
+        <spirit:width>32</spirit:width>
+        
+        <spirit:register>
+          <spirit:name>CONTROL</spirit:name>
+          <spirit:description>Timer Control Register</spirit:description>
+          <spirit:addressOffset>0x00</spirit:addressOffset>
+          <spirit:size>32</spirit:size>
+          <spirit:access>read-write</spirit:access>
+          <spirit:field>
+            <spirit:name>ENABLE</spirit:name>
+            <spirit:description>Enable the timer block</spirit:description>
+            <spirit:bitOffset>0</spirit:bitOffset>
+            <spirit:bitWidth>1</spirit:bitWidth>
+            <spirit:access>read-write</spirit:access>
+          </spirit:field>
+          <spirit:field>
+            <spirit:name>MODE</spirit:name>
+            <spirit:description>Operating mode (0: single-shot, 1: periodic)</spirit:description>
+            <spirit:bitOffset>1</spirit:bitOffset>
+            <spirit:bitWidth>3</spirit:bitWidth>
+            <spirit:access>read-write</spirit:access>
+          </spirit:field>
+        </spirit:register>
+        
+        <spirit:register>
+          <spirit:name>STATUS</spirit:name>
+          <spirit:description>Timer Status Register</spirit:description>
+          <spirit:addressOffset>0x04</spirit:addressOffset>
+          <spirit:size>32</spirit:size>
+          <spirit:access>read-only</spirit:access>
+          <spirit:field>
+            <spirit:name>INTR</spirit:name>
+            <spirit:description>Interrupt Pending Flag</spirit:description>
+            <spirit:bitOffset>0</spirit:bitOffset>
+            <spirit:bitWidth>1</spirit:bitWidth>
+            <spirit:access>read-only</spirit:access>
+          </spirit:field>
+        </spirit:register>
+      </spirit:addressBlock>
+    </spirit:memoryMap>
+  </spirit:memoryMaps>
+</spirit:component>

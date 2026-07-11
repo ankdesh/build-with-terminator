@@ -1,0 +1,55 @@
+#ifndef _{{ name | upper }}_H_
+#define _{{ name | upper }}_H_
+
+#include <systemc>
+#include <tlm>
+#include "tlm_utils/simple_initiator_socket.h"
+#include "tlm_utils/simple_target_socket.h"
+#include "{{ name }}_regs.h"
+
+class {{ name }} : public sc_core::sc_module {
+public:
+    // Sockets
+    {% for bi in bus_interfaces %}
+    // Protocol: {{ bi.protocol_type or "Generic TLM-2.0" }}
+    {% if bi.interface_type == "target" %}
+    tlm_utils::simple_target_socket<{{ name }}> {{ bi.name }};
+    {% else %}
+    tlm_utils::simple_initiator_socket<{{ name }}> {{ bi.name }};
+    {% endif %}
+    {% endfor %}
+
+    // Ports
+    {% for port in ports %}
+    {% if port.direction == "in" %}
+    {% if port.width > 1 %}
+    sc_core::sc_in<sc_dt::sc_bv<{{ port.width }}>> {{ port.name }};
+    {% else %}
+    sc_core::sc_in<bool> {{ port.name }};
+    {% endif %}
+    {% else %}
+    {% if port.width > 1 %}
+    sc_core::sc_out<sc_dt::sc_bv<{{ port.width }}>> {{ port.name }};
+    {% else %}
+    sc_core::sc_out<bool> {{ port.name }};
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+
+    // Register Map Instance
+    {{ name }}_regs_t regs;
+
+    // Constructor
+    SC_HAS_PROCESS({{ name }});
+    {{ name }}(sc_core::sc_module_name nm);
+
+private:
+    // TLM Target Socket Callbacks
+    {% for bi in bus_interfaces if bi.interface_type == "target" %}
+    virtual void {{ bi.name }}_b_transport(tlm::tlm_generic_payload& trans, sc_core::sc_time& delay);
+    virtual bool {{ bi.name }}_get_direct_mem_ptr(tlm::tlm_generic_payload& trans, tlm::tlm_dmi& dmi_data);
+    virtual unsigned int {{ bi.name }}_transport_dbg(tlm::tlm_generic_payload& trans);
+    {% endfor %}
+};
+
+#endif // _{{ name | upper }}_H_

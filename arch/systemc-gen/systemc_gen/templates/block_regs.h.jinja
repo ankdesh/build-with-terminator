@@ -1,0 +1,54 @@
+#ifndef _{{ name | upper }}_REGS_H_
+#define _{{ name | upper }}_REGS_H_
+
+#include <cstdint>
+
+// Individual Register Structures
+{% for reg in registers %}
+/**
+ * Register: {{ reg.name }}
+ * Offset: 0x{{ "%02X"|format(reg.address_offset) }}
+ * Size: {{ reg.size }} bits
+ * Access: {{ reg.access }}
+ * Description: {{ reg.description or "No description provided." }}
+ */
+struct {{ reg.name }}_t {
+    {% if reg.bitfields %}
+    union {
+        struct {
+            {% for bf in reg.bitfields %}
+            {% if bf.name %}
+            uint{{ reg.size }}_t {{ bf.name }} : {{ bf.width }}; // {{ bf.description or "" }}
+            {% else %}
+            uint{{ reg.size }}_t : {{ bf.width }}; // Reserved/Padding
+            {% endif %}
+            {% endfor %}
+        } fields;
+        uint{{ reg.size }}_t value;
+    };
+    {% else %}
+    uint{{ reg.size }}_t value;
+    {% endif %}
+
+    // Reset value initialization helper
+    {{ reg.name }}_t() {
+        {% if reg.bitfields %}
+        value = 0;
+        {% else %}
+        value = 0;
+        {% endif %}
+    }
+};
+
+{% endfor %}
+
+/**
+ * Register Map for {{ name }} component.
+ */
+struct {{ name }}_regs_t {
+    {% for reg in registers %}
+    {{ reg.name }}_t {{ reg.name }}; // Offset: 0x{{ "%02X"|format(reg.address_offset) }}
+    {% endfor %}
+};
+
+#endif // _{{ name | upper }}_REGS_H_
