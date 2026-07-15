@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TLM 2.0 AT Performance Model Visualizer</title>
+    <!-- Premium Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Controls -->
+        <aside class="sidebar glass">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="icon">⚡</span>
+                    <h2>TLM 2.0 AT</h2>
+                </div>
+                <p class="subtitle">Timeline & Performance Visualizer</p>
+            </div>
+
+            <div class="config-panel">
+                <div class="form-group">
+                    <label for="example-select">Select Example</label>
+                    <select id="example-select">
+                        <option value="example0">Example 0: Simple Pipeline Stage</option>
+                        <option value="example1">Example 1: Pipelined ALU</option>
+                        <option value="example2">Example 2: FIFO Backpressure</option>
+                        <option value="example3">Example 3: Switch Arbitration</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="scenario-select">Select Scenario</label>
+                    <select id="scenario-select">
+                        <option value="sc1">Scenario 1</option>
+                        <option value="sc2">Scenario 2</option>
+                        <option value="sc3">Scenario 3</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="trace-input-toggle">Source Mode</label>
+                    <div class="toggle-buttons">
+                        <button id="btn-preloaded" class="active">Preloaded Run</button>
+                        <button id="btn-custom">Custom Log</button>
+                    </div>
+                </div>
+
+                <div id="custom-trace-container" class="form-group hidden">
+                    <label for="custom-trace">Paste Console Logs</label>
+                    <textarea id="custom-trace" placeholder="Paste SystemC simulation stdout trace here..."></textarea>
+                    <button id="btn-parse-custom" class="btn-primary">Parse Trace</button>
+                </div>
+            </div>
+
+            <!-- Transaction Inspector -->
+            <div class="inspector glass">
+                <h3>Transaction Inspector</h3>
+                <div id="inspector-placeholder" class="inspector-placeholder">
+                    Hover over a transaction bar to inspect its timing, data, and lifecycle details.
+                </div>
+                <div id="inspector-content" class="inspector-content hidden">
+                    <div class="inspector-row">
+                        <span class="label">Transaction ID:</span>
+                        <span id="inspect-id" class="value highlight-text">0</span>
+                    </div>
+                    <div class="inspector-row">
+                        <span class="label">Operation/Cmd:</span>
+                        <span id="inspect-op" class="value">ADD</span>
+                    </div>
+                    <div class="inspector-row">
+                        <span class="label">Address/Dest:</span>
+                        <span id="inspect-addr" class="value">0x0</span>
+                    </div>
+                    <div class="inspector-row">
+                        <span class="label">Payload Data:</span>
+                        <span id="inspect-data" class="value code-text">10, 20</span>
+                    </div>
+                    <div class="inspector-row">
+                        <span class="label">Handshake Start:</span>
+                        <span id="inspect-start" class="value">10 ns</span>
+                    </div>
+                    <div class="inspector-row">
+                        <span class="label">Req Phase (END_REQ):</span>
+                        <span id="inspect-req-end" class="value">20 ns</span>
+                    </div>
+                    <div class="inspector-row">
+                        <span class="label">Resp Phase (BEGIN_RESP):</span>
+                        <span id="inspect-resp-start" class="value">40 ns</span>
+                    </div>
+                    <div class="inspector-row">
+                        <span class="label">Transaction Close:</span>
+                        <span id="inspect-end" class="value">50 ns</span>
+                    </div>
+                    <div class="inspector-row divider"></div>
+                    <div class="inspector-row">
+                        <span class="label">Total Latency:</span>
+                        <span id="inspect-latency" class="value highlight-text font-bold">40 ns</span>
+                    </div>
+                    <div class="inspector-row">
+                        <span class="label">Stall Duration:</span>
+                        <span id="inspect-stall" class="value font-bold text-red">0 ns</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Timeline Canvas -->
+        <main class="main-content">
+            <!-- Example Context Info -->
+            <header class="main-header glass">
+                <div class="header-info">
+                    <h1 id="example-title">Example 1: Pipelined ALU</h1>
+                    <p id="example-desc">3-cycle Adder and 4-cycle Multiplier with In-Order Retirement.</p>
+                </div>
+                <div class="legend">
+                    <span class="legend-item"><span class="color-box hatched-req"></span> Request Phase</span>
+                    <span class="legend-item"><span class="color-box solid-active"></span> Executing / Waiting</span>
+                    <span class="legend-item"><span class="color-box solid-resp"></span> Response Phase</span>
+                    <span class="legend-item"><span class="color-box solid-stall"></span> Stalled / Blocked</span>
+                </div>
+            </header>
+
+            <!-- Interactive Timeline Plot -->
+            <section class="timeline-container glass">
+                <div class="timeline-header">
+                    <h3>Simulation Timeline</h3>
+                    <div class="view-toggle-container">
+                        <button id="btn-view-gantt" class="btn-toggle active">Gantt Phases</button>
+                        <button id="btn-view-wave" class="btn-toggle">Waveforms (VCD)</button>
+                    </div>
+                    <div class="time-marker-info">Current Simulation Time: <span id="current-sim-time" class="highlight-text font-bold">0 ns</span></div>
+                </div>
+                <div class="timeline-scroll-wrapper">
+                    <svg id="timeline-svg" width="100%" height="320"></svg>
+                </div>
+            </section>
+
+            <!-- Bottom Dashboard Row -->
+            <div class="dashboard-row">
+                <!-- State Animator (Hardware Simulation View) -->
+                <section class="animator-card glass">
+                    <h3>Hardware Component State</h3>
+                    <div id="animator-canvas" class="animator-canvas">
+                        <!-- Dynamic hardware visualization rendered via JS -->
+                        <div id="hardware-simple-pipeline" class="hw-view hidden">
+                            <div class="hw-block cpu">
+                                <h4>Component A</h4>
+                                <div class="hw-content" id="hw-comp-a-status">Idle</div>
+                            </div>
+                            <div class="hw-arrow">➡</div>
+                            <div class="hw-block alu">
+                                <h4>Pipeline B (3 cy)</h4>
+                                <div class="hw-stages">
+                                    <div class="hw-stage" id="pipe-stage-exec">
+                                        <span class="stage-num">Active Queue</span>
+                                        <div class="pipeline-slots" id="pipe-pipeline-slots">
+                                            <!-- In-flight slots -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hw-arrow">➡</div>
+                            <div class="hw-block consumer">
+                                <h4>Component C</h4>
+                                <div class="hw-status" id="hw-comp-c-status">Idle</div>
+                            </div>
+                        </div>
+
+                        <div id="hardware-pipelined-alu" class="hw-view">
+                            <div class="hw-block cpu">
+                                <h4>Initiator (CPU)</h4>
+                                <div class="hw-content" id="hw-cpu-content">Idle</div>
+                            </div>
+                            <div class="hw-arrow">➡</div>
+                            <div class="hw-block alu">
+                                <h4>Pipelined ALU</h4>
+                                <div class="hw-stages">
+                                    <div class="hw-stage" id="alu-stage-input">
+                                        <span class="stage-num">Input Reg</span>
+                                        <span class="stage-val">Empty</span>
+                                    </div>
+                                    <div class="hw-stage" id="alu-stage-exec">
+                                        <span class="stage-num">Active Pipeline</span>
+                                        <div class="pipeline-slots" id="alu-pipeline-slots">
+                                            <!-- In-flight slots -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="hardware-fifo-backpressure" class="hw-view hidden">
+                            <div class="hw-block producer">
+                                <h4>Producer IP</h4>
+                                <div class="hw-status" id="hw-producer-status">Active</div>
+                            </div>
+                            <div class="hw-arrow" id="hw-prod-arrow">➡</div>
+                            <div class="hw-block fifo">
+                                <h4>FIFO Target (Cap: 4)</h4>
+                                <div class="fifo-slots" id="fifo-slots-container">
+                                    <div class="fifo-slot"></div>
+                                    <div class="fifo-slot"></div>
+                                    <div class="fifo-slot"></div>
+                                    <div class="fifo-slot"></div>
+                                </div>
+                            </div>
+                            <div class="hw-arrow">➡</div>
+                            <div class="hw-block consumer">
+                                <h4>Consumer IP</h4>
+                                <div class="hw-status" id="hw-consumer-status">Idle</div>
+                            </div>
+                        </div>
+
+                        <div id="hardware-switch-arbitration" class="hw-view hidden">
+                            <div class="hw-column">
+                                <div class="hw-mini-block init" id="hw-init-0">Init 0</div>
+                                <div class="hw-mini-block init" id="hw-init-1">Init 1</div>
+                                <div class="hw-mini-block init" id="hw-init-2">Init 2</div>
+                                <div class="hw-mini-block init" id="hw-init-3">Init 3</div>
+                            </div>
+                            <div class="hw-arrow">➡</div>
+                            <div class="hw-block switch-hub">
+                                <h4>Arbitrated Switch</h4>
+                                <div class="switch-inner">
+                                    <div class="switch-arb" id="switch-arb-ptr">RR Index: 0</div>
+                                    <div class="switch-state" id="switch-state-val">FREE</div>
+                                </div>
+                            </div>
+                            <div class="hw-arrow">➡</div>
+                            <div class="hw-column">
+                                <div class="hw-mini-block target-node" id="hw-target-0">Node 0</div>
+                                <div class="hw-mini-block target-node" id="hw-target-1">Node 1</div>
+                                <div class="hw-mini-block target-node" id="hw-target-2">Node 2</div>
+                                <div class="hw-mini-block target-node" id="hw-target-3">Node 3</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Interactive Time Scrub Controls -->
+                <section class="playback-card glass">
+                    <h3>Simulation Playback</h3>
+                    <div class="playback-controls">
+                        <button id="btn-play-pause" class="btn-icon">▶ Play</button>
+                        <button id="btn-step-prev" class="btn-icon">⏮ Step Prev</button>
+                        <button id="btn-step-next" class="btn-icon">⏭ Step Next</button>
+                        <button id="btn-reset" class="btn-icon">🔄 Reset</button>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" id="time-slider" min="0" max="200" value="0" class="slider">
+                        <div class="slider-labels">
+                            <span>0 ns</span>
+                            <span id="slider-max-label">200 ns</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Preloaded traces script -->
+    <script src="traces.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

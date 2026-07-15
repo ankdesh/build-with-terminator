@@ -1,0 +1,74 @@
+$date
+     Jul 15, 2026       11:37:55
+$end
+
+$version
+ SystemC 2.3.3-Accellera --- Jul 11 2026 12:54:45
+$end
+
+$timescale
+     1 ns
+$end
+
+$scope module SystemC $end
+$scope module top $end
+$scope module fifo_target $end
+$var wire   32  aaaaa  fifo_size [31:0]  $end
+$var wire    1  aaaab  producer_stalled       $end
+$var wire    1  aaaac  consumer_stalled       $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions  $end
+
+$comment
+All initial values are dumped below at time 0 sec = 0 timescale units.
+$end
+
+$dumpvars
+b0 aaaaa
+0aaaab
+0aaaac
+$end
+
+#30
+b1 aaaaa
+1aaaac
+
+#40
+b10 aaaaa
+
+#50
+b11 aaaaa
+
+#60
+b100 aaaaa
+1aaaab
+
+#70
+b101 aaaaa
+
+#110
+b100 aaaaa
+0aaaab
+
+#120
+b101 aaaaa
+
+#140
+b100 aaaaa
+
+#170
+b11 aaaaa
+
+#200
+b10 aaaaa
+
+#230
+b1 aaaaa
+
+#260
+b0 aaaaa
+0aaaac
+
+#300

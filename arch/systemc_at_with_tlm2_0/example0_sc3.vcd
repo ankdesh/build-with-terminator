@@ -1,0 +1,70 @@
+$date
+     Jul 15, 2026       11:37:55
+$end
+
+$version
+ SystemC 2.3.3-Accellera --- Jul 11 2026 12:54:45
+$end
+
+$timescale
+     1 ns
+$end
+
+$scope module SystemC $end
+$scope module top $end
+$scope module pipeline_b $end
+$var wire   32  aaaaa  pipeline_depth [31:0]  $end
+$var wire   32  aaaab  A_B_req_tx [31:0]  $end
+$var wire   32  aaaac  B_C_req_tx [31:0]  $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions  $end
+
+$comment
+All initial values are dumped below at time 0 sec = 0 timescale units.
+$end
+
+$dumpvars
+b0 aaaaa
+b0 aaaab
+b0 aaaac
+$end
+
+#10
+b1 aaaaa
+b1 aaaab
+
+#20
+b0 aaaab
+
+#30
+b10 aaaaa
+b10 aaaab
+
+#40
+b1 aaaaa
+b0 aaaab
+b1 aaaac
+
+#50
+b10 aaaaa
+b11 aaaab
+b0 aaaac
+
+#60
+b1 aaaaa
+b0 aaaab
+b10 aaaac
+
+#70
+b0 aaaac
+
+#80
+b0 aaaaa
+b11 aaaac
+
+#90
+b0 aaaac
+
+#120

@@ -1,0 +1,138 @@
+import subprocess
+import os
+import re
+import json
+
+# Paths
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BUILD_DIR = os.path.join(BASE_DIR, "build")
+VISUALIZER_DIR = os.path.join(BASE_DIR, "visualizer")
+
+BINARIES = {
+    "example0": os.path.join(BUILD_DIR, "example0_simple", "example0_simple"),
+    "example1": os.path.join(BUILD_DIR, "example1_pipeline", "example1_pipeline"),
+    "example2": os.path.join(BUILD_DIR, "example2_backpressure", "example2_backpressure"),
+    "example3": os.path.join(BUILD_DIR, "example3_arbitration", "example3_arbitration"),
+}
+
+def run_simulation(bin_path, scenario):
+    """Runs a simulation binary for a specific scenario and returns stdout."""
+    print(f"Running {os.path.basename(bin_path)} with scenario {scenario}...")
+    result = subprocess.run([bin_path, str(scenario)], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
+    return result.stdout
+
+def parse_vcd(vcd_path):
+    """Parses a SystemC VCD file and returns a dictionary of signals and their time-value changes."""
+    if not os.path.exists(vcd_path):
+        print(f"Warning: VCD file {vcd_path} not found.")
+        return {}
+
+    # Signal definitions mapping symbol to signal name
+    symbol_to_name = {}
+    waveforms = {}
+
+    # Read VCD
+    with open(vcd_path, 'r') as f:
+        lines = f.readlines()
+
+    current_time = 0
+    
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+
+        # Parse definitions
+        if line.startswith("$var"):
+            parts = line.split()
+            # Format: $var wire 1 ! input_stage_occupied $end
+            # Or: $var integer 32 " pipeline_depth $end
+            if len(parts) >= 6:
+                symbol = parts[3]
+                name = parts[4]
+                symbol_to_name[symbol] = name
+                waveforms[name] = []
+            continue
+
+        # Parse time markers (e.g. #10) and scale to cycles (1 cycle = 10ns)
+        if line.startswith("#"):
+            current_time = int(line[1:]) // 10
+            continue
+
+        # Parse value changes
+        # Single-bit: 0! or 1!
+        if len(line) >= 2 and (line[0] in ('0', '1', 'z', 'x')) and line[1:] in symbol_to_name:
+            val = int(line[0]) if line[0] in ('0', '1') else line[0]
+            name = symbol_to_name[line[1:]]
+            waveforms[name].append([current_time, val])
+        # Bus/Multi-bit: b00000000000000000000000000000000 " or b10 "
+        elif line.startswith('b'):
+            parts = line.split()
+            if len(parts) == 2:
+                bin_str = parts[0][1:] # Strip 'b'
+                symbol = parts[1]
+                if symbol in symbol_to_name:
+                    name = symbol_to_name[symbol]
+                    try:
+                        # Convert binary string to integer
+                        val = int(bin_str, 2)
+                    except ValueError:
+                        val = bin_str
+                    waveforms[name].append([current_time, val])
+
+    # Post-process: ensure every signal starts at T=0
+    for name, points in waveforms.items():
+        if not points or points[0][0] > 0:
+            # Check if we can find default value
+            waveforms[name].insert(0, [0, 0])
+
+    return waveforms
+
+def main():
+    all_scenarios_data = {
+        "example0": {},
+        "example1": {},
+        "example2": {},
+        "example3": {}
+    }
+
+    # Run and parse all scenarios (1, 2, 3) for all examples
+    for example_key, bin_path in BINARIES.items():
+        for scenario in (1, 2, 3):
+            # 1. Run simulation and capture console output
+            stdout = run_simulation(bin_path, scenario)
+            
+            # 2. Parse the generated VCD file
+            vcd_filename = f"{example_key}_sc{scenario}.vcd"
+            # VCD is dumped in the current working directory of execution (which is BUILD_DIR here, or we can look for it in the workspace root)
+            # Let's locate where VCD was written. In main.cpp we did: sc_create_vcd_trace_file("example1_sc1"), which dumps it in the run directory.
+            # Since our run directory is Cwd in python (which is BUILD_DIR or BASE_DIR depending on execution), let's check both.
+            vcd_path = os.path.join(BUILD_DIR, vcd_filename)
+            if not os.path.exists(vcd_path):
+                vcd_path = os.path.join(BASE_DIR, vcd_filename)
+
+            waveforms = parse_vcd(vcd_path)
+            
+            # Save scenario data
+            all_scenarios_data[example_key][f"sc{scenario}"] = {
+                "log": stdout,
+                "waveforms": waveforms
+            }
+
+            # Cleanup VCD files to keep workspace tidy
+            if os.path.exists(vcd_path):
+                os.remove(vcd_path)
+                print(f"Cleaned up temporary VCD file {vcd_path}")
+
+    # Write output to traces.js
+    traces_js_path = os.path.join(VISUALIZER_DIR, "traces.js")
+    with open(traces_js_path, 'w') as f:
+        f.write("// Auto-generated by run_scenarios.py. Do not edit directly.\n")
+        f.write("const ALL_SCENARIOS_DATA = ")
+        json.dump(all_scenarios_data, f, indent=4)
+        f.write(";\n")
+        
+    print(f"\nSuccessfully wrote all traces and waveform data to {traces_js_path}")
+
+if __name__ == "__main__":
+    main()

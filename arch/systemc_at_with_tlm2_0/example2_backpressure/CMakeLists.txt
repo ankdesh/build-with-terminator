@@ -1,0 +1,2 @@
+add_executable(example2_backpressure main.cpp)
+target_link_libraries(example2_backpressure SystemC::systemc)
