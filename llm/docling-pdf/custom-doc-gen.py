@@ -1,5 +1,6 @@
 import os
 import io
+import argparse
 import zipfile
 import pandas as pd
 from PIL import Image
@@ -18,8 +19,8 @@ from docling_core.types.doc import (
 from docling_core.types.doc.labels import DocItemLabel, GroupLabel
 
 # Ingestion & converter pipeline configurations
-from docling.document_converter import DocumentConverter, PdfFormatOption
-from docling.datamodel.pipeline_options import PdfPipelineOptions
+from docling.document_converter import DocumentConverter, PdfFormatOption, WordFormatOption
+from docling.datamodel.pipeline_options import PdfPipelineOptions, PaginatedPipelineOptions
 from docling.datamodel.base_models import InputFormat
 
 
@@ -32,7 +33,6 @@ class CustomDocumentWriter:
     """
     def __init__(self):
         # State tracking for your proprietary format
-        self.doc_name: str = "custom_document"
         self.output_manifest = {
             "sections": [],
             "tables": {},
@@ -50,10 +50,9 @@ class CustomDocumentWriter:
         STUB: Triggered when entering a structural grouping (e.g., Chapter, List, Section).
         Use this to open nested sections in your custom XML or ODT-like document structure.
         """
-        group_label = group.label  # e.g., GroupLabel.SECTION, GroupLabel.LIST
+        group_label = group.label  # e.g., GroupLabel.SECTION, GroupLabel.LIST # [citegc: 8]
         group_name = getattr(group, "name", "Unnamed Group")
         
-        # Example logic for nesting sections:
         section_entry = {
             "type": "group_start",
             "label": str(group_label),
@@ -89,9 +88,8 @@ class CustomDocumentWriter:
         Inspect text_item.label to format differently (e.g., headings, code blocks, lists).
         """
         text = text_item.text
-        label = text_item.label  # e.g., DocItemLabel.PARAGRAPH, DocItemLabel.TITLE
+        label = text_item.label  # e.g., DocItemLabel.PARAGRAPH, DocItemLabel.TITLE # [citegc: 8]
         
-        # Determine specific textual semantics # [citegc: 8]:
         if label == DocItemLabel.TITLE:
             custom_block = {"element": "h1", "text": text}
         elif label == DocItemLabel.SECTION_HEADER:
@@ -99,7 +97,6 @@ class CustomDocumentWriter:
         elif label == DocItemLabel.CODE:
             custom_block = {"element": "code", "text": text, "language": getattr(text_item, "formatting", None)}
         elif label == DocItemLabel.FORMULA:
-            # Mathematical notation automatically rendered as standardized LaTeX # [citegc: 8]
             custom_block = {"element": "math_formula", "latex": text}
         else:
             custom_block = {"element": "p", "text": text}
@@ -124,10 +121,10 @@ class CustomDocumentWriter:
         self._table_counter += 1
         table_id = f"table_{self._table_counter}"
         
-        # Method A: Direct export to a standard Pandas DataFrame # [citegc: 9, 10]
+        # Direct export to a standard Pandas DataFrame # [citegc: 9]
         df: pd.DataFrame = table_item.export_to_dataframe(doc=doc)
         
-        # Method B: Fine-grained topological traversal of table headers and spans # [citegc: 7, 8]
+        # Fine-grained topological traversal of table headers and spans # [citegc: 8]
         table_cells_custom = []
         for cell in table_item.data.table_cells:
             table_cells_custom.append({
@@ -136,7 +133,7 @@ class CustomDocumentWriter:
                 "row_end": cell.end_row_offset_idx,
                 "col_start": cell.start_col_offset_idx,
                 "col_end": cell.end_col_offset_idx,
-                "is_header": cell.column_header or cell.row_header ## [citegc: 7]
+                "is_header": cell.column_header or cell.row_header # [citegc: 8]
             })
 
         self.output_manifest["tables"][table_id] = {
@@ -146,7 +143,6 @@ class CustomDocumentWriter:
             "level": level
         }
         
-        # Referencing the extracted table in the main layout stream
         ref_block = {"element": "table_reference", "id": table_id, "level": level}
         if self.current_section:
             self.current_section["items"].append(ref_block)
@@ -170,12 +166,10 @@ class CustomDocumentWriter:
         pil_image: Optional[Image.Image] = picture_item.get_image(doc)
         
         if pil_image:
-            # Stub for custom graphics manipulation (rescaling, compressing, vectorization, etc.)
             img_buffer = io.BytesIO()
             pil_image.save(img_buffer, format="PNG")
             img_bytes = img_buffer.getvalue()
             
-            # Store the graphic metadata and binaries separately
             self.output_manifest["images"][image_id] = {
                 "bytes": img_bytes,
                 "format": "PNG",
@@ -184,7 +178,6 @@ class CustomDocumentWriter:
                 "level": level
             }
             
-            # Record picture captions if available # [citegc: 8]
             caption = picture_item.caption_text(doc=doc) if hasattr(picture_item, "caption_text") else ""
             
             ref_block = {
@@ -200,23 +193,20 @@ class CustomDocumentWriter:
                 
             print(f"{'  ' * level}[IMAGE] ({image_id}) : Captured {pil_image.width}x{pil_image.height} PIL Image")
         else:
-            print(f"{'  ' * level}[IMAGE] ({image_id}) : Image missing/uncropped. Check pipeline options.")
+            print(f"{'  ' * level}[IMAGE] ({image_id}) : Graphic missing or format does not support visual cropping.")
 
     # =========================================================================
     # STUB 6: CUSTOM PACKAGING AND SAVING
     # =========================================================================
     def save_as_custom_format(self, output_file_path: Path):
         """
-        STUB: Re-packages the separated structural data (text, tables, images) 
-        into your proprietary custom format (e.g., standard zip archive containing 
-        content XMLs and image binaries, similar to ODF/docx).
+        STUB: Re-packages structural content mapping and separated image buffers 
+        into your proprietary custom zip archive (similar to ODF/ODT containers).
         """
         print(f"\nConstructing proprietary Custom Archive: '{output_file_path.name}'")
         
-        # Establish a compressed ODF-style package
         with zipfile.ZipFile(output_file_path, "w", zipfile.ZIP_DEFLATED) as custom_zip:
-            # 1. Package the structural content mapping (like content.xml in ODT)
-            # Remove raw byte elements before converting mapping manifest to text/JSON
+            # Prepare serialization manifest (excluding raw byte arrays)
             serialized_manifest = {
                 "sections": self.output_manifest["sections"],
                 "tables": self.output_manifest["tables"],
@@ -226,19 +216,16 @@ class CustomDocumentWriter:
                 }
             }
             
-            # Format and save structural content XML or JSON
             import json
             custom_zip.writestr("content.json", json.dumps(serialized_manifest, indent=2))
             
-            # 2. Package graphic assets inside a separated subdirectory
+            # Save the raw image bytes in a subdirectory inside the zip
             for img_id, img_data in self.output_manifest["images"].items():
                 custom_zip.writestr(f"Pictures/{img_id}.png", img_data["bytes"])
                 
-            # 3. Package layout metadata
-            meta_payload = f"Generated by Docling Custom Parser. Version: 1.0"
-            custom_zip.writestr("meta.txt", meta_payload)
+            custom_zip.writestr("meta.txt", "Generated dynamically by Docling Custom Multi-Format Engine.")
             
-        print("Successfully compiled and saved.")
+        print(f"Successfully compiled custom archive at: {output_file_path}")
 
 
 # =============================================================================
@@ -246,71 +233,89 @@ class CustomDocumentWriter:
 # =============================================================================
 def convert_document_to_custom(input_file: Path, output_archive: Path):
     """
-    Orchestrates the ingestion, tree traversal, and conversion logic.
+    Handles dynamic document configuration, conversion, and structural tree traversal.
     """
-    # 1. Setup layout parsing options (enable image rendering & structural extraction)
-    pipeline_options = PdfPipelineOptions()
-    pipeline_options.do_ocr = True
-    pipeline_options.do_table_structure = True
-    pipeline_options.generate_picture_images = True  # MANDATORY for PIL crop retrieval # [citegc: 5, 11]
-    pipeline_options.images_scale = 2.0             # Up-scale canvas sampling resolution # [citegc: 5, 12]
+    # Configure high-resolution rendering and table OCR settings for PDFs
+    pdf_options = PdfPipelineOptions()
+    pdf_options.do_ocr = True
+    pdf_options.do_table_structure = True
+    pdf_options.generate_picture_images = True
+    pdf_options.images_scale = 2.0
     
+    # Configure picture extraction settings for paginated DOCX/PPTX files
+    word_options = PaginatedPipelineOptions()
+    word_options.generate_picture_images = True
+    word_options.images_scale = 2.0
+
+    # Initialize DocumentConverter with custom overrides for paginated file types # [citegc: 6]
     converter = DocumentConverter(
         format_options={
-            InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)
+            InputFormat.PDF: PdfFormatOption(pipeline_options=pdf_options),
+            InputFormat.DOCX: WordFormatOption(pipeline_options=word_options)
         }
     )
     
-    print("Initiating layout parsing...")
+    print(f"Processing input file: '{input_file.name}'")
     conversion_result = converter.convert(input_file)
     doc: DoclingDocument = conversion_result.document
     
-    # 2. Walk the Tree Node-by-Node in layout-aware Reading Order
     custom_writer = CustomDocumentWriter()
-    
-    # Track nesting transitions using a tracker stack
     active_group_stack = []
     
-    # Traverse depth-first walk using iterate_items
-    # yield items along with their structural nesting levels
-    for item, level in doc.iterate_items(with_groups=True, traverse_pictures=False): ## [citegc: 3]
-        # Resolve group nesting scope shifts
+    # Traverse depth-first tree in programmatic reading order # [citegc: 10]
+    for item, level in doc.iterate_items(with_groups=True, traverse_pictures=False):
+        # Handle group nesting scope shifts
         while len(active_group_stack) > level:
             active_group_stack.pop()
             custom_writer.end_group(level=len(active_group_stack))
             
-        # Case A: Element is a Structural Group (Section boundaries, Lists, Chapters, etc.)
-        if isinstance(item, GroupItem): # [citegc: 2, 7]
+        if isinstance(item, GroupItem):
             custom_writer.start_group(item, level=level)
             active_group_stack.append(item)
             
-        # Case B: Element is an individual Text Block
-        elif isinstance(item, TextItem): # [citegc: 2, 7]
+        elif isinstance(item, TextItem):
             custom_writer.handle_text_item(item, level=level)
             
-        # Case C: Element is a Table
-        elif isinstance(item, TableItem): # [citegc: 2, 7]
+        elif isinstance(item, TableItem):
             custom_writer.handle_table_item(item, doc=doc, level=level)
             
-        # Case D: Element is a Graphical Picture or Figure
-        elif isinstance(item, PictureItem): # [citegc: 2, 7]
+        elif isinstance(item, PictureItem):
             custom_writer.handle_picture_item(item, doc=doc, level=level)
 
-    # Resolve any remaining hanging groups on exit
+    # Clean up any trailing unclosed groupings
     while len(active_group_stack) > 0:
         active_group_stack.pop()
         custom_writer.end_group(level=len(active_group_stack))
 
-    # 3. Export to your packaged binary format
+    # Compile the final customized ODT-style container
     custom_writer.save_as_custom_format(output_archive)
 
 
 if __name__ == "__main__":
-    # Configure input and output workspace
-    input_pdf_path = Path("sample_document.pdf")
-    output_custom_file = Path("output_document.custom")  # Your zipped, ODT-like package
+    # Command Line Interface (CLI) configuration using standard argparse
+    parser = argparse.ArgumentParser(
+        description="Convert any Docling-supported document format (PDF, DOCX, ODT, HTML, PNG, etc.) into a custom XML/JSON zip format."
+    )
+    parser.add_argument(
+        "input_file", 
+        type=str, 
+        help="Path to the source document you want to convert."
+    )
+    parser.add_argument(
+        "-o", "--output", 
+        type=str, 
+        default=None,
+        help="Optional destination path for the custom output package. Defaults to replacing extension with '.custom'."
+    )
     
-    if not input_pdf_path.exists():
-        print(f"Please provide a document file at: '{input_pdf_path.absolute()}' to test conversion.")
-    else:
-        convert_document_to_custom(input_pdf_path, output_custom_file)
+    args = parser.parse_args()
+    input_path = Path(args.input_file)
+    
+    if not input_path.exists():
+        print(f"Error: Target file not found at: '{input_path.absolute()}'")
+        exit(1)
+        
+    # Resolve the destination file path
+    output_path = Path(args.output) if args.output else input_path.with_suffix(".custom")
+    
+    convert_document_to_custom(input_path, output_path)
