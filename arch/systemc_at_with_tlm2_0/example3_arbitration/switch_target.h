@@ -1,6 +1,14 @@
 #ifndef SWITCH_TARGET_H
 #define SWITCH_TARGET_H
 
+// ============================================================================
+// MULTI-SOCKETS:
+// - multi_passthrough_target_socket: A target socket that can bind to multiple
+//   initiators. It passes a Port ID (int index) to callback functions to
+//   identify which connection triggered the transport.
+// - multi_passthrough_initiator_socket: An initiator socket that can bind to
+//   multiple targets.
+// ============================================================================
 #include <systemc>
 #include <tlm>
 #include <tlm_utils/multi_passthrough_target_socket.h>
@@ -18,6 +26,12 @@ inline int get_cycle() {
 #define CYC_LOG() "[CYCLE: " << get_cycle() << "] "
 #endif
 
+// ============================================================================
+// SwitchTarget Module (Example 3)
+// - Models a shared communication crossbar switch.
+// - Demonstrates multi-socket binding, Round-Robin arbitration, and busy lock
+//   modeling (using a PEQ lock delay).
+// ============================================================================
 class SwitchTarget : public sc_core::sc_module {
 public:
     tlm_utils::multi_passthrough_target_socket<SwitchTarget, 32> target_sockets;
@@ -34,9 +48,11 @@ public:
         : sc_core::sc_module(name), target_sockets("target_sockets"), initiator_sockets("initiator_sockets"),
           m_cycle_time(10, sc_core::SC_NS), m_rr_index(0), m_switch_busy(false), m_active_init_id(-1), m_peq("peq") {
         
+        // Register callbacks. Sockets accept port ID parameters.
         target_sockets.register_nb_transport_fw(this, &SwitchTarget::nb_transport_fw);
         initiator_sockets.register_nb_transport_bw(this, &SwitchTarget::nb_transport_bw);
         
+        // Concurrent arbiter and busy release threads
         SC_THREAD(arbiter_thread);
         SC_THREAD(busy_release_thread);
 
@@ -59,7 +75,7 @@ public:
 
 private:
     struct Request {
-        int init_id;
+        int init_id; // Source initiator port index (0 to 3)
         tlm::tlm_generic_payload* trans;
         sc_core::sc_time arrival_time;
     };
@@ -69,9 +85,9 @@ private:
     bool m_switch_busy;
     int m_active_init_id;
 
-    std::vector<Request> m_pending_requests;
+    std::vector<Request> m_pending_requests; // Vector capturing all concurrent requests
     std::map<tlm::tlm_generic_payload*, int> m_trans_to_init;
-    tlm_utils::peq_with_get<tlm::tlm_generic_payload> m_peq; // PEQ for switch transmission locks
+    tlm_utils::peq_with_get<tlm::tlm_generic_payload> m_peq; // PEQ modeling the switch busy transmission delay
 
     sc_core::sc_event m_arbiter_event;
     sc_core::sc_event m_switch_free_event;
@@ -85,7 +101,12 @@ private:
         sig_pending_req_count.write(m_pending_requests.size());
     }
 
-    // FW path from Initiators
+    // ============================================================================
+    // nb_transport_fw (Forward path target callback)
+    // - Receives requests from the 4 Initiators.
+    // - Sockets pass port index parameter (id).
+    // - Captures requests and returns TLM_ACCEPTED to stall initiators.
+    // ============================================================================
     tlm::tlm_sync_enum nb_transport_fw(int id, tlm::tlm_generic_payload& trans, tlm::tlm_phase& phase, sc_core::sc_time& delay) {
         int cyc = static_cast<int>((sc_core::sc_time_stamp() + delay) / sc_core::sc_time(10, sc_core::SC_NS) + 0.5);
 
@@ -95,11 +116,12 @@ private:
 
             m_trans_to_init[&trans] = id;
 
+            // Stash request and stall initiator by returning TLM_ACCEPTED
             Request r = {id, &trans, sc_core::sc_time_stamp() + delay};
             m_pending_requests.push_back(r);
 
             m_signal_event.notify(delay);
-            m_arbiter_event.notify(delay);
+            m_arbiter_event.notify(delay); // Trigger arbiter
 
             return tlm::TLM_ACCEPTED;
         }
@@ -111,21 +133,29 @@ private:
         return tlm::TLM_ACCEPTED;
     }
 
+    // ============================================================================
+    // arbiter_thread
+    // - Concurrent scheduler process.
+    // - Performs Round-Robin scheduling to select the winning initiator.
+    // - Releases the winner, forwards its transaction, and locks the switch.
+    // ============================================================================
     void arbiter_thread() {
         while (true) {
             if (m_pending_requests.empty()) {
-                wait(m_arbiter_event);
+                wait(m_arbiter_event); // Block if no requests are pending
             }
 
             if (m_switch_busy) {
-                wait(m_switch_free_event);
+                wait(m_switch_free_event); // Block if switch is busy transmitting
             }
 
             if (m_pending_requests.empty()) {
                 continue;
             }
 
-            // Find request using Round-Robin
+            // Round-Robin Selection Logic:
+            // - Starts checking ports from the current m_rr_index index.
+            // - Selects the first active request found, then updates m_rr_index.
             int selected_idx = -1;
             for (int i = 0; i < 4; ++i) {
                 int cand_id = (m_rr_index + i) % 4;
@@ -142,7 +172,7 @@ private:
                 Request r = m_pending_requests[selected_idx];
                 m_pending_requests.erase(m_pending_requests.begin() + selected_idx);
 
-                m_switch_busy = true;
+                m_switch_busy = true; // Lock switch
                 m_active_init_id = r.init_id;
                 
                 std::cout << CYC_LOG() << "[SWITCH] Arbiter GRANTED access to Initiator " << r.init_id 
@@ -150,12 +180,12 @@ private:
 
                 m_signal_event.notify();
 
-                // 1. Release initiator request phase: Send END_REQ backward
+                // 1. Release winner request phase: Send END_REQ backward to initiator
                 tlm::tlm_phase phase = tlm::END_REQ;
                 sc_core::sc_time delay = m_cycle_time;
                 target_sockets[r.init_id]->nb_transport_bw(*r.trans, phase, delay);
 
-                // 2. Forward BEGIN_REQ to destination target node after 1 cycle switch delay
+                // 2. Forward BEGIN_REQ to destination target node after 1 cycle switch routing delay
                 int dest_node = r.trans->get_address();
                 phase = tlm::BEGIN_REQ;
                 delay = m_cycle_time;
@@ -166,7 +196,7 @@ private:
                     std::cout << "[CYCLE: " << cyc << "] [SWITCH] Target node " << dest_node << " accepted request.\n";
                 }
 
-                // 3. Register busy transmission complete event with PEQ to release busy status after 3 cycles
+                // 3. Register busy transmission complete event with PEQ to release busy status after 3 cycles (switch lock delay)
                 m_peq.notify(*r.trans, 3 * m_cycle_time);
 
                 // Update Round Robin index
@@ -176,19 +206,20 @@ private:
         }
     }
 
+    // Worker thread waiting on switch transmission lock expiration
     void busy_release_thread() {
         while (true) {
-            // Block on PEQ event
             wait(m_peq.get_event());
 
             tlm::tlm_generic_payload* trans;
             while ((trans = m_peq.get_next_transaction())) {
+                // Free the switch busy lock
                 m_switch_busy = false;
                 m_active_init_id = -1;
                 std::cout << CYC_LOG() << "[SWITCH] Switch transmission complete (freeing switch).\n";
                 
                 m_signal_event.notify();
-                m_switch_free_event.notify();
+                m_switch_free_event.notify(); // Notify arbiter to process remaining queued requests
             }
         }
     }

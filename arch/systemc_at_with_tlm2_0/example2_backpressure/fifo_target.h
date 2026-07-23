@@ -16,6 +16,14 @@ inline int get_cycle() {
 #define CYC_LOG() "[CYCLE: " << get_cycle() << "] "
 #endif
 
+// ============================================================================
+// FifoTarget Module (Example 2)
+// - Fixed-capacity buffer interconnect module.
+// - Acts as a target receiving writes from the Producer, and an initiator
+//   pushing data packets forward to the Consumer.
+// - Demonstrates backpressure cascade: stalls the Producer when buffer is full,
+//   and is stalled by the Consumer when the Consumer is busy.
+// ============================================================================
 class FifoTarget : public sc_core::sc_module {
 public:
     tlm_utils::simple_target_socket<FifoTarget> write_socket;
@@ -32,9 +40,11 @@ public:
           m_capacity(capacity), m_cycle_time(10, sc_core::SC_NS), m_peq("peq"),
           m_consumer_busy(false), m_active_trans(nullptr) {
         
+        // Register callbacks
         write_socket.register_nb_transport_fw(this, &FifoTarget::nb_transport_fw_write);
         read_socket.register_nb_transport_bw(this, &FifoTarget::nb_transport_bw_read);
         
+        // Concurrent worker threads
         SC_THREAD(process_peq_thread);
         SC_THREAD(push_to_consumer_thread);
 
@@ -56,10 +66,10 @@ public:
 private:
     size_t m_capacity;
     sc_core::sc_time m_cycle_time;
-    std::queue<int> m_fifo_data;
+    std::queue<int> m_fifo_data; // Internal queue modeling storage capacity
 
-    std::queue<tlm::tlm_generic_payload*> m_pending_writes;
-    tlm_utils::peq_with_get<tlm::tlm_generic_payload> m_peq; // PEQ for write buffer latency
+    std::queue<tlm::tlm_generic_payload*> m_pending_writes; // Queue tracking stalled producers
+    tlm_utils::peq_with_get<tlm::tlm_generic_payload> m_peq; // PEQ modeling write buffer latency
 
     sc_core::sc_event m_consumer_trigger_event;
     sc_core::sc_event m_consumer_released_event;
@@ -75,7 +85,11 @@ private:
         sig_consumer_stalled.write(m_consumer_busy);
     }
 
-    // FW path for writes (from Producer)
+    // ============================================================================
+    // nb_transport_fw_write (Forward path write target callback)
+    // - Receives data write requests from the Producer.
+    // - Implements backpressure stall when the FIFO queue buffer is full.
+    // ============================================================================
     tlm::tlm_sync_enum nb_transport_fw_write(tlm::tlm_generic_payload& trans, tlm::tlm_phase& phase, sc_core::sc_time& delay) {
         int cyc = static_cast<int>((sc_core::sc_time_stamp() + delay) / sc_core::sc_time(10, sc_core::SC_NS) + 0.5);
 
@@ -84,7 +98,7 @@ private:
                       << m_fifo_data.size() << "/" << m_capacity << "\n";
 
             if (m_fifo_data.size() < m_capacity && m_pending_writes.empty()) {
-                // Return END_REQ after 1 cycle delay
+                // Return END_REQ after 1 cycle register delay
                 phase = tlm::END_REQ;
                 delay = delay + m_cycle_time;
 
@@ -93,6 +107,7 @@ private:
 
                 return tlm::TLM_UPDATED;
             } else {
+                // FIFO buffer full! Stall the producer by returning TLM_ACCEPTED
                 std::cout << "[CYCLE: " << cyc << "] [FIFO] FIFO FULL! Stall write request.\n";
                 m_pending_writes.push(&trans);
                 m_signal_event.notify(delay);
@@ -102,7 +117,11 @@ private:
         return tlm::TLM_ACCEPTED;
     }
 
-    // BW path from Consumer
+    // ============================================================================
+    // nb_transport_bw_read (Backward path initiator callback)
+    // - Triggered when the Consumer returns END_REQ backward, releasing
+    //   our consumer socket interface.
+    // ============================================================================
     tlm::tlm_sync_enum nb_transport_bw_read(tlm::tlm_generic_payload& /*trans*/, tlm::tlm_phase& phase, sc_core::sc_time& delay) {
         int cyc = static_cast<int>((sc_core::sc_time_stamp() + delay) / sc_core::sc_time(10, sc_core::SC_NS) + 0.5);
 
@@ -111,12 +130,12 @@ private:
             m_consumer_busy = false;
             m_active_trans = nullptr;
 
-            // Pop item from FIFO
+            // Pop item from FIFO queue
             if (!m_fifo_data.empty()) {
                 m_fifo_data.pop();
             }
 
-            // Release stalled Producer
+            // Release stalled Producer (stalls are released backward)
             if (!m_pending_writes.empty()) {
                 tlm::tlm_generic_payload* p_trans = m_pending_writes.front();
                 m_pending_writes.pop();
@@ -140,6 +159,7 @@ private:
         return tlm::TLM_ACCEPTED;
     }
 
+    // Receives write packets from PEQ and places them inside the queue
     void process_peq_thread() {
         while (true) {
             wait(m_peq.get_event());
@@ -158,13 +178,14 @@ private:
         }
     }
 
+    // Pushes stored packets forward to the Consumer Target
     void push_to_consumer_thread() {
         while (true) {
             if (m_fifo_data.empty()) {
-                wait(m_consumer_trigger_event);
+                wait(m_consumer_trigger_event); // Wait for items to arrive
             }
             if (m_consumer_busy) {
-                wait(m_consumer_released_event);
+                wait(m_consumer_released_event); // Wait for consumer interface to free
             }
             if (m_fifo_data.empty()) {
                 continue;
@@ -173,12 +194,11 @@ private:
             int val = m_fifo_data.front();
             m_consumer_busy = true;
 
-            // Create a payload to forward to Consumer
+            // Allocate a write payload directed to Consumer
             m_active_trans = new tlm::tlm_generic_payload();
             m_active_trans->set_command(tlm::TLM_WRITE_COMMAND);
             m_active_trans->set_address(0);
             
-            // Re-use data storage
             int* data_ptr = new int(val);
             m_active_trans->set_data_ptr(reinterpret_cast<unsigned char*>(data_ptr));
             m_active_trans->set_data_length(sizeof(int));
@@ -189,8 +209,10 @@ private:
             std::cout << CYC_LOG() << "[FIFO] Forwarding popped value " << val << " to Consumer.\n";
             m_signal_event.notify();
 
+            // Forward write request to Consumer Target
             tlm::tlm_sync_enum status = read_socket->nb_transport_fw(*m_active_trans, phase, delay);
 
+            // Handle direct updates (if Consumer is not busy)
             if (status == tlm::TLM_UPDATED && phase == tlm::END_REQ) {
                 int cyc = static_cast<int>((sc_core::sc_time_stamp() + delay) / sc_core::sc_time(10, sc_core::SC_NS) + 0.5);
                 std::cout << "[CYCLE: " << cyc << "] [FIFO] Consumer accepted write request immediately.\n";

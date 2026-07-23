@@ -14,6 +14,12 @@ inline int get_cycle() {
 #define CYC_LOG() "[CYCLE: " << get_cycle() << "] "
 #endif
 
+// ============================================================================
+// Producer Module (Example 2)
+// - Initiator representing a bursty stream source.
+// - Demonstrates stall behavior when the downstream block (FIFO) is full
+//   and holds END_REQ.
+// ============================================================================
 class Producer : public sc_core::sc_module {
 public:
     tlm_utils::simple_initiator_socket<Producer> socket;
@@ -22,6 +28,7 @@ public:
     Producer(sc_core::sc_module_name name, int scenario = 1) 
         : sc_core::sc_module(name), socket("socket"), m_scenario(scenario), m_req_in_progress(false) {
         
+        // Register the backward path callback
         socket.register_nb_transport_bw(this, &Producer::nb_transport_bw);
         SC_THREAD(producer_thread);
     }
@@ -29,24 +36,39 @@ public:
 private:
     int m_scenario;
     bool m_req_in_progress;
-    sc_core::sc_event m_end_req_event;
+    sc_core::sc_event m_end_req_event; // Event used to stall the producer thread
     
     std::vector<tlm::tlm_generic_payload*> m_transactions;
     std::vector<int*> m_allocated_data;
 
+    // ============================================================================
+    // nb_transport_bw (Non-blocking transport backward path callback)
+    // - Receives phase updates from target.
+    // - If the target was full, it holds END_REQ. When space becomes available,
+    //   it sends END_REQ backward, triggering this callback to unblock us.
+    // ============================================================================
     tlm::tlm_sync_enum nb_transport_bw(tlm::tlm_generic_payload& trans, tlm::tlm_phase& phase, sc_core::sc_time& delay) {
         int cyc = static_cast<int>((sc_core::sc_time_stamp() + delay) / sc_core::sc_time(10, sc_core::SC_NS) + 0.5);
         
         if (phase == tlm::END_REQ) {
             std::cout << "[CYCLE: " << cyc << "] [PRODUCER] Received END_REQ for write transaction " 
                       << trans.get_address() << "\n";
+            
+            // Release interface lock
             m_req_in_progress = false;
+            
+            // Notify the stalled producer thread to resume execution
             m_end_req_event.notify(delay);
             return tlm::TLM_ACCEPTED;
         }
         return tlm::TLM_ACCEPTED;
     }
 
+    // ============================================================================
+    // write_fifo_nonblocking
+    // - Writes a data packet to the FIFO interconnect.
+    // - Blocks the producer thread if backpressure is active.
+    // ============================================================================
     void write_fifo_nonblocking(int id, int val) {
         tlm::tlm_generic_payload* trans = new tlm::tlm_generic_payload();
         int* data_ptr = new int(val);
@@ -69,18 +91,25 @@ private:
         std::cout << CYC_LOG() << "[PRODUCER] Sending write BEGIN_REQ (Tx " 
                   << id << ") with value: " << val << "\n";
 
+        // Lock socket interface
         m_req_in_progress = true;
         tlm::tlm_sync_enum status = socket->nb_transport_fw(*trans, phase, delay);
 
+        // Check if FIFO accepted request immediately (FIFO size < capacity)
         if (status == tlm::TLM_UPDATED && phase == tlm::END_REQ) {
             int cyc = static_cast<int>((sc_core::sc_time_stamp() + delay) / sc_core::sc_time(10, sc_core::SC_NS) + 0.5);
             std::cout << "[CYCLE: " << cyc << "] [PRODUCER] Direct update: phase END_REQ for Tx " << id << ".\n";
             m_req_in_progress = false;
         }
 
+        // ============================================================================
+        // Stalling on Backpressure:
+        // - If FIFO is full, it returns TLM_ACCEPTED without updating phase to END_REQ.
+        // - m_req_in_progress remains true, so we yield thread context using wait().
+        // ============================================================================
         if (m_req_in_progress) {
             std::cout << CYC_LOG() << "[PRODUCER] Stalling on Tx " << id << " due to backpressure...\n";
-            wait(m_end_req_event);
+            wait(m_end_req_event); // Yield execution until the target returns END_REQ backward
             std::cout << CYC_LOG() << "[PRODUCER] Stall released for Tx " << id << ".\n";
         }
         
@@ -89,17 +118,17 @@ private:
     }
 
     void producer_thread() {
-        wait(10, sc_core::SC_NS); // Start at cycle 1 (T = 10ns)
+        wait(10, sc_core::SC_NS); // Start traffic at cycle 1 (T = 10ns)
 
         if (m_scenario == 1) {
-            // Scenario 1: Fast Producer, Slow Consumer
+            // Scenario 1: Fast Producer (writes every cycle)
             for (int i = 1; i <= 6; ++i) {
                 write_fifo_nonblocking(i, 100 + i);
                 wait(10, sc_core::SC_NS);
             }
         } 
         else if (m_scenario == 2) {
-            // Scenario 2: Slow Producer, Fast Consumer
+            // Scenario 2: Slow Producer (writes every 6 cycles)
             for (int i = 1; i <= 4; ++i) {
                 write_fifo_nonblocking(i, 200 + i);
                 wait(60, sc_core::SC_NS);
