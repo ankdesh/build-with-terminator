@@ -1,0 +1,32 @@
+# KLayout repository (cloned automatically by setup_and_build.sh)
+/klayout/
+
+# Emscripten SDK (installed automatically by setup_and_build.sh)
+/emsdk/
+
+# CMake / Emscripten build directory
+/build_wasm/
+build/
+
+# Node.js / NPM dependencies and build outputs
+node_modules/
+/demo/node_modules/
+/demo/dist/
+package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Generated WebAssembly build outputs in package & demo public
+/pkg/klayout_db.js
+/pkg/klayout_db.wasm
+/demo/public/klayout_db.js
+/demo/public/klayout_db.wasm
+
+# OS / Editor temporary files
+.DS_Store
+*.swp
+*.tmp
+.vscode/
+.idea/
+*.log

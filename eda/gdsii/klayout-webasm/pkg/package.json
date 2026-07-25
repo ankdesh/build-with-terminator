@@ -1,0 +1,25 @@
+{
+  "name": "klayout-wasm",
+  "version": "0.1.0",
+  "description": "KLayout database core library compiled to WebAssembly with TypeScript bindings",
+  "main": "index.js",
+  "types": "klayout.d.ts",
+  "files": [
+    "index.js",
+    "klayout.d.ts",
+    "klayout_db.js",
+    "klayout_db.wasm"
+  ],
+  "keywords": [
+    "klayout",
+    "gdsii",
+    "oasis",
+    "layout",
+    "webassembly",
+    "wasm",
+    "eda",
+    "cad"
+  ],
+  "author": "Antigravity",
+  "license": "GPL-2.0"
+}
