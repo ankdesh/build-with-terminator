@@ -134,8 +134,8 @@ class IPXACTValidator:
             # Already loaded in this session — reuse.
             return self._schema
 
-        if not self._cached_xsd_path.is_file():
-            self._download_schema()
+        # Always check and download any missing schema dependencies.
+        self._download_schema()
 
         if not self._cached_xsd_path.is_file():
             print(
@@ -159,25 +159,70 @@ class IPXACTValidator:
 
     def _download_schema(self) -> None:
         """
-        Fetch the Accellera 2022 XSD from the official URL and cache it locally.
-        Emits a warning if the download fails (network unavailable, etc.).
+        Fetch the Accellera 2022 XSD from the official URL and cache it locally,
+        recursively downloading any included or imported schemas that are missing.
         """
-        print(
-            f"[*] XSD schema not cached. Downloading from:\n    {XSD_INDEX_URL}",
-            file=sys.stderr,
-        )
-        try:
-            response = requests.get(XSD_INDEX_URL, timeout=30)
-            response.raise_for_status()
-            self._cached_xsd_path.write_bytes(response.content)
+        base_url = "https://www.accellera.org/XMLSchema/IPXACT/1685-2022/"
+        to_download = ["index.xsd"]
+        downloaded: set[str] = set()
+
+        while to_download:
+            current = to_download.pop(0)
+            if current in downloaded:
+                continue
+
+            local_path = self._cache_dir / current
+
+            # If the file already exists, parse it to find its dependencies,
+            # but do not download it again.
+            if local_path.is_file():
+                downloaded.add(current)
+                try:
+                    parser = etree.XMLParser(remove_blank_text=True)
+                    xsd_doc = etree.parse(str(local_path), parser)
+                    ns = {"xs": "http://www.w3.org/2001/XMLSchema"}
+                    includes = xsd_doc.xpath("//xs:include | //xs:import", namespaces=ns)
+                    for inc in includes:
+                        schema_loc = inc.get("schemaLocation")
+                        if schema_loc and not schema_loc.startswith(("http://", "https://")):
+                            if schema_loc not in downloaded and schema_loc not in to_download:
+                                to_download.append(schema_loc)
+                except Exception as e:
+                    print(
+                        f"[WARNING] Failed to parse cached {current} for dependencies: {e}",
+                        file=sys.stderr,
+                    )
+                continue
+
+            url = base_url + current
             print(
-                f"[*] XSD cached to: '{self._cached_xsd_path}'",
+                f"[*] Downloading missing XSD component: {current} from {url}...",
                 file=sys.stderr,
             )
-        except requests.RequestException as exc:
-            print(
-                f"[WARNING] Could not download XSD schema: {exc}\n"
-                "          Validation will be skipped. Supply XSD manually at:\n"
-                f"          {self._cached_xsd_path}",
-                file=sys.stderr,
-            )
+            try:
+                response = requests.get(url, timeout=30)
+                response.raise_for_status()
+                local_path.write_bytes(response.content)
+                downloaded.add(current)
+
+                # Parse the downloaded XSD to find further includes/imports
+                try:
+                    parser = etree.XMLParser(remove_blank_text=True)
+                    xsd_doc = etree.fromstring(response.content, parser)
+                    ns = {"xs": "http://www.w3.org/2001/XMLSchema"}
+                    includes = xsd_doc.xpath("//xs:include | //xs:import", namespaces=ns)
+                    for inc in includes:
+                        schema_loc = inc.get("schemaLocation")
+                        if schema_loc and not schema_loc.startswith(("http://", "https://")):
+                            if schema_loc not in downloaded and schema_loc not in to_download:
+                                to_download.append(schema_loc)
+                except Exception as e:
+                    print(
+                        f"[WARNING] Failed to parse dependency schemas in {current}: {e}",
+                        file=sys.stderr,
+                    )
+            except Exception as exc:
+                print(
+                    f"[WARNING] Failed to download {current}: {exc}",
+                    file=sys.stderr,
+                )

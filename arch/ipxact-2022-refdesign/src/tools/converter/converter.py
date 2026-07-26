@@ -107,6 +107,13 @@ class IPXACTConverter:
         # leaves behind on child elements after in-place tag reassignment.
         etree.cleanup_namespaces(new_root, top_nsmap=OUTPUT_NS_MAP)
 
+        # Step 3c: Migrate structural and semantic differences from 2014 to 2022.
+        self._migrate_element_names(new_root)
+        self._migrate_attributes(new_root)
+        self._migrate_cpus(new_root)
+        self._ensure_cpu_memory_maps(new_root)
+        self._migrate_description_to_top(new_root)
+
         # Step 4: Normalize vendor identity.
         vendor_count = self._normalize_vendor(new_root)
         print(
@@ -280,3 +287,151 @@ class IPXACTConverter:
                 "these are optional and outside Phase 1 scope.",
                 file=sys.stderr,
             )
+
+    def _migrate_element_names(self, root: etree._Element) -> None:
+        """
+        Rename elements that changed name from 2014 to 2022:
+          - master -> initiator
+          - slave -> target
+          - mirroredMaster -> mirroredInitiator
+          - mirroredSlave -> mirroredTarget
+        """
+        rename_map = {
+            "master": "initiator",
+            "slave": "target",
+            "mirroredMaster": "mirroredInitiator",
+            "mirroredSlave": "mirroredTarget",
+        }
+        for elem in root.iter():
+            if not isinstance(elem.tag, str):
+                continue
+            qname = etree.QName(elem.tag)
+            if qname.namespace == NS_2022 and qname.localname in rename_map:
+                new_local = rename_map[qname.localname]
+                elem.tag = f"{{{NS_2022}}}{new_local}"
+
+    def _migrate_attributes(self, root: etree._Element) -> None:
+        """
+        Rename attributes that changed name from 2014 to 2022:
+          - componentRef -> componentInstanceRef (e.g. in internalPortReference, activeInterface)
+          - masterRef -> initiatorRef (e.g. in transparentBridge)
+          - slaveRef -> targetRef
+        """
+        for elem in root.iter():
+            if "componentRef" in elem.attrib:
+                val = elem.attrib.pop("componentRef")
+                elem.set("componentInstanceRef", val)
+            if "masterRef" in elem.attrib:
+                val = elem.attrib.pop("masterRef")
+                elem.set("initiatorRef", val)
+            if "slaveRef" in elem.attrib:
+                val = elem.attrib.pop("slaveRef")
+                elem.set("targetRef", val)
+
+    def _ensure_cpu_memory_maps(self, root: etree._Element) -> None:
+        """
+        Ensure that any memoryMapRef referenced by a CPU exists in memoryMaps.
+        If not, create a dummy memoryMap with that name.
+        """
+        referenced_maps = set()
+        for ref_el in root.xpath(".//ipxact:cpu/ipxact:memoryMapRef", namespaces={"ipxact": NS_2022}):
+            if ref_el.text:
+                referenced_maps.add(ref_el.text.strip())
+
+        if not referenced_maps:
+            return
+
+        # Find or create <ipxact:memoryMaps>
+        memory_maps_el = root.find(f"{{{NS_2022}}}memoryMaps")
+        if memory_maps_el is None:
+            memory_maps_el = etree.Element(f"{{{NS_2022}}}memoryMaps")
+            insert_idx = 0
+            for idx, child in enumerate(root):
+                local_name = etree.QName(child.tag).localname
+                if local_name in ("vendor", "library", "name", "version", "displayName",
+                                  "shortDescription", "description", "typeDefinitions",
+                                  "powerDomains", "busInterfaces", "indirectInterfaces",
+                                  "channels", "addressSpaces"):
+                    insert_idx = idx + 1
+            root.insert(insert_idx, memory_maps_el)
+
+        # For any referenced map that doesn't exist, create it
+        for map_name in referenced_maps:
+            has_it = False
+            for existing in memory_maps_el.findall(f"{{{NS_2022}}}memoryMap"):
+                e_name_el = existing.find(f"{{{NS_2022}}}name")
+                if e_name_el is not None and e_name_el.text and e_name_el.text.strip() == map_name:
+                    has_it = True
+                    break
+            
+            if not has_it:
+                new_map = etree.Element(f"{{{NS_2022}}}memoryMap")
+                name_el = etree.Element(f"{{{NS_2022}}}name")
+                name_el.text = map_name
+                new_map.append(name_el)
+                memory_maps_el.append(new_map)
+
+    def _migrate_cpus(self, root: etree._Element) -> None:
+        """
+        Migrate <ipxact:cpu> elements from 2014 to 2022:
+          - Extract <ipxact:addressSpaceRef addressSpaceRef="ref_name"/>
+          - Look up the referenced <ipxact:addressSpace> in the same component
+          - Extract its <ipxact:range> and <ipxact:width>
+          - Insert <ipxact:range>, <ipxact:width>, and <ipxact:memoryMapRef>ref_name</ipxact:memoryMapRef>
+            in the correct schema sequence.
+        """
+        address_spaces = {}
+        for as_elem in root.xpath(".//ipxact:addressSpace", namespaces={"ipxact": NS_2022}):
+            name_elem = as_elem.find(f"{{{NS_2022}}}name")
+            if name_elem is not None and name_elem.text:
+                as_name = name_elem.text.strip()
+                range_elem = as_elem.find(f"{{{NS_2022}}}range")
+                width_elem = as_elem.find(f"{{{NS_2022}}}width")
+                address_spaces[as_name] = {
+                    "range": range_elem.text.strip() if range_elem is not None else "0x100000000",
+                    "width": width_elem.text.strip() if width_elem is not None else "32"
+                }
+
+        cpus = root.xpath(".//ipxact:cpu", namespaces={"ipxact": NS_2022})
+        for cpu in cpus:
+            ref_elem = cpu.find(f"{{{NS_2022}}}addressSpaceRef")
+            if ref_elem is not None:
+                ref_name = ref_elem.get("addressSpaceRef")
+                cpu.remove(ref_elem)
+                
+                if ref_name:
+                    as_data = address_spaces.get(ref_name, {"range": "0x100000000", "width": "32"})
+                    
+                    range_el = etree.Element(f"{{{NS_2022}}}range")
+                    range_el.text = as_data["range"]
+                    
+                    width_el = etree.Element(f"{{{NS_2022}}}width")
+                    width_el.text = as_data["width"]
+                    
+                    mem_map_ref_el = etree.Element(f"{{{NS_2022}}}memoryMapRef")
+                    mem_map_ref_el.text = ref_name
+                    
+                    insert_idx = 0
+                    for idx, child in enumerate(cpu):
+                        local_name = etree.QName(child.tag).localname
+                        if local_name in ("name", "displayName", "shortDescription", "description"):
+                            insert_idx = idx + 1
+                    
+                    cpu.insert(insert_idx, range_el)
+                    cpu.insert(insert_idx + 1, width_el)
+                    cpu.append(mem_map_ref_el)
+
+    def _migrate_description_to_top(self, root: etree._Element) -> None:
+        """
+        Move <ipxact:description> to the top (following name/version/displayName/shortDescription)
+        as required by IP-XACT 2022.
+        """
+        desc = root.find(f"{{{NS_2022}}}description")
+        if desc is not None:
+            root.remove(desc)
+            insert_idx = 0
+            for idx, child in enumerate(root):
+                local_name = etree.QName(child.tag).localname
+                if local_name in ("vendor", "library", "name", "version", "displayName", "shortDescription"):
+                    insert_idx = idx + 1
+            root.insert(insert_idx, desc)
