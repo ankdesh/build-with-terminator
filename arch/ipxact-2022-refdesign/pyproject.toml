@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ipxact-tools"
+version = "0.1.0"
+description = "IP-XACT 2022 lean-profile tooling: converter (2014→2022) and validator"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "lxml>=5.0.0",
+    "requests>=2.31.0",
+]
+
+[project.scripts]
+ipxact-convert  = "src.tools.converter.cli:main"
+ipxact-validate = "src.tools.validator.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true

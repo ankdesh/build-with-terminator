@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  sample_2014_input.xml
+  ======================
+  A minimal IP-XACT IEEE 1685-2014 component document used to test the converter.
+
+  Deliberately includes:
+    - 2014 namespace (to test namespace migration)
+    - <ipxact:vendor> not set to 'saiti' (to test vendor normalization)
+    - <ipxact:isPresent> on a port (to test conditionality extraction)
+    - <ipxact:busInterfaces> (to test Category 3 WARNING flagging)
+    - <ipxact:memoryMap> (to test Category 2 INFO flagging)
+    - Valid <ipxact:ports> with wire and vector (Category 1, should pass through cleanly)
+-->
+<ipxact:component
+    xmlns:ipxact="http://www.accellera.org/XMLSchema/IPXACT/1685-2014"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.accellera.org/XMLSchema/IPXACT/1685-2014
+                        http://www.accellera.org/XMLSchema/IPXACT/1685-2014/index.xsd">
+
+  <!-- VLNV — vendor will be overwritten to 'saiti' by the converter -->
+  <ipxact:vendor>acme_corp</ipxact:vendor>
+  <ipxact:library>legacy_ips</ipxact:library>
+  <ipxact:name>fetch_unit_v1</ipxact:name>
+  <ipxact:version>2.3</ipxact:version>
+
+  <!-- Ports: Category 1 — should migrate cleanly -->
+  <ipxact:ports>
+
+    <ipxact:port>
+      <ipxact:name>clk</ipxact:name>
+      <ipxact:wire>
+        <ipxact:direction>in</ipxact:direction>
+      </ipxact:wire>
+    </ipxact:port>
+
+    <ipxact:port>
+      <ipxact:name>rst_n</ipxact:name>
+      <ipxact:wire>
+        <ipxact:direction>in</ipxact:direction>
+      </ipxact:wire>
+    </ipxact:port>
+
+    <!-- A port with isPresent conditionality — must be extracted to vendor extension -->
+    <ipxact:port>
+      <ipxact:name>debug_out</ipxact:name>
+      <ipxact:isPresent>ENABLE_DEBUG == 1</ipxact:isPresent>
+      <ipxact:wire>
+        <ipxact:direction>out</ipxact:direction>
+        <ipxact:vectors>
+          <ipxact:vector>
+            <ipxact:left>7</ipxact:left>
+            <ipxact:right>0</ipxact:right>
+          </ipxact:vector>
+        </ipxact:vectors>
+      </ipxact:wire>
+    </ipxact:port>
+
+    <!-- Standard 32-bit output port — Category 1, migrates cleanly -->
+    <ipxact:port>
+      <ipxact:name>fetch_addr</ipxact:name>
+      <ipxact:wire>
+        <ipxact:direction>out</ipxact:direction>
+        <ipxact:vectors>
+          <ipxact:vector>
+            <ipxact:left>31</ipxact:left>
+            <ipxact:right>0</ipxact:right>
+          </ipxact:vector>
+        </ipxact:vectors>
+      </ipxact:wire>
+    </ipxact:port>
+
+  </ipxact:ports>
+
+  <!-- Category 3: busInterfaces — should trigger WARNING in converter -->
+  <ipxact:busInterfaces>
+    <ipxact:busInterface>
+      <ipxact:name>axi_master</ipxact:name>
+      <ipxact:busType vendor="amba" library="amba4" name="AXI4" version="r0p0_0"/>
+      <ipxact:master/>
+    </ipxact:busInterface>
+  </ipxact:busInterfaces>
+
+  <!-- Category 2: memoryMaps — should trigger INFO in converter -->
+  <ipxact:memoryMaps>
+    <ipxact:memoryMap>
+      <ipxact:name>csr_map</ipxact:name>
+      <ipxact:addressBlock>
+        <ipxact:name>control_regs</ipxact:name>
+        <ipxact:baseAddress>0x0</ipxact:baseAddress>
+        <ipxact:range>256</ipxact:range>
+        <ipxact:width>32</ipxact:width>
+      </ipxact:addressBlock>
+    </ipxact:memoryMap>
+  </ipxact:memoryMaps>
+
+</ipxact:component>

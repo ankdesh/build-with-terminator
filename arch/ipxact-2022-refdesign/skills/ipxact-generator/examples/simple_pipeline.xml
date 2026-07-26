@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  simple_pipeline.xml
+  ====================
+  A minimal but complete IP-XACT 2022 design document demonstrating a
+  2-stage IF (Instruction Fetch) → ID (Instruction Decode) pipeline.
+
+  This is the DESIGN document. See also:
+    - if_stage_component.xml  (not included separately here; component defs are inline)
+    - id_stage_component.xml
+
+  Profile: Category 1 (lean intra-core) — no bus interfaces, no memory maps.
+  Vendor:  saiti
+-->
+<ipxact:design
+    xmlns:ipxact="http://www.accellera.org/XMLSchema/IPXACT/1685-2022"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.accellera.org/XMLSchema/IPXACT/1685-2022
+                        http://www.accellera.org/XMLSchema/IPXACT/1685-2022/index.xsd">
+
+  <!-- VLNV: Vendor-Library-Name-Version — unique ID for this design document -->
+  <ipxact:vendor>saiti</ipxact:vendor>
+  <ipxact:library>lean_core</ipxact:library>
+  <ipxact:name>simple_2stage_pipeline</ipxact:name>
+  <ipxact:version>1.0</ipxact:version>
+
+  <!-- ===================================================================
+       Component Instances
+       Each stage is instantiated with a unique instance name.
+       componentRef points to the VLNV of the component XML document.
+       =================================================================== -->
+  <ipxact:componentInstances>
+
+    <!-- Instruction Fetch stage instance -->
+    <ipxact:componentInstance>
+      <ipxact:instanceName>u_if_stage</ipxact:instanceName>
+      <ipxact:componentRef
+          vendor="saiti"
+          library="lean_core"
+          name="if_stage"
+          version="1.0"/>
+    </ipxact:componentInstance>
+
+    <!-- Instruction Decode stage instance -->
+    <ipxact:componentInstance>
+      <ipxact:instanceName>u_id_stage</ipxact:instanceName>
+      <ipxact:componentRef
+          vendor="saiti"
+          library="lean_core"
+          name="id_stage"
+          version="1.0"/>
+    </ipxact:componentInstance>
+
+  </ipxact:componentInstances>
+
+  <!-- ===================================================================
+       Ad-Hoc Connections
+       Point-to-point wiring between component instances and design boundary.
+       Note: componentRef in portReferences refers to instanceName, NOT component name.
+       =================================================================== -->
+  <ipxact:adHocConnections>
+
+    <!-- Global clock — broadcast from design input to all stages -->
+    <ipxact:adHocConnection>
+      <ipxact:name>clk_net</ipxact:name>
+      <ipxact:portReferences>
+        <!-- Design-level external port (top-level input) -->
+        <ipxact:externalPortReference portRef="clk"/>
+        <!-- Fan-out to IF stage -->
+        <ipxact:internalPortReference componentRef="u_if_stage" portRef="clk"/>
+        <!-- Fan-out to ID stage -->
+        <ipxact:internalPortReference componentRef="u_id_stage" portRef="clk"/>
+      </ipxact:portReferences>
+    </ipxact:adHocConnection>
+
+    <!-- Global active-low reset — broadcast from design input to all stages -->
+    <ipxact:adHocConnection>
+      <ipxact:name>rst_n_net</ipxact:name>
+      <ipxact:portReferences>
+        <ipxact:externalPortReference portRef="rst_n"/>
+        <ipxact:internalPortReference componentRef="u_if_stage" portRef="rst_n"/>
+        <ipxact:internalPortReference componentRef="u_id_stage" portRef="rst_n"/>
+      </ipxact:portReferences>
+    </ipxact:adHocConnection>
+
+    <!-- Program counter input from design boundary to IF stage -->
+    <ipxact:adHocConnection>
+      <ipxact:name>pc_input_net</ipxact:name>
+      <ipxact:portReferences>
+        <ipxact:externalPortReference portRef="pc_in"/>
+        <ipxact:internalPortReference componentRef="u_if_stage" portRef="pc_in"/>
+      </ipxact:portReferences>
+    </ipxact:adHocConnection>
+
+    <!-- Pipeline register: the full IF→ID structured bundle
+         Connects the IF stage structured output to the ID stage structured input.
+         This is a full-bundle connection — all subports travel together. -->
+    <ipxact:adHocConnection>
+      <ipxact:name>if_id_pipeline_reg</ipxact:name>
+      <ipxact:portReferences>
+        <ipxact:internalPortReference componentRef="u_if_stage" portRef="if_id_out"/>
+        <ipxact:internalPortReference componentRef="u_id_stage" portRef="if_id_in"/>
+      </ipxact:portReferences>
+    </ipxact:adHocConnection>
+
+    <!-- ID stage decoded output to design boundary (for downstream stages) -->
+    <ipxact:adHocConnection>
+      <ipxact:name>id_decode_out_net</ipxact:name>
+      <ipxact:portReferences>
+        <ipxact:internalPortReference componentRef="u_id_stage" portRef="id_ex_out"/>
+        <ipxact:externalPortReference portRef="id_ex_out"/>
+      </ipxact:portReferences>
+    </ipxact:adHocConnection>
+
+  </ipxact:adHocConnections>
+
+</ipxact:design>
