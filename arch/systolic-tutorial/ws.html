@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weight Stationary (WS) — Systolic Array Tutorial</title>
+  <meta name="description" content="Interactive tutorial: Weight Stationary dataflow for systolic array matrix multiplication. Visualize how weights stay stationary while inputs stream.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">⬡ Systolic Array Tutorial</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="os.html">Output Stationary</a>
+      <a href="ws.html" class="active">Weight Stationary</a>
+      <a href="is.html">Input Stationary</a>
+    </div>
+  </nav>
+
+  <!-- ── Mode Header ── -->
+  <header class="mode-header">
+    <h1><span class="highlight-ws">Weight Stationary (WS)</span> Dataflow</h1>
+    <p class="mode-description">
+      Each Processing Element (PE) holds one specific element of the weight matrix <strong>B</strong> stationary. 
+      Elements of <strong>A</strong> stream through, and partial sums flow down to accumulate the output matrix <strong>C</strong>.
+    </p>
+    <div class="mode-tags">
+      <span class="mode-tag stationary">B — Stationary</span>
+      <span class="mode-tag streaming-a">A — Streaming →</span>
+      <span class="mode-tag output">C — Streaming ↓</span>
+    </div>
+  </header>
+
+  <!-- ── Main Content ── -->
+  <main class="tutorial-main">
+
+    <!-- Matrix Editor -->
+    <section class="matrix-input-section" id="matrixEditor">
+      <!-- Filled by JS -->
+    </section>
+
+    <!-- Info Panel -->
+    <section class="info-panel" id="infoPanel">
+      <div class="cycle-indicator">
+        <span class="cycle-label">Cycle</span>
+        <span class="cycle-current" id="currentCycle">0</span>
+        <span class="cycle-total" id="totalCycles">/ 9</span>
+        <div class="cycle-progress">
+          <div class="cycle-progress-bar" id="progressBar" style="width: 0%"></div>
+        </div>
+      </div>
+      <div class="step-explanation" id="stepExplanation">
+        Press <strong>▶</strong> or use keyboard shortcuts to begin.
+      </div>
+    </section>
+
+    <!-- Visualization Area -->
+    <section class="viz-area">
+      <!-- B label (top) -->
+      <div class="input-queue input-queue-top" id="bQueue" style="justify-content: center; font-style: italic; color: var(--text-dim); min-height: 30px;">
+        Weights B Preloaded in PEs
+      </div>
+
+      <div class="viz-row">
+        <!-- A input queue (left) -->
+        <div class="input-queue input-queue-left" id="aQueue"></div>
+
+        <!-- PE Grid -->
+        <div class="pe-grid" id="peGrid"></div>
+      </div>
+      
+      <!-- C output queue (bottom) -->
+      <div class="output-queue" id="cQueue"></div>
+    </section>
+
+    <!-- Formula -->
+    <div class="formula-display">
+      <code>C[m][j] = Σ<sub>i=0..3</sub> A[m][i] × B[i][j]&nbsp;&nbsp;|&nbsp;&nbsp;PE(i,j) processes m = cycle − i − j</code>
+    </div>
+
+    <!-- Matrices Display -->
+    <section class="matrices-section">
+      <div class="matrix-container" id="matrixA"></div>
+      <span class="matrix-operation">×</span>
+      <div class="matrix-container" id="matrixB"></div>
+      <span class="matrix-operation">=</span>
+      <div class="matrix-container" id="matrixC"></div>
+    </section>
+
+    <!-- Controls -->
+    <section class="controls-section">
+      <div class="controls" id="controls"></div>
+    </section>
+
+    <!-- Legend -->
+    <section class="legend">
+      <div class="legend-item">
+        <span class="legend-dot a"></span>
+        <span>Matrix A (streaming →)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot st"></span>
+        <span>Matrix B (stationary in PE)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot c"></span>
+        <span>Output C (streaming ↓)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot ac"></span>
+        <span>Active PE (computing)</span>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    Systolic Array Matrix Multiplication Tutorial — Weight Stationary Mode
+  </footer>
+
+  <script src="js/common.js"></script>
+  <script src="js/ws.js"></script>
+</body>
+</html>

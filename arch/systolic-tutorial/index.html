@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Systolic Array Matrix Multiplication Tutorial</title>
+  <meta name="description" content="Interactive tutorial explaining how matrix multiplication is mapped onto systolic arrays using Output Stationary, Weight Stationary, and Input Stationary dataflows.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* Landing page specific styles */
+    .systolic-diagram {
+      display: flex; justify-content: center;
+      margin: 48px auto 32px;
+      max-width: 480px;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      padding: 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-default);
+      border-radius: var(--r-lg);
+      backdrop-filter: blur(12px);
+    }
+
+    .mini-pe {
+      width: 60px; height: 60px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg-pe);
+      border: 1px solid var(--border-default);
+      border-radius: var(--r-md);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem; font-weight: 500;
+      color: var(--text-muted);
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+
+    .mini-pe:hover {
+      border-color: var(--color-pe);
+      box-shadow: 0 0 15px var(--color-pe-glow);
+      color: var(--color-pe);
+      transform: scale(1.08);
+    }
+
+    .mini-pe.active-demo {
+      animation: mini-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes mini-pulse {
+      0%, 100% { 
+        border-color: var(--border-default);
+        box-shadow: none;
+      }
+      50% { 
+        border-color: var(--color-pe);
+        box-shadow: 0 0 12px var(--color-pe-glow);
+        background: var(--bg-pe-active);
+      }
+    }
+
+    .mini-pe:nth-child(1) { animation-delay: 0s; }
+    .mini-pe:nth-child(2) { animation-delay: 0.3s; }
+    .mini-pe:nth-child(3) { animation-delay: 0.6s; }
+    .mini-pe:nth-child(4) { animation-delay: 0.9s; }
+    .mini-pe:nth-child(5) { animation-delay: 0.3s; }
+    .mini-pe:nth-child(6) { animation-delay: 0.6s; }
+    .mini-pe:nth-child(7) { animation-delay: 0.9s; }
+    .mini-pe:nth-child(8) { animation-delay: 1.2s; }
+    .mini-pe:nth-child(9) { animation-delay: 0.6s; }
+    .mini-pe:nth-child(10) { animation-delay: 0.9s; }
+    .mini-pe:nth-child(11) { animation-delay: 1.2s; }
+    .mini-pe:nth-child(12) { animation-delay: 1.5s; }
+    .mini-pe:nth-child(13) { animation-delay: 0.9s; }
+    .mini-pe:nth-child(14) { animation-delay: 1.2s; }
+    .mini-pe:nth-child(15) { animation-delay: 1.5s; }
+    .mini-pe:nth-child(16) { animation-delay: 1.8s; }
+
+    .flow-arrows {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 4px; margin: 16px auto;
+    }
+
+    .flow-arrows .row {
+      display: flex; gap: 24px; justify-content: center;
+    }
+
+    .flow-arrows .arrow {
+      font-size: 1.2rem;
+      animation: arrow-pulse 1.5s ease-in-out infinite;
+    }
+
+    .flow-arrows .arrow.a { color: var(--color-a); }
+    .flow-arrows .arrow.b { color: var(--color-b); }
+
+    @keyframes arrow-pulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    .intro-section {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .intro-text {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      line-height: 1.7;
+      margin-bottom: 32px;
+      padding: 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-default);
+      border-radius: var(--r-lg);
+    }
+
+    .intro-text strong { color: var(--text-primary); }
+    .intro-text .color-a { color: var(--color-a); font-weight: 600; }
+    .intro-text .color-b { color: var(--color-b); font-weight: 600; }
+    .intro-text .color-c { color: var(--color-c); font-weight: 600; }
+
+    .formula-hero {
+      text-align: center;
+      padding: 20px;
+      margin: 24px auto 40px;
+      max-width: 500px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-default);
+      border-radius: var(--r-lg);
+    }
+
+    .formula-hero code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .formula-hero .sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    .concepts-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">⬡ Systolic Array Tutorial</a>
+    <div class="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="os.html">Output Stationary</a>
+      <a href="ws.html">Weight Stationary</a>
+      <a href="is.html">Input Stationary</a>
+    </div>
+  </nav>
+
+  <!-- ── Hero Section ── -->
+  <section class="hero">
+    <h1>
+      Mapping Matrix Multiplication on<br>
+      <span class="gradient-text">Systolic Arrays</span>
+    </h1>
+    <p>
+      An interactive tutorial exploring how C = A × B is computed on a fixed-size 
+      Processing Element (PE) array using three fundamental dataflow strategies.
+    </p>
+    <p class="hero-subtitle">
+      Step through each clock cycle to see data flow through the array in real time.
+    </p>
+  </section>
+
+  <!-- ── Mini Systolic Array Diagram ── -->
+  <div class="systolic-diagram">
+    <div style="display: flex; flex-direction: column; align-items: center;">
+      <!-- Top B arrows -->
+      <div class="flow-arrows">
+        <div class="row">
+          <span class="arrow b">↓</span>
+          <span class="arrow b">↓</span>
+          <span class="arrow b">↓</span>
+          <span class="arrow b">↓</span>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <!-- Left A arrows -->
+        <div style="display: flex; flex-direction: column; gap: 26px;">
+          <span class="arrow a" style="animation: arrow-pulse 1.5s ease-in-out infinite;">→</span>
+          <span class="arrow a" style="animation: arrow-pulse 1.5s ease-in-out infinite 0.3s;">→</span>
+          <span class="arrow a" style="animation: arrow-pulse 1.5s ease-in-out infinite 0.6s;">→</span>
+          <span class="arrow a" style="animation: arrow-pulse 1.5s ease-in-out infinite 0.9s;">→</span>
+        </div>
+        <!-- Grid -->
+        <div class="mini-grid">
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Formula ── -->
+  <div class="formula-hero">
+    <code>C[i][j] = Σ<sub>k</sub> A[i][k] × B[k][j]</code>
+    <div class="sub">4×4 systolic array computes all 16 output elements</div>
+  </div>
+
+  <!-- ── Introduction ── -->
+  <div class="intro-section">
+    <div class="intro-text">
+      A <strong>systolic array</strong> is a grid of interconnected Processing Elements (PEs) that 
+      rhythmically pass data between neighbors, like a heartbeat. Each PE performs a 
+      <strong>multiply-accumulate</strong> (MAC) operation. The key design decision is which data 
+      stays <strong>stationary</strong> inside the PEs and which data <strong>streams</strong> through — 
+      this determines the <em>dataflow</em> strategy.<br><br>
+      Explore the three fundamental dataflow modes below to understand the trade-offs:
+    </div>
+  </div>
+
+  <!-- ── Mode Cards ── -->
+  <div class="concepts-container">
+    <h2 class="section-title">Choose a Dataflow Mode</h2>
+
+    <div class="concepts-grid">
+
+      <!-- OS Card -->
+      <a href="os.html" class="concept-card card-os">
+        <div class="card-icon">📊</div>
+        <div class="card-title" style="color: var(--color-c);">Output Stationary (OS)</div>
+        <div class="card-subtitle">C stays fixed — A and B stream through</div>
+        <div class="card-text">
+          Each PE is dedicated to computing one specific element of the output matrix C. 
+          The accumulator inside each PE holds C[i][j] while elements of A stream 
+          horizontally and B streams vertically, meeting at the designated PE.
+        </div>
+        <div class="card-best">
+          <strong>Best for:</strong> Large matrix sizes where output memory writes need to be minimized.
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+      <!-- WS Card -->
+      <a href="ws.html" class="concept-card card-ws">
+        <div class="card-icon">⚖️</div>
+        <div class="card-title" style="color: var(--color-b);">Weight Stationary (WS)</div>
+        <div class="card-subtitle">B (weights) stay fixed — A and C stream</div>
+        <div class="card-text">
+          Elements of the weight matrix B are pre-loaded into PEs and stay fixed. 
+          Input activations A stream through the array, multiply with static weights, 
+          and partial results of C accumulate downward through the array.
+        </div>
+        <div class="card-best">
+          <strong>Best for:</strong> Neural network inference where the same weights are reused for many inputs.
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+      <!-- IS Card -->
+      <a href="is.html" class="concept-card card-is">
+        <div class="card-icon">🔄</div>
+        <div class="card-title" style="color: var(--color-a);">Input Stationary (IS)</div>
+        <div class="card-subtitle">A (inputs) stay fixed — B and C stream</div>
+        <div class="card-text">
+          Elements of the activation matrix A are kept stationary inside the PEs. 
+          Weight matrix B streams through from above, and partial products are passed 
+          rightward to accumulate the final output matrix C.
+        </div>
+        <div class="card-best">
+          <strong>Best for:</strong> Workloads where inputs are heavily reused across multiple weight sets.
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ── Comparison Section ── -->
+  <div class="intro-section" style="margin-top: 48px; margin-bottom: 64px;">
+    <h2 class="section-title">Quick Comparison</h2>
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; background: var(--bg-card); border: 1px solid var(--border-default); border-radius: var(--r-lg); overflow: hidden;">
+        <thead>
+          <tr style="border-bottom: 1px solid var(--border-default);">
+            <th style="padding: 14px 16px; text-align: left; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Property</th>
+            <th style="padding: 14px 16px; text-align: center; font-size: 0.82rem; font-weight: 600; color: var(--color-c);">Output Stationary</th>
+            <th style="padding: 14px 16px; text-align: center; font-size: 0.82rem; font-weight: 600; color: var(--color-b);">Weight Stationary</th>
+            <th style="padding: 14px 16px; text-align: center; font-size: 0.82rem; font-weight: 600; color: var(--color-a);">Input Stationary</th>
+          </tr>
+        </thead>
+        <tbody style="font-size: 0.85rem;">
+          <tr style="border-bottom: 1px solid var(--border-default);">
+            <td style="padding: 12px 16px; color: var(--text-secondary);">Stationary Data</td>
+            <td style="padding: 12px 16px; text-align: center; color: var(--color-c); font-weight: 600;">Output (C)</td>
+            <td style="padding: 12px 16px; text-align: center; color: var(--color-b); font-weight: 600;">Weights (B)</td>
+            <td style="padding: 12px 16px; text-align: center; color: var(--color-a); font-weight: 600;">Inputs (A)</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border-default);">
+            <td style="padding: 12px 16px; color: var(--text-secondary);">Streaming Data</td>
+            <td style="padding: 12px 16px; text-align: center; color: var(--text-primary);">A → , B ↓</td>
+            <td style="padding: 12px 16px; text-align: center; color: var(--text-primary);">A → , C ↓</td>
+            <td style="padding: 12px 16px; text-align: center; color: var(--text-primary);">B ↓ , C →</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border-default);">
+            <td style="padding: 12px 16px; color: var(--text-secondary);">A Data Reuse</td>
+            <td style="padding: 12px 16px; text-align: center;">Row broadcast</td>
+            <td style="padding: 12px 16px; text-align: center;">Row broadcast</td>
+            <td style="padding: 12px 16px; text-align: center; font-weight: 600; color: var(--color-stat);">Maximal (stays in PE)</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border-default);">
+            <td style="padding: 12px 16px; color: var(--text-secondary);">B Data Reuse</td>
+            <td style="padding: 12px 16px; text-align: center;">Column broadcast</td>
+            <td style="padding: 12px 16px; text-align: center; font-weight: 600; color: var(--color-stat);">Maximal (stays in PE)</td>
+            <td style="padding: 12px 16px; text-align: center;">Column broadcast</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 16px; color: var(--text-secondary);">Best Use Case</td>
+            <td style="padding: 12px 16px; text-align: center; font-size: 0.8rem;">Large matrices,<br>minimize output writes</td>
+            <td style="padding: 12px 16px; text-align: center; font-size: 0.8rem;">NN inference,<br>weight reuse</td>
+            <td style="padding: 12px 16px; text-align: center; font-size: 0.8rem;">Input reuse across<br>multiple weight sets</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer class="footer">
+    Systolic Array Matrix Multiplication Tutorial — Interactive Dataflow Visualization
+  </footer>
+
+</body>
+</html>
