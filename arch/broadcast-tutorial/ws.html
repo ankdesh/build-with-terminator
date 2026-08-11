@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weight Stationary (WS) — Broadcast Array Tutorial</title>
+  <meta name="description" content="Interactive tutorial: Weight Stationary dataflow for broadcast-based matrix multiplication. Visualize static weights in PEs with row-broadcast inputs and column-reduction outputs.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">⬡ Broadcast Array Tutorial</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="os.html">Output Stationary</a>
+      <a href="ws.html" class="active">Weight Stationary</a>
+      <a href="is.html">Input Stationary</a>
+    </div>
+  </nav>
+
+  <!-- ── Mode Header ── -->
+  <header class="mode-header">
+    <h1><span class="highlight-ws">Weight Stationary (WS)</span> Broadcast Dataflow</h1>
+    <p class="mode-description">
+      Each Processing Element (PE) holds one specific weight <strong>B[i][j]</strong> stationary. 
+      At cycle m, input row <strong>A[m][:]</strong> is <em>row-broadcast</em> across the array, and 
+      column reduction sums the products down each column to output completed row <strong>C[m][:]</strong>.
+    </p>
+    <div class="mode-tags">
+      <span class="mode-tag stationary">B — Stationary in PE</span>
+      <span class="mode-tag broadcast-a">A — Row Broadcast →</span>
+      <span class="mode-tag output">C — Column Reduction ↓</span>
+      <span class="mode-tag bus">ALL 16 PEs Active Every Cycle</span>
+    </div>
+  </header>
+
+  <!-- ── Main Content ── -->
+  <main class="tutorial-main">
+
+    <!-- Matrix Editor -->
+    <section class="matrix-input-section" id="matrixEditor">
+      <!-- Filled by JS -->
+    </section>
+
+    <!-- Info Panel -->
+    <section class="info-panel" id="infoPanel">
+      <div class="cycle-indicator">
+        <span class="cycle-label">Cycle m</span>
+        <span class="cycle-current" id="currentCycle">0</span>
+        <span class="cycle-total" id="totalCycles">/ 3</span>
+        <div class="cycle-progress">
+          <div class="cycle-progress-bar" id="progressBar" style="width: 0%"></div>
+        </div>
+      </div>
+      <div class="step-explanation" id="stepExplanation">
+        Press <strong>▶</strong> or use keyboard shortcuts to begin.
+      </div>
+    </section>
+
+    <!-- Visualization Area -->
+    <section class="viz-area">
+      <!-- Top column reduction labels (C row values) -->
+      <div class="bus-labels-top" id="busTop"></div>
+
+      <div class="viz-row">
+        <!-- Left broadcast bus labels (A row values) -->
+        <div class="bus-labels-left" id="busLeft"></div>
+
+        <!-- PE Grid -->
+        <div class="pe-grid" id="peGrid"></div>
+      </div>
+    </section>
+
+    <!-- Formula -->
+    <div class="formula-display">
+      <code>C[m][j] = Σ<sub>i=0..3</sub> A[m][i] × B[i][j]&nbsp;&nbsp;|&nbsp;&nbsp;Row m of C computed at cycle m = 0, 1, 2, 3</code>
+    </div>
+
+    <!-- Matrices Display -->
+    <section class="matrices-section">
+      <div class="matrix-container" id="matrixA"></div>
+      <span class="matrix-operation">×</span>
+      <div class="matrix-container" id="matrixB"></div>
+      <span class="matrix-operation">=</span>
+      <div class="matrix-container" id="matrixC"></div>
+    </section>
+
+    <!-- Controls -->
+    <section class="controls-section">
+      <div class="controls" id="controls"></div>
+    </section>
+
+    <!-- Legend -->
+    <section class="legend">
+      <div class="legend-item">
+        <span class="legend-dot a"></span>
+        <span>Matrix A (row-broadcast →)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot st"></span>
+        <span>Matrix B (stationary in PE)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot c"></span>
+        <span>Output C (column reduction ↓)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot ac"></span>
+        <span>Active PE (ALL PEs every cycle)</span>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    Broadcast-Based Hardware Matrix Multiplication Tutorial — Weight Stationary Mode
+  </footer>
+
+  <script src="js/common.js"></script>
+  <script src="js/ws.js"></script>
+</body>
+</html>

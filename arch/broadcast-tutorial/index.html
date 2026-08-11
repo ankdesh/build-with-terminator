@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Broadcast-Based Matrix Multiplication — Interactive Tutorial Dashboard</title>
+  <meta name="description" content="Interactive tutorial explaining matrix multiplication on broadcast-based hardware architectures using Output Stationary, Weight Stationary, and Input Stationary dataflows.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* Landing page specific diagram & table styles */
+    .broadcast-diagram {
+      display: flex; justify-content: center;
+      margin: 40px auto 32px;
+      max-width: 540px;
+    }
+
+    .diagram-wrapper {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+    }
+
+    .bus-h-visual {
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px 16px;
+      background: var(--color-a-dim);
+      border: 1px solid rgba(79,195,247,0.25);
+      border-radius: var(--r-md);
+      color: var(--color-a);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem; font-weight: 600;
+      animation: bus-h-anim 2s ease-in-out infinite;
+    }
+    .bus-h-visual .arrow { font-size: 1rem; }
+
+    @keyframes bus-h-anim {
+      0%, 100% { box-shadow: none; opacity: 0.5; }
+      50% { box-shadow: 0 0 16px var(--color-a-glow); opacity: 1; }
+    }
+
+    .diagram-grid-area {
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+
+    .bus-v-visual {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      padding: 16px 6px;
+      background: var(--color-b-dim);
+      border: 1px solid rgba(255,183,77,0.25);
+      border-radius: var(--r-md);
+      color: var(--color-b);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem; font-weight: 600;
+      animation: bus-v-anim 2s ease-in-out infinite 0.5s;
+    }
+    .bus-v-visual .arrow { font-size: 1rem; }
+
+    @keyframes bus-v-anim {
+      0%, 100% { box-shadow: none; opacity: 0.5; }
+      50% { box-shadow: 0 0 16px var(--color-b-glow); opacity: 1; }
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 5px;
+      padding: 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-default);
+      border-radius: var(--r-lg);
+      backdrop-filter: blur(12px);
+    }
+
+    .mini-pe {
+      width: 54px; height: 54px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg-pe);
+      border: 1px solid var(--border-default);
+      border-radius: var(--r-md);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem; font-weight: 500;
+      color: var(--text-muted);
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+
+    .mini-pe:hover {
+      border-color: var(--color-pe);
+      box-shadow: 0 0 15px var(--color-pe-glow);
+      color: var(--color-pe);
+      transform: scale(1.08);
+    }
+
+    .mini-pe.active-demo {
+      animation: all-pe-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes all-pe-pulse {
+      0%, 100% { 
+        border-color: var(--border-default);
+        box-shadow: none;
+      }
+      50% { 
+        border-color: var(--color-active);
+        box-shadow: 0 0 12px var(--color-active-glow);
+        background: var(--bg-pe-active);
+      }
+    }
+
+    .formula-hero {
+      text-align: center;
+      padding: 20px;
+      margin: 24px auto 40px;
+      max-width: 600px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-default);
+      border-radius: var(--r-lg);
+    }
+    .formula-hero code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.05rem; font-weight: 600;
+      color: var(--text-primary);
+    }
+    .formula-hero .sub {
+      font-size: 0.82rem; color: var(--text-muted); margin-top: 8px;
+    }
+    .formula-hero .perf {
+      font-size: 0.85rem; color: var(--color-bus); margin-top: 4px; font-weight: 600;
+    }
+
+    .intro-section {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .intro-text {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      line-height: 1.7;
+      margin-bottom: 32px;
+      padding: 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-default);
+      border-radius: var(--r-lg);
+    }
+    .intro-text strong { color: var(--text-primary); }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">⬡ Broadcast Array Tutorial</a>
+    <div class="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="os.html">Output Stationary</a>
+      <a href="ws.html">Weight Stationary</a>
+      <a href="is.html">Input Stationary</a>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <h1>
+      Mapping Matrix Multiplication on<br>
+      <span class="gradient-text">Broadcast-Based Hardware</span>
+    </h1>
+    <p>
+      An interactive tutorial exploring how C = A × B is computed on a fixed-size 
+      Processing Element (PE) array using <strong>row and column broadcast buses</strong> 
+      across three fundamental dataflow strategies.
+    </p>
+    <p class="hero-subtitle">
+      Step through each clock cycle to see broadcast buses deliver data to all PEs in parallel.
+    </p>
+  </section>
+
+  <!-- ── Mini Broadcast Diagram ── -->
+  <div class="broadcast-diagram">
+    <div class="diagram-wrapper">
+      <div style="display: flex; gap: 4px; align-self: flex-start; margin-left: 78px;">
+        <div class="bus-v-visual"><span class="arrow">↓</span>B</div>
+        <div class="bus-v-visual" style="animation-delay: 0.6s;"><span class="arrow">↓</span>B</div>
+        <div class="bus-v-visual" style="animation-delay: 0.7s;"><span class="arrow">↓</span>B</div>
+        <div class="bus-v-visual" style="animation-delay: 0.8s;"><span class="arrow">↓</span>B</div>
+      </div>
+
+      <div class="diagram-grid-area">
+        <div style="display: flex; flex-direction: column; gap: 4px; padding-top: 2px;">
+          <div class="bus-h-visual"><span class="arrow">→</span> A</div>
+          <div class="bus-h-visual" style="animation-delay: 0.3s;"><span class="arrow">→</span> A</div>
+          <div class="bus-h-visual" style="animation-delay: 0.6s;"><span class="arrow">→</span> A</div>
+          <div class="bus-h-visual" style="animation-delay: 0.9s;"><span class="arrow">→</span> A</div>
+        </div>
+        <div class="mini-grid">
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+          <div class="mini-pe active-demo">PE</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Formula ── -->
+  <div class="formula-hero">
+    <code>C[i][j] = Σ<sub>k</sub> A[i][k] × B[k][j]</code>
+    <div class="sub">4×4 broadcast PE array • 16 PEs active every cycle</div>
+    <div class="perf">Completes in exactly 4 cycles (no stagger delay!)</div>
+  </div>
+
+  <!-- ── Intro ── -->
+  <div class="intro-section">
+    <div class="intro-text">
+      Unlike systolic arrays where data moves step-by-step between neighboring PEs in a staggered wavefront, 
+      <strong>broadcast-based hardware architectures</strong> use shared row and column buses to deliver data 
+      to an entire row or column of Processing Elements (PEs) simultaneously.<br><br>
+      Explore the three fundamental dataflow modes below to understand how broadcast hardware operates:
+    </div>
+  </div>
+
+  <!-- ── Mode Cards ── -->
+  <div class="concepts-container">
+    <h2 class="section-title">Choose a Dataflow Mode</h2>
+
+    <div class="concepts-grid">
+
+      <!-- OS Card -->
+      <a href="os.html" class="concept-card card-os">
+        <div class="card-icon">📊</div>
+        <div class="card-title" style="color: var(--color-c);">Output Stationary (OS)</div>
+        <div class="card-subtitle">C stays fixed — A and B broadcast</div>
+        <div class="card-text">
+          Each PE holds its output accumulator C[i][j] locally. 
+          At cycle k, row buses broadcast column A[*][k] and column buses broadcast row B[k][*]. 
+          All 16 PEs compute in parallel every cycle.
+        </div>
+        <div class="card-best">
+          <strong>Best for:</strong> Large matrix multiplications where writing partial sums to memory must be avoided.
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+      <!-- WS Card -->
+      <a href="ws.html" class="concept-card card-ws">
+        <div class="card-icon">⚖️</div>
+        <div class="card-title" style="color: var(--color-b);">Weight Stationary (WS)</div>
+        <div class="card-subtitle">B (weights) stay fixed — A broadcasts, C reduces</div>
+        <div class="card-text">
+          Weight matrix B is pre-loaded into PEs. At cycle m, input vector A[m][:] is 
+          row-broadcast horizontally. Partial products are accumulated down each column via column reduction to output row C[m][:].
+        </div>
+        <div class="card-best">
+          <strong>Best for:</strong> Neural network inference where the same weights are reused across many inputs.
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+      <!-- IS Card -->
+      <a href="is.html" class="concept-card card-is">
+        <div class="card-icon">🔄</div>
+        <div class="card-title" style="color: var(--color-a);">Input Stationary (IS)</div>
+        <div class="card-subtitle">A (inputs) stay fixed — B broadcasts, C reduces</div>
+        <div class="card-text">
+          Activation matrix A is pre-loaded into PEs. At cycle n, weight vector B[:][n] is 
+          column-broadcast vertically. Partial products are accumulated across each row via row reduction to output column C[:][n].
+        </div>
+        <div class="card-best">
+          <strong>Best for:</strong> Workloads where inputs are kept in local registers and reused across multiple weight matrices.
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ── Comparison Section ── -->
+  <div class="intro-section" style="margin-top: 48px; margin-bottom: 64px;">
+    <h2 class="section-title">Broadcast Dataflow Comparison</h2>
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; background: var(--bg-card); border: 1px solid var(--border-default); border-radius: var(--r-lg); overflow: hidden;">
+        <thead>
+          <tr style="border-bottom: 1px solid var(--border-default);">
+            <th style="padding: 14px 16px; text-align: left; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Property</th>
+            <th style="padding: 14px 16px; text-align: center; font-size: 0.82rem; font-weight: 600; color: var(--color-c);">Output Stationary</th>
+            <th style="padding: 14px 16px; text-align: center; font-size: 0.82rem; font-weight: 600; color: var(--color-b);">Weight Stationary</th>
+            <th style="padding: 14px 16px; text-align: center; font-size: 0.82rem; font-weight: 600; color: var(--color-a);">Input Stationary</th>
+          </tr>
+        </thead>
+        <tbody style="font-size: 0.85rem;">
+          <tr style="border-bottom: 1px solid var(--border-default);">
+            <td style="padding: 12px 16px; color: var(--text-secondary);">Stationary Element</td>
+            <td style="padding: 12px 16px; text-align: center; color: var(--color-c); font-weight: 600;">Accumulator (C)</td>
+            <td style="padding: 12px 16px; text-align: center; color: var(--color-b); font-weight: 600;">Weights (B)</td>
+            <td style="padding: 12px 16px; text-align: center; color: var(--color-a); font-weight: 600;">Activations (A)</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border-default);">
+            <td style="padding: 12px 16px; color: var(--text-secondary);">Broadcast Vector</td>
+            <td style="padding: 12px 16px; text-align: center; color: var(--text-primary);">A row &amp; B column</td>
+            <td style="padding: 12px 16px; text-align: center; color: var(--text-primary);">A row broadcast →</td>
+            <td style="padding: 12px 16px; text-align: center; color: var(--text-primary);">B column broadcast ↓</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border-default);">
+            <td style="padding: 12px 16px; color: var(--text-secondary);">Output Accumulation</td>
+            <td style="padding: 12px 16px; text-align: center;">Local PE accumulator</td>
+            <td style="padding: 12px 16px; text-align: center;">Column reduction tree ↓</td>
+            <td style="padding: 12px 16px; text-align: center;">Row reduction tree →</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border-default);">
+            <td style="padding: 12px 16px; color: var(--text-secondary);">Execution Cycles (4×4)</td>
+            <td style="padding: 12px 16px; text-align: center; font-weight: 600; color: var(--color-bus);">4 cycles</td>
+            <td style="padding: 12px 16px; text-align: center; font-weight: 600; color: var(--color-bus);">4 cycles</td>
+            <td style="padding: 12px 16px; text-align: center; font-weight: 600; color: var(--color-bus);">4 cycles</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 16px; color: var(--text-secondary);">Primary Benefit</td>
+            <td style="padding: 12px 16px; text-align: center; font-size: 0.8rem;">Minimizes output SRAM writes</td>
+            <td style="padding: 12px 16px; text-align: center; font-size: 0.8rem;">Maximal weight reuse for inference</td>
+            <td style="padding: 12px 16px; text-align: center; font-size: 0.8rem;">Maximal activation reuse for batching</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer class="footer">
+    Broadcast-Based Hardware Matrix Multiplication Tutorial — Interactive Dataflow Visualization
+  </footer>
+
+</body>
+</html>
