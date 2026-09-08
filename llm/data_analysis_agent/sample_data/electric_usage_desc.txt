@@ -1,0 +1,13 @@
+# WPS-AI Sample Dataset: Hourly Electricity Usage & Environmental Metrics
+
+General Information:
+This dataset records hourly electrical energy consumption, peak power demand, outdoor ambient temperature, and building occupancy across three designated operational zones (Zone-A, Zone-B, Zone-C) for a commercial enterprise facility. Data spans from September 1, 2026 to September 5, 2026.
+
+Column Descriptions:
+timestamp: Date and time of measurement in YYYY-MM-DD HH:MM format (hourly intervals).
+meter_id: Unique identifier for the smart electric sub-meter.
+building_zone: Section of the facility (Zone-A: Offices, Zone-B: Assembly/Lab, Zone-C: Warehouse).
+kwh_consumed: Total active electrical energy consumed during the hour in kilowatt-hours (kWh).
+peak_demand_kw: Maximum instantaneous power demand recorded during the 15-minute peak window within the hour (kW).
+temperature_f: Outdoor ambient temperature in degrees Fahrenheit (°F).
+occupancy_count: Estimated number of personnel present in the building zone during the hour.
