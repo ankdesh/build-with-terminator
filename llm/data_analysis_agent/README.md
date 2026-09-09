@@ -8,13 +8,13 @@
 
 - **Air-Gapped & Self-Contained**: Operates with strictly zero external internet access. Connects only to your designated OpenAI-compatible API endpoint (e.g., local vLLM, Ollama, or internal gateway).
 - **Direct Python Code Execution**: In-memory data manipulation using `pandas` and `numpy`. No heavy sandboxing or complex container orchestration required.
-- **Client-Side Interactive Visualizations**: All charts (bar, line, area, pie, scatter) are rendered directly in the browser via **Recharts**, keeping the Python backend lean (~35 MB compressed download / ~100 MB on disk) without bundling heavy libraries (`matplotlib`, `seaborn`, `plotly`).
+- **Client-Side Native Apache ECharts Visualizations**: Generates native **Apache ECharts** option trees directly on HTML5 Canvas. Supports dual Y-axes, box plots, heatmaps, stepped lines, combo charts (bar + line), threshold reference lines (`markLine`), and shaded peak bands (`markArea`) with fluid zoom sliders, smooth rendering, and 2x retina PNG export with zero Python plotting overhead.
 - **Automated Data Profiling**: On upload, computes schema types, sample preview rows, descriptive statistics (min, max, mean, median), and missing value metrics.
 - **Toggleable Data Quality Report**: Automatically flags duplicate rows, extreme outliers, constant columns, and format anomalies with a single-click UI toggle.
 - **Plan → Execute → Explain Workflow**: Real-time token streaming (SSE) displaying the preliminary plan as it is formulated, followed by visual artifacts and a clear explanation in simple English.
 - **Self-Correcting Error Recovery**: If generated code fails with a syntax or runtime error, the agent intercepts the traceback, re-prompts the model, and recovers automatically (up to 3 retries).
 - **Persistent Step-by-Step Side Panel**: Dedicated collapsible right panel displaying the execution plan, syntax-formatted Python code, execution duration (ms), retry counts, and raw standard output.
-- **Data & Visual Export**: One-click download for charts (SVG) and tables (CSV).
+- **Data & Visual Export**: One-click download for charts (PNG) and tables (CSV).
 - **Local Session Persistence**: All datasets, profiles, and conversation turns are stored locally on disk (`~/.wps-ai/sessions/` or `./data/sessions/`), allowing full session resumption across app restarts.
 
 ---
@@ -28,13 +28,13 @@ FastAPI Backend (Localhost) ↔ OpenAI-compatible API (Internal / Air-gap)
        ↕
 Python Code Runner (pandas, numpy)
        ↓ (Emits structured JSON: metrics, tables, chart series)
-Frontend (React + assistant-ui + Recharts)
+Frontend (React + assistant-ui + Apache ECharts)
 ```
 
 | Layer | Technology | Role |
 | :--- | :--- | :--- |
 | **Frontend** | React 18, `@assistant-ui/react`, Tailwind CSS, Lucide | Responsive enterprise light theme UI |
-| **Charts & Visuals** | **Recharts** (Client-side) | Interactive hover tooltips, legends, animations, SVG export |
+| **Charts & Visuals** | **Apache ECharts** (Client-side Canvas) | Timeline zoom slider, tooltips, legends, retina PNG export |
 | **Backend** | Python 3.12, FastAPI, Uvicorn | API routing, session management, static asset serving |
 | **Data Engine** | **pandas, numpy** | Data aggregations, metrics, time-series analysis, IQR anomaly checks |
 | **Packaging** | `uv`, Vite static export, `launcher.py` | Single portable directory distribution |
@@ -48,26 +48,33 @@ Frontend (React + assistant-ui + Recharts)
 - `uv` package manager (recommended) or `pip`
 - Node.js 20+ (only required if building frontend from source)
 
-### 1. Environment Configuration
+### 1. Configuration (`config.json` & `OPENAI_API_KEY`)
 
-Set the environment variables pointing to your OpenAI-compatible endpoint:
+All application settings are managed cleanly in **`config.json`**, with sensible defaults out of the box (including the default OpenAI API endpoint `https://api.openai.com/v1`).
 
+Example `config.json`:
+```json
+{
+  "openai_api_base": "https://api.openai.com/v1",
+  "openai_model_name": "gpt-4o-mini",
+  "server_host": "127.0.0.1",
+  "server_port": 8080,
+  "max_retries": 3,
+  "exec_timeout_seconds": 30,
+  "max_upload_size_bytes": 104857600
+}
+```
+
+*For air-gapped / local deployments*, edit `"openai_api_base"` in `config.json` to point to your internal endpoint:
+- Local Ollama: `"http://127.0.0.1:11434/v1"`
+- Local vLLM / gateway: `"http://127.0.0.1:8000/v1"`
+
+#### API Key (Environment Variable)
+For security, your secret API key is supplied via the environment:
 ```bash
-# Required: URL to your local or internal OpenAI-compatible endpoint
-export OPENAI_API_BASE="http://127.0.0.1:11434/v1"   # Example: local Ollama or vLLM
-
-# Optional (defaults shown)
-export OPENAI_API_KEY="EMPTY"                         # API key if required
-export OPENAI_MODEL_NAME="gpt-4o-mini"                 # Model name
-export PORT="8080"                                    # Port to bind
-export HOST="127.0.0.1"                               # Host to bind
+export OPENAI_API_KEY="your-api-key-here"  # Or "EMPTY" for local models without auth
 ```
-
-*Note: On Windows PowerShell:*
-```powershell
-$env:OPENAI_API_BASE = "http://127.0.0.1:11434/v1"
-$env:OPENAI_MODEL_NAME = "gpt-4o-mini"
-```
+*(On Windows PowerShell: `$env:OPENAI_API_KEY = "your-api-key-here"`)*
 
 ### 2. Quick Launch (Development / Local)
 

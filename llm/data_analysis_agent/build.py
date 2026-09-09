@@ -62,6 +62,8 @@ def create_portable_bundle() -> bool:
     # 1. Copy backend and config files
     shutil.copytree(ROOT_DIR / "backend", DIST_DIR / "backend", dirs_exist_ok=True)
     shutil.copy(ROOT_DIR / "config.py", DIST_DIR / "config.py")
+    if (ROOT_DIR / "config.json").exists():
+        shutil.copy(ROOT_DIR / "config.json", DIST_DIR / "config.json")
     shutil.copy(ROOT_DIR / "launcher.py", DIST_DIR / "launcher.py")
     shutil.copy(ROOT_DIR / "pyproject.toml", DIST_DIR / "pyproject.toml")
 

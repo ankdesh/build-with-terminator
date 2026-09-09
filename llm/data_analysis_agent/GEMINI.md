@@ -6,7 +6,7 @@ This document outlines the architectural principles, design constraints, and eng
 
 ## 1. Environment & Dependency Management
 - **Primary Package Manager**: `uv` and `uv venv` are standard for all Python workflows.
-- **Size Optimization Principle**: Never introduce heavy external binary packages (such as `matplotlib`, `seaborn`, `plotly`, `scipy`, `scikit-learn`) into the backend runtime when client-side alternatives (such as `Recharts` in React) can satisfy the user requirement with zero backend footprint.
+- **Size Optimization Principle**: Never introduce heavy external binary packages (such as `matplotlib`, `seaborn`, `plotly`, `scipy`, `scikit-learn`) into the backend runtime when client-side alternatives (such as `Apache ECharts` in React) can satisfy the user requirement with zero backend footprint.
 - **Air-Gap Guarantee**: Zero runtime external HTTP calls except to the explicit `OPENAI_API_BASE` endpoint.
 
 ---
@@ -18,7 +18,7 @@ This document outlines the architectural principles, design constraints, and eng
   - `CodeExecutor`: Direct in-memory Python script execution producing JSON-serializable outputs.
   - `AgentService`: LLM orchestration, plan-execute-explain streaming pipeline, and self-correction loop.
 - **One Primary Class Per File**: Every Python file hosts one primary domain class (`SessionStore` in `session_store.py`, `DataProfiler` in `data_profiler.py`, `CodeExecutor` in `code_executor.py`, `AgentService` in `agent_service.py`).
-- **Separation of Visualization**: Visual chart generation is handled client-side in the React layer via Recharts specifications (`ChartSpec`). The backend only emits data series and configuration.
+- **Separation of Visualization**: Visual chart generation is handled client-side in the React layer via native Apache ECharts specifications (`ChartSpec.option`). The backend only emits data series, axes, and option trees.
 
 ---
 
@@ -39,5 +39,6 @@ This document outlines the architectural principles, design constraints, and eng
 ---
 
 ## 5. Configuration & Readability
-- **Centralized Configuration**: All environment variables, defaults, timeouts, and file limits are hoisted in `config.py`. Magic numbers and strings are strictly prohibited in application code.
+- **Centralized Configuration File**: All system parameters (endpoints, ports, timeouts, retry limits, and file size thresholds) are defined in `config.json` and hoisted into immutable typed models in `config.py`. Sane defaults (e.g. `https://api.openai.com/v1` default OpenAI endpoint) ensure zero-config initial boot.
+- **Secret Isolation**: Sensitive credentials (`OPENAI_API_KEY`) are kept strictly out of committed configuration files and loaded exclusively via environment variables.
 - **Document Intent**: Functions and classes include docstrings explaining purpose, inputs, and behaviors.

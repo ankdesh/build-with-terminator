@@ -125,8 +125,8 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
           return (
             <div
               key={msg.id}
-              className={`flex items-start space-x-3 max-w-3xl ${
-                isUser ? 'ml-auto flex-row-reverse space-x-reverse' : 'mr-auto'
+              className={`flex items-start space-x-3 w-full max-w-3xl ${
+                isUser ? 'ml-auto flex-row-reverse space-x-reverse max-w-xl' : 'mr-auto'
               }`}
             >
               {/* Avatar */}
@@ -140,7 +140,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
               {/* Message Content Bubble */}
               <div
-                className={`flex-1 overflow-hidden ${
+                className={`flex-1 min-w-0 overflow-hidden ${
                   isUser
                     ? 'bg-blue-600 text-white rounded-2xl rounded-tr-xs px-4 py-2.5 text-xs shadow-xs'
                     : 'bg-white border border-slate-200/90 rounded-2xl rounded-tl-xs p-4 text-xs shadow-xs text-slate-800'
@@ -199,12 +199,12 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
         {/* Live Streaming Assistant Message */}
         {isStreaming && (
-          <div className="flex items-start space-x-3 max-w-3xl mr-auto">
+          <div className="flex items-start space-x-3 w-full max-w-3xl mr-auto">
             <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 bg-blue-600 text-white text-xs shadow-xs">
               <Bot className="w-4 h-4" />
             </div>
 
-            <div className="flex-1 bg-white border border-slate-200 rounded-2xl rounded-tl-xs p-4 text-xs shadow-xs text-slate-800 space-y-3">
+            <div className="flex-1 min-w-0 bg-white border border-slate-200 rounded-2xl rounded-tl-xs p-4 text-xs shadow-xs text-slate-800 space-y-3">
               {/* Streaming Status Indicator */}
               {streamingStatus && (
                 <div className="flex items-center space-x-2 text-blue-600 font-medium bg-blue-50/70 p-2 rounded-lg border border-blue-100 animate-pulse">

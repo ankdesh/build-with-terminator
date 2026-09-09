@@ -72,6 +72,10 @@ if static_path.exists() and (static_path / "index.html").exists():
         target = static_path / full_path
         if target.exists() and target.is_file():
             return FileResponse(str(target))
-        return FileResponse(str(static_path / "index.html"))
+        response = FileResponse(str(static_path / "index.html"))
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+        return response
 else:
     logger.info("Static frontend not yet built at %s. API-only mode active.", static_path)

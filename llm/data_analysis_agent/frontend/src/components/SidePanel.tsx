@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import {
   Check,
-  CheckCircle2,
-  Clock,
   Code2,
   Copy,
   FileTerminal,
   ListOrdered,
-  RotateCcw,
   Sparkles,
   Terminal,
   X,
@@ -99,7 +96,7 @@ export const SidePanel: React.FC<SidePanelProps> = ({
           }`}
         >
           <FileTerminal className="w-3.5 h-3.5" />
-          <span>Logs & Performance</span>
+          <span>Logs</span>
         </button>
       </div>
 
@@ -170,39 +167,16 @@ export const SidePanel: React.FC<SidePanelProps> = ({
           </div>
         )}
 
-        {/* TAB 3: LOGS & PERFORMANCE */}
+        {/* TAB 3: LOGS */}
         {activeTab === 'logs' && (
           <div className="space-y-3">
-            {/* Performance KPIs */}
-            <div className="grid grid-cols-2 gap-2">
-              <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
-                <span className="text-[10px] uppercase font-semibold text-slate-400 flex items-center space-x-1">
-                  <Clock className="w-3 h-3" />
-                  <span>Execution Time</span>
-                </span>
-                <p className="text-sm font-bold text-slate-800 mt-0.5">
-                  {result?.execution_time_ms ? `${result.execution_time_ms} ms` : '—'}
-                </p>
-              </div>
-
-              <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
-                <span className="text-[10px] uppercase font-semibold text-slate-400 flex items-center space-x-1">
-                  <RotateCcw className="w-3 h-3" />
-                  <span>Self-Correct Retries</span>
-                </span>
-                <p className="text-sm font-bold text-slate-800 mt-0.5">
-                  {result?.retries_attempted !== undefined ? result.retries_attempted : 0} / 3
-                </p>
-              </div>
-            </div>
-
             {/* Standard Output Console */}
             <div>
               <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1.5 flex items-center space-x-1">
-                <Terminal className="w-3 h-3" />
+                <Terminal className="w-3.5 h-3.5" />
                 <span>Captured stdout</span>
               </span>
-              <pre className="p-3 bg-slate-950 text-emerald-400 rounded-lg font-mono text-[11px] overflow-x-auto min-h-[100px] border border-slate-800 select-text">
+              <pre className="p-3 bg-slate-950 text-emerald-400 rounded-lg font-mono text-[11px] overflow-x-auto min-h-[140px] border border-slate-800 select-text">
                 {stdout || '// No standard output printed.'}
               </pre>
             </div>

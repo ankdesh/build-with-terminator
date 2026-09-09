@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 from backend.exceptions import CodeExecutionError
-from backend.models.chat import ChartSeries, ChartSpec, ExecutionResult, TableData
+from backend.models.chat import ChartSpec, ExecutionResult, TableData
 from config import MAX_TABLE_PREVIEW_ROWS
 
 logger = logging.getLogger(__name__)
@@ -28,7 +28,8 @@ class CodeExecutor:
         df: pd.DataFrame,
         plan: str = "",
         explanation: str = "",
-        retries_attempted: int = 0
+        retries_attempted: int = 0,
+        user_query: Optional[str] = None,
     ) -> ExecutionResult:
         """Run Python code with in-memory DataFrame in local scope, extracting visuals and results."""
         start_time = time.perf_counter()
@@ -49,6 +50,24 @@ class CodeExecutor:
         try:
             with contextlib.redirect_stdout(stdout_buffer):
                 exec(clean_code, exec_globals, exec_locals)
+        except ModuleNotFoundError as exc:
+            tb = traceback.format_exc()
+            missing_module = getattr(exc, "name", str(exc))
+            tip = ""
+            if missing_module in ("sklearn", "scikit-learn", "scipy"):
+                tip = (
+                    "\n[Execution Hint] 'sklearn' and 'scipy' are not installed in this air-gapped environment. "
+                    "Use pure pandas and numpy instead (e.g. min-max scaling with (x - x.min()) / (x.max() - x.min()), "
+                    "z-score with (x - x.mean()) / x.std(), or np.polyfit for regressions)."
+                )
+            elif missing_module in ("matplotlib", "seaborn", "plotly"):
+                tip = (
+                    "\n[Execution Hint] Python visualization libraries are not installed. "
+                    "Do not import matplotlib/seaborn/plotly. Return an Apache ECharts option tree in chart_spec['option']."
+                )
+            tb_with_hint = tb + tip
+            logger.warning("Code execution failed: %s\nTraceback:\n%s", exc, tb_with_hint)
+            raise CodeExecutionError(code=clean_code, traceback_str=tb_with_hint)
         except Exception as exc:
             tb = traceback.format_exc()
             logger.warning("Code execution failed: %s\nTraceback:\n%s", exc, tb)
@@ -60,6 +79,12 @@ class CodeExecutor:
         # Harvest output artifacts from locals
         chart = self._extract_chart_spec(exec_locals)
         table = self._extract_table_data(exec_locals)
+
+        # Do not include data table after plot unless explicitly asked for
+        if chart is not None and table is not None and user_query is not None:
+            if not self._is_table_requested(user_query, exec_locals):
+                table = None
+
         custom_explanation = exec_locals.get("explanation") or exec_locals.get("summary")
         final_explanation = str(custom_explanation) if custom_explanation else explanation
 
@@ -76,6 +101,26 @@ class CodeExecutor:
             retries_attempted=retries_attempted,
         )
 
+    def _is_table_requested(self, user_query: str, local_scope: Dict[str, Any]) -> bool:
+        """Check if user query or local scope explicitly requested tabular data alongside a plot."""
+        if local_scope.get("show_table") is True or local_scope.get("include_table") is True:
+            return True
+        query_lower = user_query.lower()
+        table_keywords = [
+            "table",
+            "raw data",
+            "show data",
+            "print data",
+            "include data",
+            "display data",
+            "tabular",
+            "records",
+            "rows",
+            "dataframe",
+            "both",
+        ]
+        return any(kw in query_lower for kw in table_keywords)
+
     def _clean_code_string(self, code: str) -> str:
         """Strip markdown fences (```python ... ```) if included by LLM."""
         code = code.strip()
@@ -89,53 +134,45 @@ class CodeExecutor:
         return code
 
     def _extract_chart_spec(self, local_scope: Dict[str, Any]) -> Optional[ChartSpec]:
-        """Extract and sanitize chart specification dictionary from local scope."""
-        chart_obj = local_scope.get("chart_spec") or local_scope.get("chart")
+        """Extract and sanitize native Apache ECharts specification from local scope."""
+        chart_obj = local_scope.get("chart_spec") or local_scope.get("echarts_option") or local_scope.get("chart")
         if not isinstance(chart_obj, dict):
             return None
 
         try:
-            raw_type = str(chart_obj.get("chart_type", chart_obj.get("type", "bar"))).lower()
-            if raw_type not in ["bar", "line", "area", "pie", "scatter"]:
-                raw_type = "bar"
+            # 1. Determine the ECharts option tree
+            option: Dict[str, Any] = {}
+            if "option" in chart_obj and isinstance(chart_obj["option"], dict):
+                option = chart_obj["option"]
+            elif "echarts_option" in chart_obj and isinstance(chart_obj["echarts_option"], dict):
+                option = chart_obj["echarts_option"]
+            else:
+                option = chart_obj
 
+            # 2. Extract title & description
             title = str(chart_obj.get("title", "Analysis Chart"))
-            x_key = str(chart_obj.get("x_key", chart_obj.get("xAxis", "x")))
-            raw_series = chart_obj.get("series", [])
-            raw_data = chart_obj.get("data", [])
+            if isinstance(option.get("title"), dict) and "text" in option["title"]:
+                title = str(option["title"]["text"])
+            elif isinstance(option.get("title"), str):
+                title = str(option["title"])
 
-            # Handle if series is a list of strings
-            series_list: List[ChartSeries] = []
-            if isinstance(raw_series, list):
-                for s in raw_series:
-                    if isinstance(s, dict):
-                        series_list.append(
-                            ChartSeries(
-                                key=str(s.get("key", "")),
-                                name=str(s.get("name", s.get("key", ""))),
-                                color=s.get("color")
-                            )
-                        )
-                    elif isinstance(s, str):
-                        series_list.append(ChartSeries(key=s, name=s))
+            description = chart_obj.get("description")
+            if not description and isinstance(option, dict):
+                description = option.get("description")
 
-            # Handle if data is a pandas DataFrame
-            data_list: List[Dict[str, Any]] = []
-            if isinstance(raw_data, pd.DataFrame):
-                data_list = self._sanitize_records(raw_data.to_dict(orient="records"))
-            elif isinstance(raw_data, list):
-                data_list = self._sanitize_records(raw_data)
+            # 3. Recursively sanitize option tree for JSON transmission
+            clean_option = self._sanitize_for_json(option)
+            if not isinstance(clean_option, dict):
+                return None
 
-            if not data_list:
+            # Must have at least series or dataset to be a valid ECharts spec
+            if "series" not in clean_option and "dataset" not in clean_option:
                 return None
 
             return ChartSpec(
-                chart_type=raw_type,  # type: ignore[arg-type]
                 title=title,
-                x_key=x_key,
-                series=series_list,
-                data=data_list,
-                description=chart_obj.get("description"),
+                description=str(description) if description else None,
+                option=clean_option,
             )
         except Exception as e:
             logger.warning("Could not construct ChartSpec from local scope: %s", e)
@@ -188,21 +225,35 @@ class CodeExecutor:
 
         return None
 
+    def _sanitize_for_json(self, val: Any) -> Any:
+        """Recursively convert numpy/pandas/datetime types into standard JSON-serializable primitives."""
+        if val is None:
+            return None
+        if isinstance(val, (pd.Series, np.ndarray)) or (hasattr(val, "tolist") and hasattr(val, "__iter__")):
+            return [self._sanitize_for_json(x) for x in val.tolist()]
+        if isinstance(val, pd.DataFrame):
+            return self._sanitize_for_json(val.to_dict(orient="records"))
+        if isinstance(val, dict):
+            return {str(k): self._sanitize_for_json(v) for k, v in val.items()}
+        if isinstance(val, (list, tuple, set)):
+            return [self._sanitize_for_json(x) for x in val]
+
+        # Scalar checks
+        try:
+            if pd.isna(val):
+                return None
+        except Exception:
+            pass
+
+        if isinstance(val, (np.integer, int)):
+            return int(val)
+        if isinstance(val, (np.floating, float)):
+            return None if np.isnan(val) or np.isinf(val) else round(float(val), 4)
+        if isinstance(val, (pd.Timestamp, np.datetime64)):
+            return str(val)
+        return val if isinstance(val, (str, bool)) else str(val)
+
     def _sanitize_records(self, records: List[Dict[Any, Any]]) -> List[Dict[str, Any]]:
         """Ensure all values in dict records are JSON-serializable."""
-        sanitized: List[Dict[str, Any]] = []
-        for r in records:
-            clean_r: Dict[str, Any] = {}
-            for k, v in r.items():
-                if v is None or pd.isna(v):
-                    clean_r[str(k)] = None
-                elif isinstance(v, (np.integer, int)):
-                    clean_r[str(k)] = int(v)
-                elif isinstance(v, (np.floating, float)):
-                    clean_r[str(k)] = None if np.isnan(v) or np.isinf(v) else round(float(v), 4)
-                elif isinstance(v, (pd.Timestamp, np.datetime64)):
-                    clean_r[str(k)] = str(v)
-                else:
-                    clean_r[str(k)] = str(v)
-            sanitized.append(clean_r)
-        return sanitized
+        clean = self._sanitize_for_json(records)
+        return clean if isinstance(clean, list) else []

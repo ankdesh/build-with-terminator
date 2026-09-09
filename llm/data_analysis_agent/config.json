@@ -1,0 +1,9 @@
+{
+  "openai_api_base": "https://api.openai.com/v1",
+  "openai_model_name": "gpt-4o-mini",
+  "server_host": "127.0.0.1",
+  "server_port": 8080,
+  "max_retries": 3,
+  "exec_timeout_seconds": 30,
+  "max_upload_size_bytes": 104857600
+}

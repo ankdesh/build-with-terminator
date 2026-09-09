@@ -24,17 +24,40 @@ The columns and their business context are provided in the system context.
 You must respond with valid JSON matching this exact structure:
 {
   "plan": "Simple English description of the analytical steps you plan to take (e.g., '1. Filter records where temperature > 75. 2. Group by hour and calculate average kilowatt usage. 3. Identify the peak usage period.')",
-  "code": "Python code using df, pd, np. The code MUST create: \\n1. `result`: pandas DataFrame or Series for tabular output (optional if only answering a single number)\\n2. `chart_spec`: (optional) dict with {'chart_type': 'bar'|'line'|'area'|'pie'|'scatter', 'title': '...', 'x_key': '...', 'series': [{'key': 'col', 'name': 'Label'}], 'data': list of dicts}\\n3. `explanation`: A clear explanation in simple English explaining how it was calculated and what the key takeaways are.",
+  "code": "Python code using df, pd, np. Output variables:\\n1. `chart_spec`: (optional) dict with {'title': '...', 'description': '...', 'option': {...}} containing an Apache ECharts option tree when a plot/chart is requested.\\n2. `result`: (optional) pandas DataFrame or Series. IMPORTANT: When creating a chart, do NOT assign `result` unless the user explicitly requested data or a table alongside the plot.\\n3. `explanation`: A clear explanation in simple English explaining how it was calculated and what the key takeaways are.",
   "explanation": "Clear, friendly explanation of the answer, findings, and calculation steps in simple English."
 }
 
 Rules for code generation:
 1. Do NOT load the CSV again; `df` is already available in scope.
-2. Only use `pd`, `np`, `math`, `datetime`, `re`, and standard python libraries.
-3. Do NOT import matplotlib, seaborn, or plotly. Visualizations are rendered client-side from `chart_spec`.
-4. Ensure column names match the dataset exactly.
-5. If creating a chart, ensure `chart_spec['data']` is a list of dictionary records.
-6. Always explain the calculation steps in plain English.
+2. Only use `pandas` (`pd`), `numpy` (`np`), `math`, `datetime`, `re`, and standard built-in Python libraries.
+3. Do NOT import `sklearn` / `scikit-learn` or `scipy`. They are NOT installed in this air-gapped environment.
+   - For normalization or min-max scaling: use standard pandas `(df[col] - df[col].min()) / (df[col].max() - df[col].min())`.
+   - For standardization / z-score: use `(df[col] - df[col].mean()) / df[col].std()`.
+   - For linear regression or trendlines: use `np.polyfit(x, y, deg=1)` or pure numpy/pandas.
+4. Do NOT import `matplotlib`, `seaborn`, or `plotly`. All visualizations are rendered client-side from `chart_spec['option']` via Apache ECharts.
+5. Ensure column names match the dataset exactly.
+6. In `chart_spec['option']`, convert all series data and axis categories into native Python lists (e.g., `df['col'].tolist()`).
+7. Do NOT output `result` or print a data table when plotting a chart unless the user explicitly asked to see the data or table in their request (e.g., 'show table and plot' or 'include data'). If the user only asked for a chart/plot, omit `result` so only the chart is displayed.
+
+Visualization Guidelines (Keep charts simple, clear, and informative):
+- Simplicity & Clarity: Do not clutter charts. Keep layouts clean with readable fonts and intuitive axis scaling.
+- Units & Labels: Always specify clear axis names with units (e.g., name='Energy Usage (kWh)', name='Temperature (°F)').
+- Choosing the right chart type:
+  - Trends over time -> `type: 'line'` or `'area'` with `xAxis: {'type': 'category', 'data': [...]}`.
+  - Discrete category comparisons -> `type: 'bar'` (use horizontal bars if category names are long).
+  - Comparing two metrics with different units/scales -> Dual Y-axis:
+    `yAxis: [{'type': 'value', 'name': 'kWh', 'position': 'left'}, {'type': 'value', 'name': 'Temp (°F)', 'position': 'right'}]`,
+    and assign the second series `yAxisIndex: 1`.
+  - Correlation between two numeric variables -> `type: 'scatter'`.
+  - Statistical distributions & outliers -> `type: 'boxplot'`.
+  - Matrix / time-of-day heatmaps -> `type: 'heatmap'` with `visualMap`.
+  - Proportions of a whole (only for <= 6 categories) -> `type: 'pie'` (or donut).
+- Highlighting & Markers:
+  - When the user asks to highlight, mark, or call out specific points (e.g., top 25%, outliers, or peaks):
+    In `series.data`, supply data items with custom styling:
+    `{'value': val, 'symbol': 'circle', 'symbolSize': 10, 'itemStyle': {'color': '#ef4444'}}` for highlighted points, while normal points remain standard or `symbolSize: 0`.
+  - Use `markLine` for key reference thresholds or averages (e.g. `markLine: {'data': [{'type': 'average', 'name': 'Mean'}]}`).
 """
 
 
@@ -130,7 +153,8 @@ class AgentService:
                     df=df,
                     plan=plan,
                     explanation=initial_explanation,
-                    retries_attempted=retries
+                    retries_attempted=retries,
+                    user_query=user_query,
                 )
 
                 # Stream execution artifacts
