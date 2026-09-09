@@ -61,11 +61,45 @@ async def test_agent_retry_and_self_correction(mock_profile: DataProfile) -> Non
     event_types = [e["event"] for e in events]
 
     assert "plan" in event_types
+    assert "code" in event_types
+    assert "log" in event_types
     assert "execution_result" in event_types
     assert "done" in event_types
     assert mock_llm.call_count == 2
 
-    # Check execution result has retries_attempted == 1
+    # Check execution result has retries_attempted == 1 and step_logs populated
     exec_result_event = next(e for e in events if e["event"] == "execution_result")
     assert exec_result_event["data"]["retries_attempted"] == 1
     assert exec_result_event["data"]["success"] is True
+    assert isinstance(exec_result_event["data"]["step_logs"], list)
+    assert len(exec_result_event["data"]["step_logs"]) > 0
+
+
+@pytest.mark.asyncio
+async def test_synthesize_explanation() -> None:
+    """Verify that _synthesize_explanation formats execution outputs with LLM."""
+    agent = AgentService(code_executor=CodeExecutor())
+    mock_call_text = AsyncMock(return_value="The building consumed an average of 42 kWh.")
+    agent._call_external_text = mock_call_text  # type: ignore[assignment]
+
+    from backend.models.chat import ExecutionResult, TableData
+    exec_result = ExecutionResult(
+        success=True,
+        plan="Compute mean",
+        explanation="Initial explanation",
+        code="result = 42",
+        stdout="Mean: 42",
+        table=TableData(columns=["val"], rows=[{"val": 42}], total_rows=1),
+        execution_time_ms=10.0,
+        retries_attempted=0,
+    )
+
+    synthesized = await agent._synthesize_explanation(
+        user_query="What is the average?",
+        exec_result=exec_result,
+        initial_explanation="Initial explanation",
+    )
+
+    assert synthesized == "The building consumed an average of 42 kWh."
+    mock_call_text.assert_awaited_once()
+

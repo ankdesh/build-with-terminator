@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   createSession,
   deleteSession,
@@ -38,8 +38,10 @@ export const App: React.FC = () => {
   const [isStreaming, setIsStreaming] = useState<boolean>(false);
   const [streamingStatus, setStreamingStatus] = useState<string | null>(null);
   const [streamingPlan, setStreamingPlan] = useState<string | null>(null);
+  const [streamingLogs, setStreamingLogs] = useState<string[]>([]);
   const [streamingToken, setStreamingToken] = useState<string>('');
   const [streamingResult, setStreamingResult] = useState<ExecutionResult | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   // 1. Initial load
   useEffect(() => {
@@ -148,43 +150,70 @@ export const App: React.FC = () => {
     setIsStreaming(true);
     setStreamingStatus('Initializing query...');
     setStreamingPlan(null);
+    setStreamingLogs([]);
     setStreamingToken('');
     setStreamingResult(null);
 
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
     try {
-      await streamChat(activeSessionId, query, {
-        onStatus: (status) => setStreamingStatus(status),
-        onPlan: (plan) => setStreamingPlan(plan),
-        onToken: (tok) => setStreamingToken((prev) => prev + tok),
-        onResult: (res) => {
-          setStreamingResult(res);
-          setSelectedMessage({
-            id: 'live',
-            role: 'assistant',
-            content: res.explanation,
-            plan: res.plan,
-            execution_result: res,
-          });
+      await streamChat(
+        activeSessionId,
+        query,
+        {
+          onStatus: (status) => setStreamingStatus(status),
+          onPlan: (plan) => setStreamingPlan(plan),
+          onLog: (log) => setStreamingLogs((prev) => [...prev, log]),
+          onToken: (tok) => setStreamingToken((prev) => prev + tok),
+          onResult: (res) => {
+            setStreamingResult(res);
+            setSelectedMessage({
+              id: 'live',
+              role: 'assistant',
+              content: res.explanation,
+              plan: res.plan,
+              execution_result: res,
+            });
+          },
+          onError: (err) => {
+            setStreamingStatus(`Error: ${err}`);
+          },
+          onDone: async () => {
+            setIsStreaming(false);
+            setStreamingStatus(null);
+            // Reload full messages from session store
+            const updatedMsgs = await getMessages(activeSessionId);
+            setMessages(updatedMsgs);
+            if (updatedMsgs.length > 0) {
+              setSelectedMessage(updatedMsgs[updatedMsgs.length - 1]);
+            }
+          },
         },
-        onError: (err) => {
-          setStreamingStatus(`Error: ${err}`);
-        },
-        onDone: async () => {
-          setIsStreaming(false);
-          setStreamingStatus(null);
-          // Reload full messages from session store
-          const updatedMsgs = await getMessages(activeSessionId);
-          setMessages(updatedMsgs);
-          if (updatedMsgs.length > 0) {
-            setSelectedMessage(updatedMsgs[updatedMsgs.length - 1]);
-          }
-        },
-      });
+        abortController.signal
+      );
     } catch (err: any) {
+      if (err.name === 'AbortError') {
+        console.log('Chat operation cancelled by user');
+        setIsStreaming(false);
+        setStreamingStatus(null);
+        return;
+      }
       console.error('Chat error:', err);
       setIsStreaming(false);
       setStreamingStatus(`Error: ${err.message || err}`);
+    } finally {
+      abortControllerRef.current = null;
     }
+  };
+
+  const handleCancelOperation = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    setIsStreaming(false);
+    setStreamingStatus(null);
   };
 
   const handleExportCsv = async (columns: string[], rows: any[]) => {
@@ -247,6 +276,7 @@ export const App: React.FC = () => {
             hasDataset={hasDataset}
             onOpenUpload={() => setIsUploadOpen(true)}
             onExportCsv={handleExportCsv}
+            onCancelOperation={handleCancelOperation}
           />
         </main>
 
@@ -256,7 +286,9 @@ export const App: React.FC = () => {
           onClose={() => setIsSidePanelOpen(false)}
           selectedMessage={selectedMessage}
           activePlan={streamingPlan}
+          activeLogs={isStreaming ? streamingLogs : (selectedMessage?.execution_result?.step_logs || [])}
           activeResult={streamingResult}
+          isStreaming={isStreaming}
         />
       </div>
 

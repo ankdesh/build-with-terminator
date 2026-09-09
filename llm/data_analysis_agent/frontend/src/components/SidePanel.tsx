@@ -16,7 +16,9 @@ interface SidePanelProps {
   onClose: () => void;
   selectedMessage: ChatMessage | null;
   activePlan: string | null;
+  activeLogs?: string[];
   activeResult: ExecutionResult | null;
+  isStreaming?: boolean;
 }
 
 export const SidePanel: React.FC<SidePanelProps> = ({
@@ -24,7 +26,9 @@ export const SidePanel: React.FC<SidePanelProps> = ({
   onClose,
   selectedMessage,
   activePlan,
+  activeLogs,
   activeResult,
+  isStreaming,
 }) => {
   const [copied, setCopied] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<'plan' | 'code' | 'logs'>('plan');
@@ -36,6 +40,9 @@ export const SidePanel: React.FC<SidePanelProps> = ({
   const result = activeResult || selectedMessage?.execution_result;
   const code = result?.code || '';
   const stdout = result?.stdout || '';
+  const logs = (activeLogs && activeLogs.length > 0)
+    ? activeLogs
+    : (result?.step_logs || []);
 
   const handleCopyCode = () => {
     if (!code) return;
@@ -63,8 +70,8 @@ export const SidePanel: React.FC<SidePanelProps> = ({
         </button>
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="flex border-b border-slate-200 px-3 bg-white text-xs">
+      {/* Tabs Header */}
+      <div className="flex border-b border-slate-200 px-4 bg-slate-50/40 text-xs">
         <button
           onClick={() => setActiveTab('plan')}
           className={`py-2 px-3 border-b-2 font-medium flex items-center space-x-1.5 transition-colors ${
@@ -73,9 +80,10 @@ export const SidePanel: React.FC<SidePanelProps> = ({
               : 'border-transparent text-slate-500 hover:text-slate-700'
           }`}
         >
-          <ListOrdered className="w-3.5 h-3.5" />
-          <span>Plan & Steps</span>
+          <Compass className="w-3.5 h-3.5" />
+          <span>Plan</span>
         </button>
+
         <button
           onClick={() => setActiveTab('code')}
           className={`py-2 px-3 border-b-2 font-medium flex items-center space-x-1.5 transition-colors ${
@@ -85,8 +93,9 @@ export const SidePanel: React.FC<SidePanelProps> = ({
           }`}
         >
           <Code2 className="w-3.5 h-3.5" />
-          <span>Python Code</span>
+          <span>Code</span>
         </button>
+
         <button
           onClick={() => setActiveTab('logs')}
           className={`py-2 px-3 border-b-2 font-medium flex items-center space-x-1.5 transition-colors ${
@@ -97,6 +106,13 @@ export const SidePanel: React.FC<SidePanelProps> = ({
         >
           <FileTerminal className="w-3.5 h-3.5" />
           <span>Logs</span>
+          {logs.length > 0 && (
+            <span className={`ml-1 px-1.5 py-0.5 rounded-full text-[9px] font-mono ${
+              activeTab === 'logs' ? 'bg-blue-100 text-blue-700 font-bold' : 'bg-slate-100 text-slate-600'
+            }`}>
+              {logs.length}
+            </span>
+          )}
         </button>
       </div>
 
@@ -169,14 +185,56 @@ export const SidePanel: React.FC<SidePanelProps> = ({
 
         {/* TAB 3: LOGS */}
         {activeTab === 'logs' && (
-          <div className="space-y-3">
+          <div className="space-y-4">
+            {/* Step-by-Step Diagnostic Stream */}
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-[10px] uppercase font-bold text-slate-500 flex items-center space-x-1">
+                  <FileTerminal className="w-3.5 h-3.5" />
+                  <span>Step Execution & LLM Output</span>
+                </span>
+                {isStreaming && (
+                  <span className="inline-flex items-center space-x-1 px-1.5 py-0.5 rounded text-[10px] bg-blue-50 text-blue-600 font-medium animate-pulse">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
+                    <span>Streaming</span>
+                  </span>
+                )}
+              </div>
+
+              {logs && logs.length > 0 ? (
+                <div className="p-3 bg-slate-950 text-slate-200 rounded-lg font-mono text-[11px] overflow-x-auto max-h-[260px] border border-slate-800 space-y-1.5 select-text">
+                  {logs.map((logEntry, idx) => {
+                    const isError = logEntry.includes('[ERROR]') || logEntry.includes('[FATAL]');
+                    const isWarning = logEntry.includes('[WARNING]') || logEntry.includes('[Self-Correction]');
+                    const isSuccess = logEntry.includes('succeeded') || logEntry.includes('complete');
+                    const colorClass = isError
+                      ? 'text-red-400 font-semibold'
+                      : isWarning
+                      ? 'text-amber-400'
+                      : isSuccess
+                      ? 'text-emerald-400'
+                      : 'text-slate-300';
+                    return (
+                      <div key={idx} className={`leading-relaxed whitespace-pre-wrap ${colorClass}`}>
+                        {logEntry}
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="p-4 bg-slate-900 text-slate-400 rounded-lg font-mono text-[11px] border border-slate-800 text-center italic">
+                  {isStreaming ? 'Waiting for first execution step...' : '// No step logs recorded.'}
+                </div>
+              )}
+            </div>
+
             {/* Standard Output Console */}
             <div>
               <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1.5 flex items-center space-x-1">
                 <Terminal className="w-3.5 h-3.5" />
                 <span>Captured stdout</span>
               </span>
-              <pre className="p-3 bg-slate-950 text-emerald-400 rounded-lg font-mono text-[11px] overflow-x-auto min-h-[140px] border border-slate-800 select-text">
+              <pre className="p-3 bg-slate-950 text-emerald-400 rounded-lg font-mono text-[11px] overflow-x-auto min-h-[80px] max-h-[180px] border border-slate-800 select-text">
                 {stdout || '// No standard output printed.'}
               </pre>
             </div>

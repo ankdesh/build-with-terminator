@@ -121,10 +121,17 @@ async def chat_stream(session_id: str, payload: ChatQueryRequest) -> EventSource
                     except Exception as ex:
                         logger.warning("Could not parse ExecutionResult: %s", ex)
 
-                # Format as SSE event
+                # Format as SSE event (safely JSON-encode complex or multi-line event payloads)
+                if event_type in ("execution_result", "done", "log", "code"):
+                    data_str = json.dumps(event_data)
+                elif isinstance(event_data, str):
+                    data_str = event_data
+                else:
+                    data_str = json.dumps(event_data)
+
                 yield {
                     "event": event_type,
-                    "data": json.dumps(event_data) if not isinstance(event_data, str) else event_data
+                    "data": data_str
                 }
 
             # Save assistant message to disk

@@ -114,6 +114,7 @@ class ExecutionResult(BaseModel):
     error_traceback: Optional[str] = Field(default=None, description="Error traceback if execution failed")
     execution_time_ms: float = Field(default=0.0, description="Execution duration in milliseconds")
     retries_attempted: int = Field(default=0, description="Count of retry attempts required to succeed")
+    step_logs: List[str] = Field(default_factory=list, description="Step-by-step diagnostic and execution log entries")
 
 
 class ChatMessage(BaseModel):

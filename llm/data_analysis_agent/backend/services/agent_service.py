@@ -1,5 +1,6 @@
 """Agent orchestration service managing LLM prompts, execution, retries, and SSE streaming."""
 
+from datetime import datetime
 import json
 import logging
 from typing import Any, AsyncGenerator, Dict, List, Optional
@@ -100,8 +101,18 @@ class AgentService:
         dataset_description: str = ""
     ) -> AsyncGenerator[Dict[str, Any], None]:
         """Stream real-time SSE events for plan, execution, retries, visuals, and final explanation."""
+        step_logs: List[str] = []
+
+        def make_log(msg: str) -> Dict[str, str]:
+            timestamp = datetime.now().strftime("%H:%M:%S")
+            entry = f"[{timestamp}] {msg}"
+            step_logs.append(entry)
+            return {"event": "log", "data": entry}
+
         # Yield initial status
         yield {"event": "status", "data": "Analyzing question and dataset context..."}
+        yield make_log(f"Started analysis: '{user_query}'")
+        yield make_log(f"Dataset context: {profile.dataset_name} ({len(df)} rows, {len(df.columns)} columns)")
 
         # Build prompt context
         messages = self._build_prompt_messages(
@@ -123,6 +134,7 @@ class AgentService:
                         "event": "status",
                         "data": f"Self-correcting analysis code (attempt {retries}/{max_retries})..."
                     }
+                    yield make_log(f"[Self-Correction] Re-prompting model with traceback from attempt {retries}...")
                     # Add error correction prompt
                     messages.append({
                         "role": "user",
@@ -136,6 +148,7 @@ class AgentService:
                     })
 
                 # Call LLM
+                yield make_log("Calling LLM to formulate plan and generate code...")
                 response_json = await self._call_llm(messages)
                 plan = response_json.get("plan", "Generating data analysis plan...")
                 code = response_json.get("code", "")
@@ -143,7 +156,15 @@ class AgentService:
 
                 # Stream plan to client
                 yield {"event": "plan", "data": plan}
+                yield {"event": "code", "data": code}
+                plan_preview = plan.replace("\n", " ")
+                if len(plan_preview) > 100:
+                    plan_preview = plan_preview[:97] + "..."
+                yield make_log(f"Plan formulated: {plan_preview}")
+                yield make_log(f"Generated Python script ({len(code.splitlines())} lines)")
+
                 yield {"event": "status", "data": "Executing Python analysis code..."}
+                yield make_log("Executing Python script in isolated execution namespace...")
 
                 last_code = code
 
@@ -157,6 +178,35 @@ class AgentService:
                     user_query=user_query,
                 )
 
+                yield make_log(f"Execution succeeded in {exec_result.execution_time_ms:.1f}ms")
+                if exec_result.stdout:
+                    stdout_preview = exec_result.stdout.strip()
+                    lines = stdout_preview.splitlines()
+                    if len(lines) > 5:
+                        stdout_preview = "\n".join(lines[:5]) + f"\n... ({len(lines)} lines total)"
+                    yield make_log(f"Captured stdout:\n{stdout_preview}")
+                if exec_result.table and exec_result.table.rows:
+                    yield make_log(
+                        f"Generated tabular output: {exec_result.table.total_rows} rows x "
+                        f"{len(exec_result.table.columns)} columns"
+                    )
+                if exec_result.chart:
+                    yield make_log(f"Generated Apache ECharts visual spec: '{exec_result.chart.title}'")
+
+                # Format and present results using the LLM
+                yield {"event": "status", "data": "Formatting calculation results..."}
+                yield make_log("Calling LLM to synthesize final plain-English answer from computed data...")
+                final_explanation = await self._synthesize_explanation(
+                    user_query=user_query,
+                    exec_result=exec_result,
+                    initial_explanation=initial_explanation,
+                )
+                exec_result.explanation = final_explanation
+                yield make_log("Answer synthesis complete. Emitting final response tokens.")
+
+                # Attach full step logs to execution result
+                exec_result.step_logs = list(step_logs)
+
                 # Stream execution artifacts
                 yield {
                     "event": "execution_result",
@@ -164,10 +214,9 @@ class AgentService:
                 }
 
                 # Stream tokens of explanation
-                explanation_text = exec_result.explanation or initial_explanation
                 chunk_size = 25
-                for i in range(0, len(explanation_text), chunk_size):
-                    chunk = explanation_text[i:i + chunk_size]
+                for i in range(0, len(final_explanation), chunk_size):
+                    chunk = final_explanation[i:i + chunk_size]
                     yield {"event": "token", "data": chunk}
 
                 yield {"event": "done", "data": {"success": True}}
@@ -177,7 +226,10 @@ class AgentService:
                 last_error = ce.traceback_str
                 retries += 1
                 logger.warning("Execution error on attempt %s: %s", retries, ce.traceback_str)
+                err_line = ce.traceback_str.strip().splitlines()[-1] if ce.traceback_str else "Unknown execution error"
+                yield make_log(f"[ERROR] Execution failed on attempt {retries}: {err_line}")
                 if retries > max_retries:
+                    yield make_log(f"[FATAL] Reached maximum retry limit ({max_retries}). Aborting.")
                     yield {
                         "event": "error",
                         "data": (
@@ -188,6 +240,7 @@ class AgentService:
                     return
             except Exception as e:
                 logger.error("Agent error during analysis stream: %s", e)
+                yield make_log(f"[FATAL] Agent error: {str(e)}")
                 yield {"event": "error", "data": str(e)}
                 return
 
@@ -209,6 +262,71 @@ class AgentService:
         except Exception as e:
             logger.error("LLM API call failed: %s", e)
             raise LLMServiceError(status_code=500, response_text=str(e))
+
+    async def _synthesize_explanation(
+        self,
+        user_query: str,
+        exec_result: ExecutionResult,
+        initial_explanation: str
+    ) -> str:
+        """Have the LLM inspect actual execution outputs and format a clear plain-English response."""
+        context_parts: List[str] = []
+
+        if exec_result.stdout:
+            context_parts.append(f"Console Output (stdout):\n{exec_result.stdout}")
+
+        if exec_result.table and exec_result.table.rows:
+            cols = exec_result.table.columns
+            preview = exec_result.table.rows[:10]
+            header = " | ".join(str(c) for c in cols)
+            sep = " | ".join(["---"] * len(cols))
+            rows_md = [" | ".join(str(r.get(c, "")) for c in cols) for r in preview]
+            table_md = f"| {header} |\n| {sep} |\n" + "\n".join(f"| {r} |" for r in rows_md)
+            if exec_result.table.total_rows > 10:
+                table_md += f"\n... ({exec_result.table.total_rows} total rows)"
+            context_parts.append(f"Computed Data Result:\n{table_md}")
+
+        if exec_result.chart:
+            context_parts.append(f"Generated Chart: {exec_result.chart.title}")
+            if exec_result.chart.description:
+                context_parts.append(f"Chart Visual Takeaway: {exec_result.chart.description}")
+
+        # If nothing was produced in stdout/table/chart, fall back to initial explanation
+        if not context_parts:
+            return exec_result.explanation or initial_explanation
+
+        prompt_content = (
+            f"DATA ANALYSIS EXECUTION OUTPUT:\n"
+            + "\n\n".join(context_parts)
+            + f"\n\nUSER QUESTION: {user_query}\n\n"
+            f"INSTRUCTION: Based on the actual execution results above, explain the answer and key takeaways in simple, clear English with minimal math jargon. Format the numbers clearly and directly address the user's question. Do not write Python code."
+        )
+
+        messages: List[Dict[str, Any]] = [
+            {"role": "system", "content": "You are WPS-AI, a helpful data analysis assistant. Present the final answer clearly and concisely in plain English using the computed numbers and findings."},
+            {"role": "user", "content": prompt_content},
+        ]
+
+        try:
+            return await self._call_external_text(messages)
+        except Exception as e:
+            logger.warning("Post-execution synthesis failed: %s. Falling back to default explanation.", e)
+            return exec_result.explanation or initial_explanation
+
+    async def _call_external_text(self, messages: List[Dict[str, Any]]) -> str:
+        """Call external OpenAI endpoint for plain text generation."""
+        from typing import cast
+        client = self._get_client()
+        try:
+            response = await client.chat.completions.create(
+                model=config.openai_model_name,
+                messages=cast(Any, messages),
+                temperature=0.2,
+            )
+            return (response.choices[0].message.content or "").strip()
+        except Exception as e:
+            logger.error("External text generation failed: %s", e)
+            raise
 
     def _build_prompt_messages(
         self,

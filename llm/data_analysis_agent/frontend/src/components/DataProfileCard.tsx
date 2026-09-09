@@ -18,9 +18,9 @@ interface DataProfileCardProps {
 }
 
 export const DataProfileCard: React.FC<DataProfileCardProps> = ({ profile }) => {
-  const [showQualityReport, setShowQualityReport] = useState<boolean>(true);
+  const [showQualityReport, setShowQualityReport] = useState<boolean>(false);
   const [showPreviewTable, setShowPreviewTable] = useState<boolean>(false);
-  const [isExpanded, setIsExpanded] = useState<boolean>(true);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   const qualityFlags = profile.quality_report.flags || [];
   const hasWarnings = qualityFlags.some((f) => f.severity === 'warning' || f.severity === 'critical');
