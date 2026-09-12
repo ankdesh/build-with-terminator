@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Face Count</string>
+    <string name="pick_image">Choose Photo</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="sample_image">Sample Image</string>
+    <string name="confidence_threshold">Confidence Threshold</string>
+    <string name="faces_detected">Faces Detected</string>
+    <string name="no_faces_detected">No faces detected</string>
+    <string name="processing">Analyzing image...</string>
+    <string name="error_loading_model">Failed to load YuNet model</string>
+</resources>
