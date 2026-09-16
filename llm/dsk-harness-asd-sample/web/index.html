@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ASD · Assistant workspace</title><link rel="stylesheet" href="/style.css"></head>
+<body>
+<aside class="sidebar">
+  <a class="brand" href="/" aria-label="ASD home"><span class="brand-mark">a<span>›</span></span><span>ASD<span class="brand-sub">ASSISTANT WORKSPACE</span></span></a>
+  <button id="new-chat" class="new-chat"><span>＋</span> New conversation <kbd>N</kbd></button>
+  <div class="section-label">CONVERSATIONS</div><nav id="sessions" aria-label="Conversations"></nav>
+  <div class="sidebar-bottom"><span class="avatar">Y</span><div>Your workspace<small>Local execution enabled</small></div><span class="online-dot"></span></div>
+</aside>
+<main>
+  <header><div><span class="breadcrumb">Workspace</span><span class="slash">/</span><span id="conversation-label">New conversation</span></div><span class="model-pill"><span class="online-dot"></span><span id="model">Connecting</span></span></header>
+  <div id="notice" role="status" hidden></div>
+  <section id="welcome" class="welcome">
+    <div class="eyebrow"><span class="spark">✳</span> A LITTLE HELP. A LOT POSSIBLE.</div>
+    <h1>What are we<br>working on today?</h1>
+    <p>Think it through. Run the numbers. Make something useful.<br>Your assistant can work with Bash and Python along the way.</p>
+    <div class="suggestions">
+      <button data-prompt="Use Python to calculate compound growth for an initial value of 1000 at 5% annually for 10 years. Show a table."><span class="suggestion-icon">⌁</span><strong>Explore an idea</strong><span>Turn a question into a calculation</span><b>↗</b></button>
+      <button data-prompt="Use Bash to inspect this conversation's workspace and report its location and files."><span class="suggestion-icon">›_</span><strong>Work with files</strong><span>See what’s in this workspace</span><b>↗</b></button>
+      <button data-prompt="Write and run a Python program that finds the first 20 prime numbers. Explain how it works."><span class="suggestion-icon">{ }</span><strong>Build a small script</strong><span>Go from an idea to working code</span><b>↗</b></button>
+    </div>
+  </section>
+  <section id="transcript" class="transcript" aria-label="Conversation" aria-live="polite" hidden></section>
+  <footer>
+    <form id="composer"><label for="prompt" class="sr-only">Message your assistant</label><textarea id="prompt" rows="2" placeholder="Ask a question, describe a task, or start with an idea…"></textarea><div class="composer-bottom"><div class="tool-chips"><span>›_ Bash</span><span>⌘ Python</span></div><div class="send-controls"><span>Enter to send</span><button type="button" id="stop" hidden aria-label="Stop generation">■</button><button id="send" type="submit" aria-label="Send message">↑</button></div></div></form>
+    <p class="footnote">Code runs locally with your service account’s access. Review important results.</p>
+  </footer>
+</main>
+<script type="module" src="/app.js"></script>
+</body></html>

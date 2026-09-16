@@ -1,0 +1,20 @@
+/** Product setup; all Harness linking and launch mechanics belong to the fork. */
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { randomBytes } from 'node:crypto';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { spawn } from 'node:child_process';
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+if (existsSync(resolve(root, '.env'))) process.loadEnvFile(resolve(root, '.env'));
+const harness = resolve(process.env.HARNESS_SOURCE || resolve(root, '../../../deepseek-harness'));
+const state = resolve(process.env.SAMPLE_STATE || resolve(root, '.dev'));
+mkdirSync(state, { recursive: true, mode: 0o700 });
+const tokenFile = resolve(state, 'access-token');
+if (!existsSync(tokenFile)) writeFileSync(tokenFile, randomBytes(32).toString('hex'), { mode: 0o600, flag: 'wx' });
+const env = { ...process.env, DSH_HOME: resolve(state, 'harness'), SAMPLE_WORKSPACES: resolve(state, 'workspaces'), SAMPLE_PYTHON: resolve(root, '.venv/bin/python'), SAMPLE_TOKEN: readFileSync(tokenFile, 'utf8').trim() };
+if (!existsSync(env.SAMPLE_PYTHON)) throw new Error('Run uv sync before starting the app.');
+console.log(`Open http://127.0.0.1:${env.SAMPLE_PORT || 6020}/#token=${env.SAMPLE_TOKEN}`);
+if (!env.OPENAI_API_KEY) console.log('OPENAI_API_KEY is unset. Add it to .env to send model requests.');
+const child = spawn(process.execPath, [resolve(harness, 'scripts/product-runtime.mjs'), 'dev', root], { cwd: root, env, stdio: 'inherit' });
+for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => child.kill(signal));
+child.on('exit', (code, signal) => { process.exitCode = code ?? (signal ? 1 : 0); });

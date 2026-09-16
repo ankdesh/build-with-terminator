@@ -1,0 +1,24 @@
+/** Native sample entry: configure external state, then invoke the shipped dsh CLI. */
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { randomBytes } from 'node:crypto';
+import { resolve } from 'node:path';
+import { homedir } from 'node:os';
+import { fileURLToPath } from 'node:url';
+import { spawn } from 'node:child_process';
+import { prepareProductProfile } from './harness-profile.mjs';
+const root = fileURLToPath(new URL('..', import.meta.url));
+if (process.env.SAMPLE_ENV_FILE) process.loadEnvFile(process.env.SAMPLE_ENV_FILE);
+const release = JSON.parse(readFileSync(resolve(root, 'release.json'), 'utf8'));
+if (release.platform !== process.platform || release.arch !== process.arch) throw new Error('This release targets a different operating system or architecture.');
+const state = resolve(process.env.SAMPLE_STATE || resolve(homedir(), '.local/state/asd-sample'));
+mkdirSync(state, { recursive: true, mode: 0o700 });
+const tokenPath = resolve(state, 'access-token');
+if (!existsSync(tokenPath)) writeFileSync(tokenPath, randomBytes(32).toString('hex'), { mode: 0o600, flag: 'wx' });
+const env = { ...process.env, DSH_HOME: resolve(state, 'harness'), SAMPLE_TOKEN: readFileSync(tokenPath, 'utf8').trim(), SAMPLE_PYTHON: process.env.SAMPLE_PYTHON || resolve(state, 'python/bin/python'), SAMPLE_WORKSPACES: resolve(state, 'workspaces') };
+if (!existsSync(env.SAMPLE_PYTHON)) throw new Error('Provision the Python environment first: sh deployment/provision.sh');
+prepareProductProfile(resolve(root, 'node_modules', release.application), env.DSH_HOME);
+console.log(`Open http://127.0.0.1:${env.SAMPLE_PORT || 6020}/#token=${env.SAMPLE_TOKEN}`);
+if (!env.OPENAI_API_KEY) console.log('OPENAI_API_KEY is unset; configure it in SAMPLE_ENV_FILE before sending a model request.');
+const child = spawn(process.execPath, [resolve(root, 'node_modules/@deepseek-ai/dsh/lib/bin.js'), '--profile', 'product'], { cwd: state, env, stdio: 'inherit' });
+for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => child.kill(signal));
+child.on('exit', (code, signal) => { process.exitCode = code ?? (signal ? 1 : 0); });

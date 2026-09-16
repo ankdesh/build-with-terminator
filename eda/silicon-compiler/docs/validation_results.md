@@ -36,3 +36,19 @@ DC preflight was run without a DC binary or license, so no synthesis execution w
 | `freepdk45` | `preflight_only` | yes | yes | yes | no | no | `results/dc/freepdk45.json` |
 | `sky130` | `preflight_only` | yes | yes | yes | no | no | `results/dc/sky130.json` |
 | `asap7` | `preflight_only` | yes | yes | yes | no | no | `results/dc/asap7.json` |
+
+## LSILS/EPFL Benchmark Validation
+
+The `lsils/benchmarks` repository was added as a submodule under `third_party/lsils-benchmarks`, not copied into this repository. DC scripts were generated for all 10 arithmetic benchmarks across `freepdk45`, `sky130`, and `asap7`; no DC synthesis was run because `dc_shell` and license details are unavailable.
+
+```bash
+.venv/bin/python scripts/run_benchmarks.py --benchmark all --target all --tool dc
+.venv/bin/python scripts/run_benchmarks.py --benchmark bar --target freepdk45 --tool yosys
+```
+
+Yosys was run only for Barrel shifter (`bar`) on `freepdk45`, as requested.
+
+| Benchmark | Tool | Target | Status | Cells | Cell area | Nets | Pins | Result file |
+| --- | --- | --- | --- | ---: | ---: | ---: | ---: | --- |
+| Barrel shifter (`bar`) | Yosys | `freepdk45` | pass | 1419 | 1881.684 | 1554 | 263 | `results/benchmarks/yosys/freepdk45/bar.json` |
+| All arithmetic benchmarks | DC | `freepdk45`, `sky130`, `asap7` | `preflight_only` | | | | | `results/benchmarks/dc/<target>/<benchmark>.json` |

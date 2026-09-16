@@ -1,0 +1,67 @@
+- insert:
+    - id: timer
+      name: '@deepseek-ai/cordis-plugin-timer'
+    - id: llm
+      name: '@deepseek-ai/dsh-llm'
+    - id: model
+      name: '@deepseek-ai/dsh-llm-pi-ai'
+      config:
+        providers:
+          openai:
+            apiKeyEnv: OPENAI_API_KEY
+            api: openai-completions
+            baseURL: !!js process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1'
+            models:
+              - id: !!js process.env.OPENAI_MODEL || 'gpt-4o-mini'
+    - id: sessions
+      name: '@deepseek-ai/dsh-session'
+    - id: session-projections
+      name: '@deepseek-ai/dsh-session-projection'
+    - id: persistence
+      name: '@deepseek-ai/dsh-session-persistence-jsonl'
+      config:
+        root: !!js dshHomePath('sessions')
+        compression: none
+    - id: system-prompt
+      name: '@deepseek-ai/dsh-system-prompt'
+      config:
+        includeHarnessIdentity: false
+        includeRuntimeContext: false
+        personaPrefix: >-
+          You are ASD, a practical assistant for a local workspace. Help the user
+          understand and complete their task. Use execute_code when computation,
+          files, or running code will help. Choose Bash for shell commands and
+          Python for calculations and data processing. Code has service-user
+          filesystem and network access. Avoid destructive actions unless the
+          user requests them. Explain results clearly, and never claim execution
+          succeeded unless the tool result confirms it. Each conversation has
+          its own working directory. Python uses the configured virtual environment.
+    - id: tools
+      name: '@deepseek-ai/dsh-tools'
+      config:
+        mode: native
+    - id: agents
+      name: '@deepseek-ai/dsh-agent'
+    - id: invariants
+      name: '@deepseek-ai/dsh-invariants'
+    - id: agent-loop
+      name: '@deepseek-ai/dsh-agent-loop'
+      config:
+        agents: []
+        maxParallelToolCalls: 1
+    - id: webserver
+      name: '@deepseek-ai/dsh-host-webserver'
+      config:
+        host: 127.0.0.1
+        port: !!js Number(process.env.SAMPLE_PORT || 6020)
+    - id: sample
+      name: '@asd/dsk-harness-sample'
+      config:
+        provider: openai
+        model: !!js process.env.OPENAI_MODEL || 'gpt-4o-mini'
+        token: !!js process.env.SAMPLE_TOKEN
+        workspaceRoot: !!js process.env.SAMPLE_WORKSPACES
+        python: !!js process.env.SAMPLE_PYTHON
+        timeoutMs: 120000
+        maxOutputBytes: 65536
+        maxSessions: 20

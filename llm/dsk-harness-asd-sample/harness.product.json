@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "releaseFiles": [
+    "deployment",
+    "README.md",
+    "docs",
+    "pyproject.toml",
+    "uv.lock",
+    "harness.lock.json"
+  ]
+}

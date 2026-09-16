@@ -1,0 +1,18 @@
+[Unit]
+Description=ASD Harness assistant
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/apps/asd-sample/current
+Environment=SAMPLE_STATE=%h/.local/state/asd-sample
+EnvironmentFile=%h/.config/asd-sample/environment
+ExecStart=/usr/bin/env node %h/apps/asd-sample/current/deployment/launch.mjs
+Restart=on-failure
+RestartSec=3
+KillMode=control-group
+TimeoutStopSec=30
+UMask=0077
+
+[Install]
+WantedBy=default.target

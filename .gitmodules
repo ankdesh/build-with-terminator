@@ -1,0 +1,3 @@
+[submodule "eda/silicon-compiler/third_party/lsils-benchmarks"]
+	path = eda/silicon-compiler/third_party/lsils-benchmarks
+	url = https://github.com/lsils/benchmarks

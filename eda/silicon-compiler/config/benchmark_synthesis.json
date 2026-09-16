@@ -1,0 +1,36 @@
+{
+  "benchmark_root": "third_party/lsils-benchmarks",
+  "category": "arithmetic",
+  "topmodule": "top",
+  "clock_period_ns": 10.0,
+  "default_target": "freepdk45",
+  "benchmarks": {
+    "adder": {"rtl": "arithmetic/adder.v", "description": "Adder"},
+    "bar": {"rtl": "arithmetic/bar.v", "description": "Barrel shifter"},
+    "div": {"rtl": "arithmetic/div.v", "description": "Divisor"},
+    "hyp": {"rtl": "arithmetic/hyp.v", "description": "Hypotenuse"},
+    "log2": {"rtl": "arithmetic/log2.v", "description": "Log2"},
+    "max": {"rtl": "arithmetic/max.v", "description": "Maximum"},
+    "multiplier": {"rtl": "arithmetic/multiplier.v", "description": "Multiplier"},
+    "sin": {"rtl": "arithmetic/sin.v", "description": "Sine"},
+    "sqrt": {"rtl": "arithmetic/sqrt.v", "description": "Square-root"},
+    "square": {"rtl": "arithmetic/square.v", "description": "Square"}
+  },
+  "dc": {
+    "dc_shell_bin": "dc_shell",
+    "license_env": {
+      "SNPSLMD_LICENSE_FILE": "",
+      "LM_LICENSE_FILE": ""
+    },
+    "compile": {
+      "command": "compile_ultra",
+      "ungroup": false,
+      "incremental": false
+    },
+    "constraints": {
+      "combinational_max_delay_ns": 10.0,
+      "input_delay_ns": 0.0,
+      "output_delay_ns": 0.0
+    }
+  }
+}

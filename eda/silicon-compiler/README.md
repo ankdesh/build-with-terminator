@@ -68,3 +68,19 @@ Update `config/dc_config.json` when `dc_shell` and license details are available
 
 DC preflight reports are written to `results/dc/`; generated Tcl is written to `build/dc/<target>/scripts/dc_synth.tcl`. See `docs/dc_setup.md`.
 
+
+## LSILS/EPFL Benchmarks
+
+The LSILS/EPFL benchmark suite is included as a git submodule under `third_party/lsils-benchmarks`. Generate DC preflight scripts for all arithmetic benchmarks and all targets with:
+
+```bash
+.venv/bin/python scripts/run_benchmarks.py --benchmark all --target all --tool dc
+```
+
+Validate only the Barrel shifter with Yosys:
+
+```bash
+.venv/bin/python scripts/run_benchmarks.py --benchmark bar --target freepdk45 --tool yosys
+```
+
+Comparison tables are written to `results/benchmarks/comparison.csv` and `results/benchmarks/comparison.json`. See `docs/benchmark_synthesis.md`.
