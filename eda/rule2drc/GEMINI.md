@@ -23,3 +23,8 @@ This repository manages the Rule2DRC benchmark dataset and tooling for synthesiz
 ### 4. Testing & Verification
 - Validate data integrity upon every download (row counts, column schemas, payload presence).
 - Prioritize end-to-end integration verification.
+
+### 5. Documentation Maintenance
+- Maintain technical specifications and benchmark analysis in `docs/` (e.g., `docs/dataset_reference.md`).
+- Continuously update documentation as new scripts, experiments, and benchmark tools are developed.
+

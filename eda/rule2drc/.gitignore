@@ -32,6 +32,8 @@ ENV/
 
 # Dataset files
 data/
+extracted_gds/
 *.parquet
 *.tmp
+
 
