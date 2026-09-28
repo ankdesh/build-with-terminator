@@ -1,0 +1,36 @@
+[project]
+name = "rule2drc"
+version = "0.1.0"
+description = "Rule2DRC dataset downloader and benchmark toolkit"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "datasets>=2.20.0",
+    "huggingface-hub>=0.23.0",
+    "pyarrow>=15.0.0",
+    "rich>=13.7.0",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.10.0",
+    "pytest>=8.0.0",
+    "ruff>=0.4.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+module = ["datasets.*", "pyarrow.*"]
+ignore_missing_imports = true
+
