@@ -200,3 +200,5 @@ problems/
   - Downloaded `jusjinuk/Rule2DRC` (1,000 tasks, 13,921 testcases) to local Parquet files.
   - Extracted and statistically analyzed all 13,921 binary GDS files into `data/extracted_gds/`.
   - Documented schemas, unique `gds_path` distribution, and size histograms.
+  - Analyzed and tabulated GDS layout file statistics for the production **SkyWater 130nm HD standard cell library** (`sky130_fd_sc_hd`, 437 cells, 4.03 MB), documented in [`docs/sky130_fd_sc_hd_gds_stats.md`](file:///home/ankdesh/explore/build-with-terminator/eda/rule2drc/docs/sky130_fd_sc_hd_gds_stats.md).
+

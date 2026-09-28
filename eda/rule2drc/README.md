@@ -63,8 +63,9 @@ After running the download and extraction scripts, the following artifacts are g
 
 ## Documentation
 
-For an in-depth reference including dataset schema details, field definitions, ER diagram, `gds_path` distribution, and layout size statistics, see:
-- **[`docs/dataset_reference.md`](file:///home/ankdesh/explore/build-with-terminator/eda/rule2drc/docs/dataset_reference.md)**
+Comprehensive project documentation:
+- **[`docs/dataset_reference.md`](file:///home/ankdesh/explore/build-with-terminator/eda/rule2drc/docs/dataset_reference.md)**: In-depth Rule2DRC benchmark reference, schema details, ER diagram, `gds_path` distribution, and layout size statistics.
+- **[`docs/sky130_fd_sc_hd_gds_stats.md`](file:///home/ankdesh/explore/build-with-terminator/eda/rule2drc/docs/sky130_fd_sc_hd_gds_stats.md)**: GDSII layout statistics, functional categorization, and size percentiles for the SkyWater SKY130 HD standard cell library.
 
 ## Project Structure
 
@@ -74,11 +75,14 @@ eda/rule2drc/
 ├── README.md                  # Documentation and setup instructions
 ├── pyproject.toml             # Project metadata and dependencies (uv)
 ├── docs/
-│   └── dataset_reference.md   # In-depth dataset reference, schemas & size stats
+│   ├── dataset_reference.md   # In-depth dataset reference, schemas & size stats
+│   └── sky130_fd_sc_hd_gds_stats.md # SkyWater 130nm HD standard cell GDS statistics
 ├── scripts/
 │   ├── download_dataset.py    # Self-contained download & validation script
-│   └── extract_gds.py         # Binary GDS extractor & size statistics analyzer
+│   ├── extract_gds.py         # Binary GDS extractor & size statistics analyzer
+│   └── sky130_gds_stats.py    # SkyWater 130nm HD library GDS statistics collector
 ├── src/                       # Reserved for future benchmark & synthesis modules
 └── data/                      # Downloaded Parquet files and extracted GDS layouts
 ```
+
 
