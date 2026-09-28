@@ -174,19 +174,30 @@ uv run python scripts/extract_gds.py --by-problem
 uv run python scripts/extract_gds.py --overwrite
 ```
 
-### 5.4 Benchmark Directory Materialization (for KLayout Runner)
-When running evaluation scripts from the official benchmark, files can be organized per problem:
-```text
-problems/
-└── {problem_id}/
-    ├── spec.yaml
-    ├── gold/
-    │   └── {problem_id}.drc
-    └── data/
-        └── gds/
-            ├── labels.csv
-            ├── pass/*.gds
-            └── fail/*.gds
+### 5.4 Large Sky130 Production GDS Downloader
+Script: [`scripts/download_large_gds.py`](file:///home/ankdesh/explore/build-with-terminator/eda/rule2drc/scripts/download_large_gds.py)
+```bash
+# Download user_proj_example.gds (~53.4 MB)
+uv run python scripts/download_large_gds.py --targets user_proj_example
+
+# Download full-chip Caravel SoC harness (~54.6 MB gz / ~250 MB raw)
+uv run python scripts/download_large_gds.py --targets caravel
+
+# Download all available production targets
+uv run python scripts/download_large_gds.py --targets all
+```
+
+### 5.5 Master Pipeline Runner (All Assets)
+Script: [`scripts/run_all.py`](file:///home/ankdesh/explore/build-with-terminator/eda/rule2drc/scripts/run_all.py)
+```bash
+# Run all core tasks (Dataset download, GDS extraction, PDK stats)
+uv run python scripts/run_all.py
+
+# Run all tasks including large Sky130 IP download
+uv run python scripts/run_all.py --include-large-gds --large-target user_proj_example
+
+# Dry-run / simulation mode
+uv run python scripts/run_all.py --dry-run
 ```
 
 ---
@@ -201,4 +212,7 @@ problems/
   - Extracted and statistically analyzed all 13,921 binary GDS files into `data/extracted_gds/`.
   - Documented schemas, unique `gds_path` distribution, and size histograms.
   - Analyzed and tabulated GDS layout file statistics for the production **SkyWater 130nm HD standard cell library** (`sky130_fd_sc_hd`, 437 cells, 4.03 MB), documented in [`docs/sky130_fd_sc_hd_gds_stats.md`](file:///home/ankdesh/explore/build-with-terminator/eda/rule2drc/docs/sky130_fd_sc_hd_gds_stats.md).
+  - Implemented [`scripts/download_large_gds.py`](file:///home/ankdesh/explore/build-with-terminator/eda/rule2drc/scripts/download_large_gds.py) to download real-world large Sky130 production GDS layouts (`user_proj_example.gds` and `caravel.gds`).
+  - Implemented [`scripts/run_all.py`](file:///home/ankdesh/explore/build-with-terminator/eda/rule2drc/scripts/run_all.py) to orchestrate and execute all download and extraction scripts.
+
 

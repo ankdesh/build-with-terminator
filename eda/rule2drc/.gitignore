@@ -30,10 +30,14 @@ ENV/
 .mypy_cache/
 .ruff_cache/
 
-# Dataset files
+# Dataset & layout files
 data/
 extracted_gds/
+large_gds/
 *.parquet
+*.gds
+*.gds.gz
 *.tmp
+
 
 

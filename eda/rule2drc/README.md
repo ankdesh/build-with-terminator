@@ -51,6 +51,36 @@ uv run python scripts/extract_gds.py --by-problem
 uv run python scripts/extract_gds.py --output-dir extracted_gds
 ```
 
+## Downloading Large Sky130 Production GDS Layouts
+
+To download full-scale production GDS files (`user_proj_example.gds` ~53 MB or `caravel.gds` ~54 MB gz / ~250 MB raw):
+
+```bash
+# Download user_proj_example.gds
+uv run python scripts/download_large_gds.py --targets user_proj_example
+
+# Download full Caravel SoC harness
+uv run python scripts/download_large_gds.py --targets caravel
+
+# Download all available large targets
+uv run python scripts/download_large_gds.py --targets all
+```
+
+## Running the Master Pipeline
+
+To run all download, extraction, and statistical analysis scripts in a unified sequence:
+
+```bash
+# Run all standard pipeline stages
+uv run python scripts/run_all.py
+
+# Run all pipeline stages including large Sky130 GDS download
+uv run python scripts/run_all.py --include-large-gds --large-target user_proj_example
+
+# Dry-run mode (simulates pipeline execution)
+uv run python scripts/run_all.py --dry-run
+```
+
 ## Dataset Files
 
 After running the download and extraction scripts, the following artifacts are generated:
@@ -60,6 +90,7 @@ After running the download and extraction scripts, the following artifacts are g
 | `data/tasks.parquet` | 1,000 | Task definitions, natural language prompt, rule specs, and gold DRC deck |
 | `data/testcases.parquet` | 13,921 | Labeled GDS layout test cases with pass/fail violation labels |
 | `data/extracted_gds/` | 13,921 | Extracted binary `.gds` layout files (`pass/` and `fail/`) |
+| `data/large_gds/` | 1-2 files | Production-scale Sky130 GDS layouts (`user_proj_example.gds`, `caravel.gds`) |
 
 ## Documentation
 
@@ -78,11 +109,14 @@ eda/rule2drc/
 │   ├── dataset_reference.md   # In-depth dataset reference, schemas & size stats
 │   └── sky130_fd_sc_hd_gds_stats.md # SkyWater 130nm HD standard cell GDS statistics
 ├── scripts/
+│   ├── run_all.py             # Top-level master orchestrator script
 │   ├── download_dataset.py    # Self-contained download & validation script
 │   ├── extract_gds.py         # Binary GDS extractor & size statistics analyzer
-│   └── sky130_gds_stats.py    # SkyWater 130nm HD library GDS statistics collector
+│   ├── sky130_gds_stats.py    # SkyWater 130nm HD library GDS statistics collector
+│   └── download_large_gds.py  # Production Sky130 large GDS downloader
 ├── src/                       # Reserved for future benchmark & synthesis modules
 └── data/                      # Downloaded Parquet files and extracted GDS layouts
 ```
+
 
 
