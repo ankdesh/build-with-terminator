@@ -1,0 +1,21 @@
+[project]
+name = "xls2datasets"
+version = "0.1.0"
+description = "Two-stage pipeline for extracting tables from XLS/XLSX files and generating analysis-ready CSV datasets with LLM-generated schema metadata"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "docling>=2.0.0",
+    "openai>=1.0.0",
+    "pydantic>=2.0.0",
+    "pyyaml>=6.0.0",
+    "pandas>=2.0.0",
+    "openpyxl>=3.1.0",
+]
+
+[project.scripts]
+xls2datasets = "cli:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
