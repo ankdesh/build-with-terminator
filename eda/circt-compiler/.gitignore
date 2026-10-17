@@ -1,0 +1,15 @@
+# Isolated CIRCT source repository (tracked on its own develop-asd branch) and build tree
+external/
+
+# Python / uv environment and caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Simulation artifacts & waveforms
+*.vcd
+*.fst
+sim_build/
