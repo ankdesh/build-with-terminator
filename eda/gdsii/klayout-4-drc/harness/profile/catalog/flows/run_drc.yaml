@@ -1,0 +1,114 @@
+{
+  "id": "klayout.gds_drc_flow",
+  "version": "1.0.0",
+  "description": "Execute KLayout DRC analysis on a GDS layout, generate an intermediate report database, and format the textual violation report.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "gds_path": {
+        "type": "string"
+      },
+      "drc_script_path": {
+        "type": "string"
+      },
+      "output_report_path": {
+        "type": "string"
+      },
+      "output_text_path": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "gds_path",
+      "drc_script_path"
+    ],
+    "additionalProperties": false
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "status": {
+        "type": "string"
+      },
+      "input_gds": {
+        "type": "string"
+      },
+      "drc_script": {
+        "type": "string"
+      },
+      "report_db": {
+        "type": "string"
+      },
+      "text_report_file": {
+        "oneOf": [
+          { "type": "string" },
+          { "type": "null" }
+        ]
+      },
+      "total_violations": {
+        "type": "integer"
+      },
+      "rule_summary": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "integer"
+        }
+      },
+      "textual_report": {
+        "type": "string"
+      },
+      "details": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "required": [
+      "status",
+      "input_gds",
+      "drc_script",
+      "report_db",
+      "total_violations",
+      "rule_summary",
+      "textual_report"
+    ],
+    "additionalProperties": false
+  },
+  "publication": {
+    "toolName": "run_gds_drc",
+    "contexts": [
+      "eda",
+      "drc"
+    ]
+  },
+  "nodes": [
+    {
+      "id": "execute_drc",
+      "kind": "call",
+      "operation": {
+        "id": "klayout.run_drc_and_report",
+        "version": "1.0.0"
+      },
+      "inputs": {
+        "gds_path": {
+          "$ref": "inputs.gds_path"
+        },
+        "drc_script_path": {
+          "$ref": "inputs.drc_script_path"
+        },
+        "output_report_path": {
+          "$ref": "inputs.output_report_path"
+        },
+        "output_text_path": {
+          "$ref": "inputs.output_text_path"
+        }
+      },
+      "next": null,
+      "result": {
+        "$ref": "nodes.execute_drc"
+      }
+    }
+  ],
+  "outputs": {
+    "$ref": "nodes.execute_drc"
+  }
+}

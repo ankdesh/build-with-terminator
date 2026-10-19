@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "defaultProfile": "klayout-drc-headless",
+  "profiles": {
+    "klayout-drc-headless": {
+      "bundles": ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-headless", "@klayout/harness-drc"],
+      "localBundles": ["."],
+      "patchReload": "startup"
+    }
+  },
+  "releaseFiles": [
+    "harness.product.json",
+    "package.json"
+  ]
+}

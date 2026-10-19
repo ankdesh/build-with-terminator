@@ -1,0 +1,14 @@
+source($input)
+report("ASAP7 DRC", $report)
+
+m1 = input(18, 0)
+v1 = input(19, 0)
+
+# M1 Min Width: 18nm
+m1.width(0.018, euclidian).output("M1_W", "M1 minimum width is 18nm")
+
+# M1 Min Spacing: 18nm
+m1.space(0.018, euclidian).output("M1_S", "M1 minimum spacing is 18nm")
+
+# V1 Min Enclosure by M1: 9nm
+v1.enclosed(m1, 0.009, euclidian).output("V1_M1_ENC", "V1 minimum enclosure by M1 is 9nm")

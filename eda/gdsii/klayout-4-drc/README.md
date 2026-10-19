@@ -1,64 +1,155 @@
-# Programmatic DRC with KLayout
+# Programmatic DRC with KLayout & DeepSeek Harness Flow
 
-The setup for executing and fixing Design Rule Checks (DRC) using the KLayout API and command line engine is complete. The implementation correctly fulfills your request to use standard KLayout native DRC runsets for analysis and the python programming interface for repairing violations.
+This repository provides an automated, programmatic pipeline for executing Design Rule Checking (DRC) on GDSII layouts using KLayout, generating structured intermediate violation databases (`.lyrdb`), creating human-readable textual reports, and exposing the entire workflow as a reusable flow within the **DeepSeek Harness** (`dsh`) flow subsystem.
 
-## What Was Done
+---
 
-We developed a robust four-step workflow using the ASAP7 open-source PDK rules (7nm):
+## Architecture Overview
 
-1. **Test Layout Generation (`create_sample_layout.py`)**
-   A script utilizing `klayout.db` to generate a test GDS (`asap7_test.gds`) containing predefined M1 and V1 shapes with intentional DRC violations (narrow wires, close wires, and unenclosed vias).
+The system is organized into two decoupled tiers:
 
-2. **Native KLayout DRC (`asap7_mini.drc`)**
-   A standard KLayout Ruby-based DRC script was created to evaluate three fundamental ASAP7 design rules:
-   - **Width**: M1 >= 18nm
-   - **Spacing**: M1 >= 18nm
-   - **Enclosure**: V1 enclosed by M1 >= 9nm
+1. **Python DRC Core (`src/klayout_drc/`)**:
+   - Executes KLayout in headless batch mode (`klayout -b -r <deck> -rd input=<gds> -rd report=<lyrdb>`).
+   - Parses the XML report database (`.lyrdb`) and extracts per-category violation counts and geometric coordinates (edge-pairs, boxes, polygons).
+   - Produces formatted human-readable reports and machine-readable structured JSON summaries.
+   - Provides programmatic geometric healing for ASAP7 M1/V1 violations using `klayout.db.Region` operations.
 
-3. **Analysis Execution (`run_drc.py`)**
-   A Python script that executes the KLayout binary in batch-mode `klayout -b -r asap7_mini.drc` and parses the generated report database (`.lyrdb`) to print a clean summary.
+2. **Harness Flow Subsystem (`harness/`)**:
+   - Implements a local DeepSeek Harness product bundle (`@klayout/harness-drc`).
+   - Links to local DeepSeek Harness packages (`/home/ankdesh/explore/deepseek-harness`) without modifying the harness repository.
+   - Registers the `klayout.gds_drc_flow` flow definition and `klayout.run_drc_and_report` operation.
+   - Provides both a standalone CLI flow runner (`npm run flow:drc`) and product profile configurations for headless and interactive execution.
 
-4. **Programmatic Fixing (`drc_fix.py`)**
-   A pure-Python script that loads the violated GDS and directly employs the `klayout.db.Region` geometric API to programmatically fix the violations without manual intervention:
-   - *Enclosure Fix*: `m1_reg = m1_reg | v1_reg.sized(9)`
-   - *Spacing Fix*: `m1_reg = m1_reg.sized(9).sized(-9)`
-   - *Width Fix*: `m1_reg = m1_reg | m1_reg.width_check(18).polygons(0).sized(5)`
+---
+
+## Directory Structure
+
+```
+klayout-4-drc/
+├── pyproject.toml                     # Python package & CLI configuration (uv)
+├── uv.lock                            # Deterministic uv lockfile
+├── GEMINI.md                          # Project constitution & design principles
+├── README.md                          # This documentation
+├── src/
+│   └── klayout_drc/
+│       ├── __init__.py                # Package exports
+│       ├── config.py                  # Hoisted constants, paths, and exceptions
+│       ├── runner.py                  # Headless KLayout batch process runner
+│       ├── parser.py                  # Report database (.lyrdb) parser
+│       ├── reporter.py                # Human-readable & structured reporter
+│       ├── fixer.py                   # Automated layout repair logic
+│       └── cli.py                     # Unified CLI entry point
+├── test_data/
+│   ├── layouts/
+│   │   ├── asap7_test.gds             # Sample GDS with intentional violations
+│   │   ├── asap7_fixed.gds            # Sample repaired GDS
+│   │   └── create_sample_layout.py    # Generator for test layout
+│   └── rules/
+│       └── asap7_mini.drc             # ASAP7 7nm mini DRC deck
+├── reports/                           # Output directory for generated reports
+│   ├── drc_violations.lyrdb           # Intermediate KLayout report database
+│   └── drc_report.txt                 # Formatted textual report
+├── tests/
+│   └── test_drc_pipeline.py          # End-to-end integration test suite
+└── harness/                           # DeepSeek Harness integration bundle
+    ├── package.json                   # Bundle package manifest
+    ├── harness.product.json           # Harness product profile configuration
+    ├── tsconfig.json                  # TypeScript configuration
+    ├── scripts/
+    │   ├── link-harness.mjs           # Safe compile-time symlink manager
+    │   └── run-flow.mjs               # Standalone Flow CLI runner
+    ├── profile/
+    │   ├── cordis.patch.yml           # Cordis profile configuration
+    │   └── catalog/
+    │       └── flows/
+    │           └── run_drc.yaml       # Declarative flow specification
+    └── src/
+        ├── index.ts                   # Cordis plugin entry point
+        ├── drc-operations.ts          # Flow operation registration
+        └── types.ts                   # Input/output schemas
+```
+
+---
+
+## Quickstart & Usage
+
+### 1. Python DRC Pipeline (`uv`)
+
+Run the complete DRC check and generate textual reports directly via Python:
+
+```bash
+# Execute DRC on default sample layout
+uv run klayout-drc
+
+# Output structured JSON for machine integration
+uv run klayout-drc --json
+
+# Run against custom layout and rule deck
+uv run klayout-drc --gds test_data/layouts/asap7_test.gds --deck test_data/rules/asap7_mini.drc
+
+# Automatically repair violations and write healed GDS
+uv run klayout-drc --gds test_data/layouts/asap7_test.gds --fix-output test_data/layouts/my_healed.gds
+```
+
+### 2. DeepSeek Harness Flow Execution
+
+Run the flow through the Harness runtime from the project root or from `harness/`:
+
+```bash
+# From project root:
+node harness/scripts/run-flow.mjs
+
+# Or from harness/ directory:
+cd harness
+npm run flow:drc
+
+# Execute flow with custom arguments:
+node scripts/run-flow.mjs --gds ../test_data/layouts/asap7_fixed.gds
+```
+
+### 3. Run Automated Tests
+
+Execute the end-to-end test suite verifying violation detection, report formatting, and automated healing:
+
+```bash
+uv run pytest
+```
+
+---
 
 ## Verification Results
 
-The test chain was executed and verified end-to-end:
-
-### Initial State (`asap7_test.gds`)
+### Initial Layout (`asap7_test.gds`)
 ```text
-=== DRC Violations Summary ===
+=== DRC Violations Details ===
+Source: /home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/drc_violations.lyrdb
+
 Rule: M1_W - M1 minimum width is 18nm
-  -> 1 violation(s) found.
+  -> 1 violation(s) found:
+    Violation 1 (Cell: TOP):
+      Edge pair: (0,0;0,0.1)|(0.01,0.1;0.01,0)
+
 Rule: M1_S - M1 minimum spacing is 18nm
-  -> 1 violation(s) found.
+  -> 1 violation(s) found:
+    Violation 1 (Cell: TOP):
+      Edge pair: (0.13,0;0.13,0.1)|(0.12,0.1;0.12,0)
+
 Rule: V1_M1_ENC - V1 minimum enclosure by M1 is 9nm
-  -> 6 violation(s) found.
+  -> 6 violation(s) found:
+    Violation 1 (Cell: TOP):
+      Edge pair: (0.218,0.018;0.218,0)/(0.218,0.018;0.218,0)
+    ...
 ==============================
 Total Violations: 8
 ```
 
-### Fixed State (`asap7_fixed.gds`)
-After `drc_fix.py` ran, we executed the DRC checks again on the output to prove the fixes worked:
-
+### Repaired Layout (`asap7_fixed.gds`)
 ```text
-=== DRC Violations Summary ===
-Rule: M1_W - M1 minimum width is 18nm
-  -> 0 violation(s) found.
-Rule: M1_S - M1 minimum spacing is 18nm
-  -> 0 violation(s) found.
-Rule: V1_M1_ENC - V1 minimum enclosure by M1 is 9nm
-  -> 0 violation(s) found.
+=== DRC Violations Details ===
+Source: /home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/fixed_drc_violations.lyrdb
+
+No DRC violations found.
+
 ==============================
 Total Violations: 0
 ```
-
-> [!TIP]
-> You can re-run this exact sequence by executing:
-> `uv run python create_sample_layout.py`
-> `uv run python run_drc.py`
-> `uv run python drc_fix.py`
-> `uv run python run_drc.py asap7_fixed.gds fixed_drc_violations.lyrdb`

@@ -1,0 +1,6 @@
+# KLayout DRC profile patch
+- id: system-prompt
+  config:
+    includeHarnessIdentity: false
+    includeRuntimeContext: false
+    personaPrefix: "You are an automated EDA DRC verification agent."
