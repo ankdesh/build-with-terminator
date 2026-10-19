@@ -1,21 +1,33 @@
 {
   "id": "klayout.gds_drc_flow",
   "version": "1.0.0",
-  "description": "Execute KLayout DRC analysis on a GDS layout, generate an intermediate report database, and format the textual violation report.",
+  "description": "Execute KLayout DRC, extract multi-modal context (DRC rules, GDS layout sections, violation tables, knowledge base), and invoke an LLM agent to synthesize a Python repair script.",
   "inputSchema": {
     "type": "object",
     "properties": {
       "gds_path": {
-        "type": "string"
+        "type": "string",
+        "description": "Path to input GDS layout"
       },
       "drc_script_path": {
-        "type": "string"
+        "type": "string",
+        "description": "Path to KLayout DRC deck"
       },
       "output_report_path": {
-        "type": "string"
+        "type": "string",
+        "description": "Optional output path for .lyrdb"
       },
       "output_text_path": {
-        "type": "string"
+        "type": "string",
+        "description": "Optional output path for textual report"
+      },
+      "knowledge_dir": {
+        "type": "string",
+        "description": "Optional path to markdown knowledge base directory"
+      },
+      "output_script_path": {
+        "type": "string",
+        "description": "Optional destination path for generated Python fix script"
       }
     },
     "required": [
@@ -27,49 +39,16 @@
   "outputSchema": {
     "type": "object",
     "properties": {
+      "saved_path": {
+        "type": "string"
+      },
       "status": {
         "type": "string"
-      },
-      "input_gds": {
-        "type": "string"
-      },
-      "drc_script": {
-        "type": "string"
-      },
-      "report_db": {
-        "type": "string"
-      },
-      "text_report_file": {
-        "oneOf": [
-          { "type": "string" },
-          { "type": "null" }
-        ]
-      },
-      "total_violations": {
-        "type": "integer"
-      },
-      "rule_summary": {
-        "type": "object",
-        "additionalProperties": {
-          "type": "integer"
-        }
-      },
-      "textual_report": {
-        "type": "string"
-      },
-      "details": {
-        "type": "object",
-        "additionalProperties": true
       }
     },
     "required": [
-      "status",
-      "input_gds",
-      "drc_script",
-      "report_db",
-      "total_violations",
-      "rule_summary",
-      "textual_report"
+      "saved_path",
+      "status"
     ],
     "additionalProperties": false
   },
@@ -82,10 +61,10 @@
   },
   "nodes": [
     {
-      "id": "execute_drc",
+      "id": "run_drc",
       "kind": "call",
       "operation": {
-        "id": "klayout.run_drc_and_report",
+        "id": "klayout.run_drc",
         "version": "1.0.0"
       },
       "inputs": {
@@ -97,18 +76,127 @@
         },
         "output_report_path": {
           "$ref": "inputs.output_report_path"
+        }
+      }
+    },
+    {
+      "id": "violation_ctx",
+      "kind": "call",
+      "operation": {
+        "id": "klayout.process_violation_context",
+        "version": "1.0.0"
+      },
+      "inputs": {
+        "report_db": {
+          "$ref": "nodes.run_drc.report_db"
         },
         "output_text_path": {
           "$ref": "inputs.output_text_path"
         }
+      }
+    },
+    {
+      "id": "drc_ctx",
+      "kind": "call",
+      "operation": {
+        "id": "klayout.process_drc_context",
+        "version": "1.0.0"
+      },
+      "inputs": {
+        "drc_script_path": {
+          "$ref": "inputs.drc_script_path"
+        },
+        "report_db": {
+          "$ref": "nodes.run_drc.report_db"
+        }
+      }
+    },
+    {
+      "id": "gds_ctx",
+      "kind": "call",
+      "operation": {
+        "id": "klayout.process_gds_context",
+        "version": "1.0.0"
+      },
+      "inputs": {
+        "gds_path": {
+          "$ref": "inputs.gds_path"
+        },
+        "report_db": {
+          "$ref": "nodes.run_drc.report_db"
+        }
+      }
+    },
+    {
+      "id": "load_knowledge",
+      "kind": "call",
+      "operation": {
+        "id": "klayout.load_knowledge",
+        "version": "1.0.0"
+      },
+      "inputs": {
+        "knowledge_dir": {
+          "$ref": "inputs.knowledge_dir"
+        }
+      }
+    },
+    {
+      "id": "agent_llm",
+      "kind": "model",
+      "instructionsFile": "generate_fix.md",
+      "inputs": {
+        "violations": {
+          "$ref": "nodes.violation_ctx.violations_text"
+        },
+        "drc_rules": {
+          "$ref": "nodes.drc_ctx.drc_rules_text"
+        },
+        "gds_sections": {
+          "$ref": "nodes.gds_ctx.gds_sections_text"
+        },
+        "knowledge": {
+          "$ref": "nodes.load_knowledge.knowledge_text"
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "python_script": {
+            "type": "string"
+          },
+          "rationale": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "python_script",
+          "rationale"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "id": "save_script",
+      "kind": "call",
+      "operation": {
+        "id": "klayout.save_script",
+        "version": "1.0.0"
+      },
+      "inputs": {
+        "script_content": {
+          "$ref": "nodes.agent_llm.python_script"
+        },
+        "output_path": {
+          "$ref": "inputs.output_script_path"
+        }
       },
       "next": null,
       "result": {
-        "$ref": "nodes.execute_drc"
+        "$ref": "nodes.save_script"
       }
     }
   ],
   "outputs": {
-    "$ref": "nodes.execute_drc"
+    "$ref": "nodes.save_script"
   }
 }

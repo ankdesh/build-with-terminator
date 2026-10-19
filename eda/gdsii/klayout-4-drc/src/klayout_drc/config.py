@@ -26,6 +26,12 @@ DEFAULT_GDS_PATH: Final[Path] = DEFAULT_LAYOUTS_DIR / "asap7_test.gds"
 DEFAULT_DRC_SCRIPT_PATH: Final[Path] = DEFAULT_RULES_DIR / "asap7_mini.drc"
 DEFAULT_REPORT_DB_PATH: Final[Path] = DEFAULT_REPORTS_DIR / "drc_violations.lyrdb"
 DEFAULT_TEXT_REPORT_PATH: Final[Path] = DEFAULT_REPORTS_DIR / "drc_report.txt"
+DEFAULT_KNOWLEDGE_DIR: Final[Path] = PROJECT_ROOT / "knowledge"
+DEFAULT_FIX_SCRIPT_PATH: Final[Path] = DEFAULT_REPORTS_DIR / "fix_layout.py"
+
+# Layout Context Extraction Settings
+DEFAULT_WINDOW_HALO_UM: Final[float] = 0.100  # 100 nm window margin around violation markers
+ASAP7_DBU_UM: Final[float] = 0.00025          # 0.25 nm database unit
 
 # ASAP7 PDK Layer Definitions (Layer, Datatype)
 LAYER_M1: Final[tuple[int, int]] = (18, 0)
