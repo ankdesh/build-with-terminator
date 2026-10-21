@@ -205,21 +205,25 @@ if __name__ == "__main__":
     ].join("\n");
 
     console.log(`  -> Invoking LLM (${model})...`);
+    const payload = {
+      model,
+      response_format: { type: "json_object" },
+      messages: [
+        { role: "system", content: "You are an expert EDA Physical Verification and DRC Remediation Engineer." },
+        { role: "user", content: prompt }
+      ],
+    };
+    if (process.env.OPENAI_TEMPERATURE) {
+      payload.temperature = parseFloat(process.env.OPENAI_TEMPERATURE);
+    }
+
     const resp = await fetch(endpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${apiKey}`,
       },
-      body: JSON.stringify({
-        model,
-        response_format: { type: "json_object" },
-        messages: [
-          { role: "system", content: "You are an expert EDA Physical Verification and DRC Remediation Engineer." },
-          { role: "user", content: prompt }
-        ],
-        temperature: 0.1,
-      }),
+      body: JSON.stringify(payload),
     });
 
     if (!resp.ok) {
