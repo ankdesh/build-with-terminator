@@ -61,4 +61,4 @@ This directory contains verified Design Rule Check (DRC) runsets for KLayout hea
   - `M2.W.1`: Minimum M2 width (18 nm)
   - `M1.A.1`: Minimum M1 area (504 nm²)
   - `M1.S.1`: Minimum M1 spacing for parallel edges > 36 nm (18 nm)
-  - `V1.M1.EN.1`: Minimum V1 enclosure by M1 on opposite sides (5 nm & 2 nm)
+  - `V1.W.1`: Minimum V1 width (18 nm)

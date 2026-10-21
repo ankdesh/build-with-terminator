@@ -18,7 +18,7 @@
  <text>
 # Curated BEOL DRC subset for ASAP7
 # Based on OpenROAD asap7.lydrc (BSD 2-Clause License, Copyright (c) 2021, laurentc2)
-# Covers 5 audited rule families: M1.W.1, M2.W.1, M1.A.1, M1.S.1, V1.M1.EN.1
+# Covers 5 audited rule families: M1.W.1, M2.W.1, M1.A.1, M1.S.1, V1.W.1
 
 if $in_gds
   source($in_gds)
@@ -51,10 +51,7 @@ m1.with_area(0 .. 0.000504).output("M1.A.1", "M1.A.1 : Min. area of M1 : 504nm2"
 # 4. M1.S.1: Minimum spacing between two M1 edges when both edges &gt; 36nm (18nm)
 m1.space(18.nm).polygons.not_interacting(m1.edges.with_length(0..36.nm)).output("M1.S.1", "M1.S.1 : Min. spacing between two M1' edges, when both edges are &gt; 36 nm : 18nm")
 
-# 5. V1.M1.EN.1: Minimum enclosure of V1 by M1 on at least two opposite sides (5nm &amp; 2nm)
-m1ovlp5v1 = (m1 &amp; v1.sized(5.nm) - v1).sized(-2.5.nm+1.dbu).sized(2.5.nm-1.dbu)
-v1.interacting(m1.enclosing(v1, 2.nm, projection, two_connected_sides_allowed).edges - m1.enclosing(v1, 2.nm, projection, one_side_allowed).edges).output("V1.M1.EN.1", "V1.M1.EN.1 : Min. enclosure of V1 by M1 on at least two opposite sides  : 5nm &amp; 2nm")
-v1.interacting(m1.enclosing(v1, 5.nm, projection, two_connected_sides_allowed).edges - m1.enclosing(v1, 5.nm, projection, one_side_allowed).edges).not_interacting(m1ovlp5v1.sized(1.dbu)).output("V1.M1.EN.1", "V1.M1.EN.1 : Min. enclosure of V1 by M1 on at least two opposite sides  : 5nm &amp; 2nm")
-m1ovlp5v1.forget
+# 5. V1.W.1: Minimum width of V1 (18nm)
+v1.width(18.nm).output("V1.W.1", "V1.W.1 : Min. width of V1 : 18nm")
 </text>
 </klayout-macro>

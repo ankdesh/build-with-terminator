@@ -153,7 +153,8 @@ class DRCParser:
 
         categories: list[RuleCategory] = []
         for cat in report.each_category():
-            rule_cat = RuleCategory(name=cat.name(), description=cat.description or "")
+            cat_name = cat.name().strip("'\"")
+            rule_cat = RuleCategory(name=cat_name, description=cat.description or "")
             items = [item for item in report.each_item() if item.category_id() == cat.rdb_id()]
             
             for idx, item in enumerate(items, 1):
@@ -167,7 +168,7 @@ class DRCParser:
 
                 v_item = ViolationItem(
                     item_id=idx,
-                    category_name=cat.name(),
+                    category_name=cat_name,
                     cell_name=cell_name,
                 )
 
