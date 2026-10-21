@@ -26,6 +26,9 @@ class DRCProfile:
     extra_params: dict[str, str] = field(default_factory=dict)
     layers: dict[str, tuple[int, int]] = field(default_factory=dict)
     dbu_um: float = 0.001
+    manufacturing_grid_um: float = 0.00025
+    editable_layers: tuple[str, ...] = ("M1", "V1")
+    protected_cells: tuple[str, ...] = ()
 
     def validate(self) -> None:
         """Validate profile parameters and ensure deck file exists."""
@@ -51,17 +54,43 @@ class DRCProfileManager:
             param_report="report",
             layers={"M1": (18, 0), "V1": (19, 0)},
             dbu_um=0.001,
+            manufacturing_grid_um=0.001,
+            editable_layers=("M1", "V1"),
         )
         self.register_profile(legacy_mini)
 
-        asap7_public = DRCProfile(
-            name="asap7_public_full",
-            description="Public ASAP7 KLayout DRC deck with authentic PDK layer conventions",
-            deck_path=DEFAULT_RULES_DIR / "drc_ASAP7.lydrc",
+        asap7_curated = DRCProfile(
+            name="asap7_curated",
+            description="Audited subset of 5 BEOL rule families with authentic layer conventions",
+            deck_path=DEFAULT_RULES_DIR / "asap7_curated.lydrc",
             param_in_gds="in_gds",
             param_report="report_file",
             layers={"V0": (18, 0), "M1": (19, 0), "M2": (20, 0), "V1": (21, 0)},
             dbu_um=0.00025,
+            manufacturing_grid_um=0.00025,
+            editable_layers=("V0", "M1", "M2", "V1"),
+        )
+        self.register_profile(asap7_curated)
+
+        asap7_public = DRCProfile(
+            name="asap7_public_full",
+            description="Public ASAP7 KLayout DRC deck with authentic PDK layer conventions",
+            deck_path=DEFAULT_RULES_DIR / "asap7.lydrc",
+            param_in_gds="in_gds",
+            param_report="report_file",
+            layers={
+                "V0": (18, 0),
+                "M1": (19, 0),
+                "M2": (20, 0),
+                "V1": (21, 0),
+                "V2": (25, 0),
+                "M3": (30, 0),
+                "V3": (35, 0),
+                "M4": (40, 0),
+            },
+            dbu_um=0.00025,
+            manufacturing_grid_um=0.00025,
+            editable_layers=("V0", "M1", "M2", "V1", "V2", "M3", "V3", "M4"),
         )
         self.register_profile(asap7_public)
 
@@ -120,6 +149,9 @@ class DRCProfileManager:
         layers_raw = data.get("layers", {})
         layers = {k: tuple(v) for k, v in layers_raw.items()}
 
+        editable_layers = tuple(data.get("editable_layers", ("M1", "V1")))
+        protected_cells = tuple(data.get("protected_cells", ()))
+
         profile = DRCProfile(
             name=data["name"],
             description=data.get("description", ""),
@@ -129,6 +161,9 @@ class DRCProfileManager:
             extra_params=data.get("extra_params", {}),
             layers=layers,
             dbu_um=float(data.get("dbu_um", 0.001)),
+            manufacturing_grid_um=float(data.get("manufacturing_grid_um", 0.00025)),
+            editable_layers=editable_layers,
+            protected_cells=protected_cells,
         )
         self.register_profile(profile)
         return profile

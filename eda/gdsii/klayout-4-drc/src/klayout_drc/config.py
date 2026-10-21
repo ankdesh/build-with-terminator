@@ -33,15 +33,30 @@ DEFAULT_FIX_SCRIPT_PATH: Final[Path] = DEFAULT_REPORTS_DIR / "fix_layout.py"
 # Layout Context Extraction Settings
 DEFAULT_WINDOW_HALO_UM: Final[float] = 0.100  # 100 nm window margin around violation markers
 ASAP7_DBU_UM: Final[float] = 0.00025          # 0.25 nm database unit
+ASAP7_MANUFACTURING_GRID_UM: Final[float] = 0.00025  # 0.25 nm manufacturing grid
 
-# ASAP7 PDK Layer Definitions (Layer, Datatype)
-LAYER_M1: Final[tuple[int, int]] = (18, 0)
-LAYER_V1: Final[tuple[int, int]] = (19, 0)
+# Authentic ASAP7 PDK Layer Definitions (Layer, Datatype)
+ASAP7_LAYER_V0: Final[tuple[int, int]] = (18, 0)
+ASAP7_LAYER_M1: Final[tuple[int, int]] = (19, 0)
+ASAP7_LAYER_M2: Final[tuple[int, int]] = (20, 0)
+ASAP7_LAYER_V1: Final[tuple[int, int]] = (21, 0)
+ASAP7_LAYER_V2: Final[tuple[int, int]] = (25, 0)
+ASAP7_LAYER_M3: Final[tuple[int, int]] = (30, 0)
+
+# Legacy Mini Synthetic PDK Layer Definitions (Maintained for Phase A regressions)
+LEGACY_MINI_LAYER_M1: Final[tuple[int, int]] = (18, 0)
+LEGACY_MINI_LAYER_V1: Final[tuple[int, int]] = (19, 0)
+LAYER_M1: Final[tuple[int, int]] = LEGACY_MINI_LAYER_M1
+LAYER_V1: Final[tuple[int, int]] = LEGACY_MINI_LAYER_V1
 
 # ASAP7 Geometric Rule Thresholds (in micrometers)
 ASAP7_M1_MIN_WIDTH_UM: Final[float] = 0.018
+ASAP7_M2_MIN_WIDTH_UM: Final[float] = 0.018
+ASAP7_M1_MIN_AREA_UM2: Final[float] = 0.000504
 ASAP7_M1_MIN_SPACING_UM: Final[float] = 0.018
-ASAP7_V1_M1_MIN_ENCLOSURE_UM: Final[float] = 0.009
+ASAP7_V1_M1_MIN_ENCLOSURE_SIDE_UM: Final[float] = 0.002
+ASAP7_V1_M1_MIN_ENCLOSURE_END_UM: Final[float] = 0.005
+ASAP7_V1_M1_MIN_ENCLOSURE_UM: Final[float] = 0.009  # Legacy mini threshold
 
 
 class DRCError(Exception):
