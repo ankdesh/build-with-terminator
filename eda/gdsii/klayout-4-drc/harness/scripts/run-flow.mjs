@@ -36,6 +36,7 @@ const reportDbPath = getArg("--report-db", resolve(projectRoot, "reports/drc_vio
 const textReportPath = getArg("--text-report", resolve(projectRoot, "reports/drc_report.txt"));
 const kbDir = getArg("--knowledge-dir", resolve(projectRoot, "knowledge"));
 const outputScriptPath = getArg("--output-script", resolve(projectRoot, "reports/fix_layout.py"));
+const isHeuristicMode = args.includes("--heuristic");
 
 console.log("===============================================================================");
 console.log("DeepSeek Harness Flow: KLayout DRC -> Context -> LLM Layout Repair Synthesis");
@@ -116,82 +117,17 @@ async function main() {
   });
   console.log(`  -> Knowledge context loaded: ${kbResult.knowledge_text.length} chars`);
 
-  // Node 6: Agent (LLM) Synthesis
-  console.log("[Node 6/7] Synthesizing repair script via Model Phase...");
-  
+  // Node 6: Candidate Synthesis
   let pythonScript = "";
   let rationale = "";
 
-  const openaiApiKey = process.env.OPENAI_API_KEY;
-  const deepseekApiKey = process.env.DEEPSEEK_API_KEY;
-
-  if (openaiApiKey || deepseekApiKey) {
-    const isDeepSeek = Boolean(deepseekApiKey);
-    const endpoint = isDeepSeek 
-      ? "https://api.deepseek.com/chat/completions" 
-      : "https://api.openai.com/v1/chat/completions";
-    const model = isDeepSeek ? "deepseek-coder" : "gpt-4o-mini";
-    const apiKey = isDeepSeek ? deepseekApiKey : openaiApiKey;
-
-    const instructionsFile = resolve(productRoot, "profile/catalog/flows/generate_fix.md");
-    const instructions = existsSync(instructionsFile) 
-      ? readFileSync(instructionsFile, "utf-8") 
-      : "You are an automated EDA layout repair assistant.";
-
-    const prompt = [
-      instructions,
-      "\n### CONTEXT 1: DRC VIOLATIONS\n",
-      violResult.violations_text,
-      "\n### CONTEXT 2: EXTRACTED DRC RULES\n",
-      drcCtxResult.drc_rules_text,
-      "\n### CONTEXT 3: GDS LAYOUT LOCAL SECTIONS\n",
-      gdsCtxResult.gds_sections_text,
-      "\n### CONTEXT 4: DOMAIN KNOWLEDGE BASE\n",
-      kbResult.knowledge_text,
-      "\nRespond strictly with a JSON object: {\"python_script\": \"...\", \"rationale\": \"...\"}"
-    ].join("\n");
-
-    try {
-      console.log(`  -> Invoking LLM (${model})...`);
-      const resp = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-          model,
-          response_format: { type: "json_object" },
-          messages: [
-            { role: "system", content: "You are an expert EDA Physical Verification and DRC Remediation Engineer." },
-            { role: "user", content: prompt }
-          ],
-          temperature: 0.1,
-        }),
-      });
-
-      if (resp.ok) {
-        const data = await resp.json();
-        const content = JSON.parse(data.choices[0].message.content);
-        pythonScript = content.python_script;
-        rationale = content.rationale;
-        console.log(`  -> LLM synthesis succeeded! Rationale: ${rationale}`);
-      } else {
-        console.warn(`  -> LLM HTTP response ${resp.status}, falling back to knowledge base recipe.`);
-      }
-    } catch (llmErr) {
-      console.warn(`  -> LLM call failed (${llmErr.message}), falling back to knowledge base recipe.`);
-    }
-  }
-
-  // Fallback to deterministic synthesis from knowledge base if LLM call was skipped or failed
-  if (!pythonScript) {
-    console.log("  -> Using domain knowledge geometric recipe for ASAP7 repair...");
+  if (isHeuristicMode) {
+    console.log("[Node 6/7] Synthesizing repair script via Heuristic Baseline Mode...");
     rationale = "Applied ASAP7 rules: Dilated M1 by 16 DBU for min-width, padded V1 by 36 DBU (9nm) for enclosure, and subtracted spacing keepouts.";
     pythonScript = `#!/usr/bin/env python3
 """Automated KLayout DRC Geometric Layout Repair Script.
 
-Generated from Flow: klayout.gds_drc_flow
+Generated from Flow: klayout.gds_drc_flow (Heuristic Baseline)
 Target: ASAP7 PDK M1 (18/0) and V1 (19/0)
 """
 import sys
@@ -222,9 +158,6 @@ def fix_layout(input_gds: str, output_gds: str) -> None:
     v1_pad = v1_region.sized(36)
     healed_m1 = m1_region + v1_pad
 
-    # 2. Width fix: expand narrow M1 features (< 18nm / 72 DBU)
-    # 3. Spacing fix: resolve spacing (< 18nm / 72 DBU)
-    # Apply clean replacement
     m1_shapes.clear()
     m1_shapes.insert(healed_m1)
 
@@ -238,6 +171,69 @@ if __name__ == "__main__":
     out_file = sys.argv[2] if len(sys.argv) > 2 else "${resolve(projectRoot, 'reports/fixed_layout.gds')}"
     fix_layout(in_file, out_file)
 `;
+  } else {
+    console.log("[Node 6/7] Synthesizing repair script via Model Phase (Agent)...");
+
+    const openaiApiKey = process.env.OPENAI_API_KEY;
+    const deepseekApiKey = process.env.DEEPSEEK_API_KEY;
+
+    if (!openaiApiKey && !deepseekApiKey) {
+      throw new Error("Missing LLM API Key: neither OPENAI_API_KEY nor DEEPSEEK_API_KEY is configured.");
+    }
+
+    const isDeepSeek = Boolean(deepseekApiKey);
+    const endpoint = isDeepSeek 
+      ? "https://api.deepseek.com/chat/completions" 
+      : "https://api.openai.com/v1/chat/completions";
+    const model = isDeepSeek ? "deepseek-coder" : "gpt-4o-mini";
+    const apiKey = isDeepSeek ? deepseekApiKey : openaiApiKey;
+
+    const instructionsFile = resolve(productRoot, "profile/catalog/flows/generate_fix.md");
+    const instructions = existsSync(instructionsFile) 
+      ? readFileSync(instructionsFile, "utf-8") 
+      : "You are an automated EDA layout repair assistant.";
+
+    const prompt = [
+      instructions,
+      "\n### CONTEXT 1: DRC VIOLATIONS\n",
+      violResult.violations_text,
+      "\n### CONTEXT 2: EXTRACTED DRC RULES\n",
+      drcCtxResult.drc_rules_text,
+      "\n### CONTEXT 3: GDS LAYOUT LOCAL SECTIONS\n",
+      gdsCtxResult.gds_sections_text,
+      "\n### CONTEXT 4: DOMAIN KNOWLEDGE BASE\n",
+      kbResult.knowledge_text,
+      "\nRespond strictly with a JSON object: {\"python_script\": \"...\", \"rationale\": \"...\"}"
+    ].join("\n");
+
+    console.log(`  -> Invoking LLM (${model})...`);
+    const resp = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model,
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: "You are an expert EDA Physical Verification and DRC Remediation Engineer." },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0.1,
+      }),
+    });
+
+    if (!resp.ok) {
+      const errText = await resp.text();
+      throw new Error(`LLM API returned HTTP ${resp.status}: ${errText}`);
+    }
+
+    const data = await resp.json();
+    const content = JSON.parse(data.choices[0].message.content);
+    pythonScript = content.python_script;
+    rationale = content.rationale;
+    console.log(`  -> LLM synthesis succeeded! Rationale: ${rationale}`);
   }
 
   // Node 7: klayout.save_script

@@ -17,6 +17,7 @@ from .config import (
     DEFAULT_REPORT_DB_PATH,
     DEFAULT_TEXT_REPORT_PATH,
     DEFAULT_WINDOW_HALO_UM,
+    DEFAULT_RUNS_DIR,
     DRCJobConfig,
     DRCError,
     DRCConfigurationError,
@@ -28,6 +29,8 @@ from .fixer import DRCFixer
 from .drc_context import DRCContextProcessor
 from .gds_context import GDSContextProcessor
 from .knowledge_loader import KnowledgeLoader
+from .run_manifest import RunSpec
+from .single_shot import SingleShotOrchestrator
 
 
 def run_pipeline(
@@ -171,6 +174,47 @@ def execute_save_script(script_content: str, output_path: Path) -> dict:
     }
 
 
+def execute_single_shot(
+    input_gds: Path,
+    drc_script: Path,
+    profile_name: str = "legacy_mini",
+    candidate_mode: str = "heuristic",
+    candidate_script: Path | None = None,
+    run_id: str | None = None,
+    runs_dir: Path = DEFAULT_RUNS_DIR,
+) -> dict:
+    """Execute single-shot evaluation: preflight DRC -> apply patch -> validate -> recheck -> report."""
+    spec = RunSpec(
+        case_name=input_gds.stem,
+        input_gds=input_gds,
+        drc_script=drc_script,
+        profile_name=profile_name,
+        candidate_mode=candidate_mode,
+        candidate_script=candidate_script,
+        run_id=run_id,
+        output_root=runs_dir,
+    )
+    orchestrator = SingleShotOrchestrator(spec)
+    summary = orchestrator.run()
+
+    return {
+        "status": "success" if summary.verdict == "success_geometry_only" else summary.verdict,
+        "run_id": orchestrator.manifest_manager.run_id,
+        "run_dir": str(orchestrator.paths.run_dir),
+        "verdict": summary.verdict,
+        "validation_level": summary.validation_level,
+        "total_violations_before": summary.total_before,
+        "total_violations_after": summary.total_after,
+        "violations_before": summary.violations_before,
+        "violations_after": summary.violations_after,
+        "execution_status": summary.execution_result.status,
+        "execution_duration": round(summary.execution_result.duration_seconds, 3),
+        "error_message": summary.error_message,
+        "report_md_file": str(orchestrator.paths.report_md),
+        "results_json_file": str(orchestrator.paths.results_json),
+    }
+
+
 def main() -> int:
     """CLI entry point."""
     parser = argparse.ArgumentParser(
@@ -178,7 +222,7 @@ def main() -> int:
     )
     parser.add_argument(
         "--mode",
-        choices=["full", "run-drc", "violation-ctx", "drc-ctx", "gds-ctx", "load-knowledge", "save-script"],
+        choices=["full", "single-shot", "run-drc", "violation-ctx", "drc-ctx", "gds-ctx", "load-knowledge", "save-script"],
         default="full",
         help="Pipeline mode to execute (default: %(default)s)",
     )
@@ -244,11 +288,48 @@ def main() -> int:
         type=Path,
         help="If specified (in full mode), programmatically repair violations and output healed GDS.",
     )
+    parser.add_argument(
+        "--candidate-mode",
+        choices=["script_file", "heuristic", "agent"],
+        default="heuristic",
+        help="Repair candidate source mode for single-shot evaluation (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--candidate-script",
+        type=Path,
+        help="Path to pre-existing Python repair script when using --candidate-mode script_file",
+    )
+    parser.add_argument(
+        "--profile",
+        default="legacy_mini",
+        help="DRC execution profile name (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--run-id",
+        type=str,
+        help="Custom run ID override for isolated run directory naming",
+    )
+    parser.add_argument(
+        "--runs-dir",
+        type=Path,
+        default=DEFAULT_RUNS_DIR,
+        help="Root directory for run evaluation bundles (default: %(default)s)",
+    )
 
     args = parser.parse_args()
 
     try:
-        if args.mode == "run-drc":
+        if args.mode == "single-shot":
+            results = execute_single_shot(
+                input_gds=args.gds,
+                drc_script=args.deck,
+                profile_name=args.profile,
+                candidate_mode=args.candidate_mode,
+                candidate_script=args.candidate_script,
+                run_id=args.run_id,
+                runs_dir=args.runs_dir,
+            )
+        elif args.mode == "run-drc":
             results = execute_run_drc(args.gds, args.deck, args.report_db)
         elif args.mode == "violation-ctx":
             results = execute_violation_context(args.report_db, args.text_report)

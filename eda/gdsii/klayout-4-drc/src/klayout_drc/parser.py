@@ -54,6 +54,11 @@ class DRCReportData:
         """Total count of all violations across all rules."""
         return sum(cat.count for cat in self.categories)
 
+    @property
+    def rule_summary(self) -> dict[str, int]:
+        """Summary mapping rule category names to violation counts."""
+        return {cat.name: cat.count for cat in self.categories}
+
     def to_dict(self) -> dict[str, Any]:
         """Serialize data to a dictionary suitable for JSON serialization."""
         return {

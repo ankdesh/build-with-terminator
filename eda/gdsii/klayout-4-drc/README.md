@@ -1,6 +1,6 @@
 # Programmatic DRC with KLayout & DeepSeek Harness Flow
 
-This repository provides an automated, programmatic pipeline for executing Design Rule Checking (DRC) on GDSII layouts using KLayout, extracting multi-modal context (rule decks, local layout geometry windows, violation tables, domain knowledge), and invoking an LLM agent within the **DeepSeek Harness** (`dsh`) flow subsystem to synthesize executable Python layout repair scripts.
+This repository provides an automated, programmatic pipeline for executing Design Rule Checking (DRC) on GDSII layouts using KLayout, extracting multi-modal context (rule decks, local layout geometry windows, violation tables, domain knowledge), and evaluating layout repair patches via the **DeepSeek Harness** (`dsh`) flow subsystem and a Python-native single-shot evaluation engine.
 
 ---
 
@@ -10,7 +10,7 @@ This repository provides an automated, programmatic pipeline for executing Desig
 flowchart TD
     subgraph Inputs ["Input Artifacts"]
         GDS["GDS File (.gds)"]
-        DRC["DRC Deck (.drc)"]
+        DRC["DRC Deck (.drc / .lydrc)"]
         KB_DIR["Knowledge Base (knowledge/*.md)"]
     end
 
@@ -31,10 +31,17 @@ flowchart TD
         KB_TEXT["Knowledge Base (Text)<br/>API patterns & ASAP7 fix techniques"]
     end
 
-    subgraph Node3 ["3. Synthesis & Generation Stage"]
+    subgraph Node3 ["3. Synthesis & Candidate Stage"]
         AGENT["Agent (LLM)<br/>(kind: model)"]
-        SAVE_NODE["Save Fix Script<br/>(klayout.save_script)"]
-        FIX_SCRIPT["Python Script to Fix GDS<br/>(reports/fix_layout.py)"]
+        SAVE_NODE["Save Candidate Script<br/>(klayout.save_script)"]
+        CANDIDATE["Candidate Fix Script<br/>(candidate_fix.py)"]
+    end
+
+    subgraph Node4 ["4. Single-Shot Evaluation Engine"]
+        APPLY["Out-of-Process Execution<br/>(RepairExecutor)"]
+        VALIDATE["Layout Integrity & Diff<br/>(LayoutValidator & Diff)"]
+        RECHECK["DRC Re-Check<br/>(DRCRunner)"]
+        REPORT["Run Artifacts & Report<br/>(RunReporter)"]
     end
 
     %% Flow connections
@@ -62,26 +69,40 @@ flowchart TD
     KB_TEXT --> AGENT
 
     AGENT --> SAVE_NODE
-    SAVE_NODE --> FIX_SCRIPT
+    SAVE_NODE --> CANDIDATE
+
+    CANDIDATE --> APPLY
+    APPLY --> VALIDATE
+    VALIDATE --> RECHECK
+    RECHECK --> REPORT
 ```
 
-The system is organized into two decoupled tiers:
+The system is organized into three decoupled tiers:
 
-1. **Python DRC & Context Core (`src/klayout_drc/`)**:
-   - `DRCRunner`: Executes KLayout in headless batch mode (`klayout -b -r <deck> -rd input=<gds> -rd report=<lyrdb>`).
+1. **Python DRC, Context & Evaluation Engine (`src/klayout_drc/`)**:
+   - `DRCRunner`: Executes KLayout in headless batch mode with profile-aware parameter binding.
    - `DRCParser`: Parses XML report databases (`.lyrdb`) into strongly typed violation data models.
    - `DRCReporter`: Produces formatted human-readable reports and structured JSON summaries.
    - `DRCContextProcessor`: Scans DRC decks and extracts only rule code blocks and thresholds matching violated rule names.
    - `GDSContextProcessor`: Crops bounding-box windows around violation markers (100nm halo) and extracts local polygon geometries and layer assignments.
    - `KnowledgeLoader`: Loads and merges Markdown domain knowledge documents from `knowledge/`.
-   - `DRCFixer`: Geometric layout repair with KLayout Region operations.
-   - `cli.py`: Unified CLI with subcommands for all flow nodes.
+   - `DRCFixer`: Deterministic geometric layout repair with KLayout Region operations.
+   - `RepairExecutor`: Safely executes candidate scripts out-of-process via subprocess with timeout and log capture.
+   - `LayoutValidator` & `LayoutDiffCalculator`: Validates GDS integrity (DBU, top-cell, non-empty shapes, bounding box sanity) and computes polygon diffs.
+   - `RunReporter`: Produces structured audit bundles in `reports/runs/<run_id>/` with truthful status reporting (`success_geometry_only`, `partial`, `invalid_patch`, `model_error`, etc.).
+   - `SingleShotOrchestrator`: Chains the complete `Fix → Apply Patch → Report` pipeline.
+   - `cli.py`: Unified CLI with subcommands for all flow nodes and full evaluation.
 
 2. **Harness Flow Subsystem (`harness/`)**:
    - Implements a local DeepSeek Harness product bundle (`@klayout/harness-drc`).
-   - Declares the 7-node flow in `profile/catalog/flows/run_drc.yaml`.
+   - Declares the flow in `profile/catalog/flows/run_drc.yaml`.
    - Native flow model node (`kind: model`) using `generate_fix.md` system instructions.
-   - Generates and persists the Python repair script to `reports/fix_layout.py`.
+   - Truthful error handling: LLM failures report `model_error` without silent heuristic substitution.
+
+3. **Staged Roadmap & Documentation (`docs/`)**:
+   - Phased execution from Foundation 0 to Phase C, keeping closed-loop iteration as an independent Goal D.
+   - Detailed plan: [docs/STAGE_0_AND_A_IMPLEMENTATION_PLAN.md](docs/STAGE_0_AND_A_IMPLEMENTATION_PLAN.md).
+   - Upstream roadmap package: [docs/ASAP7_Codex_Staged_Implementation_Package/](docs/ASAP7_Codex_Staged_Implementation_Package/).
 
 ---
 
@@ -93,6 +114,9 @@ klayout-4-drc/
 ├── uv.lock                            # Deterministic uv lockfile
 ├── GEMINI.md                          # Project constitution & design principles
 ├── README.md                          # This documentation
+├── docs/                              # Project documentation & staged roadmap
+│   ├── STAGE_0_AND_A_IMPLEMENTATION_PLAN.md # Detailed implementation plan
+│   └── ASAP7_Codex_Staged_Implementation_Package/ # Staged roadmap specifications
 ├── knowledge/                         # Domain knowledge base
 │   ├── asap7_rules_guide.md           # ASAP7 layers, rules, and DBU grid
 │   ├── geometric_fix_techniques.md    # Repair recipes (dilation, padding, keepout)
@@ -115,11 +139,12 @@ klayout-4-drc/
 │   │   ├── asap7_fixed.gds            # Sample repaired GDS
 │   │   └── create_sample_layout.py    # Generator for test layout
 │   └── rules/
-│       └── asap7_mini.drc             # ASAP7 7nm mini DRC deck
-├── reports/                           # Output directory for generated reports & scripts
+│       ├── asap7_mini.drc             # ASAP7 7nm mini DRC deck
+│       └── drc_ASAP7.lydrc            # Full ASAP7 DRC deck (for Phase B)
+├── reports/                           # Output directory for generated reports & runs
 │   ├── drc_violations.lyrdb           # Intermediate KLayout report database
 │   ├── drc_report.txt                 # Formatted textual report
-│   └── fix_layout.py                  # Synthesized Python fix script
+│   └── runs/                          # Isolated per-run evaluation bundles (<run_id>/)
 ├── tests/
 │   └── test_drc_pipeline.py          # End-to-end integration test suite
 └── harness/                           # DeepSeek Harness integration bundle
@@ -161,18 +186,18 @@ uv run python -m klayout_drc.cli --mode load-knowledge --json
 
 ### 2. DeepSeek Harness Flow Execution
 
-Run the complete 7-node flow from `harness/`:
+Run the flow from `harness/`:
 
 ```bash
 cd harness
 npm run flow:drc
 ```
 
-The flow executes all 7 nodes, queries the model phase, and writes the synthesized Python repair script to `reports/fix_layout.py`.
+The flow executes context extraction nodes, queries the model phase, and writes the candidate Python repair script.
 
 ### 3. Run Automated Tests
 
-Execute the comprehensive integration test suite (7 tests):
+Execute the comprehensive integration test suite:
 
 ```bash
 uv run pytest

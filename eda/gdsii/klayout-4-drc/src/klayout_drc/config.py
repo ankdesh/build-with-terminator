@@ -4,7 +4,7 @@ All hardcoded values, tool execution defaults, rule thresholds, and
 custom exceptions are hoisted here to avoid magic constants across the codebase.
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Final
 
@@ -21,6 +21,7 @@ DEFAULT_DATA_DIR: Final[Path] = PROJECT_ROOT / "test_data"
 DEFAULT_LAYOUTS_DIR: Final[Path] = DEFAULT_DATA_DIR / "layouts"
 DEFAULT_RULES_DIR: Final[Path] = DEFAULT_DATA_DIR / "rules"
 DEFAULT_REPORTS_DIR: Final[Path] = PROJECT_ROOT / "reports"
+DEFAULT_RUNS_DIR: Final[Path] = DEFAULT_REPORTS_DIR / "runs"
 
 DEFAULT_GDS_PATH: Final[Path] = DEFAULT_LAYOUTS_DIR / "asap7_test.gds"
 DEFAULT_DRC_SCRIPT_PATH: Final[Path] = DEFAULT_RULES_DIR / "asap7_mini.drc"
@@ -71,6 +72,9 @@ class DRCJobConfig:
     output_lyrdb: Path
     klayout_bin: str = DEFAULT_KLAYOUT_BIN
     timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS
+    param_in_gds: str = "input"
+    param_report: str = "report"
+    extra_params: dict[str, str] = field(default_factory=dict)
 
     def validate(self) -> None:
         """Validate that input files exist and paths are well-formed."""

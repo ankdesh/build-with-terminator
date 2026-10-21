@@ -1,6 +1,14 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.venv/
+*.lyrdb
+*.target.gds
+*.log
+temp_*
 reports/*.lyrdb
 reports/*.txt
+reports/*.gds
+reports/runs/
+reports/fix_layout.py
 !reports/.gitkeep

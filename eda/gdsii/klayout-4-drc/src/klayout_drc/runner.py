@@ -44,13 +44,11 @@ class DRCRunner:
             self.config.klayout_bin,
             "-b",
             "-r", str(self.config.drc_script.resolve()),
-            "-rd", f"input={self.config.input_gds.resolve()}",
-            "-rd", f"report={output_lyrdb}",
-            # Fallbacks for test scripts expecting alternate parameter names
-            "-rd", f"drc_test_source={self.config.input_gds.resolve()}",
-            "-rd", f"drc_test_target={output_lyrdb.with_suffix('.target.gds')}",
-            "-rd", "drc_test_deep=false",
+            "-rd", f"{self.config.param_in_gds}={self.config.input_gds.resolve()}",
+            "-rd", f"{self.config.param_report}={output_lyrdb}",
         ]
+        for key, val in self.config.extra_params.items():
+            cmd.extend(["-rd", f"{key}={val}"])
 
         logger.info("Executing KLayout command: %s", " ".join(cmd))
 
@@ -77,12 +75,9 @@ class DRCRunner:
             )
 
         if not output_lyrdb.exists():
-            # Check if a target layout was generated instead (some KLayout test cases output .gds)
-            target_gds = output_lyrdb.with_suffix(".target.gds")
-            if not target_gds.exists():
-                raise DRCExecutionError(
-                    f"KLayout finished with code 0 but neither report database '{output_lyrdb}' "
-                    f"nor target layout '{target_gds}' was generated.\nStderr: {result.stderr}"
-                )
+            raise DRCExecutionError(
+                f"KLayout finished with code 0 but report database '{output_lyrdb}' was not generated.\n"
+                f"Stderr: {result.stderr}\nStdout: {result.stdout}"
+            )
 
         return output_lyrdb
