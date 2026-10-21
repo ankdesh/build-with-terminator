@@ -174,19 +174,17 @@ if __name__ == "__main__":
   } else {
     console.log("[Node 6/7] Synthesizing repair script via Model Phase (Agent)...");
 
-    const openaiApiKey = process.env.OPENAI_API_KEY;
-    const deepseekApiKey = process.env.DEEPSEEK_API_KEY;
-
-    if (!openaiApiKey && !deepseekApiKey) {
-      throw new Error("Missing LLM API Key: neither OPENAI_API_KEY nor DEEPSEEK_API_KEY is configured.");
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      throw new Error("Missing LLM API Key: OPENAI_API_KEY environment variable is not set.");
     }
 
-    const isDeepSeek = Boolean(deepseekApiKey);
-    const endpoint = isDeepSeek 
-      ? "https://api.deepseek.com/chat/completions" 
-      : "https://api.openai.com/v1/chat/completions";
-    const model = isDeepSeek ? "deepseek-coder" : "gpt-4o-mini";
-    const apiKey = isDeepSeek ? deepseekApiKey : openaiApiKey;
+    const model = process.env.OPENAI_MODEL;
+    if (!model) {
+      throw new Error("Missing LLM Model: OPENAI_MODEL environment variable is not set.");
+    }
+
+    const endpoint = "https://api.openai.com/v1/chat/completions";
 
     const instructionsFile = resolve(productRoot, "profile/catalog/flows/generate_fix.md");
     const instructions = existsSync(instructionsFile) 

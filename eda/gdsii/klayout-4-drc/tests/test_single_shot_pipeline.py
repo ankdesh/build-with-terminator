@@ -94,8 +94,8 @@ def test_single_shot_agent_live_or_blocked(tmp_path: Path) -> None:
     orchestrator = SingleShotOrchestrator(spec)
     summary = orchestrator.run()
 
-    has_key = bool(os.environ.get("OPENAI_API_KEY") or os.environ.get("DEEPSEEK_API_KEY"))
-    if has_key:
+    has_credentials = bool(os.environ.get("OPENAI_API_KEY") and os.environ.get("OPENAI_MODEL"))
+    if has_credentials:
         # Live LLM execution must run and record truthful status and diagnostics
         assert summary.verdict in (
             VERDICT_SUCCESS_GEOMETRY_ONLY,
@@ -106,7 +106,7 @@ def test_single_shot_agent_live_or_blocked(tmp_path: Path) -> None:
         assert orchestrator.paths.results_json.exists()
         assert orchestrator.paths.report_md.exists()
     else:
-        # Without credentials, pipeline must record model_error without silent fallback
+        # Without credentials or OPENAI_MODEL, pipeline must record model_error without silent fallback
         assert summary.verdict == "model_error"
         assert summary.execution_result.status == "model_error"
 
