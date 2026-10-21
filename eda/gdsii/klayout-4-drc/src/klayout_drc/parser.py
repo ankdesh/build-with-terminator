@@ -11,6 +11,13 @@ import klayout.rdb as rdb
 import klayout.db as db
 
 from .config import DRCParserError
+from .marker_geometry import (
+    BoxMarker,
+    EdgeMarker,
+    EdgePairMarker,
+    MarkerGeometry,
+    PolygonMarker,
+)
 
 
 @dataclass
@@ -19,6 +26,14 @@ class ViolationGeometry:
     kind: str  # 'polygon', 'box', 'edge', 'edge_pair', 'path', 'text', 'shape'
     representation: str
     details: dict[str, Any] = field(default_factory=dict)
+    marker: EdgePairMarker | EdgeMarker | PolygonMarker | BoxMarker | None = None
+
+    @property
+    def bbox_um(self) -> tuple[float, float, float, float] | None:
+        """Bounding box (min_x, min_y, max_x, max_y) in physical micrometers."""
+        if self.marker and hasattr(self.marker, "bbox"):
+            return self.marker.bbox
+        return None
 
 
 @dataclass
@@ -157,34 +172,31 @@ class DRCParser:
                 )
 
                 for val in item.each_value():
+                    kind = "shape"
+                    rep = val.to_s()
                     if val.is_polygon():
-                        v_item.geometries.append(
-                            ViolationGeometry(kind="polygon", representation=val.polygon().to_s())
-                        )
+                        kind = "polygon"
+                        rep = val.polygon().to_s()
                     elif val.is_box():
-                        v_item.geometries.append(
-                            ViolationGeometry(kind="box", representation=val.box().to_s())
-                        )
+                        kind = "box"
+                        rep = val.box().to_s()
                     elif val.is_edge():
-                        v_item.geometries.append(
-                            ViolationGeometry(kind="edge", representation=val.edge().to_s())
-                        )
+                        kind = "edge"
+                        rep = val.edge().to_s()
                     elif val.is_edge_pair():
-                        v_item.geometries.append(
-                            ViolationGeometry(kind="edge_pair", representation=val.edge_pair().to_s())
-                        )
+                        kind = "edge_pair"
+                        rep = val.edge_pair().to_s()
                     elif val.is_path():
-                        v_item.geometries.append(
-                            ViolationGeometry(kind="path", representation=val.path().to_s())
-                        )
+                        kind = "path"
+                        rep = val.path().to_s()
                     elif val.string:
-                        v_item.geometries.append(
-                            ViolationGeometry(kind="text", representation=val.string)
-                        )
-                    else:
-                        v_item.geometries.append(
-                            ViolationGeometry(kind="shape", representation=val.to_s())
-                        )
+                        kind = "text"
+                        rep = val.string
+
+                    marker = MarkerGeometry.parse_value_string(rep, kind=kind)
+                    v_item.geometries.append(
+                        ViolationGeometry(kind=kind, representation=rep, marker=marker)
+                    )
 
                 rule_cat.violations.append(v_item)
 
