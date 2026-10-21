@@ -241,7 +241,12 @@ if __name__ == "__main__":
             return summary
 
         # 4. Validate layout integrity
-        validator = LayoutValidator(self.paths.patched_gds, reference_gds=self.paths.input_gds)
+        protected_set = set(self.profile.protected_cells) if self.profile.protected_cells else None
+        validator = LayoutValidator(
+            self.paths.patched_gds,
+            reference_gds=self.paths.input_gds,
+            protected_cells=protected_set,
+        )
         val_res = validator.validate()
 
         if not val_res.is_valid:
@@ -260,6 +265,37 @@ if __name__ == "__main__":
         self.paths.layout_diff_json.write_text(
             json.dumps(diff_rep.to_dict(), indent=2), encoding="utf-8"
         )
+
+        # 5b. Verify edit scope against profile editable_layers
+        if self.profile.editable_layers:
+            allowed_tuples = {
+                self.profile.layers[l]
+                for l in self.profile.editable_layers
+                if l in self.profile.layers
+            }
+            for mod_ly in diff_rep.modified_layers:
+                if tuple(mod_ly) not in allowed_tuples:
+                    scope_err = (
+                        f"Edit scope violation: layer {mod_ly[0]}/{mod_ly[1]} was modified "
+                        f"but is not in allowed editable layers {self.profile.editable_layers}."
+                    )
+                    val_res = ValidationResult(
+                        is_valid=False,
+                        top_cell_name=val_res.top_cell_name,
+                        dbu_um=val_res.dbu_um,
+                        total_shapes=val_res.total_shapes,
+                        bbox_um=val_res.bbox_um,
+                        violations=list(val_res.violations) + [scope_err],
+                    )
+                    summary = self.reporter.evaluate(
+                        execution=exec_res,
+                        violations_before=viols_before,
+                        total_before=total_before,
+                        validation=val_res,
+                        diff_report=diff_rep,
+                    )
+                    self._write_artifacts(summary)
+                    return summary
 
         # 6. Re-check DRC on patched GDS with identical deck & profile
         try:

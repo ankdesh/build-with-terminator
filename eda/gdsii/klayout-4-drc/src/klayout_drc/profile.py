@@ -114,6 +114,21 @@ class DRCProfileManager:
             )
         return self._profiles[name]
 
+    def find_profile_for_deck(self, deck_path: Path) -> DRCProfile:
+        """Find the matching profile for a given deck path, or return legacy_mini as fallback."""
+        deck_name = Path(deck_path).name
+        for profile in self._profiles.values():
+            if profile.deck_path.name == deck_name:
+                return profile
+        if Path(deck_path).exists():
+            try:
+                content = Path(deck_path).read_text(encoding="utf-8")
+                if "$in_gds" in content:
+                    return self.get_profile("asap7_curated" if "curated" in deck_name else "asap7_public_full")
+            except Exception:
+                pass
+        return self.get_profile("legacy_mini")
+
     def list_profiles(self) -> list[str]:
         """Return names of all registered profiles."""
         return list(self._profiles.keys())

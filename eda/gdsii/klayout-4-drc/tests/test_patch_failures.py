@@ -171,3 +171,35 @@ def test_noop_patch_recorded_as_no_change(tmp_path: Path) -> None:
     assert summary.total_before == 8
     assert summary.total_after == 8
     assert summary.execution_result.status == "success"
+
+
+def test_feol_edit_rejected_by_scope(tmp_path: Path) -> None:
+    """Test that modifying an unallowed FEOL layer (Gate 7/0) is rejected as invalid_patch."""
+    feol_script = tmp_path / "feol_edit.py"
+    feol_script.write_text(
+        "import sys, pya\n"
+        "layout = pya.Layout()\n"
+        "layout.read(sys.argv[1])\n"
+        "top = layout.top_cell()\n"
+        "gate_layer = layout.layer(7, 0)\n"  # Gate FEOL layer
+        "top.shapes(gate_layer).insert(pya.Box(0, 0, 100, 100))\n"
+        "layout.write(sys.argv[2])\n",
+        encoding="utf-8",
+    )
+
+    spec = RunSpec(
+        case_name="test_feol_edit",
+        input_gds=SAMPLE_GDS,
+        drc_script=DEFAULT_RULES_DIR / "asap7_curated.lydrc",
+        profile_name="asap7_curated",
+        candidate_mode="script_file",
+        candidate_script=feol_script,
+        output_root=tmp_path,
+    )
+    orchestrator = SingleShotOrchestrator(spec)
+    summary = orchestrator.run()
+
+    assert summary.verdict == VERDICT_INVALID_PATCH
+    assert summary.validation_result is not None
+    assert summary.validation_result.is_valid is False
+    assert any("Edit scope violation" in viol for viol in summary.validation_result.violations)

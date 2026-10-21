@@ -81,14 +81,17 @@ The system is organized into three decoupled tiers:
 
 1. **Python DRC, Context & Evaluation Engine (`src/klayout_drc/`)**:
    - `DRCRunner`: Executes KLayout in headless batch mode with profile-aware parameter binding.
+   - `DRCDeckExtractor`: Unbundles `<klayout-macro>` XML envelopes and decodes XML entities.
+   - `DRCRuleCatalog`: Audited rule catalog indexing constraints, physical layers, and upstream anomalies.
+   - `MarkerGeometry`: Strongly typed models (`EdgeMarker`, `EdgePairMarker`, `PolygonMarker`, `BoxMarker`).
    - `DRCParser`: Parses XML report databases (`.lyrdb`) into strongly typed violation data models.
    - `DRCReporter`: Produces formatted human-readable reports and structured JSON summaries.
-   - `DRCContextProcessor`: Scans DRC decks and extracts only rule code blocks and thresholds matching violated rule names.
-   - `GDSContextProcessor`: Crops bounding-box windows around violation markers (100nm halo) and extracts local polygon geometries and layer assignments.
+   - `DRCContextProcessor`: Scans DRC decks and extracts matching rule blocks and constraints.
+   - `GDSContextProcessor`: Hierarchical windowed layout extractor applying instance coordinate transformations.
    - `KnowledgeLoader`: Loads and merges Markdown domain knowledge documents from `knowledge/`.
    - `DRCFixer`: Deterministic geometric layout repair with KLayout Region operations.
    - `RepairExecutor`: Safely executes candidate scripts out-of-process via subprocess with timeout and log capture.
-   - `LayoutValidator` & `LayoutDiffCalculator`: Validates GDS integrity (DBU, top-cell, non-empty shapes, bounding box sanity) and computes polygon diffs.
+   - `LayoutValidator` & `LayoutDiffCalculator`: Validates GDS integrity (DBU, top-cell, BEOL scope, master cell protection) and computes polygon diffs.
    - `RunReporter`: Produces structured audit bundles in `reports/runs/<run_id>/` with truthful status reporting (`success_geometry_only`, `partial`, `invalid_patch`, `model_error`, etc.).
    - `SingleShotOrchestrator`: Chains the complete `Fix → Apply Patch → Report` pipeline.
    - `cli.py`: Unified CLI with subcommands for all flow nodes and full evaluation.
@@ -101,7 +104,9 @@ The system is organized into three decoupled tiers:
 
 3. **Staged Roadmap & Documentation (`docs/`)**:
    - Phased execution from Foundation 0 to Phase C, keeping closed-loop iteration as an independent Goal D.
-   - Detailed plan: [docs/STAGE_0_AND_A_IMPLEMENTATION_PLAN.md](docs/STAGE_0_AND_A_IMPLEMENTATION_PLAN.md).
+   - Phase B Plan: [docs/PHASE_B_IMPLEMENTATION_PLAN.md](docs/PHASE_B_IMPLEMENTATION_PLAN.md).
+   - Phase B Evaluation Report: [docs/reports/asap7_phase_b_agent_evaluation.md](docs/reports/asap7_phase_b_agent_evaluation.md).
+   - Stage 0 & A Plan: [docs/STAGE_0_AND_A_IMPLEMENTATION_PLAN.md](docs/STAGE_0_AND_A_IMPLEMENTATION_PLAN.md).
    - Upstream roadmap package: [docs/ASAP7_Codex_Staged_Implementation_Package/](docs/ASAP7_Codex_Staged_Implementation_Package/).
 
 ---

@@ -29,6 +29,7 @@ from .fixer import DRCFixer
 from .drc_context import DRCContextProcessor
 from .gds_context import GDSContextProcessor
 from .knowledge_loader import KnowledgeLoader
+from .profile import DRCProfileManager
 from .run_manifest import RunSpec
 from .single_shot import SingleShotOrchestrator
 
@@ -38,12 +39,18 @@ def run_pipeline(
     drc_script: Path,
     output_lyrdb: Path,
     text_report_path: Path | None = None,
+    profile_name: str | None = None,
 ) -> dict:
     """Execute end-to-end DRC check, parse results, and generate textual report."""
+    profile_mgr = DRCProfileManager()
+    profile = profile_mgr.get_profile(profile_name) if profile_name else profile_mgr.find_profile_for_deck(drc_script)
     config = DRCJobConfig(
         input_gds=input_gds,
         drc_script=drc_script,
         output_lyrdb=output_lyrdb,
+        param_in_gds=profile.param_in_gds,
+        param_report=profile.param_report,
+        extra_params=profile.extra_params,
     )
     runner = DRCRunner(config)
     report_file = runner.run()
@@ -71,12 +78,22 @@ def run_pipeline(
     }
 
 
-def execute_run_drc(input_gds: Path, drc_script: Path, output_lyrdb: Path) -> dict:
+def execute_run_drc(
+    input_gds: Path,
+    drc_script: Path,
+    output_lyrdb: Path,
+    profile_name: str | None = None,
+) -> dict:
     """Execute DRC batch check only and return database path and violation count."""
+    profile_mgr = DRCProfileManager()
+    profile = profile_mgr.get_profile(profile_name) if profile_name else profile_mgr.find_profile_for_deck(drc_script)
     config = DRCJobConfig(
         input_gds=input_gds,
         drc_script=drc_script,
         output_lyrdb=output_lyrdb,
+        param_in_gds=profile.param_in_gds,
+        param_report=profile.param_report,
+        extra_params=profile.extra_params,
     )
     runner = DRCRunner(config)
     report_file = runner.run()
@@ -177,18 +194,19 @@ def execute_save_script(script_content: str, output_path: Path) -> dict:
 def execute_single_shot(
     input_gds: Path,
     drc_script: Path,
-    profile_name: str = "legacy_mini",
+    profile_name: str | None = None,
     candidate_mode: str = "heuristic",
     candidate_script: Path | None = None,
     run_id: str | None = None,
     runs_dir: Path = DEFAULT_RUNS_DIR,
 ) -> dict:
     """Execute single-shot evaluation: preflight DRC -> apply patch -> validate -> recheck -> report."""
+    resolved_profile = profile_name or DRCProfileManager().find_profile_for_deck(drc_script).name
     spec = RunSpec(
         case_name=input_gds.stem,
         input_gds=input_gds,
         drc_script=drc_script,
-        profile_name=profile_name,
+        profile_name=resolved_profile,
         candidate_mode=candidate_mode,
         candidate_script=candidate_script,
         run_id=run_id,
@@ -301,8 +319,8 @@ def main() -> int:
     )
     parser.add_argument(
         "--profile",
-        default="legacy_mini",
-        help="DRC execution profile name (default: %(default)s)",
+        default=None,
+        help="DRC execution profile name (default: auto-detected from deck)",
     )
     parser.add_argument(
         "--run-id",
@@ -330,7 +348,7 @@ def main() -> int:
                 runs_dir=args.runs_dir,
             )
         elif args.mode == "run-drc":
-            results = execute_run_drc(args.gds, args.deck, args.report_db)
+            results = execute_run_drc(args.gds, args.deck, args.report_db, profile_name=args.profile)
         elif args.mode == "violation-ctx":
             results = execute_violation_context(args.report_db, args.text_report)
         elif args.mode == "drc-ctx":
@@ -353,6 +371,7 @@ def main() -> int:
                 drc_script=args.deck,
                 output_lyrdb=args.report_db,
                 text_report_path=args.text_report,
+                profile_name=args.profile,
             )
             if args.fix_output:
                 fixer = DRCFixer(input_gds=args.gds, output_gds=args.fix_output)

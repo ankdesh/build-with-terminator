@@ -64,6 +64,7 @@ class RunPaths:
     layout_diff_json: Path
     results_json: Path
     report_md: Path
+    run_manifest_json: Path
 
 
 class RunManifestManager:
@@ -100,6 +101,7 @@ class RunManifestManager:
             layout_diff_json=self.run_dir / "layout_diff.json",
             results_json=self.run_dir / "results.json",
             report_md=self.run_dir / "report.md",
+            run_manifest_json=self.run_dir / "run_manifest.json",
         )
 
     @staticmethod

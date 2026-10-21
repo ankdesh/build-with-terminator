@@ -42,15 +42,25 @@ class ValidationResult:
 class LayoutValidator:
     """Validates structural layout integrity and checks for destructive edits."""
 
-    def __init__(self, patched_gds: Path, reference_gds: Path | None = None) -> None:
+    def __init__(
+        self,
+        patched_gds: Path,
+        reference_gds: Path | None = None,
+        allowed_layers: set[tuple[int, int]] | None = None,
+        protected_cells: set[str] | None = None,
+    ) -> None:
         """Initialize validator with target patched GDS and optional reference GDS.
 
         Args:
             patched_gds: Path to the layout to validate.
             reference_gds: Path to baseline layout before patch.
+            allowed_layers: Optional set of allowed (layer, datatype) tuples that may be edited.
+            protected_cells: Optional set of cell names that must remain immutable.
         """
         self.patched_gds = Path(patched_gds).resolve()
         self.reference_gds = Path(reference_gds).resolve() if reference_gds else None
+        self.allowed_layers = allowed_layers
+        self.protected_cells = protected_cells
 
     def validate(self) -> ValidationResult:
         """Perform comprehensive layout integrity checks.
@@ -133,6 +143,17 @@ class LayoutValidator:
                     violations.append(
                         f"DBU mismatch: original layout DBU is {ref_layout.dbu}, patched is {dbu}."
                     )
+
+                # Check protected cells
+                if self.protected_cells:
+                    for pcell_name in self.protected_cells:
+                        ref_c = ref_layout.cell(pcell_name)
+                        patch_c = layout.cell(pcell_name)
+                        if ref_c is not None:
+                            if patch_c is None:
+                                violations.append(f"Protected master cell '{pcell_name}' was removed in patched layout.")
+                            elif ref_c.bbox() != patch_c.bbox():
+                                violations.append(f"Protected master cell '{pcell_name}' bounding box changed.")
             except Exception as exc:
                 violations.append(f"Could not load reference GDS for comparison: {exc}")
 
