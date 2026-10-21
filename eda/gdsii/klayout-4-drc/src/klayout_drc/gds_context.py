@@ -28,6 +28,7 @@ class PolygonGeometry:
     points_um: list[tuple[float, float]]
     bbox_um: tuple[float, float, float, float]
     shape_type: str = "polygon"
+    source_cell: str = ""
 
 
 @dataclass(frozen=True)
@@ -39,6 +40,7 @@ class ViolationNeighborhoodWindow:
     marker_bbox_um: tuple[float, float, float, float]
     window_bbox_um: tuple[float, float, float, float]
     polygons: list[PolygonGeometry] = field(default_factory=list)
+    is_truncated: bool = False
 
 
 class GDSContextProcessor:
@@ -118,13 +120,16 @@ class GDSContextProcessor:
                 f"Inspection Window (um):    [{win.window_bbox_um[0]:.4f}, {win.window_bbox_um[1]:.4f}] to [{win.window_bbox_um[2]:.4f}, {win.window_bbox_um[3]:.4f}]"
             )
             lines.append(f"Intersecting Shapes Count: {len(win.polygons)}")
+            if win.is_truncated:
+                lines.append("  [Note: Context truncated at shape limit]")
 
             if not win.polygons:
                 lines.append("  (No intersecting shapes found on active layers within halo)")
             else:
                 for idx, poly in enumerate(win.polygons, start=1):
+                    cell_info = f" [Cell: {poly.source_cell}]" if poly.source_cell and poly.source_cell != win.cell_name else ""
                     lines.append(
-                        f"  Shape {idx}: Layer {poly.layer}/{poly.datatype} ({poly.shape_type})"
+                        f"  Shape {idx}: Layer {poly.layer}/{poly.datatype} ({poly.shape_type}){cell_info}"
                     )
                     lines.append(
                         f"    BBox (um): [{poly.bbox_um[0]:.4f}, {poly.bbox_um[1]:.4f}] to [{poly.bbox_um[2]:.4f}, {poly.bbox_um[3]:.4f}]"
@@ -146,20 +151,25 @@ class GDSContextProcessor:
         rule_name: str,
         dbu: float,
     ) -> Optional[ViolationNeighborhoodWindow]:
-        """Compute window bounding box and gather intersecting shapes."""
-        points: list[tuple[float, float]] = []
+        """Compute window bounding box and gather intersecting shapes hierarchically."""
+        marker_bboxes: list[tuple[float, float, float, float]] = []
         for geom in item.geometries:
-            numbers = [float(n) for n in re.findall(r"[-+]?\d+(?:\.\d+)?", geom.representation)]
-            for i in range(0, len(numbers) - 1, 2):
-                points.append((numbers[i], numbers[i + 1]))
+            if geom.bbox_um is not None:
+                marker_bboxes.append(geom.bbox_um)
+            else:
+                numbers = [float(n) for n in re.findall(r"[-+]?\d+(?:\.\d+)?", geom.representation)]
+                if len(numbers) >= 2:
+                    xs = [numbers[i] for i in range(0, len(numbers) - 1, 2)]
+                    ys = [numbers[i + 1] for i in range(0, len(numbers) - 1, 2)]
+                    marker_bboxes.append((min(xs), min(ys), max(xs), max(ys)))
 
-        if not points:
+        if not marker_bboxes:
             return None
 
-        xs = [p[0] for p in points]
-        ys = [p[1] for p in points]
-        min_x, max_x = min(xs), max(xs)
-        min_y, max_y = min(ys), max(ys)
+        min_x = min(b[0] for b in marker_bboxes)
+        min_y = min(b[1] for b in marker_bboxes)
+        max_x = max(b[2] for b in marker_bboxes)
+        max_y = max(b[3] for b in marker_bboxes)
 
         marker_bbox = (min_x, min_y, max_x, max_y)
         win_min_x = min_x - self.halo_um
@@ -177,15 +187,25 @@ class GDSContextProcessor:
         )
 
         extracted_polys: list[PolygonGeometry] = []
+        is_truncated = False
+        max_shapes = 50
 
-        # Iterate through all layout layers
+        # Iterate hierarchically through all layout layers using RecursiveShapeIterator
         for layer_info in layout.layer_infos():
             layer_idx = layout.layer(layer_info)
-            shapes = cell.shapes(layer_idx)
+            iter = cell.begin_shapes_rec_overlapping(layer_idx, box_dbu)
 
-            for shape in shapes.each_overlapping(box_dbu):
+            while not iter.at_end():
+                if len(extracted_polys) >= max_shapes:
+                    is_truncated = True
+                    break
+
+                shape = iter.shape()
+                itrans = iter.itrans()
+                source_cell = iter.cell().name if iter.cell() else cell.name
+
                 if shape.is_box():
-                    b = shape.box
+                    b = shape.box.transformed(itrans)
                     pts = [
                         (b.left * dbu, b.bottom * dbu),
                         (b.right * dbu, b.bottom * dbu),
@@ -200,10 +220,11 @@ class GDSContextProcessor:
                             points_um=pts,
                             bbox_um=poly_bbox,
                             shape_type="box",
+                            source_cell=source_cell,
                         )
                     )
                 elif shape.is_polygon():
-                    p = shape.polygon
+                    p = shape.polygon.transformed(itrans)
                     pts = [(pt.x * dbu, pt.y * dbu) for pt in p.each_point_hull()]
                     b = p.bbox()
                     poly_bbox = (b.left * dbu, b.bottom * dbu, b.right * dbu, b.top * dbu)
@@ -214,8 +235,29 @@ class GDSContextProcessor:
                             points_um=pts,
                             bbox_um=poly_bbox,
                             shape_type="polygon",
+                            source_cell=source_cell,
                         )
                     )
+                elif shape.is_path():
+                    p = shape.path.polygon().transformed(itrans)
+                    pts = [(pt.x * dbu, pt.y * dbu) for pt in p.each_point_hull()]
+                    b = p.bbox()
+                    poly_bbox = (b.left * dbu, b.bottom * dbu, b.right * dbu, b.top * dbu)
+                    extracted_polys.append(
+                        PolygonGeometry(
+                            layer=layer_info.layer,
+                            datatype=layer_info.datatype,
+                            points_um=pts,
+                            bbox_um=poly_bbox,
+                            shape_type="path",
+                            source_cell=source_cell,
+                        )
+                    )
+
+                iter.next()
+
+            if is_truncated:
+                break
 
         return ViolationNeighborhoodWindow(
             violation_index=item.item_id,
@@ -224,4 +266,5 @@ class GDSContextProcessor:
             marker_bbox_um=marker_bbox,
             window_bbox_um=window_bbox,
             polygons=extracted_polys,
+            is_truncated=is_truncated,
         )
