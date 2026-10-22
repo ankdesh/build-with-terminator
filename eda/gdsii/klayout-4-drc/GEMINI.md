@@ -30,7 +30,13 @@ This document defines the architectural guidelines, standards, and workflow inva
   - `src/klayout_drc/run_manifest.py` (`RunManifestManager`, `RunSpec`, `RunPaths`): Input snapshotting, hashing, environment capture, and run directory isolation.
   - `src/klayout_drc/run_reporter.py` (`RunReporter`): Before/after comparison, typed status assignment, and audit report generation.
   - `src/klayout_drc/single_shot.py` (`SingleShotOrchestrator`): Chaining the single-shot `Fix → Apply Patch → Report` pipeline.
-  - `src/klayout_drc/cli.py`: Unified CLI supporting granular node modes and end-to-end evaluation (`--mode single-shot`).
+  - `src/klayout_drc/benchmark/types.py`: Benchmark data contracts (`BenchmarkCaseSpec`, `DifficultyTier`, `BenchmarkVerdict`, `EvaluationResult`, `BenchmarkSummary`).
+  - `src/klayout_drc/benchmark/manifest.py` (`BenchmarkManifestManager`): Manifest serialization, query filtering, and SHA-256 integrity verification.
+  - `src/klayout_drc/benchmark/mutations.py`: Geometric shape operators for synthetic BEOL layout generation.
+  - `src/klayout_drc/benchmark/generator.py` (`BenchmarkGenerator`): Seeded deterministic layout generation across the 100 benchmark cases.
+  - `src/klayout_drc/benchmark/evaluator.py` (`BenchmarkEvaluator`): Batch execution orchestrator for benchmark evaluation.
+  - `src/klayout_drc/benchmark/scorer.py` (`BenchmarkScorer`): Metric calculation, verdict classification, regression detection, and report generation (`.json`, `.csv`, `.md`).
+  - `src/klayout_drc/cli.py`: Unified CLI supporting granular node modes, end-to-end evaluation (`--mode single-shot`), and benchmark suite operations (`benchmark-list`, `benchmark-verify`, `benchmark-generate`, `benchmark-evaluate`).
 - **Fail Early & Explicitly**: Never let errors fail silently. Use dedicated exceptions (`DRCConfigurationError`, `DRCExecutionError`, `DRCParserError`).
 - **No Silent Fallback**: In `mode=agent`, an LLM failure must produce `model_error` and exit explicitly; it must **never** substitute a heuristic script under an agent label.
 - **Truthful Status Reporting**: DRC pass does not imply electrical validity. Successful DRC runs without independent LVS/connectivity checks are reported as `success_geometry_only`.
@@ -51,13 +57,18 @@ This document defines the architectural guidelines, standards, and workflow inva
   - `tests/test_gds_hierarchy_context.py`: Hierarchical layout context windowing with complex instance transformations.
   - `tests/test_asap7_rule_boundaries.py`: 5 BEOL rule families across 4-case boundary matrix (20 testcases) + compound interaction.
   - `tests/test_phase_b_single_shot.py`: Single-shot agent and script evaluation under authentic ASAP7 profiles.
+  - `tests/test_benchmark_manifest.py`: Schemas, serialization, filtering, and cryptographic SHA-256 integrity checks.
+  - `tests/test_benchmark_generation.py`: 100-case generation, exact tier/rule distributions, and live DRC oracle verification.
+  - `tests/test_benchmark_pipeline.py`: Benchmark evaluator execution, scoring engine, and CLI integration.
 
 ---
 
 ## 4. Directory Conventions
 - `src/klayout_drc/`: Python package implementation.
+- `src/klayout_drc/benchmark/`: Synthetic benchmark suite implementation (generator, manifest, evaluator, scorer).
 - `knowledge/`: Markdown knowledge base files (`asap7_rules_guide.md`, `geometric_fix_techniques.md`, `klayout_api_patterns.md`).
 - `test_data/layouts/`: Sample GDS files (`asap7_test.gds`, `asap7_fixed.gds`), versioned legacy fixtures (`legacy_mini_v2/`), and BEOL boundary fixtures (`asap7_beol_v1/`).
+- `test_data/benchmark_v1/`: Authentic 100-case BEOL benchmark suite (`manifest.json` and `cases/*.gds`).
 - `test_data/rules/`: DRC rule decks (`asap7_mini.drc`, `asap7_curated.lydrc`, `asap7.lydrc`).
 - `reports/`: Output directory for report databases (`.lyrdb`), textual reports (`.txt`), and isolated run bundles (`reports/runs/<run_id>/`).
 - `docs/`: Architecture documents, staged implementation plans, and evaluation reports (`docs/reports/`).

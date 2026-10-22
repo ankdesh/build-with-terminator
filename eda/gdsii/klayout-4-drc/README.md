@@ -200,9 +200,25 @@ npm run flow:drc
 
 The flow executes context extraction nodes, queries the model phase, and writes the candidate Python repair script.
 
-### 3. Run Automated Tests
+### 3. ASAP7 BEOL Benchmark Suite (100 Cases)
 
-Execute the comprehensive integration test suite:
+```bash
+# List benchmark cases (with optional filtering by rule and tier)
+uv run python -m klayout_drc.cli --mode benchmark-list --benchmark-rules M1.W.1 --benchmark-tiers boundary
+
+# Verify cryptographic SHA-256 integrity of all 100 benchmark GDS files
+uv run python -m klayout_drc.cli --mode benchmark-verify
+
+# Run benchmark evaluation using fast heuristic solver
+uv run python -m klayout_drc.cli --mode benchmark-evaluate --candidate-mode heuristic --benchmark-limit 5
+
+# Run benchmark evaluation using LLM agent solver (gpt-6-luna)
+uv run python -m klayout_drc.cli --mode benchmark-evaluate --candidate-mode agent --benchmark-rules M1.W.1 --benchmark-tiers isolated --benchmark-limit 1
+```
+
+### 4. Run Automated Tests
+
+Execute the comprehensive integration test suite (69 passing tests):
 
 ```bash
 uv run pytest

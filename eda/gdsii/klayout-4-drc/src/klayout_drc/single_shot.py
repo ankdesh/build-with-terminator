@@ -82,9 +82,30 @@ class SingleShotOrchestrator:
             return None
 
         if mode == "heuristic":
-            # Generate deterministic heuristic repair script targeting M1 and V1
+            # Generate deterministic heuristic repair script targeting profile layers
             m1_layer, m1_dt = self.profile.layers.get("M1", (18, 0))
+            m2_layer, m2_dt = self.profile.layers.get("M2", (20, 0))
             v1_layer, v1_dt = self.profile.layers.get("V1", (19, 0))
+
+            is_legacy = self.spec.profile_name == "legacy_mini"
+
+            v1_width_snippet = "" if is_legacy else """
+        # Fix V1 width: expand narrow via cuts (< 18nm)
+        min_v1_dbu = int(round(0.018 / dbu))
+        v1_err = v1_reg.width_check(min_v1_dbu)
+        if not v1_err.is_empty():
+            v1_reg = v1_reg | v1_err.polygons(0).sized(int(round(0.005 / dbu)))
+            top.shapes(v1_idx).clear()
+            top.shapes(v1_idx).insert(v1_reg)
+"""
+
+            m1_area_snippet = "" if is_legacy else """
+        # Fix area: expand small islands (< 504 nm2)
+        min_area_dbu2 = int(round(0.000504 / (dbu * dbu)))
+        small_polys = m1_reg.with_area(0, min_area_dbu2)
+        if not small_polys.is_empty():
+            m1_reg = m1_reg | small_polys.sized(int(round(0.006 / dbu)))
+"""
 
             heuristic_code = f"""#!/usr/bin/env python3
 \"\"\"Deterministic Heuristic DRC Repair Script for ASAP7.\"\"\"
@@ -100,33 +121,49 @@ def fix_layout(input_gds: str, output_gds: str) -> None:
         raise RuntimeError("No top cell found in layout.")
 
     dbu = layout.dbu
-    # Layer {m1_layer}/{m1_dt} for M1, Layer {v1_layer}/{v1_dt} for V1
+    # Layer indices
     m1_idx = layout.find_layer({m1_layer}, {m1_dt})
+    m2_idx = layout.find_layer({m2_layer}, {m2_dt})
     v1_idx = layout.find_layer({v1_layer}, {v1_dt})
 
     m1_reg = db.Region(top.shapes(m1_idx)) if m1_idx is not None else db.Region()
+    m2_reg = db.Region(top.shapes(m2_idx)) if m2_idx is not None else db.Region()
     v1_reg = db.Region(top.shapes(v1_idx)) if v1_idx is not None else db.Region()
 
-    # 1. Enclosure pad V1 by 9nm
+    # 1. Enclosure pad V1 by 9nm on M1 (if legacy mini)
     if not v1_reg.is_empty():
         enc_pad_dbu = int(round(0.009 / dbu))
         m1_reg = m1_reg | v1_reg.sized(enc_pad_dbu)
+{v1_width_snippet}
 
-    # 2. Fix spacing: merge wires closer than 18nm
+    # 2. Fix M1 width and area
     if not m1_reg.is_empty():
         merge_dbu = int(round(0.009 / dbu))
         m1_reg = m1_reg.sized(merge_dbu).sized(-merge_dbu)
 
-        # 3. Fix width: expand narrow regions (< 18nm)
+        # Fix width: expand narrow regions (< 18nm)
         min_width_dbu = int(round(0.018 / dbu))
         width_boost_dbu = int(round(0.005 / dbu))
         error_edges = m1_reg.width_check(min_width_dbu)
         m1_reg = m1_reg | error_edges.polygons(0).sized(width_boost_dbu)
+{m1_area_snippet}
 
         if m1_idx is None:
             m1_idx = layout.layer({m1_layer}, {m1_dt})
         top.shapes(m1_idx).clear()
         top.shapes(m1_idx).insert(m1_reg)
+
+    # 3. Fix M2 width
+    if not m2_reg.is_empty():
+        min_width_dbu = int(round(0.018 / dbu))
+        width_boost_dbu = int(round(0.005 / dbu))
+        error_edges_m2 = m2_reg.width_check(min_width_dbu)
+        if not error_edges_m2.is_empty():
+            m2_reg = m2_reg | error_edges_m2.polygons(0).sized(width_boost_dbu)
+            if m2_idx is None:
+                m2_idx = layout.layer({m2_layer}, {m2_dt})
+            top.shapes(m2_idx).clear()
+            top.shapes(m2_idx).insert(m2_reg)
 
     Path(output_gds).parent.mkdir(parents=True, exist_ok=True)
     layout.write(str(output_gds))

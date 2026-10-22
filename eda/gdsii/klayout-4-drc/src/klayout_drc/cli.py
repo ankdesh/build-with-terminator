@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 
 from .config import (
+    DEFAULT_DATA_DIR,
     DEFAULT_FIX_SCRIPT_PATH,
     DEFAULT_GDS_PATH,
     DEFAULT_DRC_SCRIPT_PATH,
@@ -32,6 +33,99 @@ from .knowledge_loader import KnowledgeLoader
 from .profile import DRCProfileManager
 from .run_manifest import RunSpec
 from .single_shot import SingleShotOrchestrator
+from .benchmark.generator import BenchmarkGenerator
+from .benchmark.manifest import BenchmarkManifestManager
+from .benchmark.evaluator import BenchmarkEvaluator
+from .benchmark.types import DifficultyTier
+
+DEFAULT_BENCHMARK_DIR: Path = DEFAULT_DATA_DIR / "benchmark_v1"
+
+
+def execute_benchmark_list(
+    benchmark_dir: Path,
+    rules: list[str] | None = None,
+    tiers: list[str] | None = None,
+    limit: int | None = None,
+) -> dict:
+    """List benchmark cases with filtering options."""
+    manifest_path = benchmark_dir / "manifest.json"
+    manifest = BenchmarkManifestManager.load(manifest_path)
+
+    parsed_tiers = [DifficultyTier(t.strip().lower()) for t in tiers] if tiers else None
+    filtered = BenchmarkManifestManager.filter_cases(manifest, rules=rules, tiers=parsed_tiers, limit=limit)
+
+    return {
+        "status": "success",
+        "benchmark_version": manifest.benchmark_version,
+        "total_manifest_cases": manifest.case_count,
+        "filtered_count": len(filtered),
+        "cases": [c.to_dict() for c in filtered],
+    }
+
+
+def execute_benchmark_verify(benchmark_dir: Path) -> dict:
+    """Verify cryptographic integrity of benchmark GDS files against manifest."""
+    manifest_path = benchmark_dir / "manifest.json"
+    manifest = BenchmarkManifestManager.load(manifest_path)
+    integrity = BenchmarkManifestManager.verify_integrity(manifest, benchmark_dir)
+
+    failed = [case_id for case_id, ok in integrity.items() if not ok]
+    all_ok = len(failed) == 0
+
+    return {
+        "status": "success" if all_ok else "failed",
+        "benchmark_version": manifest.benchmark_version,
+        "total_cases": manifest.case_count,
+        "verified_cases": sum(1 for ok in integrity.values() if ok),
+        "failed_cases": failed,
+        "all_valid": all_ok,
+    }
+
+
+def execute_benchmark_generate(output_dir: Path) -> dict:
+    """Deterministically regenerate benchmark dataset and manifest."""
+    generator = BenchmarkGenerator()
+    manifest = generator.generate_all(output_dir)
+    return {
+        "status": "success",
+        "output_dir": str(output_dir.resolve()),
+        "case_count": manifest.case_count,
+        "benchmark_version": manifest.benchmark_version,
+    }
+
+
+def execute_benchmark_evaluate(
+    benchmark_dir: Path,
+    output_dir: Path | None = None,
+    candidate_mode: str = "heuristic",
+    candidate_script: Path | None = None,
+    rules: list[str] | None = None,
+    tiers: list[str] | None = None,
+    limit: int | None = None,
+    profile_name: str = "asap7_curated",
+) -> dict:
+    """Execute single-shot repair evaluation across benchmark cases."""
+    manifest_path = benchmark_dir / "manifest.json"
+    manifest = BenchmarkManifestManager.load(manifest_path)
+
+    parsed_tiers = [DifficultyTier(t.strip().lower()) for t in tiers] if tiers else None
+    filtered_cases = BenchmarkManifestManager.filter_cases(manifest, rules=rules, tiers=parsed_tiers, limit=limit)
+
+    evaluator = BenchmarkEvaluator(
+        base_dir=benchmark_dir,
+        output_dir=output_dir,
+        profile_name=profile_name,
+    )
+    summary = evaluator.evaluate_batch(
+        cases=filtered_cases,
+        mode=candidate_mode,
+        candidate_script=candidate_script,
+    )
+    return {
+        "status": "success",
+        "output_dir": str(evaluator.output_dir.resolve()),
+        "summary": summary.to_dict(),
+    }
 
 
 def run_pipeline(
@@ -240,7 +334,20 @@ def main() -> int:
     )
     parser.add_argument(
         "--mode",
-        choices=["full", "single-shot", "run-drc", "violation-ctx", "drc-ctx", "gds-ctx", "load-knowledge", "save-script"],
+        choices=[
+            "full",
+            "single-shot",
+            "run-drc",
+            "violation-ctx",
+            "drc-ctx",
+            "gds-ctx",
+            "load-knowledge",
+            "save-script",
+            "benchmark-list",
+            "benchmark-verify",
+            "benchmark-generate",
+            "benchmark-evaluate",
+        ],
         default="full",
         help="Pipeline mode to execute (default: %(default)s)",
     )
@@ -333,11 +440,65 @@ def main() -> int:
         default=DEFAULT_RUNS_DIR,
         help="Root directory for run evaluation bundles (default: %(default)s)",
     )
+    parser.add_argument(
+        "--benchmark-dir",
+        type=Path,
+        default=DEFAULT_BENCHMARK_DIR,
+        help="Root directory containing benchmark dataset (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--benchmark-rules",
+        type=str,
+        help="Comma-separated list of rule families to filter benchmark cases (e.g. M1.W.1,M2.W.1)",
+    )
+    parser.add_argument(
+        "--benchmark-tiers",
+        type=str,
+        help="Comma-separated list of difficulty tiers to filter benchmark cases (e.g. isolated,boundary)",
+    )
+    parser.add_argument(
+        "--benchmark-limit",
+        type=int,
+        help="Maximum number of benchmark cases to process",
+    )
+    parser.add_argument(
+        "--benchmark-output",
+        type=Path,
+        help="Destination directory for benchmark evaluation results and summaries",
+    )
 
     args = parser.parse_args()
 
     try:
-        if args.mode == "single-shot":
+        # Benchmark mode dispatches
+        if args.mode == "benchmark-list":
+            rules = [r.strip() for r in args.benchmark_rules.split(",")] if args.benchmark_rules else None
+            tiers = [t.strip() for t in args.benchmark_tiers.split(",")] if args.benchmark_tiers else None
+            results = execute_benchmark_list(
+                benchmark_dir=args.benchmark_dir,
+                rules=rules,
+                tiers=tiers,
+                limit=args.benchmark_limit,
+            )
+        elif args.mode == "benchmark-verify":
+            results = execute_benchmark_verify(benchmark_dir=args.benchmark_dir)
+        elif args.mode == "benchmark-generate":
+            out_dir = args.benchmark_output or args.benchmark_dir
+            results = execute_benchmark_generate(output_dir=out_dir)
+        elif args.mode == "benchmark-evaluate":
+            rules = [r.strip() for r in args.benchmark_rules.split(",")] if args.benchmark_rules else None
+            tiers = [t.strip() for t in args.benchmark_tiers.split(",")] if args.benchmark_tiers else None
+            results = execute_benchmark_evaluate(
+                benchmark_dir=args.benchmark_dir,
+                output_dir=args.benchmark_output,
+                candidate_mode=args.candidate_mode,
+                candidate_script=args.candidate_script,
+                rules=rules,
+                tiers=tiers,
+                limit=args.benchmark_limit,
+                profile_name=args.profile or "asap7_curated",
+            )
+        elif args.mode == "single-shot":
             results = execute_single_shot(
                 input_gds=args.gds,
                 drc_script=args.deck,

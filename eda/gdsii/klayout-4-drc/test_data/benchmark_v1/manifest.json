@@ -1,0 +1,1649 @@
+{
+  "benchmark_version": "1.0.0",
+  "case_count": 100,
+  "cases": [
+    {
+      "case_id": "m1_w1_iso_01",
+      "description": "Straight vertical M1 wire with width 10nm (< 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.W.1"
+      ],
+      "gds_rel_path": "cases/m1_w1_iso_01.gds",
+      "rule_id": "M1.W.1",
+      "sha256": "5030e816f195d81ae9dac563f0d9ac07dd80d02fd475e91b46da5c0849711353",
+      "tags": [
+        "width",
+        "vertical",
+        "gross_defect"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_w1_iso_02",
+      "description": "Straight vertical M1 wire with width 12nm (< 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.W.1"
+      ],
+      "gds_rel_path": "cases/m1_w1_iso_02.gds",
+      "rule_id": "M1.W.1",
+      "sha256": "7bb7fa3cf4e62140dcdbbbd213ba5c47a02d4d8e32c3541fa58d8bb73f5cae70",
+      "tags": [
+        "width",
+        "vertical"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_w1_iso_03",
+      "description": "Straight vertical M1 wire with width 14nm (< 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.W.1"
+      ],
+      "gds_rel_path": "cases/m1_w1_iso_03.gds",
+      "rule_id": "M1.W.1",
+      "sha256": "5c336674e2d6246028ca60c1fc5ce5ec450cf2489e009cb623fbf1044386a933",
+      "tags": [
+        "width",
+        "vertical"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_w1_iso_04",
+      "description": "Straight vertical M1 wire with width 15nm (< 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.W.1"
+      ],
+      "gds_rel_path": "cases/m1_w1_iso_04.gds",
+      "rule_id": "M1.W.1",
+      "sha256": "d38ee07ca288d232649423629a85476792cd363c821e2419e3174854f990e07b",
+      "tags": [
+        "width",
+        "vertical"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_w1_iso_05",
+      "description": "Straight vertical M1 wire with width 16nm (< 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.W.1"
+      ],
+      "gds_rel_path": "cases/m1_w1_iso_05.gds",
+      "rule_id": "M1.W.1",
+      "sha256": "e4e8ee7b14ab0ca7213a848195ab9ca19ea3c4ca7356d70ddc69d0a1e6b6489f",
+      "tags": [
+        "width",
+        "vertical",
+        "short_run"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_w1_iso_06",
+      "description": "Straight horizontal M1 wire with width 12nm (< 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.W.1"
+      ],
+      "gds_rel_path": "cases/m1_w1_iso_06.gds",
+      "rule_id": "M1.W.1",
+      "sha256": "1f5131a88f30451b9dcb66f5fe49a149cb8d8e89fcc82e6b65b577f18fa631f4",
+      "tags": [
+        "width",
+        "horizontal"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_w1_iso_07",
+      "description": "M1 wire with narrow 14nm edge notch",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.W.1"
+      ],
+      "gds_rel_path": "cases/m1_w1_iso_07.gds",
+      "rule_id": "M1.W.1",
+      "sha256": "bfcd97fc87ab1c41d87215749496ef279b8a91b6d16209716d7b482e4436dfb4",
+      "tags": [
+        "width",
+        "notch"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_w1_iso_08",
+      "description": "M1 wire with narrow 12nm bottleneck segment",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.W.1"
+      ],
+      "gds_rel_path": "cases/m1_w1_iso_08.gds",
+      "rule_id": "M1.W.1",
+      "sha256": "f87d244ee43847a0de64e81768d62ab138178fb0f27d7556dad52d2912e92a25",
+      "tags": [
+        "width",
+        "stepped",
+        "bottleneck"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_w1_iso_09",
+      "description": "L-bend M1 wire with narrow 14nm vertical leg",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.W.1"
+      ],
+      "gds_rel_path": "cases/m1_w1_iso_09.gds",
+      "rule_id": "M1.W.1",
+      "sha256": "7e86fd5e0ce0a64eae6d57bab66518ac77d7b02ef88a6db4665d1e6fd71a5fdb",
+      "tags": [
+        "width",
+        "l_bend"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_w1_iso_10",
+      "description": "M1 T-junction with narrow 12nm branch",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.W.1"
+      ],
+      "gds_rel_path": "cases/m1_w1_iso_10.gds",
+      "rule_id": "M1.W.1",
+      "sha256": "afcea2d09eb1c310a37348d354ee31914fbe7b05f62bc9b6d784e8317d117004",
+      "tags": [
+        "width",
+        "t_junction"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_w1_bnd_01",
+      "description": "M1 wire at width 17.75nm (-1 DBU grid step below limit)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.W.1"
+      ],
+      "gds_rel_path": "cases/m1_w1_bnd_01.gds",
+      "rule_id": "M1.W.1",
+      "sha256": "4b981f5bf36c4759660cfa346f87b14b1dcf505f69a2f61c6a6f2f8a8498cd48",
+      "tags": [
+        "width",
+        "boundary",
+        "1dbu"
+      ],
+      "tier": "boundary"
+    },
+    {
+      "case_id": "m1_w1_bnd_02",
+      "description": "M1 wire at width 17.50nm (-2 DBU grid steps below limit)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.W.1"
+      ],
+      "gds_rel_path": "cases/m1_w1_bnd_02.gds",
+      "rule_id": "M1.W.1",
+      "sha256": "c9f30ecef43a051551626b61dd88d7b9a1a9c05853a40a3b3e0bc536ba74500e",
+      "tags": [
+        "width",
+        "boundary",
+        "2dbu"
+      ],
+      "tier": "boundary"
+    },
+    {
+      "case_id": "m1_w1_bnd_03",
+      "description": "Horizontal M1 wire at width 17.75nm (-1 DBU grid step)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.W.1"
+      ],
+      "gds_rel_path": "cases/m1_w1_bnd_03.gds",
+      "rule_id": "M1.W.1",
+      "sha256": "cb02ccb25f1bf510a031b23f839a67b299c7886b5a38755016b356afd2823d15",
+      "tags": [
+        "width",
+        "boundary",
+        "horizontal"
+      ],
+      "tier": "boundary"
+    },
+    {
+      "case_id": "m1_w1_bnd_04",
+      "description": "M1 wire exactly at specification threshold 18nm (legal boundary)",
+      "expected_initial_violations": 0,
+      "expected_rules": [],
+      "gds_rel_path": "cases/m1_w1_bnd_04.gds",
+      "rule_id": "M1.W.1",
+      "sha256": "6fdd42000bd30b51b4e8c3455ad0233d6998e9abee6b1559697e70eae5c7fec5",
+      "tags": [
+        "width",
+        "boundary",
+        "exact_threshold"
+      ],
+      "tier": "boundary"
+    },
+    {
+      "case_id": "m1_w1_int_01",
+      "description": "Compound layout with M1.S.1 spacing pair (14nm space) and M1.W.1 narrow wire (14nm)",
+      "expected_initial_violations": 2,
+      "expected_rules": [
+        "M1.W.1",
+        "M1.S.1"
+      ],
+      "gds_rel_path": "cases/m1_w1_int_01.gds",
+      "rule_id": "M1.W.1",
+      "sha256": "e97f3c523bae22456cbe6ac022bbb7d44180c4950b8d6e1146cad483e9b78c88",
+      "tags": [
+        "compound",
+        "width",
+        "spacing"
+      ],
+      "tier": "interaction"
+    },
+    {
+      "case_id": "m1_w1_int_02",
+      "description": "M1 narrow wire (14nm) coupled with rectangular V1 via (18nm x 12nm)",
+      "expected_initial_violations": 2,
+      "expected_rules": [
+        "M1.W.1",
+        "V1.W.1"
+      ],
+      "gds_rel_path": "cases/m1_w1_int_02.gds",
+      "rule_id": "M1.W.1",
+      "sha256": "6a6f267835f7edad1f1606eb186531b1d1ccbf982d10be59b0826b68595286ef",
+      "tags": [
+        "compound",
+        "width",
+        "via"
+      ],
+      "tier": "interaction"
+    },
+    {
+      "case_id": "m1_w1_int_03",
+      "description": "Stepped M1 wire with dual independent width bottlenecks (12nm and 14nm)",
+      "expected_initial_violations": 2,
+      "expected_rules": [
+        "M1.W.1"
+      ],
+      "gds_rel_path": "cases/m1_w1_int_03.gds",
+      "rule_id": "M1.W.1",
+      "sha256": "7f5db97fd7793beabb1f546d2587f9a25d7ac69093010ea88677c6ef94387b80",
+      "tags": [
+        "compound",
+        "width",
+        "dual_violation"
+      ],
+      "tier": "interaction"
+    },
+    {
+      "case_id": "m1_w1_neg_01",
+      "description": "Clean legal straight M1 wire (18nm width)",
+      "expected_initial_violations": 0,
+      "expected_rules": [],
+      "gds_rel_path": "cases/m1_w1_neg_01.gds",
+      "rule_id": "M1.W.1",
+      "sha256": "6fdd42000bd30b51b4e8c3455ad0233d6998e9abee6b1559697e70eae5c7fec5",
+      "tags": [
+        "negative",
+        "clean",
+        "legal_wire"
+      ],
+      "tier": "negative"
+    },
+    {
+      "case_id": "m1_w1_neg_02",
+      "description": "Clean wide M1 wire (28nm width)",
+      "expected_initial_violations": 0,
+      "expected_rules": [],
+      "gds_rel_path": "cases/m1_w1_neg_02.gds",
+      "rule_id": "M1.W.1",
+      "sha256": "1f7b96a2327417029170a42f52f25a5df0988fad222f3a537bcd59584300d401",
+      "tags": [
+        "negative",
+        "clean",
+        "wide_wire"
+      ],
+      "tier": "negative"
+    },
+    {
+      "case_id": "m1_w1_neg_03",
+      "description": "Clean legal L-bend M1 wire (20nm width)",
+      "expected_initial_violations": 0,
+      "expected_rules": [],
+      "gds_rel_path": "cases/m1_w1_neg_03.gds",
+      "rule_id": "M1.W.1",
+      "sha256": "38e3dffd098026dc6f4fa7ec9daf3df64c925ee46f8e8979b3bd7375089a3e64",
+      "tags": [
+        "negative",
+        "clean",
+        "l_bend"
+      ],
+      "tier": "negative"
+    },
+    {
+      "case_id": "m2_w1_iso_01",
+      "description": "Straight vertical M2 wire with width 10nm (< 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M2.W.1"
+      ],
+      "gds_rel_path": "cases/m2_w1_iso_01.gds",
+      "rule_id": "M2.W.1",
+      "sha256": "3077a8df59bfe391a7c6e4829130a4a077365415d012791105108b1c4b0d4ce6",
+      "tags": [
+        "width",
+        "vertical",
+        "m2"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m2_w1_iso_02",
+      "description": "Straight vertical M2 wire with width 12nm (< 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M2.W.1"
+      ],
+      "gds_rel_path": "cases/m2_w1_iso_02.gds",
+      "rule_id": "M2.W.1",
+      "sha256": "3cdaf7d138f4d37a8373719c16129741775f4e65b4d02b333c98e069a979fccd",
+      "tags": [
+        "width",
+        "vertical",
+        "m2"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m2_w1_iso_03",
+      "description": "Straight vertical M2 wire with width 14nm (< 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M2.W.1"
+      ],
+      "gds_rel_path": "cases/m2_w1_iso_03.gds",
+      "rule_id": "M2.W.1",
+      "sha256": "b78955ebcf913c8466880b3e3b53b51693678b1cfa82c8b667339c1c203ab658",
+      "tags": [
+        "width",
+        "vertical",
+        "m2"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m2_w1_iso_04",
+      "description": "Straight vertical M2 wire with width 15nm (< 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M2.W.1"
+      ],
+      "gds_rel_path": "cases/m2_w1_iso_04.gds",
+      "rule_id": "M2.W.1",
+      "sha256": "6f5925fb7b2f82896c4aa9fe06ddd87fbe323bc1d9c81fd67fdb0c528540d37e",
+      "tags": [
+        "width",
+        "vertical",
+        "m2"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m2_w1_iso_05",
+      "description": "Straight vertical M2 wire with width 16nm (< 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M2.W.1"
+      ],
+      "gds_rel_path": "cases/m2_w1_iso_05.gds",
+      "rule_id": "M2.W.1",
+      "sha256": "0b90859184b9a83576eb399c653fd00268a5091b5b8367c9ccd8f5c1a261629a",
+      "tags": [
+        "width",
+        "vertical",
+        "m2"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m2_w1_iso_06",
+      "description": "Straight horizontal M2 wire with width 12nm (< 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M2.W.1"
+      ],
+      "gds_rel_path": "cases/m2_w1_iso_06.gds",
+      "rule_id": "M2.W.1",
+      "sha256": "2c758144de13973e18dcf7296684d8b022d8baf5ae6b8638d5377d0f8c8fca1a",
+      "tags": [
+        "width",
+        "horizontal",
+        "m2"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m2_w1_iso_07",
+      "description": "M2 wire with narrow 14nm edge notch",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M2.W.1"
+      ],
+      "gds_rel_path": "cases/m2_w1_iso_07.gds",
+      "rule_id": "M2.W.1",
+      "sha256": "82db37854bfb3f1a01bf8f1c2d3b65bb798f7d61dc0ce6da60f1cafd2d76dbc0",
+      "tags": [
+        "width",
+        "notch",
+        "m2"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m2_w1_iso_08",
+      "description": "M2 wire with narrow 12nm bottleneck segment",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M2.W.1"
+      ],
+      "gds_rel_path": "cases/m2_w1_iso_08.gds",
+      "rule_id": "M2.W.1",
+      "sha256": "4f22c4585d8b623e581be57cdb9d839214f825a100f2d58f4ba7929387c82cc3",
+      "tags": [
+        "width",
+        "stepped",
+        "m2"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m2_w1_iso_09",
+      "description": "L-bend M2 wire with narrow 14nm vertical leg",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M2.W.1"
+      ],
+      "gds_rel_path": "cases/m2_w1_iso_09.gds",
+      "rule_id": "M2.W.1",
+      "sha256": "173d1e43f0a817a3ce2fe474ff2f26be886a85b421b9e20614c82d49dacebd14",
+      "tags": [
+        "width",
+        "l_bend",
+        "m2"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m2_w1_iso_10",
+      "description": "M2 T-junction with narrow 12nm branch",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M2.W.1"
+      ],
+      "gds_rel_path": "cases/m2_w1_iso_10.gds",
+      "rule_id": "M2.W.1",
+      "sha256": "0dbfe789984ab506311b216bab7351726c7031678a4feae33e73890dcd47cb45",
+      "tags": [
+        "width",
+        "t_junction",
+        "m2"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m2_w1_bnd_01",
+      "description": "M2 wire at width 17.75nm (-1 DBU grid step below limit)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M2.W.1"
+      ],
+      "gds_rel_path": "cases/m2_w1_bnd_01.gds",
+      "rule_id": "M2.W.1",
+      "sha256": "18447741ccc9efcbb383c9adfbb4da2a4f8dbcae7f1c202afa04d432f373a12d",
+      "tags": [
+        "width",
+        "boundary",
+        "m2",
+        "1dbu"
+      ],
+      "tier": "boundary"
+    },
+    {
+      "case_id": "m2_w1_bnd_02",
+      "description": "M2 wire at width 17.50nm (-2 DBU grid steps below limit)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M2.W.1"
+      ],
+      "gds_rel_path": "cases/m2_w1_bnd_02.gds",
+      "rule_id": "M2.W.1",
+      "sha256": "0d5155e6b36c6f3d04d79e6f995379b057111ffc46436f4a7f0501e3b36ecfad",
+      "tags": [
+        "width",
+        "boundary",
+        "m2",
+        "2dbu"
+      ],
+      "tier": "boundary"
+    },
+    {
+      "case_id": "m2_w1_bnd_03",
+      "description": "Horizontal M2 wire at width 17.75nm (-1 DBU grid step)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M2.W.1"
+      ],
+      "gds_rel_path": "cases/m2_w1_bnd_03.gds",
+      "rule_id": "M2.W.1",
+      "sha256": "7f06a905ef28226ef2cdc6c94615673c65d5e8926cfeabd51ebcd8f831e5e184",
+      "tags": [
+        "width",
+        "boundary",
+        "m2",
+        "horizontal"
+      ],
+      "tier": "boundary"
+    },
+    {
+      "case_id": "m2_w1_bnd_04",
+      "description": "M2 wire exactly at specification threshold 18nm (legal boundary)",
+      "expected_initial_violations": 0,
+      "expected_rules": [],
+      "gds_rel_path": "cases/m2_w1_bnd_04.gds",
+      "rule_id": "M2.W.1",
+      "sha256": "5e372ac3d652e43dc78978882e622418ee57d91e5ebb123a2ac50a2c7eb1192a",
+      "tags": [
+        "width",
+        "boundary",
+        "m2",
+        "exact_threshold"
+      ],
+      "tier": "boundary"
+    },
+    {
+      "case_id": "m2_w1_int_01",
+      "description": "M2 narrow wire (14nm) coupled with rectangular V1 via (18nm x 12nm)",
+      "expected_initial_violations": 2,
+      "expected_rules": [
+        "M2.W.1",
+        "V1.W.1"
+      ],
+      "gds_rel_path": "cases/m2_w1_int_01.gds",
+      "rule_id": "M2.W.1",
+      "sha256": "213d4ea37095826dfc03a362b96a5d88b72bf8873f67aad4c2c3fc5229ad4e2b",
+      "tags": [
+        "compound",
+        "m2",
+        "via"
+      ],
+      "tier": "interaction"
+    },
+    {
+      "case_id": "m2_w1_int_02",
+      "description": "Cross-layer routing: M1 narrow wire (12nm) intersecting M2 narrow wire (12nm)",
+      "expected_initial_violations": 2,
+      "expected_rules": [
+        "M1.W.1",
+        "M2.W.1"
+      ],
+      "gds_rel_path": "cases/m2_w1_int_02.gds",
+      "rule_id": "M2.W.1",
+      "sha256": "87daa3dbb7952dce80869fbf5e28479b9082d58e2847523eb33576ddc4754873",
+      "tags": [
+        "compound",
+        "cross_layer"
+      ],
+      "tier": "interaction"
+    },
+    {
+      "case_id": "m2_w1_int_03",
+      "description": "Stepped M2 wire with dual independent width bottlenecks",
+      "expected_initial_violations": 2,
+      "expected_rules": [
+        "M2.W.1"
+      ],
+      "gds_rel_path": "cases/m2_w1_int_03.gds",
+      "rule_id": "M2.W.1",
+      "sha256": "7aacb483fc57d48e09a0d872d11cff23693086192dc1a9c3a8b089b8e154eaac",
+      "tags": [
+        "compound",
+        "m2",
+        "dual_violation"
+      ],
+      "tier": "interaction"
+    },
+    {
+      "case_id": "m2_w1_neg_01",
+      "description": "Clean legal straight M2 wire (18nm width)",
+      "expected_initial_violations": 0,
+      "expected_rules": [],
+      "gds_rel_path": "cases/m2_w1_neg_01.gds",
+      "rule_id": "M2.W.1",
+      "sha256": "5e372ac3d652e43dc78978882e622418ee57d91e5ebb123a2ac50a2c7eb1192a",
+      "tags": [
+        "negative",
+        "clean",
+        "m2"
+      ],
+      "tier": "negative"
+    },
+    {
+      "case_id": "m2_w1_neg_02",
+      "description": "Clean wide M2 wire (28nm width)",
+      "expected_initial_violations": 0,
+      "expected_rules": [],
+      "gds_rel_path": "cases/m2_w1_neg_02.gds",
+      "rule_id": "M2.W.1",
+      "sha256": "deceb0d8e7d55579aa74320b558fcc7e1b213393cdfdafe0c0406212a21d1524",
+      "tags": [
+        "negative",
+        "clean",
+        "m2",
+        "wide_wire"
+      ],
+      "tier": "negative"
+    },
+    {
+      "case_id": "m2_w1_neg_03",
+      "description": "Clean legal L-bend M2 wire (20nm width)",
+      "expected_initial_violations": 0,
+      "expected_rules": [],
+      "gds_rel_path": "cases/m2_w1_neg_03.gds",
+      "rule_id": "M2.W.1",
+      "sha256": "aae4128f57a0183f46430a5dfce2ea4ed0f037c03d7a2237730e7230735f1bbd",
+      "tags": [
+        "negative",
+        "clean",
+        "m2",
+        "l_bend"
+      ],
+      "tier": "negative"
+    },
+    {
+      "case_id": "m1_a1_iso_01",
+      "description": "Square M1 pad 18nm x 18nm (area 324nm2 < 504nm2)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.A.1"
+      ],
+      "gds_rel_path": "cases/m1_a1_iso_01.gds",
+      "rule_id": "M1.A.1",
+      "sha256": "449ca60f4236b6ec5ba33f1c01c6ecabb9e5bf1ff458ff3dbc8cf843d8d1bd1e",
+      "tags": [
+        "area",
+        "square"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_a1_iso_02",
+      "description": "Rectangular M1 pad 18nm x 20nm (area 360nm2 < 504nm2)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.A.1"
+      ],
+      "gds_rel_path": "cases/m1_a1_iso_02.gds",
+      "rule_id": "M1.A.1",
+      "sha256": "b1a6e24808f2c50f2283a903b037693dbba4112a31ba50238d5ae28ab8d8731f",
+      "tags": [
+        "area",
+        "pad"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_a1_iso_03",
+      "description": "Rectangular M1 pad 18nm x 22nm (area 396nm2 < 504nm2)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.A.1"
+      ],
+      "gds_rel_path": "cases/m1_a1_iso_03.gds",
+      "rule_id": "M1.A.1",
+      "sha256": "3f6dba57576954946addd32278f0c1bba58fefcc8518dd9d9a9438ee2f88bffc",
+      "tags": [
+        "area",
+        "pad"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_a1_iso_04",
+      "description": "Rectangular M1 pad 18nm x 24nm (area 432nm2 < 504nm2)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.A.1"
+      ],
+      "gds_rel_path": "cases/m1_a1_iso_04.gds",
+      "rule_id": "M1.A.1",
+      "sha256": "6248d4e8e9323855d296251f5eb979564fbcddb081fa29001df28a20271f1c6c",
+      "tags": [
+        "area",
+        "pad"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_a1_iso_05",
+      "description": "Rectangular M1 pad 18nm x 26nm (area 468nm2 < 504nm2)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.A.1"
+      ],
+      "gds_rel_path": "cases/m1_a1_iso_05.gds",
+      "rule_id": "M1.A.1",
+      "sha256": "f19f1cb86d3ef387115d78c7bb16906b626dde7dfe62f3514570d8ff2ba097a1",
+      "tags": [
+        "area",
+        "pad"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_a1_iso_06",
+      "description": "Square M1 pad 20nm x 20nm (area 400nm2 < 504nm2)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.A.1"
+      ],
+      "gds_rel_path": "cases/m1_a1_iso_06.gds",
+      "rule_id": "M1.A.1",
+      "sha256": "efd3b0eb89b949cd555ce878168a87102ae4776517e25df99cc5347371474cca",
+      "tags": [
+        "area",
+        "square"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_a1_iso_07",
+      "description": "Rectangular M1 pad 22nm x 20nm (area 440nm2 < 504nm2)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.A.1"
+      ],
+      "gds_rel_path": "cases/m1_a1_iso_07.gds",
+      "rule_id": "M1.A.1",
+      "sha256": "b019aa5f4790e15338d0f6f7a5d8845788c22540d0dc66d4ffc97806887182b2",
+      "tags": [
+        "area",
+        "pad"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_a1_iso_08",
+      "description": "L-shaped M1 pad with sub-504nm2 total area (~432nm2)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.A.1"
+      ],
+      "gds_rel_path": "cases/m1_a1_iso_08.gds",
+      "rule_id": "M1.A.1",
+      "sha256": "de758c826993c75b9b18d3c34783092428a5edd282ac609182efc5706e97dddc",
+      "tags": [
+        "area",
+        "l_shaped"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_a1_iso_09",
+      "description": "Rectangular M1 pad 18nm x 25nm (area 450nm2 < 504nm2)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.A.1"
+      ],
+      "gds_rel_path": "cases/m1_a1_iso_09.gds",
+      "rule_id": "M1.A.1",
+      "sha256": "2787c125b19e5ff592c8b22bbcea523acd873add874079a579e899f472a08afb",
+      "tags": [
+        "area",
+        "pad"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_a1_iso_10",
+      "description": "Rectangular M1 pad 19nm x 24nm (area 456nm2 < 504nm2)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.A.1"
+      ],
+      "gds_rel_path": "cases/m1_a1_iso_10.gds",
+      "rule_id": "M1.A.1",
+      "sha256": "25b9e144ebfbaee882903b649b68c2fcdeea99058a35dbb04a80fe06d108cbfe",
+      "tags": [
+        "area",
+        "pad"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_a1_bnd_01",
+      "description": "M1 pad with area 499.5nm2 (just below 504nm2 threshold)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.A.1"
+      ],
+      "gds_rel_path": "cases/m1_a1_bnd_01.gds",
+      "rule_id": "M1.A.1",
+      "sha256": "379bf4d77d598ade9c8057b909f56418deac621a7b91aa5a414e271fc59ba1e3",
+      "tags": [
+        "area",
+        "boundary",
+        "1dbu"
+      ],
+      "tier": "boundary"
+    },
+    {
+      "case_id": "m1_a1_bnd_02",
+      "description": "M1 pad with area 495.0nm2 (just below 504nm2 threshold)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.A.1"
+      ],
+      "gds_rel_path": "cases/m1_a1_bnd_02.gds",
+      "rule_id": "M1.A.1",
+      "sha256": "685c767ac66763eb5e8836ff6c0563cce67fa6258cb2bac3cf46337e421233f9",
+      "tags": [
+        "area",
+        "boundary",
+        "2dbu"
+      ],
+      "tier": "boundary"
+    },
+    {
+      "case_id": "m1_a1_bnd_03",
+      "description": "M1 pad with area 504.0nm2 (exact threshold boundary)",
+      "expected_initial_violations": 0,
+      "expected_rules": [],
+      "gds_rel_path": "cases/m1_a1_bnd_03.gds",
+      "rule_id": "M1.A.1",
+      "sha256": "e2797c7fdc761fea8252dd6137ca00d7caebeef7406a1eacfe004a8b77738fbe",
+      "tags": [
+        "area",
+        "boundary",
+        "exact_threshold"
+      ],
+      "tier": "boundary"
+    },
+    {
+      "case_id": "m1_a1_bnd_04",
+      "description": "M1 pad with area 508.5nm2 (just above 504nm2 threshold)",
+      "expected_initial_violations": 0,
+      "expected_rules": [],
+      "gds_rel_path": "cases/m1_a1_bnd_04.gds",
+      "rule_id": "M1.A.1",
+      "sha256": "d5cead09db2ed75e7fccab142ef17e596e917fd8f57151a458dc1d7b4d1618ff",
+      "tags": [
+        "area",
+        "boundary",
+        "legal"
+      ],
+      "tier": "boundary"
+    },
+    {
+      "case_id": "m1_a1_int_01",
+      "description": "Sub-area M1 pad (360nm2) adjacent to M1 trunk",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.A.1"
+      ],
+      "gds_rel_path": "cases/m1_a1_int_01.gds",
+      "rule_id": "M1.A.1",
+      "sha256": "323a717b43f1860f95dad71e6557c34e17bd678a952691d4b42427cb951dc234",
+      "tags": [
+        "compound",
+        "area"
+      ],
+      "tier": "interaction"
+    },
+    {
+      "case_id": "m1_a1_int_02",
+      "description": "Dual independent sub-area M1 pads (360nm2 each)",
+      "expected_initial_violations": 2,
+      "expected_rules": [
+        "M1.A.1"
+      ],
+      "gds_rel_path": "cases/m1_a1_int_02.gds",
+      "rule_id": "M1.A.1",
+      "sha256": "f5d95616de0bf490bbf933f04fe19f9f87ec37cd0cba31bc9a36a2c579dcadc6",
+      "tags": [
+        "compound",
+        "area",
+        "dual_pad"
+      ],
+      "tier": "interaction"
+    },
+    {
+      "case_id": "m1_a1_int_03",
+      "description": "Sub-area M1 pad (360nm2) coupled with rectangular V1 via (18nm x 12nm)",
+      "expected_initial_violations": 2,
+      "expected_rules": [
+        "M1.A.1",
+        "V1.W.1"
+      ],
+      "gds_rel_path": "cases/m1_a1_int_03.gds",
+      "rule_id": "M1.A.1",
+      "sha256": "f309d25754e5b39584ceaf2489aa1c13e47396c7dac62dd74512bc1c53f16a72",
+      "tags": [
+        "compound",
+        "area",
+        "via"
+      ],
+      "tier": "interaction"
+    },
+    {
+      "case_id": "m1_a1_neg_01",
+      "description": "Clean standard M1 landing pad (area 720nm2 > 504nm2)",
+      "expected_initial_violations": 0,
+      "expected_rules": [],
+      "gds_rel_path": "cases/m1_a1_neg_01.gds",
+      "rule_id": "M1.A.1",
+      "sha256": "c6bc78a0576455f95b8487956a3e1f45e72227d853a649c379f00489fd938db5",
+      "tags": [
+        "negative",
+        "clean",
+        "landing_pad"
+      ],
+      "tier": "negative"
+    },
+    {
+      "case_id": "m1_a1_neg_02",
+      "description": "Clean square M1 plate (area 900nm2 > 504nm2)",
+      "expected_initial_violations": 0,
+      "expected_rules": [],
+      "gds_rel_path": "cases/m1_a1_neg_02.gds",
+      "rule_id": "M1.A.1",
+      "sha256": "a1ebaf8c85c1d3942e4bf01c30f226641aafbfb79506018f0f68413099538f3a",
+      "tags": [
+        "negative",
+        "clean",
+        "plate"
+      ],
+      "tier": "negative"
+    },
+    {
+      "case_id": "m1_a1_neg_03",
+      "description": "Clean M1 trace segment (area 1080nm2 > 504nm2)",
+      "expected_initial_violations": 0,
+      "expected_rules": [],
+      "gds_rel_path": "cases/m1_a1_neg_03.gds",
+      "rule_id": "M1.A.1",
+      "sha256": "52d289958593049ba0e62b0a27c27f74076115f49fcd32ec1f03f38298ae6ed7",
+      "tags": [
+        "negative",
+        "clean",
+        "trace"
+      ],
+      "tier": "negative"
+    },
+    {
+      "case_id": "m1_s1_iso_01",
+      "description": "Parallel M1 wires with spacing 10nm (< 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.S.1"
+      ],
+      "gds_rel_path": "cases/m1_s1_iso_01.gds",
+      "rule_id": "M1.S.1",
+      "sha256": "2a8646f11faaa890999c75b1f2d257d11456c2cb5345536d56ac76d9d69845f0",
+      "tags": [
+        "spacing",
+        "vertical",
+        "gross_defect"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_s1_iso_02",
+      "description": "Parallel M1 wires with spacing 12nm (< 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.S.1"
+      ],
+      "gds_rel_path": "cases/m1_s1_iso_02.gds",
+      "rule_id": "M1.S.1",
+      "sha256": "2382b6b2362793110b2cb96b04c8480e08f55a9aa71b047532b9af1fba6f218e",
+      "tags": [
+        "spacing",
+        "vertical"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_s1_iso_03",
+      "description": "Parallel M1 wires with spacing 14nm (< 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.S.1"
+      ],
+      "gds_rel_path": "cases/m1_s1_iso_03.gds",
+      "rule_id": "M1.S.1",
+      "sha256": "ceffe26c0935cf61bd0a8db4d75ef28c91337525d4e96485c5d2d7e972086d6f",
+      "tags": [
+        "spacing",
+        "vertical"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_s1_iso_04",
+      "description": "Parallel M1 wires with spacing 15nm (< 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.S.1"
+      ],
+      "gds_rel_path": "cases/m1_s1_iso_04.gds",
+      "rule_id": "M1.S.1",
+      "sha256": "c7419fd648789f3d0823bf6bd2801793dfd98b94a53429759207e06e684187b7",
+      "tags": [
+        "spacing",
+        "vertical"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_s1_iso_05",
+      "description": "Parallel M1 wires with spacing 16nm (< 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.S.1"
+      ],
+      "gds_rel_path": "cases/m1_s1_iso_05.gds",
+      "rule_id": "M1.S.1",
+      "sha256": "907e5e683d76b6d198f88845971827ca2ee4b0734088efe5eb26f030d3409fe8",
+      "tags": [
+        "spacing",
+        "vertical"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_s1_iso_06",
+      "description": "Horizontal parallel M1 wires with spacing 12nm (< 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.S.1"
+      ],
+      "gds_rel_path": "cases/m1_s1_iso_06.gds",
+      "rule_id": "M1.S.1",
+      "sha256": "3645a4539d9bdb192e37405964711e68c113fceed7c5bedab38e4f2497aed77e",
+      "tags": [
+        "spacing",
+        "horizontal"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_s1_iso_07",
+      "description": "Horizontal parallel M1 wires with spacing 14nm (< 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.S.1"
+      ],
+      "gds_rel_path": "cases/m1_s1_iso_07.gds",
+      "rule_id": "M1.S.1",
+      "sha256": "c3ded1db23a675b350eefd73e3a597dac222c0805affe7bbc09bdcb64bde1a7e",
+      "tags": [
+        "spacing",
+        "horizontal"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_s1_iso_08",
+      "description": "Wide parallel M1 wires (50nm width) with spacing 14nm",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.S.1"
+      ],
+      "gds_rel_path": "cases/m1_s1_iso_08.gds",
+      "rule_id": "M1.S.1",
+      "sha256": "0b182da7e9074edc46f8fe904f150ada9602d9256ee7e50f19b2620cdbe9dcef",
+      "tags": [
+        "spacing",
+        "wide_wires"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_s1_iso_09",
+      "description": "Staggered parallel M1 wires (spacing 14nm, 60nm overlap)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.S.1"
+      ],
+      "gds_rel_path": "cases/m1_s1_iso_09.gds",
+      "rule_id": "M1.S.1",
+      "sha256": "9d15ff12c8f47b51fd04802aec6bf65ef10484b785bf214ed5cdf83c8a32ae06",
+      "tags": [
+        "spacing",
+        "staggered"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_s1_iso_10",
+      "description": "Parallel M1 wires (60nm length) with spacing 14nm",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.S.1"
+      ],
+      "gds_rel_path": "cases/m1_s1_iso_10.gds",
+      "rule_id": "M1.S.1",
+      "sha256": "da7a42fd8d8b1d1f061263ae380d6e47108a045b1ad3aa05bd3a1b7099312814",
+      "tags": [
+        "spacing",
+        "short_run"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "m1_s1_bnd_01",
+      "description": "Parallel M1 wires at spacing 17.75nm (-1 DBU grid step below limit)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.S.1"
+      ],
+      "gds_rel_path": "cases/m1_s1_bnd_01.gds",
+      "rule_id": "M1.S.1",
+      "sha256": "9ea6794af4208f5148d1f5d2a7c61e9e65690ef391dc04a68a8771e54aaf9b73",
+      "tags": [
+        "spacing",
+        "boundary",
+        "1dbu"
+      ],
+      "tier": "boundary"
+    },
+    {
+      "case_id": "m1_s1_bnd_02",
+      "description": "Parallel M1 wires at spacing 17.50nm (-2 DBU grid steps below limit)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "M1.S.1"
+      ],
+      "gds_rel_path": "cases/m1_s1_bnd_02.gds",
+      "rule_id": "M1.S.1",
+      "sha256": "3005ead48eca45ad4d0014090eabbc402925c736e07c0ad15da15819d7de9aa9",
+      "tags": [
+        "spacing",
+        "boundary",
+        "2dbu"
+      ],
+      "tier": "boundary"
+    },
+    {
+      "case_id": "m1_s1_bnd_03",
+      "description": "Parallel M1 wires at exact threshold spacing 18.0nm (legal boundary)",
+      "expected_initial_violations": 0,
+      "expected_rules": [],
+      "gds_rel_path": "cases/m1_s1_bnd_03.gds",
+      "rule_id": "M1.S.1",
+      "sha256": "c477415e17f2208d92f2c4819d51aed20ddae213635c33adb138efb2821cf065",
+      "tags": [
+        "spacing",
+        "boundary",
+        "exact_threshold"
+      ],
+      "tier": "boundary"
+    },
+    {
+      "case_id": "m1_s1_bnd_04",
+      "description": "Parallel M1 wires at spacing 18.25nm (+1 DBU grid step above limit)",
+      "expected_initial_violations": 0,
+      "expected_rules": [],
+      "gds_rel_path": "cases/m1_s1_bnd_04.gds",
+      "rule_id": "M1.S.1",
+      "sha256": "a150104dbda8236ff884856d0e265001a3b257b6b344d96bae7543e0f392936e",
+      "tags": [
+        "spacing",
+        "boundary",
+        "legal"
+      ],
+      "tier": "boundary"
+    },
+    {
+      "case_id": "m1_s1_int_01",
+      "description": "Three parallel M1 wires with dual spacing violations (14nm and 14nm)",
+      "expected_initial_violations": 2,
+      "expected_rules": [
+        "M1.S.1"
+      ],
+      "gds_rel_path": "cases/m1_s1_int_01.gds",
+      "rule_id": "M1.S.1",
+      "sha256": "e41f4c3feec8290ee9a65461da971da3d57ba883893d5ecf873861dfe14c8b30",
+      "tags": [
+        "compound",
+        "spacing",
+        "bus_track"
+      ],
+      "tier": "interaction"
+    },
+    {
+      "case_id": "m1_s1_int_02",
+      "description": "M1 parallel track pair at 14nm spacing plus narrow 14nm wire",
+      "expected_initial_violations": 2,
+      "expected_rules": [
+        "M1.S.1",
+        "M1.W.1"
+      ],
+      "gds_rel_path": "cases/m1_s1_int_02.gds",
+      "rule_id": "M1.S.1",
+      "sha256": "e97f3c523bae22456cbe6ac022bbb7d44180c4950b8d6e1146cad483e9b78c88",
+      "tags": [
+        "compound",
+        "spacing",
+        "width"
+      ],
+      "tier": "interaction"
+    },
+    {
+      "case_id": "m1_s1_int_03",
+      "description": "M1 tight spacing (14nm) coupled with rectangular V1 via cut (18nm x 12nm)",
+      "expected_initial_violations": 2,
+      "expected_rules": [
+        "M1.S.1",
+        "V1.W.1"
+      ],
+      "gds_rel_path": "cases/m1_s1_int_03.gds",
+      "rule_id": "M1.S.1",
+      "sha256": "394b1ca4234c516edddbc665c486a81219a1b383a81a267b270c4653b3e32234",
+      "tags": [
+        "compound",
+        "spacing",
+        "via"
+      ],
+      "tier": "interaction"
+    },
+    {
+      "case_id": "m1_s1_neg_01",
+      "description": "Clean parallel M1 wires with legal 18nm spacing",
+      "expected_initial_violations": 0,
+      "expected_rules": [],
+      "gds_rel_path": "cases/m1_s1_neg_01.gds",
+      "rule_id": "M1.S.1",
+      "sha256": "c477415e17f2208d92f2c4819d51aed20ddae213635c33adb138efb2821cf065",
+      "tags": [
+        "negative",
+        "clean",
+        "legal_spacing"
+      ],
+      "tier": "negative"
+    },
+    {
+      "case_id": "m1_s1_neg_02",
+      "description": "Clean parallel M1 wires with wide 24nm spacing",
+      "expected_initial_violations": 0,
+      "expected_rules": [],
+      "gds_rel_path": "cases/m1_s1_neg_02.gds",
+      "rule_id": "M1.S.1",
+      "sha256": "95641a64de2f72a9c98b115405071b14716e0f2d4e80602e830e083e3f65d6e9",
+      "tags": [
+        "negative",
+        "clean",
+        "wide_spacing"
+      ],
+      "tier": "negative"
+    },
+    {
+      "case_id": "m1_s1_neg_03",
+      "description": "Short parallel stubs (30nm length <= 36nm filter) with 12nm spacing (rule-exempt clean)",
+      "expected_initial_violations": 0,
+      "expected_rules": [],
+      "gds_rel_path": "cases/m1_s1_neg_03.gds",
+      "rule_id": "M1.S.1",
+      "sha256": "794141fba300c104a50169d5bf0c41299e840460e3e7a4911a161f6a37db8a61",
+      "tags": [
+        "negative",
+        "clean",
+        "filter_exempt"
+      ],
+      "tier": "negative"
+    },
+    {
+      "case_id": "v1_w1_iso_01",
+      "description": "Square V1 cut 10nm x 10nm (< 18nm, violates both dimensions)",
+      "expected_initial_violations": 2,
+      "expected_rules": [
+        "V1.W.1"
+      ],
+      "gds_rel_path": "cases/v1_w1_iso_01.gds",
+      "rule_id": "V1.W.1",
+      "sha256": "50dfb9dc76e6c96a0102f9ffd3b1a6e52e43d3f2cc61b5285c2cb8c9afcfb257",
+      "tags": [
+        "via",
+        "square",
+        "gross_defect"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "v1_w1_iso_02",
+      "description": "Square V1 cut 12nm x 12nm (< 18nm, violates both dimensions)",
+      "expected_initial_violations": 2,
+      "expected_rules": [
+        "V1.W.1"
+      ],
+      "gds_rel_path": "cases/v1_w1_iso_02.gds",
+      "rule_id": "V1.W.1",
+      "sha256": "8f7c477552704c9fda8b1ef05be22868f4fbec059e2a92670de24aad61f8b63e",
+      "tags": [
+        "via",
+        "square"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "v1_w1_iso_03",
+      "description": "Square V1 cut 14nm x 14nm (< 18nm, violates both dimensions)",
+      "expected_initial_violations": 2,
+      "expected_rules": [
+        "V1.W.1"
+      ],
+      "gds_rel_path": "cases/v1_w1_iso_03.gds",
+      "rule_id": "V1.W.1",
+      "sha256": "b14bb986fa96942a384569ab477dc343430daf244e707b785ef58fed71ae2b78",
+      "tags": [
+        "via",
+        "square"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "v1_w1_iso_04",
+      "description": "Square V1 cut 15nm x 15nm (< 18nm, violates both dimensions)",
+      "expected_initial_violations": 2,
+      "expected_rules": [
+        "V1.W.1"
+      ],
+      "gds_rel_path": "cases/v1_w1_iso_04.gds",
+      "rule_id": "V1.W.1",
+      "sha256": "b433b14cdf2db959fadc9a76f71aff489301b5ba7dfe49ceab2e435a7f404bc7",
+      "tags": [
+        "via",
+        "square"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "v1_w1_iso_05",
+      "description": "Square V1 cut 16nm x 16nm (< 18nm, violates both dimensions)",
+      "expected_initial_violations": 2,
+      "expected_rules": [
+        "V1.W.1"
+      ],
+      "gds_rel_path": "cases/v1_w1_iso_05.gds",
+      "rule_id": "V1.W.1",
+      "sha256": "4bfc18bbc758fd9d3a7174afbe79607c49db3d82d4eed5cd637bcbf2070664ae",
+      "tags": [
+        "via",
+        "square"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "v1_w1_iso_06",
+      "description": "Rectangular V1 cut 18nm x 12nm (height < 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "V1.W.1"
+      ],
+      "gds_rel_path": "cases/v1_w1_iso_06.gds",
+      "rule_id": "V1.W.1",
+      "sha256": "cfe05d50d4283e5ffa6dbcb6863734ca622fb73bc07840a78101653967d1c09e",
+      "tags": [
+        "via",
+        "rectangular"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "v1_w1_iso_07",
+      "description": "Rectangular V1 cut 18nm x 14nm (height < 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "V1.W.1"
+      ],
+      "gds_rel_path": "cases/v1_w1_iso_07.gds",
+      "rule_id": "V1.W.1",
+      "sha256": "c84cdaedc0dc73d05dbf9aed550c05448a72e7e99dfa27c539b05a67bd6e6424",
+      "tags": [
+        "via",
+        "rectangular"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "v1_w1_iso_08",
+      "description": "Rectangular V1 cut 12nm x 18nm (width < 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "V1.W.1"
+      ],
+      "gds_rel_path": "cases/v1_w1_iso_08.gds",
+      "rule_id": "V1.W.1",
+      "sha256": "0d3bb0c9496d36a013306a289565a92993ce46cd20dc67c60e832257ece4bbf3",
+      "tags": [
+        "via",
+        "rectangular"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "v1_w1_iso_09",
+      "description": "Rectangular V1 cut 14nm x 20nm (width < 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "V1.W.1"
+      ],
+      "gds_rel_path": "cases/v1_w1_iso_09.gds",
+      "rule_id": "V1.W.1",
+      "sha256": "f5cc605140eda194125036810b936f90ee038f6a29dd6f7f9d8b4b0d568f030e",
+      "tags": [
+        "via",
+        "rectangular"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "v1_w1_iso_10",
+      "description": "Rectangular V1 cut 16nm x 18nm (width < 18nm)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "V1.W.1"
+      ],
+      "gds_rel_path": "cases/v1_w1_iso_10.gds",
+      "rule_id": "V1.W.1",
+      "sha256": "72c19cc619cd07fca038eddc5c58759b62f4fdfb1da4904ef2d54286415cabb3",
+      "tags": [
+        "via",
+        "rectangular"
+      ],
+      "tier": "isolated"
+    },
+    {
+      "case_id": "v1_w1_bnd_01",
+      "description": "Square V1 cut at 17.75nm x 17.75nm (-1 DBU grid step below limit)",
+      "expected_initial_violations": 2,
+      "expected_rules": [
+        "V1.W.1"
+      ],
+      "gds_rel_path": "cases/v1_w1_bnd_01.gds",
+      "rule_id": "V1.W.1",
+      "sha256": "9a92d1ea2f7dd1556fdc03a1fc0665673894cef8418634e113584a3ac2a913d4",
+      "tags": [
+        "via",
+        "boundary",
+        "1dbu"
+      ],
+      "tier": "boundary"
+    },
+    {
+      "case_id": "v1_w1_bnd_02",
+      "description": "Square V1 cut at 17.50nm x 17.50nm (-2 DBU grid steps below limit)",
+      "expected_initial_violations": 2,
+      "expected_rules": [
+        "V1.W.1"
+      ],
+      "gds_rel_path": "cases/v1_w1_bnd_02.gds",
+      "rule_id": "V1.W.1",
+      "sha256": "2d3625786ca5ec88ec0a2c0720ad18bdf64cbf333baf7c93bad12f63a2b7adb5",
+      "tags": [
+        "via",
+        "boundary",
+        "2dbu"
+      ],
+      "tier": "boundary"
+    },
+    {
+      "case_id": "v1_w1_bnd_03",
+      "description": "Rectangular V1 cut at 18.0nm x 17.75nm (height -1 DBU)",
+      "expected_initial_violations": 1,
+      "expected_rules": [
+        "V1.W.1"
+      ],
+      "gds_rel_path": "cases/v1_w1_bnd_03.gds",
+      "rule_id": "V1.W.1",
+      "sha256": "ffe31141e4ca2ac432f4ad52e4b39ebdb37d1e06558ca1b9f421f94abf74e0e1",
+      "tags": [
+        "via",
+        "boundary",
+        "rectangular"
+      ],
+      "tier": "boundary"
+    },
+    {
+      "case_id": "v1_w1_bnd_04",
+      "description": "Square V1 cut at exact threshold 18.0nm x 18.0nm (legal boundary)",
+      "expected_initial_violations": 0,
+      "expected_rules": [],
+      "gds_rel_path": "cases/v1_w1_bnd_04.gds",
+      "rule_id": "V1.W.1",
+      "sha256": "0b0ff4c19bf097b2df0fadbc1df0b99d1b3b00b91460b96a11e0cd78281e0574",
+      "tags": [
+        "via",
+        "boundary",
+        "exact_threshold"
+      ],
+      "tier": "boundary"
+    },
+    {
+      "case_id": "v1_w1_int_01",
+      "description": "Rectangular V1 cut (18nm x 12nm) landing on narrow M1 wire (14nm)",
+      "expected_initial_violations": 2,
+      "expected_rules": [
+        "V1.W.1",
+        "M1.W.1"
+      ],
+      "gds_rel_path": "cases/v1_w1_int_01.gds",
+      "rule_id": "V1.W.1",
+      "sha256": "6a6f267835f7edad1f1606eb186531b1d1ccbf982d10be59b0826b68595286ef",
+      "tags": [
+        "compound",
+        "via",
+        "m1"
+      ],
+      "tier": "interaction"
+    },
+    {
+      "case_id": "v1_w1_int_02",
+      "description": "Rectangular V1 cut (18nm x 12nm) landing on narrow M2 wire (14nm)",
+      "expected_initial_violations": 2,
+      "expected_rules": [
+        "V1.W.1",
+        "M2.W.1"
+      ],
+      "gds_rel_path": "cases/v1_w1_int_02.gds",
+      "rule_id": "V1.W.1",
+      "sha256": "213d4ea37095826dfc03a362b96a5d88b72bf8873f67aad4c2c3fc5229ad4e2b",
+      "tags": [
+        "compound",
+        "via",
+        "m2"
+      ],
+      "tier": "interaction"
+    },
+    {
+      "case_id": "v1_w1_int_03",
+      "description": "Dual rectangular V1 cuts (18nm x 12nm each)",
+      "expected_initial_violations": 2,
+      "expected_rules": [
+        "V1.W.1"
+      ],
+      "gds_rel_path": "cases/v1_w1_int_03.gds",
+      "rule_id": "V1.W.1",
+      "sha256": "444292ff3f09e1be827870a0506f552bbfb0557c33c547885bca4d9d9e13ab84",
+      "tags": [
+        "compound",
+        "via",
+        "dual_via"
+      ],
+      "tier": "interaction"
+    },
+    {
+      "case_id": "v1_w1_neg_01",
+      "description": "Clean legal single V1 cut (18nm x 18nm)",
+      "expected_initial_violations": 0,
+      "expected_rules": [],
+      "gds_rel_path": "cases/v1_w1_neg_01.gds",
+      "rule_id": "V1.W.1",
+      "sha256": "0b0ff4c19bf097b2df0fadbc1df0b99d1b3b00b91460b96a11e0cd78281e0574",
+      "tags": [
+        "negative",
+        "clean",
+        "legal_via"
+      ],
+      "tier": "negative"
+    },
+    {
+      "case_id": "v1_w1_neg_02",
+      "description": "Clean legal dual V1 via array (18nm x 18nm cuts)",
+      "expected_initial_violations": 0,
+      "expected_rules": [],
+      "gds_rel_path": "cases/v1_w1_neg_02.gds",
+      "rule_id": "V1.W.1",
+      "sha256": "520c21c09c8affa0c71aee50ee926a0885d1fb9fa7100d563df26c73beebc386",
+      "tags": [
+        "negative",
+        "clean",
+        "via_array"
+      ],
+      "tier": "negative"
+    },
+    {
+      "case_id": "v1_w1_neg_03",
+      "description": "Clean legal V1 via (18nm x 18nm) centered on legal M1 landing pad (36nm x 36nm)",
+      "expected_initial_violations": 0,
+      "expected_rules": [],
+      "gds_rel_path": "cases/v1_w1_neg_03.gds",
+      "rule_id": "V1.W.1",
+      "sha256": "321dd32b9cffd373ca6d3132fbf2d0ed4551c94dfc8ea40e42ca498680c73e01",
+      "tags": [
+        "negative",
+        "clean",
+        "enclosed_via"
+      ],
+      "tier": "negative"
+    }
+  ],
+  "created_at": "2026-10-22T15:28:45.717610+00:00",
+  "description": "ASAP7 7nm Predictive BEOL DRC Benchmark Suite (100 synthetic & boundary mutation cases)",
+  "rule_families": [
+    "M1.W.1",
+    "M2.W.1",
+    "M1.A.1",
+    "M1.S.1",
+    "V1.W.1"
+  ]
+}
