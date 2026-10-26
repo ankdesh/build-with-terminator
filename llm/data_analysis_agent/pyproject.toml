@@ -1,7 +1,7 @@
 [project]
 name = "wps-ai"
-version = "0.1.0"
-description = "Lightweight self-contained air-gapped data analysis chatbot"
+version = "0.2.0"
+description = "Chat-built analysis pipelines with a model-free Windows dashboard runtime"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -9,6 +9,8 @@ dependencies = [
     "uvicorn[standard]>=0.30.0",
     "pandas>=2.2.0",
     "numpy>=1.26.0",
+    "scipy>=1.13.0",
+    "statsmodels>=0.14.2",
     "pydantic>=2.8.0",
     "httpx>=0.27.0",
     "openai>=1.40.0",
@@ -23,6 +25,17 @@ dev = [
     "mypy>=1.11.0",
     "pandas-stubs>=2.2.0",
 ]
+packaging = ["pyinstaller>=6.10.0"]
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["config", "launcher", "runtime_launcher", "offline_app"]
+
+[tool.setuptools.packages.find]
+include = ["backend*", "pipeline_core*", "examples*", "scripts*"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

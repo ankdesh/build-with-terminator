@@ -47,6 +47,7 @@ class AppConfig:
     max_retries: int
     exec_timeout_seconds: int
     max_upload_size_bytes: int
+    strict_model_outputs: bool
 
     @classmethod
     def load(cls, config_path: Optional[Path] = None) -> "AppConfig":
@@ -104,6 +105,7 @@ class AppConfig:
             max_retries=retries,
             exec_timeout_seconds=timeout,
             max_upload_size_bytes=upload_limit,
+            strict_model_outputs=bool(file_settings.get("strict_model_outputs", api_base.rstrip("/") == DEFAULT_OPENAI_API_BASE)),
         )
 
 

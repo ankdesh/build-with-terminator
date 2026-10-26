@@ -6,6 +6,10 @@ __pycache__/
 .mypy_cache/
 *.egg-info/
 data/sessions/
+data/projects/
+runtime_static/
+runtime_cache/
+artifacts/*-qa/
 dist/
 node_modules/
 backend/static/assets/

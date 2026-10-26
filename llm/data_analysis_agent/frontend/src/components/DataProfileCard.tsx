@@ -6,7 +6,6 @@ import {
   ChevronUp,
   Columns,
   Eye,
-  Info,
   Layers,
   ShieldAlert,
   Table,

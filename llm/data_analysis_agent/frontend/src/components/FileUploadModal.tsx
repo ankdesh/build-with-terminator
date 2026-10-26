@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   AlertCircle,
-  CheckCircle2,
   FileCode,
   FileSpreadsheet,
   Loader2,

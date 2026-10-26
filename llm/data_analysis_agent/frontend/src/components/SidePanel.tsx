@@ -4,7 +4,7 @@ import {
   Code2,
   Copy,
   FileTerminal,
-  ListOrdered,
+  Compass,
   Sparkles,
   Terminal,
   X,

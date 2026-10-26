@@ -10,7 +10,7 @@ from backend.app import app
 @pytest.mark.asyncio
 async def test_full_session_lifecycle_and_upload() -> None:
     transport = ASGITransport(app=app)
-    async with AsyncClient(transport=transport, base_url="http://test") as client:
+    async with AsyncClient(transport=transport, base_url="http://localhost") as client:
         # 1. Health check
         resp = await client.get("/health")
         assert resp.status_code == 200

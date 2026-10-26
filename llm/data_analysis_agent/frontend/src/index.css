@@ -29,3 +29,64 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+@layer components {
+  .platform { min-height: 100vh; background: #f5f7fb; color: #172438; font-size: 14px; }
+  .platform button { border: 1px solid #d4dce7; border-radius: 7px; background: white; padding: 8px 12px; cursor: pointer; }
+  .platform button:hover { background: #edf2fa; }
+  .platform button:disabled { opacity: .45; cursor: default; }
+  .platform button.primary { background: #245bd7; border-color: #245bd7; color: white; }
+  .platform button.primary:hover { background: #1647bd; }
+  .platform input:not([type=checkbox]), .platform select, .platform textarea { border: 1px solid #d4dce7; border-radius: 6px; padding: 7px 9px; background: white; max-width: 100%; }
+  .platform input:focus, .platform select:focus, .platform textarea:focus { outline: 2px solid #b1cafc; outline-offset: 1px; }
+  .platform label { display: flex; gap: 5px; font-size: 12px; align-items: center; }
+  .platform h2 { font-size: 15px; font-weight: 650; }
+  .platform h3 { font-size: 13px; font-weight: 650; }
+  .platform small { color: #62738b; font-size: 11px; }
+  .platform-header { height: 66px; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; border-bottom: 1px solid #dce3ee; background: white; }
+  .platform-header strong { font-size: 19px; letter-spacing: -.4px; }
+  .platform-header span { display: block; color: #6a7b90; font-size: 11px; }
+  .builder-layout { display: flex; min-height: calc(100vh - 66px); }
+  .project-list { width: 180px; flex-shrink: 0; padding: 16px 10px; border-right: 1px solid #dce3ee; display: flex; flex-direction: column; gap: 7px; }
+  .project-list button { text-align: left; overflow-wrap: anywhere; }
+  .project-list button small { display: block; margin-top: 5px; }
+  .project-list button.selected { background: #e7efff; border-color: #9cbaff; }
+  .builder-chat { width: 300px; flex-shrink: 0; padding: 20px 16px; border-right: 1px solid #dce3ee; background: white; display: flex; flex-direction: column; gap: 12px; }
+  .builder-chat label { flex-direction: column; align-items: stretch; }
+  .builder-chat textarea { width: 100%; min-height: 90px; resize: vertical; }
+  .builder-chat form { display: flex; flex-direction: column; gap: 10px; }
+  .project-messages { flex: 1; max-height: 42vh; min-height: 130px; overflow-y: auto; }
+  .project-message { margin: 8px 0; padding: 10px; border-radius: 8px; background: #f2f5fa; font-size: 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .project-message.user { background: #edf3ff; }
+  .project-message p { margin-top: 4px; }
+  .preview-area { flex: 1; min-width: 0; padding: 22px; }
+  .profile-details { padding: 10px; background: white; border-radius: 8px; border: 1px solid #dce3ee; margin-bottom: 15px; }
+  .profile-details summary { cursor: pointer; color: #61728a; font-size: 12px; }
+  .revision-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .revision-actions button { font-size: 12px; }
+  .dashboard-heading { margin: 18px 0; }
+  .dashboard-heading h1 { font-size: 25px; font-weight: 650; letter-spacing: -.5px; }
+  .dashboard-heading p { color: #66778e; margin: 5px 0 8px; }
+  .dashboard-controls { display: flex; align-items: end; gap: 12px; flex-wrap: wrap; background: white; border: 1px solid #dce3ee; border-radius: 10px; padding: 16px; margin-bottom: 18px; }
+  .dashboard-controls label { flex-direction: column; align-items: start; }
+  .dashboard-controls input:not([type=checkbox]), .dashboard-controls select { min-width: 110px; max-width: 180px; }
+  .dashboard-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .dashboard-widget { background: white; border: 1px solid #dce3ee; border-radius: 12px; padding: 18px; min-width: 0; }
+  .dashboard-widget.wide { grid-column: 1 / -1; }
+  .metric-value { font-size: 34px; font-weight: 650; letter-spacing: -.7px; margin-top: 12px; }
+  .computed-text { margin-top: 10px; color: #506078; white-space: pre-wrap; }
+  .dashboard-empty { min-height: 380px; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; gap: 12px; color: #66788e; }
+  .dashboard-empty p { max-width: 410px; line-height: 1.65; }
+  .empty-mark { font-size: 48px; color: #8ba5d7; }
+  .pipeline-inspector { width: 320px; flex-shrink: 0; padding: 20px 16px; border-left: 1px solid #dce3ee; background: white; overflow-wrap: anywhere; }
+  .pipeline-inspector section, .pipeline-inspector details { padding: 12px 0; border-bottom: 1px solid #e0e6ef; font-size: 12px; }
+  .pipeline-inspector p { margin: 7px 0; color: #5a6b82; }
+  .pipeline-inspector pre { white-space: pre-wrap; font-size: 11px; background: #f4f6fa; padding: 9px; border-radius: 5px; margin-top: 10px; }
+  .pipeline-inspector summary { cursor: pointer; }
+  .error-banner, .status-banner { padding: 12px 15px; border-radius: 8px; margin-bottom: 15px; overflow-wrap: anywhere; }
+  .error-banner { background: #fff1f1; border: 1px solid #f1bbbb; color: #992929; }
+  .status-banner { background: #edf3ff; border: 1px solid #bdcff4; color: #264979; display: flex; justify-content: space-between; align-items: center; }
+  .runtime-area { max-width: 1300px; margin: auto; padding: 24px; }
+  @media (max-width: 1100px) { .project-list { width: 145px; } .builder-chat { width: 260px; } .pipeline-inspector { width: 260px; } .dashboard-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 780px) { .builder-layout { flex-wrap: wrap; } .project-list { width: 100%; flex-direction: row; overflow-x: auto; border-right: 0; } .project-list button { flex-shrink: 0; max-width: 180px; } .builder-chat { width: 100%; border-right: 0; border-bottom: 1px solid #dce3ee; } .project-messages { max-height: 220px; } .preview-area { width: 100%; } .pipeline-inspector { width: 100%; } .platform-header { padding: 0 14px; } .platform-header strong { font-size: 16px; } }
+}

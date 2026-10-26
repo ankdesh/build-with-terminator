@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  AlertCircle,
   ArrowRight,
   Bot,
   Code2,

@@ -77,18 +77,8 @@ export const ChartViewer: React.FC<ChartViewerProps> = ({ spec }) => {
         top: '12%',
         containLabel: true,
       },
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'cross',
-          label: { backgroundColor: '#475569' },
-        },
-        backgroundColor: 'rgba(255, 255, 255, 0.96)',
-        borderColor: '#e2e8f0',
-        borderWidth: 1,
-        textStyle: { color: '#1e293b', fontSize: 12 },
-      },
       ...rawOption,
+      tooltip: { trigger: 'axis', ...(rawOption.tooltip || {}), renderMode: 'richText' },
       ...(dataZoom ? { dataZoom } : {}),
     };
 
