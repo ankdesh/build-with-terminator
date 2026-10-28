@@ -1,39 +1,17 @@
 # ASAP7 Process Design Kit (PDK) Rules Guide
 
-This document defines physical dimensions, layer numbers, and design rules for the ASAP7 predictive 7nm finFET technology PDK.
+This is a profile-scoped guide for {{PROFILE}}. The loader appends the active
+layer table, DBU convention, and manufacturing grid from the selected profile.
+Use the input layout's actual DBU. Layer numbers in another profile do not apply.
 
----
+The curated ASAP7 deck checks M1.W.1, M2.W.1, M1.A.1, M1.S.1, and V1.W.1.
+M1 and M2 minimum width is 18nm; M1 minimum area is 504nm2. The 18nm M1
+spacing check has the edge-length filter shown in its decoded deck expression.
+V1.W.1 is a minimum-width check. It does not enforce a square via shape.
 
-## 1. Technology Grid and Units
+The legacy mini profile uses different layer conventions and rule IDs.
+Its 9nm enclosure example is not an ASAP7 enclosure specification. Consult all
+active public-deck branches for directional enclosure constraints. The current
+curated evaluation makes no enclosure claim.
 
-- **Database Units (DBU)**: $1\text{ DBU} = 0.25\text{ nm} = 0.00025\ \mu\text{m}$.
-- **Grid Snapping**: All coordinates and dimensions must be integer multiples of the manufacturing grid ($0.25\text{ nm}$).
-- **Conversion**:
-  - Distance in DBU = $\text{Distance in nm} / 0.25$.
-  - Example: $18\text{ nm} \rightarrow 72\text{ DBU}$; $9\text{ nm} \rightarrow 36\text{ DBU}$.
-
----
-
-## 2. ASAP7 Layer Table
-
-| Layer Name | Layer Number | Datatype | Description |
-|---|---|---|---|
-| `M1` | 18 | 0 | Metal 1 (Interconnect) |
-| `V1` | 19 | 0 | Via 1 (Connects M1 to M2) |
-| `M2` | 20 | 0 | Metal 2 (Interconnect) |
-
----
-
-## 3. Geometric Design Rules
-
-### 3.1 M1_W: Metal 1 Minimum Width
-- **Rule Specification**: Minimum width of any M1 polygon is $18\text{ nm}$ ($0.018\ \mu\text{m}$ / $72\text{ DBU}$).
-- **Common Violations**: Thin routing tracks or necks below $18\text{ nm}$ (e.g. $10\text{ nm}$).
-
-### 3.2 M1_S: Metal 1 Minimum Spacing
-- **Rule Specification**: Minimum spacing between distinct M1 polygons or edges is $18\text{ nm}$ ($0.018\ \mu\text{m}$ / $72\text{ DBU}$).
-- **Common Violations**: Parallel traces placed too close (e.g. $10\text{ nm}$ spacing between $0.12\ \mu\text{m}$ and $0.13\ \mu\text{m}$).
-
-### 3.3 V1_M1_ENC: Via 1 Enclosure by Metal 1
-- **Rule Specification**: Metal 1 must enclose Via 1 on all sides by at least $9\text{ nm}$ ($0.009\ \mu\text{m}$ / $36\text{ DBU}$).
-- **Common Violations**: Via placed flush with M1 edge ($0\text{ nm}$ enclosure) or partial overhangs.
+DRC compliance is geometric. Net ownership and electrical connectivity are unknown.

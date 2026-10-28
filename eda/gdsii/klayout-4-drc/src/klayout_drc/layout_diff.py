@@ -29,9 +29,9 @@ class LayerDiff:
         return {
             "layer": self.layer,
             "datatype": self.datatype,
-            "added_area_um2": round(self.added_area_um2, 6),
-            "removed_area_um2": round(self.removed_area_um2, 6),
-            "unchanged_area_um2": round(self.unchanged_area_um2, 6),
+            "added_area_um2": self.added_area_um2,
+            "removed_area_um2": self.removed_area_um2,
+            "unchanged_area_um2": self.unchanged_area_um2,
             "has_changes": self.has_changes,
         }
 
@@ -49,9 +49,9 @@ class LayoutDiffReport:
     def to_dict(self) -> dict:
         """Convert diff report to dictionary."""
         return {
-            "total_added_area_um2": round(self.total_added_area_um2, 6),
-            "total_removed_area_um2": round(self.total_removed_area_um2, 6),
-            "net_area_delta_um2": round(self.net_area_delta_um2, 6),
+            "total_added_area_um2": self.total_added_area_um2,
+            "total_removed_area_um2": self.total_removed_area_um2,
+            "net_area_delta_um2": self.net_area_delta_um2,
             "modified_layers": [list(ly) for ly in self.modified_layers],
             "layer_diffs": [ld.to_dict() for ld in self.layer_diffs],
         }
@@ -101,13 +101,13 @@ class LayoutDiffCalculator:
             if ref_top:
                 ref_idx = ref_layout.find_layer(layer_num, datatype)
                 if ref_idx is not None:
-                    ref_region = db.Region(ref_top.shapes(ref_idx))
+                    ref_region = db.Region(ref_top.begin_shapes_rec(ref_idx)).merged()
 
             patch_region = db.Region()
             if patch_top:
                 patch_idx = patch_layout.find_layer(layer_num, datatype)
                 if patch_idx is not None:
-                    patch_region = db.Region(patch_top.shapes(patch_idx))
+                    patch_region = db.Region(patch_top.begin_shapes_rec(patch_idx)).merged()
 
             # Rescale regions if DBUs differ
             if abs(ref_dbu - patch_dbu) > 1e-9:

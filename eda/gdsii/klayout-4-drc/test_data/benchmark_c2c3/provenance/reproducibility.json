@@ -1,0 +1,19 @@
+{
+  "case_count": 50,
+  "checks": [
+    "Input and reference GDS bytes",
+    "Canonical geometry and hierarchy",
+    "Canonical scored and public-audit markers",
+    "Stable policies, metrics and source metadata"
+  ],
+  "errors": [],
+  "manifest_hashes": [
+    "4a566ed1fe78e7deea54831a4d674dd526bd402b9796ec110cd97d8c9205d1fd",
+    "7a03120086bc211791fe0a521c979144a5e410eb755eb586959975857806181b"
+  ],
+  "passed": true,
+  "report_byte_differences": [
+    "oracle/l4_g0.native_public.lyrdb",
+    "oracle/l5_g1.native_public.lyrdb"
+  ]
+}

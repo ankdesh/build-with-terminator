@@ -1,0 +1,1483 @@
+{
+  "case_count": 10,
+  "pages": 10,
+  "page_format": "A3 landscape",
+  "selection": "Two repair cases per level; one from each source group; selected for rule and failure diversity, not success rate estimation.",
+  "reference_fixes": 10,
+  "accepted_agent_repairs": 0,
+  "accepted_heuristic_repairs": 0,
+  "reference_policy_checks_pass": true,
+  "reference_saved_scored_reports_have_zero_markers": true,
+  "new_model_requests": 0,
+  "new_repairs": 0,
+  "new_checker_runs": 0,
+  "pdf": "output/pdf/c2_c3_selected10_repair_review.pdf",
+  "pdf_sha256": "45e5a9b28a990b6273a54ac0c5f4d166d542c6aa345c7c302c8b77fdb095ccca",
+  "generator_sha256": "8b7b54068f440a4a63a08e5628186c73819c88ac8cc4371607184d67d5a7dbab",
+  "verified_sources": {
+    "test_data/benchmark_c2c3/manifest.json": "4a566ed1fe78e7deea54831a4d674dd526bd402b9796ec110cd97d8c9205d1fd",
+    "docs/reports/c2_c3_snapshots/image_manifest.json": "6bf69bf4ac2cd79273d896fc6dca830032b077f392238258e2fd5cb8eea12159",
+    "docs/reports/c2_c3_benchmark/failure_analysis.csv": "037b89033aec315a987cd738a5ee68265f39b1a3541e70c139e3e23f84bd7056",
+    "test_data/benchmark_c2c3/cases/l1_g0_c0.gds": "8fe3cbd55986edd4ffb0d950d315267b1f2a102252b657bd16629616a5efdbbb",
+    "test_data/benchmark_c2c3/oracle/l1_g0_c0.reference.gds": "93b5a2e1a7c16ac9ccd8e35715e4ca8f18a3bbc3d6bd39ca3d28538800c5dca7",
+    "test_data/benchmark_c2c3/oracle/l1_g0_c0.lyrdb": "58731390565d85a303bb05785303a8d00370cedf3673f867c886df340715fa27",
+    "test_data/benchmark_c2c3/oracle/l1_g0_c0.reference.lyrdb": "51a018f0815761552793de970aba89b55ad5fbf2b19cd22782ddbcaa272084a1",
+    "docs/reports/c2_c3_snapshots/01_l1_g0_c0_full.png": "b79e326354dbc73af9f5825643df550c9ac785c134671ebf2779f538dccb9319",
+    "docs/reports/c2_c3_snapshots/01_l1_g0_c0_detail.png": "c77784679d6ae414e90ca7a49dfa465d648e34664b41d2f5e685663e7b43ee45",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/generation_manifest.json": "691aba363f5c00d342a1dcbd33d0a78f140cb208889c25db7b7c60ca3e0e100e",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/edit_policy.json": "4ff3b6c1969d4ccb4236a2815ae6f9452dd18e6099cf3d42699341d60ec3e89b",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/generation_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/candidate_fix.py": "c9896876068a2b45ac2cd2ef220cf316dc53c91e77c73ebed8ca370c5a76543f",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/candidate_stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/report.md": "1394bb91d3ff6a904ca5b049a57f4597c21c97bb99f4349871bf2ec7679df10a",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/api_reference_check.json": "4e5d01fab728fc2aba97d7df99aea05b8d44090c714dbc24251d96a4f4086238",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/results.json": "3b736fb5272ca8a034441fc61bc9eff63e730c77b3e4c5565e33057e1b4a409a",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/before.stage.json": "1080a66aef07df69c64ae5e565ccd0b37ca6601440f1531a53947d7824373345",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/before.lyrdb": "84337cbb046d5236bf784249fcd61445d111290f2655916ea947870be82893b5",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/model_response.json": "d06a2c01298584275f050181bde61bc9904524264559c239a0b10e8bfe9a011a",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/model_request.json": "570fef1d1b6fcea6cb558774cfcccf59b224ad66b41efa9425223dc6f0b54862",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/model_response.txt": "1766f3c0a5fac0ae50b690efa92213b9084fafaea5092c0a5b67fca958fb5591",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/patched.gds": "8616f9df1481b7a3ea4d5ee1ed738263b53cf617a7ecc7d424ce751cc8bc5268",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/model_attempt.json": "a74e23862f51f508d9e8390a411eb68fa60768c510e829b46a520af9c4dbdc44",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/rationale.txt": "e28e8dfeb892e1af64514b24ecbe86719462d2de4cec2b24b5979dd2f2d3cd14",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/input.gds": "8fe3cbd55986edd4ffb0d950d315267b1f2a102252b657bd16629616a5efdbbb",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/candidate_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/model_context.json": "f36ea4307ac3810356647ea5e782a1c609714f87b089e9025195758a45f678e7",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/deck.lydrc": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/policy_context.json": "8f18ffdeaa556bd4d93da61da7b0f83813ac99b916ff96b2eb4d0addf99f161a",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/violations.txt": "79f086b149de993b48a4f1f99852ea39d96326a9c30b4a7ad0c704ac05437f27",
+    "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e/generation_stdout.log": "c1338bb05f88ce8a93f8604b9551792260b0f4baee8b26ebeb2a9f7977a7bd94",
+    "reports/runs/c2c3_v1_agent/summary.json": "1d6c96492d4a5adcbeb43049e2355ebd08899751414878ee9c8590b961067a7d",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g0_c0_20261028_064636_42ef32/candidate_fix.py": "902a86b172c1e4d889f72a8963a6a7b361a27c78fd56fcdf387f032eaec04dab",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g0_c0_20261028_064636_42ef32/candidate_stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g0_c0_20261028_064636_42ef32/report.md": "d1e231728b62059b64273c7fbd8f4adaa9951daf84d4bbfff8003d39bda7b2cd",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g0_c0_20261028_064636_42ef32/results.json": "edce789d105374bd77676bb27b47f794107047fabf45d1d0b8b616e5b5479540",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g0_c0_20261028_064636_42ef32/before.stage.json": "8f167eefff96919aa448313c13533fa73a6dd94cb6e3b930a1ad5848384366da",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g0_c0_20261028_064636_42ef32/before.lyrdb": "6cd7f7cc93030feee0061940ed707aa79e643ba0ab87233af249cdcb30bc0974",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g0_c0_20261028_064636_42ef32/after.lyrdb": "6cd7f7cc93030feee0061940ed707aa79e643ba0ab87233af249cdcb30bc0974",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g0_c0_20261028_064636_42ef32/layout_diff.json": "3c3fbbcd52732221f8a30f298976fedfd91868d1c4def682dafa640107466009",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g0_c0_20261028_064636_42ef32/patched.gds": "185f86b2278beff4b722409f1e5f7f5e9b15cdc20d5386c23eb71e1c2f5c0648",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g0_c0_20261028_064636_42ef32/input.gds": "8fe3cbd55986edd4ffb0d950d315267b1f2a102252b657bd16629616a5efdbbb",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g0_c0_20261028_064636_42ef32/candidate_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g0_c0_20261028_064636_42ef32/after.stage.json": "894633f6d542cac697f8a8d4419437c4530c700c742570be4962c73024886071",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g0_c0_20261028_064636_42ef32/deck.lydrc": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g0_c0_20261028_064636_42ef32/policy_context.json": "8f18ffdeaa556bd4d93da61da7b0f83813ac99b916ff96b2eb4d0addf99f161a",
+    "reports/runs/c2c3_v1_heuristic/summary.json": "6c4c405c77f81a5077957443192443b931f6aba819e6875020ca2d36ddeefd61",
+    "test_data/benchmark_c2c3/cases/l1_g1_c2.gds": "5f5b5864c6b50cd2f31a1e687fc7f49d5c2103ef70cb851e01f78ba9a6ad609c",
+    "test_data/benchmark_c2c3/oracle/l1_g1_c2.reference.gds": "308e003ebac654517f12a343333077b4665c42d8299a302128a45e3c5d29805c",
+    "test_data/benchmark_c2c3/oracle/l1_g1_c2.lyrdb": "5379be7c89ef3c170df122bdc53ec6573febb3e0d533d513e2e510c8c492c89b",
+    "test_data/benchmark_c2c3/oracle/l1_g1_c2.reference.lyrdb": "51a018f0815761552793de970aba89b55ad5fbf2b19cd22782ddbcaa272084a1",
+    "docs/reports/c2_c3_snapshots/08_l1_g1_c2_full.png": "b9906b5a2e463414a2fd96285812ad67ddcf236ba545f044f37b24b66b1878c9",
+    "docs/reports/c2_c3_snapshots/08_l1_g1_c2_detail.png": "0f8dab359b7451a5f2361279dabf32a3969a605a5b992596b30d93cb0269b631",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/generation_manifest.json": "a2d843f55fdd7ee9f215a7d64d08d4ed207d764719de15be0db4f7a2c327d48f",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/edit_policy.json": "35324ea6aa50bc9509d6539c4de282868d5526c8a015c00751ad1dd7b260984c",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/generation_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/candidate_fix.py": "8535460d9c61c1dca76da0c9c7a8cc2d8a6f42956120a9efd8ad447260bb260f",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/candidate_stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/report.md": "4f9f314a1b3aa1ac3501bd6e9d237ac0472ea549bf85f15492137d1888f08ac1",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/api_reference_check.json": "4e5d01fab728fc2aba97d7df99aea05b8d44090c714dbc24251d96a4f4086238",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/results.json": "77615db35676b5423db905d88d6d8d9aa4a30fecb6e4b32650452e063aacccb3",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/before.stage.json": "f768d8d1f3cf03225f58ed99340eb713c0722a24d6c5c1c1e3d15d7032749d21",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/before.lyrdb": "63536c3872fcaa759d1fe6dea5a816829e97b985fd0b827812b43196bb2e442f",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/model_response.json": "c2b2a14ace4bf2582996619554a223a91b5b49ec7df7a813a222cdf8a908293d",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/model_request.json": "2d0936ac285de5c608ffd360f84d795321d8e3f8a35a7c9a10f7ef4bf4b45b51",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/model_response.txt": "b191fbe062d0e754e9251e8612f439df379aa359c6c2bbb8878e817180566ebe",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/after.lyrdb": "63536c3872fcaa759d1fe6dea5a816829e97b985fd0b827812b43196bb2e442f",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/layout_diff.json": "2b3572398135381bcb541091bfd032a76133556cd4dd095a3d11b8b21bd734b2",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/patched.gds": "9ad66176862ce0193ca92dcd3b6d2db5e150c1e841ca8b72285cf2e330b0d2d5",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/model_attempt.json": "57808ae1236901edb9b3a9ff4a7cf8e6f57e2bdeca79d82e64b6b170d73499d0",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/rationale.txt": "106986816b1253e2b958ef88fe57e4d3a2e97a47ff934d92447144daf7c2cf07",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/input.gds": "5f5b5864c6b50cd2f31a1e687fc7f49d5c2103ef70cb851e01f78ba9a6ad609c",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/candidate_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/model_context.json": "bcca023a4dc71a599910563be62000fee1101e2672fcb7c50c2149477a8e6676",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/after.stage.json": "4267d234dd368c41638c7a176ba273a8261a54112812a058b1696b0684e613dd",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/deck.lydrc": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/policy_context.json": "570a02ac00eb7990d1b94808f40e3dc671b5c6185cffca6b453c31c7f86bf458",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/violations.txt": "b023dcee45805b8c516a79b7e1a982a6e7acb01e726930aaade7a1f6d618b60a",
+    "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde/generation_stdout.log": "7e16a92f861cece8956dead19846f05f0b702ac275f94de1fe40abfd24443697",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g1_c2_20261028_064755_6a0a7c/candidate_fix.py": "902a86b172c1e4d889f72a8963a6a7b361a27c78fd56fcdf387f032eaec04dab",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g1_c2_20261028_064755_6a0a7c/candidate_stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g1_c2_20261028_064755_6a0a7c/report.md": "05feb073c830fdf9fff37b9acbeeb34cb5b384a6e788e32d6137842bdc474b2b",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g1_c2_20261028_064755_6a0a7c/results.json": "4cabd07b38728274b14623079c6e6b176d9e6e37fb882558897fead7b01afe22",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g1_c2_20261028_064755_6a0a7c/before.stage.json": "4e2e383ad9fcc43b627c52d58780d795e88633c31ee1a30f8c934eae7b5688a1",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g1_c2_20261028_064755_6a0a7c/before.lyrdb": "a300d502a0442ab53b17dc8b13cab31561fc6c396cd00f660891a926e832b469",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g1_c2_20261028_064755_6a0a7c/after.lyrdb": "a300d502a0442ab53b17dc8b13cab31561fc6c396cd00f660891a926e832b469",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g1_c2_20261028_064755_6a0a7c/layout_diff.json": "2b3572398135381bcb541091bfd032a76133556cd4dd095a3d11b8b21bd734b2",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g1_c2_20261028_064755_6a0a7c/patched.gds": "47666838e84295ad2906d2a8a1e737a38edff38dee52d1a832d14d947ccaedc8",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g1_c2_20261028_064755_6a0a7c/input.gds": "5f5b5864c6b50cd2f31a1e687fc7f49d5c2103ef70cb851e01f78ba9a6ad609c",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g1_c2_20261028_064755_6a0a7c/candidate_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g1_c2_20261028_064755_6a0a7c/after.stage.json": "4bc86703f91ae39208544e93ee5cfe524f75c228d818e5fd3d62e6e24a56af1b",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g1_c2_20261028_064755_6a0a7c/deck.lydrc": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "reports/runs/c2c3_v1_heuristic/runs/l1_g1_c2_20261028_064755_6a0a7c/policy_context.json": "570a02ac00eb7990d1b94808f40e3dc671b5c6185cffca6b453c31c7f86bf458",
+    "test_data/benchmark_c2c3/cases/l2_g0_c1.gds": "35fd9d4841e57c5f61bcfae3965a584287b6e1e7894089ea97ad494dd237f0e5",
+    "test_data/benchmark_c2c3/oracle/l2_g0_c1.reference.gds": "ca325a1144ba79cb29c54f8cc376bd2fd2059527908273241a375ed74ec56cbc",
+    "test_data/benchmark_c2c3/oracle/l2_g0_c1.lyrdb": "8925a697098558b01510d36aab87665f328e9f496921bae009211608ea44b2cc",
+    "test_data/benchmark_c2c3/oracle/l2_g0_c1.reference.lyrdb": "51a018f0815761552793de970aba89b55ad5fbf2b19cd22782ddbcaa272084a1",
+    "docs/reports/c2_c3_snapshots/12_l2_g0_c1_full.png": "49a08b64ac92d6a44617239cebf557cdd55b47198be56486d8533b5efb64d37c",
+    "docs/reports/c2_c3_snapshots/12_l2_g0_c1_detail.png": "e54d95540223fd22863ea587b892cfb44d80db0472c6436ca1b2dc37ecee27ab",
+    "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd/generation_manifest.json": "4d8d412df96973fdca3da101a46c7343b58df3e129c8bda444ee5bf2234c937b",
+    "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd/edit_policy.json": "14e53c14117adcb3fd4bafa9d1f21a42cb8d5413476c6fa5170a1c9fdcee9b51",
+    "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd/generation_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd/candidate_fix.py": "db5a8119c58228c93d0738ae63b3661ca8c35a5d9db7ee11ee801372ed1a0cd5",
+    "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd/candidate_stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd/report.md": "c41dc514f8f2337692887ebe5a9a3c933048efe45706706f8ed775d121f18b0a",
+    "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd/api_reference_check.json": "4e5d01fab728fc2aba97d7df99aea05b8d44090c714dbc24251d96a4f4086238",
+    "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd/results.json": "48e6e5cd0b334df34566a27f85e5903b1db06585628f59f635e66565b5ea0b87",
+    "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd/before.stage.json": "2e42ed36ce148a4b41b1d335ed568368758a4b5f5d7fb1b3f3964457b47e4598",
+    "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd/before.lyrdb": "0f8fad7dd082e0e1956b08cc58869f3ead2af3120a6a1707b53e9b18da96cce0",
+    "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd/model_response.json": "d0b5600088a886528edc262274bacb0120b75394503bee4993bc63663c513290",
+    "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd/model_request.json": "408acf65e1774aa430893afd9b10ec0daa9dd65ba8cd4c32104e12c8b2e4eac8",
+    "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd/model_response.txt": "58fe58b241d66ee41f61e3eb42bc3d6fb87a37a8e99303da5d08dd1e46d0ffed",
+    "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd/model_attempt.json": "5b21e212cfa57088798908693af9ebcbd58d1f0637b7f0f1c877ec571d7beb09",
+    "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd/rationale.txt": "8ebbaaca555bf06fa2f2a3e0d7b54354b523d3cfc9d95aa9bbe779c0dfeb188a",
+    "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd/input.gds": "35fd9d4841e57c5f61bcfae3965a584287b6e1e7894089ea97ad494dd237f0e5",
+    "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd/candidate_stderr.log": "e336bb333fde7294ee9f962ac4b95043e2e87d50d15f7c0f68a91153aeb99ba8",
+    "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd/model_context.json": "57864a783ff4c4eeb41c2a0aed176190684103b263a8015fd98a598ee70a4827",
+    "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd/deck.lydrc": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd/policy_context.json": "c020fc9f5790a820e0eb561fcb6e8511d828baea61eeb73c361c1f7736f7c559",
+    "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd/violations.txt": "13cdaf84549d91ca1632fc1e66fd80958f8f456d45e75b82fe77bc5ae46dc1d7",
+    "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd/generation_stdout.log": "f1b339fae841ba7adcf4ed4dd9ecfd2af7981e21c6f6456a15f6dbf3df115589",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g0_c1_20261028_064848_187c0f/candidate_fix.py": "902a86b172c1e4d889f72a8963a6a7b361a27c78fd56fcdf387f032eaec04dab",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g0_c1_20261028_064848_187c0f/candidate_stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g0_c1_20261028_064848_187c0f/report.md": "142317ab3b036a95b2fb97793bcffde273cb7bc23b85b3fabc305bdee7f6aa55",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g0_c1_20261028_064848_187c0f/results.json": "b1f97d558e64d11edca018a336b143f726b5b8c1f09144e6dae20cf708b80b47",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g0_c1_20261028_064848_187c0f/before.stage.json": "bc4073f10a37d6fe5085132f5a8310c0cf9efe57260823bad6dfdfb8325172dd",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g0_c1_20261028_064848_187c0f/before.lyrdb": "52582d7157c1e24dc3cbc96ed27749bf9b7d0d6955d969b70a6868ee38658446",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g0_c1_20261028_064848_187c0f/after.lyrdb": "52582d7157c1e24dc3cbc96ed27749bf9b7d0d6955d969b70a6868ee38658446",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g0_c1_20261028_064848_187c0f/layout_diff.json": "b625ae0d280e31e47fdf16248bee359e59ba4b037b5ff7446d1fd72d702031a6",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g0_c1_20261028_064848_187c0f/patched.gds": "31e055e82db30d88d787621f3dea7e8be2b1747846dbc99ab4bac26b9a69462a",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g0_c1_20261028_064848_187c0f/input.gds": "35fd9d4841e57c5f61bcfae3965a584287b6e1e7894089ea97ad494dd237f0e5",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g0_c1_20261028_064848_187c0f/candidate_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g0_c1_20261028_064848_187c0f/after.stage.json": "e2d8bf932da4545f9467bba8cc343fa4353f94a65e8dd695edf2d4b54d3ccf94",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g0_c1_20261028_064848_187c0f/deck.lydrc": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g0_c1_20261028_064848_187c0f/policy_context.json": "c020fc9f5790a820e0eb561fcb6e8511d828baea61eeb73c361c1f7736f7c559",
+    "test_data/benchmark_c2c3/cases/l2_g1_c1.gds": "a0bce046f0b6e464d0c88fd93f326e6afdb7334e886444e073dbe8b93cba19d3",
+    "test_data/benchmark_c2c3/oracle/l2_g1_c1.reference.gds": "23907d6b7ad04ab892bc65b66336ea2880948806c10e02ce319c4e6acb6e2c43",
+    "test_data/benchmark_c2c3/oracle/l2_g1_c1.lyrdb": "a2bb24c32f76f3ae95f22004ef3663beff42a2eb5256aa1836026b73fe0c7efc",
+    "test_data/benchmark_c2c3/oracle/l2_g1_c1.reference.lyrdb": "51a018f0815761552793de970aba89b55ad5fbf2b19cd22782ddbcaa272084a1",
+    "docs/reports/c2_c3_snapshots/17_l2_g1_c1_full.png": "2e90f1b92f1e9daa1e2a7866c8084121809ff67a9c07c9b2cb216463577c20f8",
+    "docs/reports/c2_c3_snapshots/17_l2_g1_c1_detail.png": "87b352e78ead859f0c9433b641444c139defb922c649475555207b870731ddf7",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/generation_manifest.json": "88c78f3244b427d8931088aa7c09cf691143ff3267fab4d42f87c3740622e3d6",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/edit_policy.json": "c236cbeb1e214fe035aacf332390a805fe89a2bacc769d3ccf97e35e6086d238",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/generation_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/candidate_fix.py": "0d99c98fe5bbaa223bbeda9d6461e8f31f07197bf4413e08306526bf2269f086",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/candidate_stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/report.md": "e48208c32257819bf94fcb2cc3095ca99c4e1c7e820f965904ade945320dd5a5",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/api_reference_check.json": "4e5d01fab728fc2aba97d7df99aea05b8d44090c714dbc24251d96a4f4086238",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/results.json": "8b8c906affaa39a4fd39004389e4cc61524cf68acd5941c6c878a68e53e6367b",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/before.stage.json": "67fd460d7e2609431ee6e4894afe695b39e8d903193f2823933d4a3ec43ce485",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/before.lyrdb": "f0e1a67c0cf24efc5bd543b884e5d54346f0a7cf52f3dfbb2a1df5687b89ed13",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/model_response.json": "844dc20b52af3cc906d14f8ef068edb7abbae3a6b291a5ebed2fd7866d4e690b",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/model_request.json": "cd5cf63cdc6a03d5186e36e526b0f35f0013fac8cd1824d9d8ddc8b43db2a31a",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/model_response.txt": "7bffc822cbdff112d0c0c9247e201b3ed67efd6bab9c81d2ace80aaac68bd2e0",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/patched.gds": "278d7db75549fbdc88f65fbf4242b2d40fccde9484cc48ee95b4a60d396b0446",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/model_attempt.json": "a8b47f93ad238bcbe1f05bb1a0dd16a767e2c36311ec378fba363dc1683eb97a",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/rationale.txt": "596cae3460a5c76038ee2b3c3df5a4cc709e37c73e6737dba7afbeaaf877632f",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/input.gds": "a0bce046f0b6e464d0c88fd93f326e6afdb7334e886444e073dbe8b93cba19d3",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/candidate_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/model_context.json": "2a3c1f6b055f10d7a53fcfbce2f302abe25c37f08c2c516afd79380d9b25f75c",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/deck.lydrc": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/policy_context.json": "2e655c6f6a3cc4aa69682f03f513e530770c40c5641b08ec3626c7977c8d5641",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/violations.txt": "6d22a7dd6d5629a83a4a2b97a3858cf59a68794536e67e5fe0244ac34f843b81",
+    "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f/generation_stdout.log": "8bfd96e71dca85aa6cb4ea85203d09b516bee839346086b3c2e4b7096119e806",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g1_c1_20261028_065002_3d48fd/candidate_fix.py": "902a86b172c1e4d889f72a8963a6a7b361a27c78fd56fcdf387f032eaec04dab",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g1_c1_20261028_065002_3d48fd/candidate_stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g1_c1_20261028_065002_3d48fd/report.md": "63b2045cdadf9bda2874cd4a2e073250e7fd7f6cd0afc19927eecb82a144cd3f",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g1_c1_20261028_065002_3d48fd/results.json": "8d9b4f41ebdbfc0fab9b91277804b71200a03d614919b340c10a22852b428b09",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g1_c1_20261028_065002_3d48fd/before.stage.json": "b64bfc1b829b680a0fdbad18d3fe2151bb5c636eeb7da763befe67c54cd3e770",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g1_c1_20261028_065002_3d48fd/before.lyrdb": "f598daa3cd015a6b3a56d008c3e399eb02eba52466669e555b76cd2adc77222b",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g1_c1_20261028_065002_3d48fd/after.lyrdb": "f598daa3cd015a6b3a56d008c3e399eb02eba52466669e555b76cd2adc77222b",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g1_c1_20261028_065002_3d48fd/layout_diff.json": "042f5331f1350589e33629de4a20a58e13955d9ed67306601569768b58667121",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g1_c1_20261028_065002_3d48fd/patched.gds": "41c4b6e35a19958d785d9c721fc9c54c8325bd16b64957fa1fb668522800f72a",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g1_c1_20261028_065002_3d48fd/input.gds": "a0bce046f0b6e464d0c88fd93f326e6afdb7334e886444e073dbe8b93cba19d3",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g1_c1_20261028_065002_3d48fd/candidate_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g1_c1_20261028_065002_3d48fd/after.stage.json": "8be592fc494e67e345b0c986849712110e2c1a11fb316f77a4ce41cdef0921cf",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g1_c1_20261028_065002_3d48fd/deck.lydrc": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "reports/runs/c2c3_v1_heuristic/runs/l2_g1_c1_20261028_065002_3d48fd/policy_context.json": "2e655c6f6a3cc4aa69682f03f513e530770c40c5641b08ec3626c7977c8d5641",
+    "test_data/benchmark_c2c3/cases/l3_g0_c1.gds": "a367fe80531325357c5997a3702048d3dd684cce90ab8fd40fafe0bfcf2d704a",
+    "test_data/benchmark_c2c3/oracle/l3_g0_c1.reference.gds": "70abd5eed7ea640ab1a4d11d529207ecb5d288331bf59030ba4d98cb80017279",
+    "test_data/benchmark_c2c3/oracle/l3_g0_c1.lyrdb": "c8a15049494f9224d8ff435be934e58969330f76f6ae1a4eeee9ea5a9cee9da4",
+    "test_data/benchmark_c2c3/oracle/l3_g0_c1.reference.lyrdb": "b5f69a21035ba437ce3b243e221389f446a20782d294a224a326c5b4c74eb894",
+    "docs/reports/c2_c3_snapshots/22_l3_g0_c1_full.png": "824b83c8be5524b1a3c7be9aef0b1e0ea963c4afbbbf4b702a2da24844580562",
+    "docs/reports/c2_c3_snapshots/22_l3_g0_c1_detail.png": "93d7b99f845cbbc7e5448f36d6ccb77c00bd1cf83b0e21be261508b046f3a133",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/generation_manifest.json": "332824c6e2d3791b4184a81050d9bdabdc7009a1e2fe6b65298147ee680aa837",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/edit_policy.json": "972978a95cc45e3c4f6273d3dcb9e9d8e7527cc196813707b587b44d002826d4",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/generation_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/candidate_fix.py": "2dd6b7fa57eb28a50d4f74cfcc1f3a41f41b7b9c1525e3b53030a00b4ccfb7fe",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/candidate_stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/report.md": "eddd38274a573565522565ab6b71b70077297ec25510b23f3d80385bf9550d9f",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/api_reference_check.json": "4e5d01fab728fc2aba97d7df99aea05b8d44090c714dbc24251d96a4f4086238",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/results.json": "6838d5e7e0becb72360565b37ee7fe6b9d9ee0f51a1742aab5248181484dbdbe",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/before.stage.json": "0166443c1b62c62acf8c8be9ea9436694dfc5d4862dec19183735b79914376bd",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/before.lyrdb": "298533b8cb6cfe1e294ec6097f97750fe16c69da934779143f1a23006856a739",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/model_response.json": "d1d6317bd9cfc91a821da8b4326d762998357d57b9d131953848db20e307a284",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/model_request.json": "cf9bba2822abe9e9c21a862e9f1aefba63858c8f0d79c2e8e547d266264c0cfc",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/model_response.txt": "66afe5aca027f27715f48728331719bce6add1ac43317c7323652ea33d0f5188",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/after.lyrdb": "298533b8cb6cfe1e294ec6097f97750fe16c69da934779143f1a23006856a739",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/layout_diff.json": "69e868d3eef8b581ef14db152d366965018ac0cd576cae043d37ee4811f0eafd",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/patched.gds": "2ffd8e19fb468d674bb46c41e5c0e6b277d2e413adc30e7da3560178c8023594",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/model_attempt.json": "1a36588153e7db30846ef5b285c94f25171b8659709930afdf414bf6b18f76cd",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/rationale.txt": "b7211ce95e6f46aa8118a05b7a2684dfd17fc386b577bad339d922b86a7448a0",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/input.gds": "a367fe80531325357c5997a3702048d3dd684cce90ab8fd40fafe0bfcf2d704a",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/candidate_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/model_context.json": "43194bbf18ceb978868310291a5c63310b09ecd47a6b89b10dbfaa344027242b",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/after.stage.json": "d48ce1b5fc315e0c1c5f853e4483b55bd9bb9609533858aa9183726fc66574de",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/deck.lydrc": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/policy_context.json": "74f382ffd9b4b913198598c881fb47d52dd11424671c6182684db33ec3d35bf2",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/violations.txt": "a7153a086b5bc37e89addccccc901e44987599e87b081111a17153864d100518",
+    "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2/generation_stdout.log": "65823296e862b9ac67579e82f0df06ac90ba28beada4d0c40dce59602492120a",
+    "reports/runs/c2c3_v1_heuristic/runs/l3_g0_c1_20261028_065107_7c84e6/candidate_fix.py": "902a86b172c1e4d889f72a8963a6a7b361a27c78fd56fcdf387f032eaec04dab",
+    "reports/runs/c2c3_v1_heuristic/runs/l3_g0_c1_20261028_065107_7c84e6/candidate_stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_heuristic/runs/l3_g0_c1_20261028_065107_7c84e6/report.md": "d502385ce350249b1e132ccce2385830db63879cf628bb3b184d1a2442ccc09e",
+    "reports/runs/c2c3_v1_heuristic/runs/l3_g0_c1_20261028_065107_7c84e6/results.json": "7e13ace13c6de5dc0e29cb9b390dddd071fa97629fb79cfc87c2ccf8b6d42846",
+    "reports/runs/c2c3_v1_heuristic/runs/l3_g0_c1_20261028_065107_7c84e6/before.stage.json": "980681bd598f8b6301503ea9295e913c8c4eb7cde557c46512c5d1982cf3dd4e",
+    "reports/runs/c2c3_v1_heuristic/runs/l3_g0_c1_20261028_065107_7c84e6/before.lyrdb": "72dac7bd904b50761a3b688862712c667442874ce226bf4af1a3003a816eac12",
+    "reports/runs/c2c3_v1_heuristic/runs/l3_g0_c1_20261028_065107_7c84e6/patched.gds": "e772d034ca190da4db65d6eec08c2f9e503cde7f846284a52059d9d8b25d29ab",
+    "reports/runs/c2c3_v1_heuristic/runs/l3_g0_c1_20261028_065107_7c84e6/input.gds": "a367fe80531325357c5997a3702048d3dd684cce90ab8fd40fafe0bfcf2d704a",
+    "reports/runs/c2c3_v1_heuristic/runs/l3_g0_c1_20261028_065107_7c84e6/candidate_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_heuristic/runs/l3_g0_c1_20261028_065107_7c84e6/deck.lydrc": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "reports/runs/c2c3_v1_heuristic/runs/l3_g0_c1_20261028_065107_7c84e6/policy_context.json": "74f382ffd9b4b913198598c881fb47d52dd11424671c6182684db33ec3d35bf2",
+    "test_data/benchmark_c2c3/cases/l3_g1_c2.gds": "325ee1266ac78538734500bfbc89ffb1e53927be00bacbe04d5c9baf41d2dde6",
+    "test_data/benchmark_c2c3/oracle/l3_g1_c2.reference.gds": "a713e046f2bd24feec9141a46640e1412d689d5b105cceb21f25098b8642ba1a",
+    "test_data/benchmark_c2c3/oracle/l3_g1_c2.lyrdb": "7e152ef4c450f8af1f24efc60073120c0ab94d267f7e758033b00fea958af15f",
+    "test_data/benchmark_c2c3/oracle/l3_g1_c2.reference.lyrdb": "b5f69a21035ba437ce3b243e221389f446a20782d294a224a326c5b4c74eb894",
+    "docs/reports/c2_c3_snapshots/28_l3_g1_c2_full.png": "e67d73866cecc45e255b0734543bfa84abf904ddbdfc70423596a9b95c248d63",
+    "docs/reports/c2_c3_snapshots/28_l3_g1_c2_detail.png": "22c2ddb93ec959e4bd525efda86f26ab103cd3c8b168e2897b5a616fbb6ca4d9",
+    "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551/generation_manifest.json": "a82e2d815f5a466fcc28072cf2881fd14f163fc2dd679dd19e9bf070d36bfaf9",
+    "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551/edit_policy.json": "5bab285d0a19643e4a9b53ebcbcb18d8c4d16b6bc0c9caaacd0d395431b84e7a",
+    "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551/generation_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551/candidate_fix.py": "bdf611c31ca29c5f49bb1a0d5251f2c105b1f3be1950a46a6325607eada95eb8",
+    "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551/candidate_stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551/report.md": "38198e2e3449713bda3326c553d27c56a186670a3be65f8638d3fdcea8e03a43",
+    "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551/api_reference_check.json": "4e5d01fab728fc2aba97d7df99aea05b8d44090c714dbc24251d96a4f4086238",
+    "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551/results.json": "654b1433dad8512e3ae460de980410569a04db1e554f011e9008689f7cdef87e",
+    "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551/before.stage.json": "e9462a72b3689badd04a4f446989ae9484f8534e8e7a7b6551dd841e60e1b991",
+    "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551/before.lyrdb": "7a93dec51dad4ee814e99e843a863f30f6abb222918b7fbcc588c3520e108ac3",
+    "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551/model_response.json": "fa22c64274b0ca480a9fa1ee9dce227f172cff82de51d4398ae6089d39eae730",
+    "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551/model_request.json": "b0eea24d86dfa97559bf40146da2fab4931f815d5188ed00a9663a34377a31f8",
+    "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551/model_response.txt": "fd7e45c7737ecb14e613fd4b6141f8267c43ae77d60c3f16496f3bef22a9f4b5",
+    "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551/model_attempt.json": "b43e8dc45e76b1e6d6b564b2741cad5351750a2833a2f91f6a38c71538c70e26",
+    "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551/rationale.txt": "3b68dbdceeff1501e503ced75547522878ff35fb9e86eb5c4bd4898512aa4500",
+    "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551/input.gds": "325ee1266ac78538734500bfbc89ffb1e53927be00bacbe04d5c9baf41d2dde6",
+    "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551/candidate_stderr.log": "9b50576e1e7830eba1d727b2c76f4eeae03eaa99a869aefc75efbb63e4a3cac2",
+    "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551/model_context.json": "2b78f0bda03f6179d106dd4a82a1dd96fc20b5e988932d4f5f3582440dde2907",
+    "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551/deck.lydrc": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551/policy_context.json": "df477872111c283ded3726135783fcc82466353f6a93ed73959ac51c237fae01",
+    "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551/violations.txt": "67dbf938c19ba0f7ae0da5a86acdc1d9b1ce45c0b0896e69ee59fc3ca991ea37",
+    "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551/generation_stdout.log": "1baaf19336dc71c91bb1a52ceb72a06efb8120be37dbbd6ce176decf6f78e737",
+    "reports/runs/c2c3_v1_heuristic/runs/l3_g1_c2_20261028_065142_5d45d5/candidate_fix.py": "902a86b172c1e4d889f72a8963a6a7b361a27c78fd56fcdf387f032eaec04dab",
+    "reports/runs/c2c3_v1_heuristic/runs/l3_g1_c2_20261028_065142_5d45d5/candidate_stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_heuristic/runs/l3_g1_c2_20261028_065142_5d45d5/report.md": "0dc220ebb65ee3c9b1a6638eb693053adb4676991a44d20acedebdf59609c7c5",
+    "reports/runs/c2c3_v1_heuristic/runs/l3_g1_c2_20261028_065142_5d45d5/results.json": "f8f1929102304b6ac5410add23f6f0dbb22164e98d1824b5e22e67f20e32d261",
+    "reports/runs/c2c3_v1_heuristic/runs/l3_g1_c2_20261028_065142_5d45d5/before.stage.json": "93efc7fc50d2fddc4d0b15cfd67f162c96c0208ba2cfe7d96960d7895fd0361a",
+    "reports/runs/c2c3_v1_heuristic/runs/l3_g1_c2_20261028_065142_5d45d5/before.lyrdb": "06216dce1315e5a0f97916f69506448d0ece77fc553c9c984909b4216046001f",
+    "reports/runs/c2c3_v1_heuristic/runs/l3_g1_c2_20261028_065142_5d45d5/patched.gds": "cab9d615bd483c1558616737fabc732a241b73aeb6da0d2e0cc2e2ada3fd8e49",
+    "reports/runs/c2c3_v1_heuristic/runs/l3_g1_c2_20261028_065142_5d45d5/input.gds": "325ee1266ac78538734500bfbc89ffb1e53927be00bacbe04d5c9baf41d2dde6",
+    "reports/runs/c2c3_v1_heuristic/runs/l3_g1_c2_20261028_065142_5d45d5/candidate_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_heuristic/runs/l3_g1_c2_20261028_065142_5d45d5/deck.lydrc": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "reports/runs/c2c3_v1_heuristic/runs/l3_g1_c2_20261028_065142_5d45d5/policy_context.json": "df477872111c283ded3726135783fcc82466353f6a93ed73959ac51c237fae01",
+    "test_data/benchmark_c2c3/cases/l4_g0_c0.gds": "722fc4c90b5073770a3a39ce5d04b8269750dbc30cc1f5f9b282704f51b31fd9",
+    "test_data/benchmark_c2c3/oracle/l4_g0_c0.reference.gds": "bae2c0c3ece51e08211d37e3d3a195cce05d7977b4d2129412be522d3efc8e22",
+    "test_data/benchmark_c2c3/oracle/l4_g0_c0.lyrdb": "1c98cfeac3dadac8a715004fa1e172df82c0fe60122922606164dfb294fb6a92",
+    "test_data/benchmark_c2c3/oracle/l4_g0_c0.reference.lyrdb": "cd5d2a750cc7cb5d25cdf5a7e4204d038754fe6a7d3aff739deaf462ea86ce65",
+    "docs/reports/c2_c3_snapshots/31_l4_g0_c0_full.png": "342c543281f5e8c950092c3cb71276776abae813c5de02a4b34e3ce6898df782",
+    "docs/reports/c2_c3_snapshots/31_l4_g0_c0_detail.png": "8cf9a1f2e5c5c0a5b38e0f679c9b1845462ba1dca741ca945d2e95185ee633f6",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/generation_manifest.json": "f6de9aa41104fafb228e6385db0963b7e2faac04c4ddfebe1d1a0aba988e344a",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/edit_policy.json": "b7c5a185794feebda9eed9c9cf596d4dd4fdaff8f45d072c2a51c166678faf70",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/generation_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/candidate_fix.py": "72144e77c3409236a8951dcd169354a19683e78bab65618d2becf936a13da674",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/candidate_stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/report.md": "93288fc9fd34350923decb7e0f90617e479c33bc271ceff2563d5c40379f9d8a",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/api_reference_check.json": "4e5d01fab728fc2aba97d7df99aea05b8d44090c714dbc24251d96a4f4086238",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/results.json": "9149dc458bd8cf98b351933adb8f7147188522a36cf28a5b3af1056186d6f31e",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/before.stage.json": "6cb65f4d5b1ead37d2bdd321a64ea5aa37263d4731b80db637bbdf8b5f63be21",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/before.lyrdb": "aa1438ce3a8fedd49b581a6677cb269321f0014d50b3b08e048b65ac7fc4e648",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/model_response.json": "ab4d5e4237b765587457c0c8d06159f12f930891938bd02c59a55a84aecdc8c3",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/model_request.json": "10fe7558bc2b469eeaceb3fb7391f08d660364d515923c597f8d72895ebc63e0",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/model_response.txt": "d06c1c649b7363bfde7d914725979e33e7d1fe7daad1e8ba399b40bef61bcdeb",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/after.lyrdb": "aa1438ce3a8fedd49b581a6677cb269321f0014d50b3b08e048b65ac7fc4e648",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/layout_diff.json": "95e8c25da7e5cdc7f1bc1c5e8ba721cf680242efb83885697a1e60531682a0d3",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/patched.gds": "cbfd666a31d928cba40763fd947ffc6680d4d1521604665d45c9fa9ab154420b",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/model_attempt.json": "116f2e71c187d25826bc17ba978d40f67c38564bddb81120a6c18496a2720db3",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/rationale.txt": "8c802417b5091e038991dbfe056f0ebd1a6cb5c7a5172f32eac02129c05bf3de",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/input.gds": "722fc4c90b5073770a3a39ce5d04b8269750dbc30cc1f5f9b282704f51b31fd9",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/candidate_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/model_context.json": "6949cdeef105d175a66a054b0d07c50e3a5eeefe425516449f4cfedfec84fc93",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/after.stage.json": "e3aff350ef14152793d6ba803570b128f6248c7faa7081dfb5c54203f8fcf3b6",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/deck.lydrc": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/policy_context.json": "9f7b41f25ba901b3db7152e7ff3779037f16d71895a5d97db9764c10a6191ee0",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/violations.txt": "d6a4a5d94e7ae6b8784fc2c61aa3c020a3f7ea033c34f249bff7b65878035a94",
+    "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23/generation_stdout.log": "b98d6b41eb8fa1e9201bb2c2c8f836e591d70517bb2d2595e64a83c1c08bf9cc",
+    "reports/runs/c2c3_v1_heuristic/runs/l4_g0_c0_20261028_065159_c1ab1e/candidate_fix.py": "902a86b172c1e4d889f72a8963a6a7b361a27c78fd56fcdf387f032eaec04dab",
+    "reports/runs/c2c3_v1_heuristic/runs/l4_g0_c0_20261028_065159_c1ab1e/candidate_stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_heuristic/runs/l4_g0_c0_20261028_065159_c1ab1e/report.md": "cf4aa2a03f1e8670c588ad7ca6219cd8f689d061246caba8c5d543fbb887d0ae",
+    "reports/runs/c2c3_v1_heuristic/runs/l4_g0_c0_20261028_065159_c1ab1e/results.json": "aaac6e64b3b9618b5c23b074409b20444e6d8656bac0e84bc012122f2619d9fd",
+    "reports/runs/c2c3_v1_heuristic/runs/l4_g0_c0_20261028_065159_c1ab1e/before.stage.json": "051bd5921cd1f0058b90a76fa2251b9e51321187f0e37f406caea63579e21906",
+    "reports/runs/c2c3_v1_heuristic/runs/l4_g0_c0_20261028_065159_c1ab1e/before.lyrdb": "f3ab1e4a11ea22f8f679e547a52a153b45668e006abd53f4a5a477faf4e3989e",
+    "reports/runs/c2c3_v1_heuristic/runs/l4_g0_c0_20261028_065159_c1ab1e/patched.gds": "58fd2ed05e97c6765e7f522b4984c9c46b80e900c82bae7483e978c46d61aa72",
+    "reports/runs/c2c3_v1_heuristic/runs/l4_g0_c0_20261028_065159_c1ab1e/input.gds": "722fc4c90b5073770a3a39ce5d04b8269750dbc30cc1f5f9b282704f51b31fd9",
+    "reports/runs/c2c3_v1_heuristic/runs/l4_g0_c0_20261028_065159_c1ab1e/candidate_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_heuristic/runs/l4_g0_c0_20261028_065159_c1ab1e/deck.lydrc": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "reports/runs/c2c3_v1_heuristic/runs/l4_g0_c0_20261028_065159_c1ab1e/policy_context.json": "9f7b41f25ba901b3db7152e7ff3779037f16d71895a5d97db9764c10a6191ee0",
+    "test_data/benchmark_c2c3/cases/l4_g1_c2.gds": "f1e576c4fa7fcfc5369dbbbfb523254b8f3a59ed8e887bdac82aba5824692eb4",
+    "test_data/benchmark_c2c3/oracle/l4_g1_c2.reference.gds": "099b1b3e32df30f36f92d65d181e4e1554a04d905b57daecf89add545d27116e",
+    "test_data/benchmark_c2c3/oracle/l4_g1_c2.lyrdb": "755ec705d6501228332855dd79ace6111c95fd6d71735a11657a238cf57ae7b4",
+    "test_data/benchmark_c2c3/oracle/l4_g1_c2.reference.lyrdb": "cd5d2a750cc7cb5d25cdf5a7e4204d038754fe6a7d3aff739deaf462ea86ce65",
+    "docs/reports/c2_c3_snapshots/38_l4_g1_c2_full.png": "9d81d78d92bd22f5ca300e14bdd9096e489151f1a0564640118ddb8ec999a77f",
+    "docs/reports/c2_c3_snapshots/38_l4_g1_c2_detail.png": "37433bfd0e65ec2a494f38fed372aa42f44363bc6c2ecfa5ef671b027ee2583f",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/generation_manifest.json": "9d455f3a131c60e19d976dfefc5a91af19adcd5d9c3d3f1ef102972a0075f7a5",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/edit_policy.json": "2f7637a81a81b6a36dd5f496b8ca1f74fb7fe697d3d69139d16313625ee73be4",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/generation_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/candidate_fix.py": "5599ab48f0fe1bbf0e375db13d46eda641bd17b48608ffbd5c79111a51d11964",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/candidate_stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/report.md": "d0479d0be0379ac1b8742c2795c9aa806c53825dac37a3b6c4f656b66c175e0b",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/api_reference_check.json": "4e5d01fab728fc2aba97d7df99aea05b8d44090c714dbc24251d96a4f4086238",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/results.json": "a2362ed38637596d22279e02b0ad03be70851386757358934deb5d410e025e36",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/before.stage.json": "1e69526037ecb3d8c053dd146bdf5058ef0b5667bcce89c6595d76d6e561e033",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/before.lyrdb": "81459681adc9b57d3b44270d7179afca1b4a220bdfba8d44c6ad54faffeaa4fa",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/model_response.json": "1a073a44a628df4f28a3f300ab2857b49da4ec296b0dd218f8b00841d734a564",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/model_request.json": "70db44ae87a7a5075ac7a0f278466b10bff1596a6a1a0362de4a1a0e58c684b2",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/model_response.txt": "e216a6c42463d93899928278809917182ba9ae13d953db06cfb888f8cb5ee8b7",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/after.lyrdb": "81459681adc9b57d3b44270d7179afca1b4a220bdfba8d44c6ad54faffeaa4fa",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/layout_diff.json": "c6eb812ee6f36b11043ffd48ec6d53f83856efbdb3139f909c5fe2f3998f9a31",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/patched.gds": "21318f00aec47e5c1f33c75983141f83e0e21f3da9563b08813b8d100c8dec9b",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/model_attempt.json": "e37c935363e1d334d825b3e3275a7b632cbc8d19ec087b1f9cd08e69f584b290",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/rationale.txt": "c3571e743935b1ed26b1369e6aabf138741dcc784ec32eb3760178ff9618adc1",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/input.gds": "f1e576c4fa7fcfc5369dbbbfb523254b8f3a59ed8e887bdac82aba5824692eb4",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/candidate_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/model_context.json": "f00abad4d82efb723cbe11c4526a7ae7f40b447dd6775d64c2d2f429d832b0e8",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/after.stage.json": "4b97baa72418854a2f7c1979d12ad7b40ef5a7c42c366960fdb4d9cbdd8bd298",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/deck.lydrc": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/policy_context.json": "2e11739ba9c8a331ca0826110046705cda600167b328d92787175b8a0137baaa",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/violations.txt": "0f101d99a2648fd47480b082441fbe83ebe8f2cb07e622696d39463e1014ef42",
+    "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649/generation_stdout.log": "025753bb25f1517687909b07ca96e02e8c32a9ae13eb5a547d7c39e972f86673",
+    "reports/runs/c2c3_v1_heuristic/runs/l4_g1_c2_20261028_065304_171eb1/candidate_fix.py": "902a86b172c1e4d889f72a8963a6a7b361a27c78fd56fcdf387f032eaec04dab",
+    "reports/runs/c2c3_v1_heuristic/runs/l4_g1_c2_20261028_065304_171eb1/candidate_stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_heuristic/runs/l4_g1_c2_20261028_065304_171eb1/report.md": "e4218a7b60149394a0494194db35bf4bda188df0d2baa977d440496fa01dba5c",
+    "reports/runs/c2c3_v1_heuristic/runs/l4_g1_c2_20261028_065304_171eb1/results.json": "f8684c294b8fe7a6b2dab89b9a6cbdb1265e284430064a2683651214ae59ee85",
+    "reports/runs/c2c3_v1_heuristic/runs/l4_g1_c2_20261028_065304_171eb1/before.stage.json": "46b514461cef150a0a1876890892851188b423984872441c46477e0952f96aea",
+    "reports/runs/c2c3_v1_heuristic/runs/l4_g1_c2_20261028_065304_171eb1/before.lyrdb": "8a4dabe20b0020a4b9b872b39867b84bc93dc5212234b3808dd66a58c901b31e",
+    "reports/runs/c2c3_v1_heuristic/runs/l4_g1_c2_20261028_065304_171eb1/patched.gds": "fabf11cc7a5d02f7cedd49e0e8de44ae9d51fe959a2b697f2f17b7d8c66de6c9",
+    "reports/runs/c2c3_v1_heuristic/runs/l4_g1_c2_20261028_065304_171eb1/input.gds": "f1e576c4fa7fcfc5369dbbbfb523254b8f3a59ed8e887bdac82aba5824692eb4",
+    "reports/runs/c2c3_v1_heuristic/runs/l4_g1_c2_20261028_065304_171eb1/candidate_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_heuristic/runs/l4_g1_c2_20261028_065304_171eb1/deck.lydrc": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "reports/runs/c2c3_v1_heuristic/runs/l4_g1_c2_20261028_065304_171eb1/policy_context.json": "2e11739ba9c8a331ca0826110046705cda600167b328d92787175b8a0137baaa",
+    "test_data/benchmark_c2c3/cases/l5_g0_c0.gds": "4b6b2089a1a88b2b79143ba1616eebd8172f95209bf2ef29b100a0530fcd6b62",
+    "test_data/benchmark_c2c3/oracle/l5_g0_c0.reference.gds": "c4a31d70b901c7a3d2f8d6b400dac43479ae79b80743ad9b7e9584ee360e3bc9",
+    "test_data/benchmark_c2c3/oracle/l5_g0_c0.lyrdb": "47de4a8c3263ce079f6016441814990a0ba7e9902cd4a9f0600f82d9d2f151f8",
+    "test_data/benchmark_c2c3/oracle/l5_g0_c0.reference.lyrdb": "cd5d2a750cc7cb5d25cdf5a7e4204d038754fe6a7d3aff739deaf462ea86ce65",
+    "docs/reports/c2_c3_snapshots/41_l5_g0_c0_full.png": "118d4857f17939037a0184f4100eabca35899018aeecfa9a88194e89d1d693af",
+    "docs/reports/c2_c3_snapshots/41_l5_g0_c0_detail.png": "be5d0d888814345eb09d8a1011f356fb42cb82260552a7b1fe07746df6f50388",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/generation_manifest.json": "abad829fa4c1dbb6dccccb8b17cce5632e82a64c32872b76f93f3d590e8a5512",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/edit_policy.json": "e56ab5788c086c63882f7b4d921d6d66e0b490c5da6441ef6838dfb04c9f4202",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/generation_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/candidate_fix.py": "088e913108e692c74d9cef29b7630bfa3270714eeeaf0e585bd877c6d3f7959a",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/candidate_stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/report.md": "4c140f92134a67b399ae220bb93d2e542784264a4b48fd6329a7b5bd2486b4aa",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/api_reference_check.json": "4e5d01fab728fc2aba97d7df99aea05b8d44090c714dbc24251d96a4f4086238",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/results.json": "902516cd2d6a1a7ceb5a5da5f422655ebe7e7cba546013dd20d98046eff25d00",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/before.stage.json": "7aa6aa66608b65fc9f7016eed8dc33a690241dba1c1cdc16f31abe877f8d622a",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/before.lyrdb": "180e409d976e37b2f38961e4381bec8aeb4944ecdd3cb16cb57abb9e4082de6b",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/model_response.json": "b089f90e21aee0beb88382a6e0706a4b69d4c052d1f73a9f83e70d877bd0d71c",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/model_request.json": "279ea2af6fccbf49ae7d81c8fbb27ea2996d81e240ded2bca83cf3d676722fa7",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/model_response.txt": "3fb9717eac6dc12d5097b74a873ad0f2fa839bed321899928d732f7a966db789",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/after.lyrdb": "180e409d976e37b2f38961e4381bec8aeb4944ecdd3cb16cb57abb9e4082de6b",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/layout_diff.json": "861732fb444d723d259a5070d7cd744568a8a7e1ab2a3e0cdb8f0bd5c486118f",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/patched.gds": "2f7c5a70504d684f19f7dfa28b692dfd46112afb234cfcbd259cf8e72d7c2537",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/model_attempt.json": "7aa44577f63b0f902e0c6714049da7972a3ff0628c58c2448bb978ba96016965",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/rationale.txt": "dd8002c092db690ce56a6b8be9cdfa212d98ed89d7a1f632bf300101dfafccd3",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/input.gds": "4b6b2089a1a88b2b79143ba1616eebd8172f95209bf2ef29b100a0530fcd6b62",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/candidate_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/model_context.json": "5a38771b9a316111eb494cbb78c6bd3d79fe5e2e8f38e65ee1788288e720d7f0",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/after.stage.json": "4fc24a1cdba960cd2a39c3e6f5a7ad9d7c5b184bdfa2dabc1c17ddf146f8df0e",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/deck.lydrc": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/policy_context.json": "927d8c2859965c9038a9a00eb16684859bb65434289957701133594a1734caed",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/violations.txt": "653324315eb297875384f30ac1e309dd721609d822f6dd90ce4456f810f0d01c",
+    "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e/generation_stdout.log": "3f125fdbb5b2a48a49049acf21b5b8978e5dc994d3c9e6e9396370ba32da31c3",
+    "reports/runs/c2c3_v1_heuristic/runs/l5_g0_c0_20261028_065333_17b32b/candidate_fix.py": "902a86b172c1e4d889f72a8963a6a7b361a27c78fd56fcdf387f032eaec04dab",
+    "reports/runs/c2c3_v1_heuristic/runs/l5_g0_c0_20261028_065333_17b32b/candidate_stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_heuristic/runs/l5_g0_c0_20261028_065333_17b32b/report.md": "c3f8c693253dcdab27e71aa86df3cb6c668190359c27a47a1f57832d7eb45992",
+    "reports/runs/c2c3_v1_heuristic/runs/l5_g0_c0_20261028_065333_17b32b/results.json": "d8d88ebac2315197249b5916c630fed22dbfd70e1b373e14539607915e1de0b0",
+    "reports/runs/c2c3_v1_heuristic/runs/l5_g0_c0_20261028_065333_17b32b/before.stage.json": "1348a1b127e638bd64e35e0dcaa192b1e84aa05014b651384b5b4515ca19353a",
+    "reports/runs/c2c3_v1_heuristic/runs/l5_g0_c0_20261028_065333_17b32b/before.lyrdb": "7ca29cce0307374c819cd687ccc48286a7cce1001a18c65e5d1919a618e6ae16",
+    "reports/runs/c2c3_v1_heuristic/runs/l5_g0_c0_20261028_065333_17b32b/patched.gds": "c55bb11db0559435d0b6186fbef9192ac9a123953ddb9342a7a8424d461a9a85",
+    "reports/runs/c2c3_v1_heuristic/runs/l5_g0_c0_20261028_065333_17b32b/input.gds": "4b6b2089a1a88b2b79143ba1616eebd8172f95209bf2ef29b100a0530fcd6b62",
+    "reports/runs/c2c3_v1_heuristic/runs/l5_g0_c0_20261028_065333_17b32b/candidate_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_heuristic/runs/l5_g0_c0_20261028_065333_17b32b/deck.lydrc": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "reports/runs/c2c3_v1_heuristic/runs/l5_g0_c0_20261028_065333_17b32b/policy_context.json": "927d8c2859965c9038a9a00eb16684859bb65434289957701133594a1734caed",
+    "test_data/benchmark_c2c3/cases/l5_g1_c1.gds": "8983f28ee48ac87b378216e386b2e6410c49c11868c6d03ec08c51f79ba786c1",
+    "test_data/benchmark_c2c3/oracle/l5_g1_c1.reference.gds": "e3ad9428ba8d77d6fb25c837fad122bfd91e287212d389c39ddb587990c8dd3d",
+    "test_data/benchmark_c2c3/oracle/l5_g1_c1.lyrdb": "163ce75d4d5ca1acfd76677f7ec130f58680ca540cb7d413f134115d263db470",
+    "test_data/benchmark_c2c3/oracle/l5_g1_c1.reference.lyrdb": "cd5d2a750cc7cb5d25cdf5a7e4204d038754fe6a7d3aff739deaf462ea86ce65",
+    "docs/reports/c2_c3_snapshots/47_l5_g1_c1_full.png": "a1fb97a97780534bb731a2d44b9eac65ae40c4a14531116e5639db83c30f2c72",
+    "docs/reports/c2_c3_snapshots/47_l5_g1_c1_detail.png": "6b8bec148949fe1d3607b7ce679c2417fed45a2302b6b65ede801160d5d4bad6",
+    "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1/generation_manifest.json": "182ca83b57d81c8ef3f232c2432dae37bf2a12c457dbb896c766e3faed6e7923",
+    "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1/edit_policy.json": "d53d8dca014dbc740a4a884166e9734ff34a1ef39ac39560a1ea4e7821c2bfdb",
+    "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1/generation_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1/candidate_fix.py": "9f8caeb3cd0713e12e512cc90d580d526cc17fc295d7c7422adfcc1a44297a42",
+    "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1/candidate_stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1/report.md": "284090bfd433b189d11d573256f6f4693960391650bc3d06c692fa584eb13f78",
+    "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1/api_reference_check.json": "4e5d01fab728fc2aba97d7df99aea05b8d44090c714dbc24251d96a4f4086238",
+    "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1/results.json": "b99173d654e5eb4bb7ee63a5093b7e3d9580cbc0259adbc46024c91627852f2d",
+    "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1/before.stage.json": "5231dcc0bd50c1886e6a7385ef244ff53aa572e7ca422b4779a2faf7faa5bae5",
+    "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1/before.lyrdb": "7614a3bc3b5a753546acdbafc5bb668065d85f822de8b042c6e032d7bdb84a45",
+    "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1/model_response.json": "759de8685d5cd99ab76bce63e54b3ffb63b02845e0dbfd8dd819ecd238e6fa30",
+    "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1/model_request.json": "69dfcc64d501c25d3a513d683806ab34a1ef5ceb0aae546e43311341ec09fa8e",
+    "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1/model_response.txt": "88c639c69987ff989925d440f8c3edfb6925bc7225152d27a50b63ad42e077a6",
+    "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1/model_attempt.json": "7ad14c7c8d9e715942d712f0d0591d20a974c7e845855ff9a89212507f8cab6d",
+    "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1/rationale.txt": "9251f2c5059044a5a33d418e1de401489450032173a9bb1ba7a60da658e49914",
+    "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1/input.gds": "8983f28ee48ac87b378216e386b2e6410c49c11868c6d03ec08c51f79ba786c1",
+    "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1/candidate_stderr.log": "8cb74957bc6a6acb0c90855b0b4784d0c61a10754fd2403046a69bb659fbd507",
+    "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1/model_context.json": "d99aecc3a0e8d6953276ad7e7a3980487205ffd7fed2a33cd03e9746065201fb",
+    "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1/deck.lydrc": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1/policy_context.json": "7eca41668d0be0eb935dee676de52926ce0c02e0b559f5a7b672c609e2afaf9f",
+    "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1/violations.txt": "e30351f17a42f7db7adfa09955f09c8d80d417452987c343987bd777420fdab4",
+    "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1/generation_stdout.log": "67cc9bb19436a53488b1d806710993b6bb0c6555da07470285d252940a71578c",
+    "reports/runs/c2c3_v1_heuristic/runs/l5_g1_c1_20261028_065428_45cc57/candidate_fix.py": "902a86b172c1e4d889f72a8963a6a7b361a27c78fd56fcdf387f032eaec04dab",
+    "reports/runs/c2c3_v1_heuristic/runs/l5_g1_c1_20261028_065428_45cc57/candidate_stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_heuristic/runs/l5_g1_c1_20261028_065428_45cc57/report.md": "e9d46c6b58f037389c0e667be1f12c4c14d0cfffb8c80f4865fd9ea2e9162b83",
+    "reports/runs/c2c3_v1_heuristic/runs/l5_g1_c1_20261028_065428_45cc57/results.json": "c17240d0a7c5ec1c8f3355b282b87b4fcb8bfd950675fad8eb89deb98314f3cf",
+    "reports/runs/c2c3_v1_heuristic/runs/l5_g1_c1_20261028_065428_45cc57/before.stage.json": "f92b0c1d672bc1762ad5f87a1fc7bc2cf06de5b19aeb50274ac0f279e4747b10",
+    "reports/runs/c2c3_v1_heuristic/runs/l5_g1_c1_20261028_065428_45cc57/before.lyrdb": "309a81dfb07199ba52959a86328d5e65fb7c9a72c7ec5858b0ca923b0110c63b",
+    "reports/runs/c2c3_v1_heuristic/runs/l5_g1_c1_20261028_065428_45cc57/patched.gds": "3b0b2869a753bd36d18a819bf3689be4bde4aa249f9ccc9dedaf09211c573a50",
+    "reports/runs/c2c3_v1_heuristic/runs/l5_g1_c1_20261028_065428_45cc57/input.gds": "8983f28ee48ac87b378216e386b2e6410c49c11868c6d03ec08c51f79ba786c1",
+    "reports/runs/c2c3_v1_heuristic/runs/l5_g1_c1_20261028_065428_45cc57/candidate_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/runs/c2c3_v1_heuristic/runs/l5_g1_c1_20261028_065428_45cc57/deck.lydrc": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "reports/runs/c2c3_v1_heuristic/runs/l5_g1_c1_20261028_065428_45cc57/policy_context.json": "7eca41668d0be0eb935dee676de52926ce0c02e0b559f5a7b672c609e2afaf9f"
+  },
+  "cases": [
+    {
+      "number": 1,
+      "case_id": "l1_g0_c0",
+      "title": "A narrow M1 waist",
+      "issue": "The blue M1 route has a 12 nm waist between wider ends. M1.W.1 marks the narrow section.",
+      "fix": "Restore the waist from 12 to 24 nm. Keep both end anchors fixed. The reference adds 600 nm2 of M1.",
+      "level": 1,
+      "source_group": "l1_source_0",
+      "metrics": {
+        "cell_definitions": 7,
+        "context_shapes": 5,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 1,
+        "hierarchy_depth": 2,
+        "instance_count": 11,
+        "protected_obstacle_count": 4,
+        "shape_count": 1255,
+        "target_markers": 1
+      },
+      "input_markers": {
+        "M1.W.1": 1
+      },
+      "reference_markers": {},
+      "reference_policy_pass": true,
+      "reference_changes": [
+        {
+          "layer": [
+            19,
+            0
+          ],
+          "added_nm2": 600.0,
+          "removed_nm2": 0.0
+        }
+      ],
+      "methods": {
+        "agent": {
+          "verdict": "invalid_patch",
+          "passed": false,
+          "failure_stage": "edit_policy",
+          "label": "REJECTED / after-DRC not run",
+          "note": "Rejected: protected cell contents changed. After-DRC was not run; no marker count is claimed.",
+          "diagnostic": "Protected master cell 'BENCHMARK_TOP' contents changed.",
+          "initial_total": 1,
+          "final_total": null,
+          "after_markers": null,
+          "output_exists": true,
+          "area_added_um2": "0.0",
+          "area_removed_um2": "0.0",
+          "run_dir": "reports/runs/c2c3_v1_agent/runs/l1_g0_c0_20261028_064725_1aff0e"
+        },
+        "heuristic": {
+          "verdict": "unresolved",
+          "passed": false,
+          "failure_stage": "geometry_reasoning",
+          "label": "UNRESOLVED / 1 scored marker(s) remain",
+          "note": "The saved output is unchanged. The input defect remains. No repair credit.",
+          "diagnostic": "",
+          "initial_total": 1,
+          "final_total": 1,
+          "after_markers": {
+            "M1.W.1": 1
+          },
+          "output_exists": true,
+          "area_added_um2": "0.0",
+          "area_removed_um2": "0.0",
+          "run_dir": "reports/runs/c2c3_v1_heuristic/runs/l1_g0_c0_20261028_064636_42ef32"
+        }
+      },
+      "images": {
+        "full": "docs/reports/c2_c3_snapshots/01_l1_g0_c0_full.png",
+        "detail": "docs/reports/c2_c3_snapshots/01_l1_g0_c0_detail.png",
+        "reference": "docs/reports/c2_c3_selected10_review/01_l1_g0_c0_reference.png",
+        "agent": "docs/reports/c2_c3_selected10_review/01_l1_g0_c0_agent.png",
+        "heuristic": "docs/reports/c2_c3_selected10_review/01_l1_g0_c0_heuristic.png"
+      },
+      "camera_um": [
+        -0.059677500000000064,
+        0.32608,
+        0.2336775000000001,
+        0.4999200000000001
+      ]
+    },
+    {
+      "number": 2,
+      "case_id": "l1_g1_c2",
+      "title": "Too little M2 enclosure around V1",
+      "issue": "The V1 via has only 2 nm of M2 extension on the checked opposite sides. The enclosure check requires more metal around it.",
+      "fix": "Extend M2 on both checked sides: enclosure grows from 2 to 7 nm. The via stays in place. The reference adds 180 nm2 of M2.",
+      "level": 1,
+      "source_group": "l1_source_1",
+      "metrics": {
+        "cell_definitions": 7,
+        "context_shapes": 5,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 2,
+        "hierarchy_depth": 2,
+        "instance_count": 16,
+        "protected_obstacle_count": 3,
+        "shape_count": 2129,
+        "target_markers": 1
+      },
+      "input_markers": {
+        "V1.M2.EN.2": 1
+      },
+      "reference_markers": {},
+      "reference_policy_pass": true,
+      "reference_changes": [
+        {
+          "layer": [
+            20,
+            0
+          ],
+          "added_nm2": 180.0,
+          "removed_nm2": 0.0
+        }
+      ],
+      "methods": {
+        "agent": {
+          "verdict": "unresolved",
+          "passed": false,
+          "failure_stage": "geometry_reasoning",
+          "label": "UNRESOLVED / 1 scored marker(s) remain",
+          "note": "The saved output is unchanged. The input defect remains. No repair credit.",
+          "diagnostic": "",
+          "initial_total": 1,
+          "final_total": 1,
+          "after_markers": {
+            "V1.M2.EN.2": 1
+          },
+          "output_exists": true,
+          "area_added_um2": "0.0",
+          "area_removed_um2": "0.0",
+          "run_dir": "reports/runs/c2c3_v1_agent/runs/l1_g1_c2_20261028_065002_ea3cde"
+        },
+        "heuristic": {
+          "verdict": "unresolved",
+          "passed": false,
+          "failure_stage": "geometry_reasoning",
+          "label": "UNRESOLVED / 1 scored marker(s) remain",
+          "note": "The saved output is unchanged. The input defect remains. No repair credit.",
+          "diagnostic": "",
+          "initial_total": 1,
+          "final_total": 1,
+          "after_markers": {
+            "V1.M2.EN.2": 1
+          },
+          "output_exists": true,
+          "area_added_um2": "0.0",
+          "area_removed_um2": "0.0",
+          "run_dir": "reports/runs/c2c3_v1_heuristic/runs/l1_g1_c2_20261028_064755_6a0a7c"
+        }
+      },
+      "images": {
+        "full": "docs/reports/c2_c3_snapshots/08_l1_g1_c2_full.png",
+        "detail": "docs/reports/c2_c3_snapshots/08_l1_g1_c2_detail.png",
+        "reference": "docs/reports/c2_c3_selected10_review/02_l1_g1_c2_reference.png",
+        "agent": "docs/reports/c2_c3_selected10_review/02_l1_g1_c2_agent.png",
+        "heuristic": "docs/reports/c2_c3_selected10_review/02_l1_g1_c2_heuristic.png"
+      },
+      "camera_um": [
+        4.0314175,
+        0.35084,
+        4.136582499999999,
+        0.41316
+      ]
+    },
+    {
+      "number": 3,
+      "case_id": "l2_g0_c1",
+      "title": "A small gap and a narrow M3 route",
+      "issue": "Two M1 shapes have a 12 nm gap. A separate M3 shape is also only 12 nm wide. Both defects must be repaired in the correct instance.",
+      "fix": "Move one M1 shape by 8 nm to give a 20 nm gap. Widen M3 from 12 to 24 nm. Preserve the repeated masters and all instance transforms.",
+      "level": 2,
+      "source_group": "l2_source_0",
+      "metrics": {
+        "cell_definitions": 10,
+        "context_shapes": 8,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 3,
+        "hierarchy_depth": 4,
+        "instance_count": 103,
+        "protected_obstacle_count": 5,
+        "shape_count": 11289,
+        "target_markers": 2
+      },
+      "input_markers": {
+        "M1.S.1": 1,
+        "M3.W.1": 1
+      },
+      "reference_markers": {},
+      "reference_policy_pass": true,
+      "reference_changes": [
+        {
+          "layer": [
+            19,
+            0
+          ],
+          "added_nm2": 800.0,
+          "removed_nm2": 800.0
+        },
+        {
+          "layer": [
+            30,
+            0
+          ],
+          "added_nm2": 1200.0,
+          "removed_nm2": 0.0
+        }
+      ],
+      "methods": {
+        "agent": {
+          "verdict": "invalid_patch",
+          "passed": false,
+          "failure_stage": "python_execution",
+          "label": "NO OUTPUT / script failed",
+          "note": "The Python script failed before export. No output GDS or after-DRC result exists.",
+          "diagnostic": "AttributeError: 'Layout' object has no attribute 'layout_io'",
+          "initial_total": 2,
+          "final_total": null,
+          "after_markers": null,
+          "output_exists": false,
+          "area_added_um2": "",
+          "area_removed_um2": "",
+          "run_dir": "reports/runs/c2c3_v1_agent/runs/l2_g0_c1_20261028_065122_90eedd"
+        },
+        "heuristic": {
+          "verdict": "unresolved",
+          "passed": false,
+          "failure_stage": "geometry_reasoning",
+          "label": "UNRESOLVED / 2 scored marker(s) remain",
+          "note": "The saved output is unchanged. The input defect remains. No repair credit.",
+          "diagnostic": "",
+          "initial_total": 2,
+          "final_total": 2,
+          "after_markers": {
+            "M1.S.1": 1,
+            "M3.W.1": 1
+          },
+          "output_exists": true,
+          "area_added_um2": "0.0",
+          "area_removed_um2": "0.0",
+          "run_dir": "reports/runs/c2c3_v1_heuristic/runs/l2_g0_c1_20261028_064848_187c0f"
+        }
+      },
+      "images": {
+        "full": "docs/reports/c2_c3_snapshots/12_l2_g0_c1_full.png",
+        "detail": "docs/reports/c2_c3_snapshots/12_l2_g0_c1_detail.png",
+        "reference": "docs/reports/c2_c3_selected10_review/03_l2_g0_c1_reference.png",
+        "agent": "docs/reports/c2_c3_selected10_review/03_l2_g0_c1_agent.png",
+        "heuristic": "docs/reports/c2_c3_selected10_review/03_l2_g0_c1_heuristic.png"
+      },
+      "camera_um": [
+        1.9824,
+        0.2769407407407409,
+        2.4415999999999998,
+        0.5490592592592591
+      ]
+    },
+    {
+      "number": 4,
+      "case_id": "l2_g1_c1",
+      "title": "Small M1 area inside rotated hierarchy",
+      "issue": "The M1 pad has area 288 nm2 and a 12 nm short dimension. M1 area and width fail. A nearby M3 route also fails width.",
+      "fix": "Grow the M1 pad to 576 nm2 with an 18 nm short dimension. Widen M3 from 12 to 24 nm. Apply the change to the permitted route instance.",
+      "level": 2,
+      "source_group": "l2_source_1",
+      "metrics": {
+        "cell_definitions": 10,
+        "context_shapes": 10,
+        "coupled_rules": 3,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 2,
+        "hierarchy_depth": 4,
+        "instance_count": 148,
+        "protected_obstacle_count": 8,
+        "shape_count": 19145,
+        "target_markers": 3
+      },
+      "input_markers": {
+        "M1.W.1": 1,
+        "M1.A.1": 1,
+        "M3.W.1": 1
+      },
+      "reference_markers": {},
+      "reference_policy_pass": true,
+      "reference_changes": [
+        {
+          "layer": [
+            19,
+            0
+          ],
+          "added_nm2": 288.0,
+          "removed_nm2": 0.0
+        },
+        {
+          "layer": [
+            30,
+            0
+          ],
+          "added_nm2": 1200.0,
+          "removed_nm2": 0.0
+        }
+      ],
+      "methods": {
+        "agent": {
+          "verdict": "invalid_patch",
+          "passed": false,
+          "failure_stage": "edit_policy",
+          "label": "REJECTED / after-DRC not run",
+          "note": "Rejected: protected cell contents changed. After-DRC was not run; no marker count is claimed.",
+          "diagnostic": "Protected master cell 'BENCHMARK_TOP' contents changed.",
+          "initial_total": 3,
+          "final_total": null,
+          "after_markers": null,
+          "output_exists": true,
+          "area_added_um2": "0.00912",
+          "area_removed_um2": "0.0",
+          "run_dir": "reports/runs/c2c3_v1_agent/runs/l2_g1_c1_20261028_065255_12c80f"
+        },
+        "heuristic": {
+          "verdict": "unresolved",
+          "passed": false,
+          "failure_stage": "geometry_reasoning",
+          "label": "UNRESOLVED / 3 scored marker(s) remain",
+          "note": "The saved output is unchanged. The input defect remains. No repair credit.",
+          "diagnostic": "",
+          "initial_total": 3,
+          "final_total": 3,
+          "after_markers": {
+            "M1.W.1": 1,
+            "M1.A.1": 1,
+            "M3.W.1": 1
+          },
+          "output_exists": true,
+          "area_added_um2": "0.0",
+          "area_removed_um2": "0.0",
+          "run_dir": "reports/runs/c2c3_v1_heuristic/runs/l2_g1_c1_20261028_065002_3d48fd"
+        }
+      },
+      "images": {
+        "full": "docs/reports/c2_c3_snapshots/17_l2_g1_c1_full.png",
+        "detail": "docs/reports/c2_c3_snapshots/17_l2_g1_c1_detail.png",
+        "reference": "docs/reports/c2_c3_selected10_review/04_l2_g1_c1_reference.png",
+        "agent": "docs/reports/c2_c3_selected10_review/04_l2_g1_c1_agent.png",
+        "heuristic": "docs/reports/c2_c3_selected10_review/04_l2_g1_c1_heuristic.png"
+      },
+      "camera_um": [
+        1.6375499999999998,
+        0.2804,
+        2.4124499999999998,
+        0.7396
+      ]
+    },
+    {
+      "number": 5,
+      "case_id": "l3_g0_c1",
+      "title": "A narrow section on real GCD routing",
+      "issue": "A controlled 4 nm cut leaves a locally narrow M3 section in the routed GCD block. Nearby layers are protected obstacles.",
+      "fix": "Restore the removed 4 x 20 nm M3 strip, adding 80 nm2. This returns the local route to its legal reference geometry.",
+      "level": 3,
+      "source_group": "l3_source_0",
+      "metrics": {
+        "cell_definitions": 40,
+        "context_shapes": 37,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 10613,
+        "editable_shape_count": 1,
+        "hierarchy_depth": 2,
+        "instance_count": 721,
+        "local_route_polygons": 11,
+        "local_routing_occupancy": 0.2584821428571429,
+        "occupancy_box_um": [
+          2.194,
+          2.463,
+          2.418,
+          2.7030000000000003
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 36,
+        "route_segment_count": 2632,
+        "shape_count": 66103,
+        "target_markers": 1,
+        "via_count": 3870
+      },
+      "input_markers": {
+        "M3.W.1": 1
+      },
+      "reference_markers": {},
+      "reference_policy_pass": true,
+      "reference_changes": [
+        {
+          "layer": [
+            30,
+            0
+          ],
+          "added_nm2": 80.0,
+          "removed_nm2": 0.0
+        }
+      ],
+      "methods": {
+        "agent": {
+          "verdict": "unresolved",
+          "passed": false,
+          "failure_stage": "geometry_reasoning",
+          "label": "UNRESOLVED / 1 scored marker(s) remain",
+          "note": "The saved output is unchanged. The input defect remains. No repair credit.",
+          "diagnostic": "",
+          "initial_total": 1,
+          "final_total": 1,
+          "after_markers": {
+            "M3.W.1": 1
+          },
+          "output_exists": true,
+          "area_added_um2": "0.0",
+          "area_removed_um2": "0.0",
+          "run_dir": "reports/runs/c2c3_v1_agent/runs/l3_g0_c1_20261028_065440_132fa2"
+        },
+        "heuristic": {
+          "verdict": "invalid_patch",
+          "passed": false,
+          "failure_stage": "edit_policy",
+          "label": "REJECTED / after-DRC not run",
+          "note": "Rejected: protected cell contents changed. After-DRC was not run; no marker count is claimed.",
+          "diagnostic": "Protected master cell 'gcd' contents changed.",
+          "initial_total": 1,
+          "final_total": null,
+          "after_markers": null,
+          "output_exists": true,
+          "area_added_um2": "8.475309",
+          "area_removed_um2": "0.0",
+          "run_dir": "reports/runs/c2c3_v1_heuristic/runs/l3_g0_c1_20261028_065107_7c84e6"
+        }
+      },
+      "images": {
+        "full": "docs/reports/c2_c3_snapshots/22_l3_g0_c1_full.png",
+        "detail": "docs/reports/c2_c3_snapshots/22_l3_g0_c1_detail.png",
+        "reference": "docs/reports/c2_c3_selected10_review/05_l3_g0_c1_reference.png",
+        "agent": "docs/reports/c2_c3_selected10_review/05_l3_g0_c1_agent.png",
+        "heuristic": "docs/reports/c2_c3_selected10_review/05_l3_g0_c1_heuristic.png"
+      },
+      "camera_um": [
+        2.1953,
+        2.5174000000000003,
+        2.4167,
+        2.6486
+      ]
+    },
+    {
+      "number": 6,
+      "case_id": "l3_g1_c2",
+      "title": "A V2 cut is too narrow",
+      "issue": "A V2 via in the second GCD source is reduced from 18 to 14 nm in one direction. V2.W.1 identifies the narrow cut.",
+      "fix": "Restore a 4 x 18 nm V2 strip, adding 72 nm2. The via returns to an 18 nm width in the affected direction. Preserve the surrounding metal.",
+      "level": 3,
+      "source_group": "l3_source_1",
+      "metrics": {
+        "cell_definitions": 45,
+        "context_shapes": 25,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 10455,
+        "editable_shape_count": 3,
+        "hierarchy_depth": 2,
+        "instance_count": 976,
+        "local_route_polygons": 6,
+        "local_routing_occupancy": 0.19616596638655462,
+        "occupancy_box_um": [
+          2.2439999999999998,
+          1.996,
+          2.468,
+          2.234
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 22,
+        "route_segment_count": 2567,
+        "shape_count": 80641,
+        "target_markers": 1,
+        "via_count": 3845
+      },
+      "input_markers": {
+        "V2.W.1": 1
+      },
+      "reference_markers": {},
+      "reference_policy_pass": true,
+      "reference_changes": [
+        {
+          "layer": [
+            25,
+            0
+          ],
+          "added_nm2": 72.0,
+          "removed_nm2": 0.0
+        }
+      ],
+      "methods": {
+        "agent": {
+          "verdict": "invalid_patch",
+          "passed": false,
+          "failure_stage": "python_execution",
+          "label": "NO OUTPUT / script failed",
+          "note": "The Python script failed before export. No output GDS or after-DRC result exists.",
+          "diagnostic": "AttributeError: 'float' object has no attribute 'to_integral_value'",
+          "initial_total": 1,
+          "final_total": null,
+          "after_markers": null,
+          "output_exists": false,
+          "area_added_um2": "",
+          "area_removed_um2": "",
+          "run_dir": "reports/runs/c2c3_v1_agent/runs/l3_g1_c2_20261028_070028_7d3551"
+        },
+        "heuristic": {
+          "verdict": "invalid_patch",
+          "passed": false,
+          "failure_stage": "edit_policy",
+          "label": "REJECTED / after-DRC not run",
+          "note": "Rejected: protected cell contents changed. After-DRC was not run; no marker count is claimed.",
+          "diagnostic": "Protected master cell 'gcd' contents changed.",
+          "initial_total": 1,
+          "final_total": null,
+          "after_markers": null,
+          "output_exists": true,
+          "area_added_um2": "10.473218",
+          "area_removed_um2": "0.0",
+          "run_dir": "reports/runs/c2c3_v1_heuristic/runs/l3_g1_c2_20261028_065142_5d45d5"
+        }
+      },
+      "images": {
+        "full": "docs/reports/c2_c3_snapshots/28_l3_g1_c2_full.png",
+        "detail": "docs/reports/c2_c3_snapshots/28_l3_g1_c2_detail.png",
+        "reference": "docs/reports/c2_c3_selected10_review/06_l3_g1_c2_reference.png",
+        "agent": "docs/reports/c2_c3_selected10_review/06_l3_g1_c2_agent.png",
+        "heuristic": "docs/reports/c2_c3_selected10_review/06_l3_g1_c2_heuristic.png"
+      },
+      "camera_um": [
+        2.2480675,
+        2.0510400000000004,
+        2.4639325,
+        2.17896
+      ]
+    },
+    {
+      "number": 7,
+      "case_id": "l4_g0_c0",
+      "title": "A local M2 notch in a UART block",
+      "issue": "The amber M2 route has a controlled notch that leaves a 14 nm local width. The full UART block contains many unrelated routes.",
+      "fix": "Restore the removed 4 x 20 nm M2 strip, adding 80 nm2. The local width returns to 18 nm. Keep the route anchor and all unrelated geometry fixed.",
+      "level": 4,
+      "source_group": "l4_source_0",
+      "metrics": {
+        "cell_definitions": 68,
+        "context_shapes": 50,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 19786,
+        "editable_shape_count": 10,
+        "hierarchy_depth": 2,
+        "instance_count": 1909,
+        "local_route_polygons": 16,
+        "local_routing_occupancy": 0.32109375,
+        "occupancy_box_um": [
+          6.981,
+          1.996,
+          7.221,
+          2.22
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 40,
+        "route_segment_count": 5077,
+        "shape_count": 192531,
+        "target_markers": 1,
+        "via_count": 7024
+      },
+      "input_markers": {
+        "M2.W.1": 1
+      },
+      "reference_markers": {},
+      "reference_policy_pass": true,
+      "reference_changes": [
+        {
+          "layer": [
+            20,
+            0
+          ],
+          "added_nm2": 80.0,
+          "removed_nm2": 0.0
+        }
+      ],
+      "methods": {
+        "agent": {
+          "verdict": "unresolved",
+          "passed": false,
+          "failure_stage": "geometry_reasoning",
+          "label": "UNRESOLVED / 1 scored marker(s) remain",
+          "note": "The saved output is unchanged. The input defect remains. No repair credit.",
+          "diagnostic": "",
+          "initial_total": 1,
+          "final_total": 1,
+          "after_markers": {
+            "M2.W.1": 1
+          },
+          "output_exists": true,
+          "area_added_um2": "0.0",
+          "area_removed_um2": "0.0",
+          "run_dir": "reports/runs/c2c3_v1_agent/runs/l4_g0_c0_20261028_070322_1b8a23"
+        },
+        "heuristic": {
+          "verdict": "invalid_patch",
+          "passed": false,
+          "failure_stage": "edit_policy",
+          "label": "REJECTED / after-DRC not run",
+          "note": "Rejected: protected cell contents changed. After-DRC was not run; no marker count is claimed.",
+          "diagnostic": "Protected master cell 'uart' contents changed.",
+          "initial_total": 1,
+          "final_total": null,
+          "after_markers": null,
+          "output_exists": true,
+          "area_added_um2": "28.407691999999997",
+          "area_removed_um2": "0.0",
+          "run_dir": "reports/runs/c2c3_v1_heuristic/runs/l4_g0_c0_20261028_065159_c1ab1e"
+        }
+      },
+      "images": {
+        "full": "docs/reports/c2_c3_snapshots/31_l4_g0_c0_full.png",
+        "detail": "docs/reports/c2_c3_snapshots/31_l4_g0_c0_detail.png",
+        "reference": "docs/reports/c2_c3_selected10_review/07_l4_g0_c0_reference.png",
+        "agent": "docs/reports/c2_c3_selected10_review/07_l4_g0_c0_agent.png",
+        "heuristic": "docs/reports/c2_c3_selected10_review/07_l4_g0_c0_heuristic.png"
+      },
+      "camera_um": [
+        7.01244,
+        2.05552,
+        7.18956,
+        2.16048
+      ]
+    },
+    {
+      "number": 8,
+      "case_id": "l4_g1_c2",
+      "title": "A narrow via in a dense UART neighborhood",
+      "issue": "The V2 via is reduced from 18 to 14 nm in one direction. Multiple nearby layers make indiscriminate expansion unsuitable.",
+      "fix": "Restore the 4 x 18 nm V2 strip, adding 72 nm2. Only the owned via geometry changes; the surrounding signal, power and clock structures stay fixed.",
+      "level": 4,
+      "source_group": "l4_source_1",
+      "metrics": {
+        "cell_definitions": 66,
+        "context_shapes": 55,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 21564,
+        "editable_shape_count": 4,
+        "hierarchy_depth": 2,
+        "instance_count": 1978,
+        "local_route_polygons": 15,
+        "local_routing_occupancy": 0.24705507202881152,
+        "occupancy_box_um": [
+          9.588000000000001,
+          4.516,
+          9.812,
+          4.7540000000000004
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 51,
+        "route_segment_count": 5524,
+        "shape_count": 199263,
+        "target_markers": 1,
+        "via_count": 7869
+      },
+      "input_markers": {
+        "V2.W.1": 1
+      },
+      "reference_markers": {},
+      "reference_policy_pass": true,
+      "reference_changes": [
+        {
+          "layer": [
+            25,
+            0
+          ],
+          "added_nm2": 72.0,
+          "removed_nm2": 0.0
+        }
+      ],
+      "methods": {
+        "agent": {
+          "verdict": "unresolved",
+          "passed": false,
+          "failure_stage": "geometry_reasoning",
+          "label": "UNRESOLVED / 1 scored marker(s) remain",
+          "note": "The saved output is unchanged. The input defect remains. No repair credit.",
+          "diagnostic": "",
+          "initial_total": 1,
+          "final_total": 1,
+          "after_markers": {
+            "V2.W.1": 1
+          },
+          "output_exists": true,
+          "area_added_um2": "0.0",
+          "area_removed_um2": "0.0",
+          "run_dir": "reports/runs/c2c3_v1_agent/runs/l4_g1_c2_20261028_071250_a63649"
+        },
+        "heuristic": {
+          "verdict": "invalid_patch",
+          "passed": false,
+          "failure_stage": "edit_policy",
+          "label": "REJECTED / after-DRC not run",
+          "note": "Rejected: protected cell contents changed. After-DRC was not run; no marker count is claimed.",
+          "diagnostic": "Protected master cell 'uart' contents changed.",
+          "initial_total": 1,
+          "final_total": null,
+          "after_markers": null,
+          "output_exists": true,
+          "area_added_um2": "28.701027999999997",
+          "area_removed_um2": "0.0",
+          "run_dir": "reports/runs/c2c3_v1_heuristic/runs/l4_g1_c2_20261028_065304_171eb1"
+        }
+      },
+      "images": {
+        "full": "docs/reports/c2_c3_snapshots/38_l4_g1_c2_full.png",
+        "detail": "docs/reports/c2_c3_snapshots/38_l4_g1_c2_detail.png",
+        "reference": "docs/reports/c2_c3_selected10_review/08_l4_g1_c2_reference.png",
+        "agent": "docs/reports/c2_c3_selected10_review/08_l4_g1_c2_agent.png",
+        "heuristic": "docs/reports/c2_c3_selected10_review/08_l4_g1_c2_heuristic.png"
+      },
+      "camera_um": [
+        9.592067499999999,
+        4.57104,
+        9.8079325,
+        4.69896
+      ]
+    },
+    {
+      "number": 9,
+      "case_id": "l5_g0_c0",
+      "title": "One M2 landing, two rule failures",
+      "issue": "The same local M2 landing fails width and V2 enclosure. A repair must clear both checks without violating the nearby routing constraints.",
+      "fix": "Restore a 4 x 17 nm M2 strip, adding 68 nm2. This clears both M2.W.1 and V2.M2.EN.1 while leaving the V2 cut and surrounding routes in place.",
+      "level": 5,
+      "source_group": "l5_source_0",
+      "metrics": {
+        "cell_definitions": 69,
+        "context_shapes": 38,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 19232,
+        "editable_shape_count": 3,
+        "hierarchy_depth": 2,
+        "instance_count": 1852,
+        "local_route_polygons": 10,
+        "local_routing_occupancy": 0.22259267631103075,
+        "matched_l4_occupancy": 0.081958257986739,
+        "occupancy_box_um": [
+          4.445,
+          3.851,
+          4.6690000000000005,
+          4.088
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 35,
+        "route_segment_count": 4962,
+        "shape_count": 190426,
+        "target_markers": 2,
+        "via_count": 6876
+      },
+      "input_markers": {
+        "M2.W.1": 1,
+        "V2.M2.EN.1": 1
+      },
+      "reference_markers": {},
+      "reference_policy_pass": true,
+      "reference_changes": [
+        {
+          "layer": [
+            20,
+            0
+          ],
+          "added_nm2": 68.0,
+          "removed_nm2": 0.0
+        }
+      ],
+      "methods": {
+        "agent": {
+          "verdict": "unresolved",
+          "passed": false,
+          "failure_stage": "geometry_reasoning",
+          "label": "UNRESOLVED / 2 scored marker(s) remain",
+          "note": "The saved output is unchanged. The input defect remains. No repair credit.",
+          "diagnostic": "",
+          "initial_total": 2,
+          "final_total": 2,
+          "after_markers": {
+            "M2.W.1": 1,
+            "V2.M2.EN.1": 1
+          },
+          "output_exists": true,
+          "area_added_um2": "0.0",
+          "area_removed_um2": "0.0",
+          "run_dir": "reports/runs/c2c3_v1_agent/runs/l5_g0_c0_20261028_072700_de590e"
+        },
+        "heuristic": {
+          "verdict": "invalid_patch",
+          "passed": false,
+          "failure_stage": "edit_policy",
+          "label": "REJECTED / after-DRC not run",
+          "note": "Rejected: protected cell contents changed. After-DRC was not run; no marker count is claimed.",
+          "diagnostic": "Protected master cell 'uart' contents changed.",
+          "initial_total": 2,
+          "final_total": null,
+          "after_markers": null,
+          "output_exists": true,
+          "area_added_um2": "28.387324999999997",
+          "area_removed_um2": "0.0",
+          "run_dir": "reports/runs/c2c3_v1_heuristic/runs/l5_g0_c0_20261028_065333_17b32b"
+        }
+      },
+      "images": {
+        "full": "docs/reports/c2_c3_snapshots/41_l5_g0_c0_full.png",
+        "detail": "docs/reports/c2_c3_snapshots/41_l5_g0_c0_detail.png",
+        "reference": "docs/reports/c2_c3_selected10_review/09_l5_g0_c0_reference.png",
+        "agent": "docs/reports/c2_c3_selected10_review/09_l5_g0_c0_agent.png",
+        "heuristic": "docs/reports/c2_c3_selected10_review/09_l5_g0_c0_heuristic.png"
+      },
+      "camera_um": [
+        4.45045125,
+        3.9063600000000003,
+        4.66354875,
+        4.03264
+      ]
+    },
+    {
+      "number": 10,
+      "case_id": "l5_g1_c1",
+      "title": "Coupled repair in the second congested source",
+      "issue": "A controlled M2 landing defect triggers both width and V2 enclosure checks in the second congestion-qualified UART source.",
+      "fix": "Restore the 4 x 17 nm M2 strip, adding 68 nm2. Both target categories clear together. The saved agent attempt fails before it writes an output.",
+      "level": 5,
+      "source_group": "l5_source_1",
+      "metrics": {
+        "cell_definitions": 66,
+        "context_shapes": 30,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 21374,
+        "editable_shape_count": 6,
+        "hierarchy_depth": 2,
+        "instance_count": 1782,
+        "local_route_polygons": 6,
+        "local_routing_occupancy": 0.09796940928270043,
+        "matched_l4_occupancy": 0.07390559071729957,
+        "occupancy_box_um": [
+          5.345,
+          8.945,
+          5.569,
+          9.182
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 24,
+        "route_segment_count": 5500,
+        "shape_count": 170400,
+        "target_markers": 2,
+        "via_count": 7677
+      },
+      "input_markers": {
+        "M2.W.1": 1,
+        "V2.M2.EN.1": 1
+      },
+      "reference_markers": {},
+      "reference_policy_pass": true,
+      "reference_changes": [
+        {
+          "layer": [
+            20,
+            0
+          ],
+          "added_nm2": 68.0,
+          "removed_nm2": 0.0
+        }
+      ],
+      "methods": {
+        "agent": {
+          "verdict": "invalid_patch",
+          "passed": false,
+          "failure_stage": "python_execution",
+          "label": "NO OUTPUT / script failed",
+          "note": "The Python script failed before export. No output GDS or after-DRC result exists.",
+          "diagnostic": "AttributeError: 'Region' object has no attribute 'enclosed'",
+          "initial_total": 2,
+          "final_total": null,
+          "after_markers": null,
+          "output_exists": false,
+          "area_added_um2": "",
+          "area_removed_um2": "",
+          "run_dir": "reports/runs/c2c3_v1_agent/runs/l5_g1_c1_20261028_073448_a984e1"
+        },
+        "heuristic": {
+          "verdict": "invalid_patch",
+          "passed": false,
+          "failure_stage": "edit_policy",
+          "label": "REJECTED / after-DRC not run",
+          "note": "Rejected: protected cell contents changed. After-DRC was not run; no marker count is claimed.",
+          "diagnostic": "Protected master cell 'uart' contents changed.",
+          "initial_total": 2,
+          "final_total": null,
+          "after_markers": null,
+          "output_exists": true,
+          "area_added_um2": "23.733985",
+          "area_removed_um2": "0.0",
+          "run_dir": "reports/runs/c2c3_v1_heuristic/runs/l5_g1_c1_20261028_065428_45cc57"
+        }
+      },
+      "images": {
+        "full": "docs/reports/c2_c3_snapshots/47_l5_g1_c1_full.png",
+        "detail": "docs/reports/c2_c3_snapshots/47_l5_g1_c1_detail.png",
+        "reference": "docs/reports/c2_c3_selected10_review/10_l5_g1_c1_reference.png",
+        "agent": "docs/reports/c2_c3_selected10_review/10_l5_g1_c1_agent.png",
+        "heuristic": "docs/reports/c2_c3_selected10_review/10_l5_g1_c1_heuristic.png"
+      },
+      "camera_um": [
+        5.35045125,
+        9.00036,
+        5.56354875,
+        9.126640000000002
+      ]
+    }
+  ],
+  "images": {
+    "docs/reports/c2_c3_snapshots/01_l1_g0_c0_full.png": "b79e326354dbc73af9f5825643df550c9ac785c134671ebf2779f538dccb9319",
+    "docs/reports/c2_c3_snapshots/01_l1_g0_c0_detail.png": "c77784679d6ae414e90ca7a49dfa465d648e34664b41d2f5e685663e7b43ee45",
+    "docs/reports/c2_c3_selected10_review/01_l1_g0_c0_reference.png": "2a8329fddbfe5f1b4f3db39ce4f20176224d63a94394e32aec2f12ef44b65d42",
+    "docs/reports/c2_c3_selected10_review/01_l1_g0_c0_agent.png": "32e114eb95659f4f34e8719c2489d8a0e2f04e4906fd780e70f4e275ce3dfc08",
+    "docs/reports/c2_c3_selected10_review/01_l1_g0_c0_heuristic.png": "9d54ece9e78f3d81f8552c41b03b36abd9eb6bed549aaf7f4d9a92ab685c5eca",
+    "docs/reports/c2_c3_snapshots/08_l1_g1_c2_full.png": "b9906b5a2e463414a2fd96285812ad67ddcf236ba545f044f37b24b66b1878c9",
+    "docs/reports/c2_c3_snapshots/08_l1_g1_c2_detail.png": "0f8dab359b7451a5f2361279dabf32a3969a605a5b992596b30d93cb0269b631",
+    "docs/reports/c2_c3_selected10_review/02_l1_g1_c2_reference.png": "7e84d169e0638efea7214a4a03b356a334d930fa6e105dbeb99fd9c6e31f01f8",
+    "docs/reports/c2_c3_selected10_review/02_l1_g1_c2_agent.png": "f1c5707b8dcf35c97ca4acb64bee6547e23243facfce8c2a6e2a9c9ea807fae7",
+    "docs/reports/c2_c3_selected10_review/02_l1_g1_c2_heuristic.png": "4e64b4607af068caa0a7f5295712773cf70a471f0d55fa24232416cc56d67f71",
+    "docs/reports/c2_c3_snapshots/12_l2_g0_c1_full.png": "49a08b64ac92d6a44617239cebf557cdd55b47198be56486d8533b5efb64d37c",
+    "docs/reports/c2_c3_snapshots/12_l2_g0_c1_detail.png": "e54d95540223fd22863ea587b892cfb44d80db0472c6436ca1b2dc37ecee27ab",
+    "docs/reports/c2_c3_selected10_review/03_l2_g0_c1_reference.png": "06ba764f9c69ea828a5e3084d4b821ec3dce716a83317f32d00067a4cf398167",
+    "docs/reports/c2_c3_selected10_review/03_l2_g0_c1_agent.png": "a1c91e813488d171bea2e68a09a9b928ed80a5cfcae6cc4defa19fd0d7501b35",
+    "docs/reports/c2_c3_selected10_review/03_l2_g0_c1_heuristic.png": "66cfe84b73cc59cd25974a2542203cf7e18c68d495c0e0c8fc532ac63e873a2f",
+    "docs/reports/c2_c3_snapshots/17_l2_g1_c1_full.png": "2e90f1b92f1e9daa1e2a7866c8084121809ff67a9c07c9b2cb216463577c20f8",
+    "docs/reports/c2_c3_snapshots/17_l2_g1_c1_detail.png": "87b352e78ead859f0c9433b641444c139defb922c649475555207b870731ddf7",
+    "docs/reports/c2_c3_selected10_review/04_l2_g1_c1_reference.png": "ecd108a03db76e08014b81174b35a7a2c1ef2c3a80ff7fd22d309004356e5133",
+    "docs/reports/c2_c3_selected10_review/04_l2_g1_c1_agent.png": "c70caa86602cd6cd69b3527281e529a24046931779af04db271ebfa26d36ad2f",
+    "docs/reports/c2_c3_selected10_review/04_l2_g1_c1_heuristic.png": "1b3a0a1fcb4ad25db4737ce766b5f93cdb944ab611409b2f6eec1810d3edd408",
+    "docs/reports/c2_c3_snapshots/22_l3_g0_c1_full.png": "824b83c8be5524b1a3c7be9aef0b1e0ea963c4afbbbf4b702a2da24844580562",
+    "docs/reports/c2_c3_snapshots/22_l3_g0_c1_detail.png": "93d7b99f845cbbc7e5448f36d6ccb77c00bd1cf83b0e21be261508b046f3a133",
+    "docs/reports/c2_c3_selected10_review/05_l3_g0_c1_reference.png": "eac0ffdef48dd824aaabcacc13a0242f12d5705c18077a5b80f5cbe10736f081",
+    "docs/reports/c2_c3_selected10_review/05_l3_g0_c1_agent.png": "2a4ca9f2710cc18fdafc60bcd9a5011c1c69398add1fdfcaaca9d4c7bac64471",
+    "docs/reports/c2_c3_selected10_review/05_l3_g0_c1_heuristic.png": "ced30495886da6c0051bffe38b25f49e192e1b262b435682c4a8c79b3ff9cbb9",
+    "docs/reports/c2_c3_snapshots/28_l3_g1_c2_full.png": "e67d73866cecc45e255b0734543bfa84abf904ddbdfc70423596a9b95c248d63",
+    "docs/reports/c2_c3_snapshots/28_l3_g1_c2_detail.png": "22c2ddb93ec959e4bd525efda86f26ab103cd3c8b168e2897b5a616fbb6ca4d9",
+    "docs/reports/c2_c3_selected10_review/06_l3_g1_c2_reference.png": "d50a6a7d7c9edc6b05ea1505a3d912bd523b3fcb1d477d2daf0e1c43f35fa592",
+    "docs/reports/c2_c3_selected10_review/06_l3_g1_c2_agent.png": "a1c91e813488d171bea2e68a09a9b928ed80a5cfcae6cc4defa19fd0d7501b35",
+    "docs/reports/c2_c3_selected10_review/06_l3_g1_c2_heuristic.png": "68250813e6c795520760d51ae1b3e889faf3f11078ab95f3e30ae130c8cb88bc",
+    "docs/reports/c2_c3_snapshots/31_l4_g0_c0_full.png": "342c543281f5e8c950092c3cb71276776abae813c5de02a4b34e3ce6898df782",
+    "docs/reports/c2_c3_snapshots/31_l4_g0_c0_detail.png": "8cf9a1f2e5c5c0a5b38e0f679c9b1845462ba1dca741ca945d2e95185ee633f6",
+    "docs/reports/c2_c3_selected10_review/07_l4_g0_c0_reference.png": "3d805b142e9e659559a50a7d71606fc0b2d932925ca08e0bd2e1e7ed2ee3ad52",
+    "docs/reports/c2_c3_selected10_review/07_l4_g0_c0_agent.png": "665dc122f8a452532e462f24bfdad3ab4ec9741c434d89b4a33abd30637c6da0",
+    "docs/reports/c2_c3_selected10_review/07_l4_g0_c0_heuristic.png": "f817b493c49d67c688f9421aad711de80660b2dc1d30b23139dc6dd636aa26ec",
+    "docs/reports/c2_c3_snapshots/38_l4_g1_c2_full.png": "9d81d78d92bd22f5ca300e14bdd9096e489151f1a0564640118ddb8ec999a77f",
+    "docs/reports/c2_c3_snapshots/38_l4_g1_c2_detail.png": "37433bfd0e65ec2a494f38fed372aa42f44363bc6c2ecfa5ef671b027ee2583f",
+    "docs/reports/c2_c3_selected10_review/08_l4_g1_c2_reference.png": "067a6c20b5892b5c615a000741b59e5ff6e3d0c90d70615ddfc89489e0a1b31a",
+    "docs/reports/c2_c3_selected10_review/08_l4_g1_c2_agent.png": "dc13a8ae2b67a3f0ceff5861a0b974e8ec6450a969b9f6e55b3fccb5b4e73918",
+    "docs/reports/c2_c3_selected10_review/08_l4_g1_c2_heuristic.png": "c529d86ceeebcbccd6d9781e92094892bbb94d0c41dd6d9bd61678216c7ac478",
+    "docs/reports/c2_c3_snapshots/41_l5_g0_c0_full.png": "118d4857f17939037a0184f4100eabca35899018aeecfa9a88194e89d1d693af",
+    "docs/reports/c2_c3_snapshots/41_l5_g0_c0_detail.png": "be5d0d888814345eb09d8a1011f356fb42cb82260552a7b1fe07746df6f50388",
+    "docs/reports/c2_c3_selected10_review/09_l5_g0_c0_reference.png": "39b026693550075de24ca658057d3ea275e5d6f22b81da75c3e5efe4b8ce1383",
+    "docs/reports/c2_c3_selected10_review/09_l5_g0_c0_agent.png": "d5a89d270a5b14cfabd2d693c2236258d170460dd72f23bc527de530a458b9c3",
+    "docs/reports/c2_c3_selected10_review/09_l5_g0_c0_heuristic.png": "3ac468ffa1b054fae418545c353901679e7385c6f52348348e8623a9a3956823",
+    "docs/reports/c2_c3_snapshots/47_l5_g1_c1_full.png": "a1fb97a97780534bb731a2d44b9eac65ae40c4a14531116e5639db83c30f2c72",
+    "docs/reports/c2_c3_snapshots/47_l5_g1_c1_detail.png": "6b8bec148949fe1d3607b7ce679c2417fed45a2302b6b65ede801160d5d4bad6",
+    "docs/reports/c2_c3_selected10_review/10_l5_g1_c1_reference.png": "317bccca8f78da6cf1030b2864430706aef0905032f24067a4e5f959e2e1e6f1",
+    "docs/reports/c2_c3_selected10_review/10_l5_g1_c1_agent.png": "a1c91e813488d171bea2e68a09a9b928ed80a5cfcae6cc4defa19fd0d7501b35",
+    "docs/reports/c2_c3_selected10_review/10_l5_g1_c1_heuristic.png": "85e071389feaee886464f7c3d845d10db091b0c8623d0b2e187018e5a164612b"
+  }
+}

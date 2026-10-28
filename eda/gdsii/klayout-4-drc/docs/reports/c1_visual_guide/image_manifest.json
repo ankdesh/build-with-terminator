@@ -1,0 +1,1983 @@
+{
+  "schema_version": 1,
+  "title": "C1 visual guide",
+  "dataset_version": "1.1.0",
+  "renderer_version": "0.30.8",
+  "checker_version": "KLayout 0.28.16",
+  "source_files_unchanged": true,
+  "verified_sources": {
+    "test_data/benchmark_v1/manifest.json": "f59014c5c51832c2c316970cda0b78ff12929a48233c175a4c559fc99c0a94f4",
+    "reports/runs/c1_corrected_heuristic/summary.json": "6ba34567f4f8bd1d79eb0f7cf45dc723f7e8c01ad9ec36652d0caf0eafee1fea",
+    "test_data/rules/asap7_curated.lydrc": "e29677d9f867858c8f7d9856fe545dcd1174c7221b6bdd2c08a3db7fdefbb8ae",
+    "scripts/capture_c1_examples.py": "2b5af334409a6de212bfd063aa31cb313f7530f414fb914492a2617667f45276",
+    "test_data/benchmark_v1/references/m1_w1_iso_01.gds": "fd051ade00854eec35cf5ffbfa550b3a53c2e28c3f08f63ce0b4d3993a9f36c1",
+    "test_data/benchmark_v1/cases/m1_w1_iso_01.gds": "5030e816f195d81ae9dac563f0d9ac07dd80d02fd475e91b46da5c0849711353",
+    "test_data/benchmark_v1/oracle/m1_w1_iso_01.reference.lyrdb": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+    "test_data/benchmark_v1/oracle/m1_w1_iso_01.lyrdb": "185fdfd34bb6844dfefd4a5115852bf908d68dac36980092e4e33f0b41467d2c",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_iso_01_20261022_221914_65bdb2/run_manifest.json": "6947b7331209cbfbef2e6f7cbdbf145699bef5f8b6834b43589cc19cdfb9f623",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_iso_01_20261022_221914_65bdb2/input.gds": "5030e816f195d81ae9dac563f0d9ac07dd80d02fd475e91b46da5c0849711353",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_iso_01_20261022_221914_65bdb2/patched.gds": "cd27ab205d3110b34daa6cc05cd00dab55942e47c732924ce8ce3b05c8105ede",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_iso_01_20261022_221914_65bdb2/before.lyrdb": "9075854b3d357e49cc3c8038029fb5cf926b74ea8245172d9ea265f7c04ccd18",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_iso_01_20261022_221914_65bdb2/deck.lydrc": "e29677d9f867858c8f7d9856fe545dcd1174c7221b6bdd2c08a3db7fdefbb8ae",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_iso_01_20261022_221914_65bdb2/benchmark_result.json": "3d34cafa310c8333df6b34d7881ad4a3fd280de775b849f646bffffd1d78fffb",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_iso_01_20261022_221914_65bdb2/after.lyrdb": "71e076ca7927d082f956b13d64f556825f67d53190dfcec4d71f8574516398eb",
+    "test_data/benchmark_v1/references/m1_w1_iso_08.gds": "fd051ade00854eec35cf5ffbfa550b3a53c2e28c3f08f63ce0b4d3993a9f36c1",
+    "test_data/benchmark_v1/cases/m1_w1_iso_08.gds": "f87d244ee43847a0de64e81768d62ab138178fb0f27d7556dad52d2912e92a25",
+    "test_data/benchmark_v1/oracle/m1_w1_iso_08.reference.lyrdb": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+    "test_data/benchmark_v1/oracle/m1_w1_iso_08.lyrdb": "72308c73357abf9cd181cb80e02a6db1d8f20e8dd27208865a4e9e2aaeda85df",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_iso_08_20261022_221923_dce062/run_manifest.json": "6da920d22771a2e84a4d8b763ca7fa0a3690798ca8920b889a697da2d500e129",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_iso_08_20261022_221923_dce062/input.gds": "f87d244ee43847a0de64e81768d62ab138178fb0f27d7556dad52d2912e92a25",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_iso_08_20261022_221923_dce062/patched.gds": "bcf0067c2944c260163a41388430acf10fc3be401f66a625c129c568e95180b6",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_iso_08_20261022_221923_dce062/before.lyrdb": "06ade7efa185dd448276f4ba39f1734ccdd2b25e47fe7341c8a3c67edffc9d59",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_iso_08_20261022_221923_dce062/deck.lydrc": "e29677d9f867858c8f7d9856fe545dcd1174c7221b6bdd2c08a3db7fdefbb8ae",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_iso_08_20261022_221923_dce062/benchmark_result.json": "11e8e912866a7d8889dd231422efcdebb3c9f6e3e5808bfd44b1bd86491c8626",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_iso_08_20261022_221923_dce062/after.lyrdb": "908526fe6fb5978275e44fa2dd3b88f3555d6b17b0ba7e5fa9d467b25a9a290d",
+    "test_data/benchmark_v1/references/m1_w1_bnd_01.gds": "fd051ade00854eec35cf5ffbfa550b3a53c2e28c3f08f63ce0b4d3993a9f36c1",
+    "test_data/benchmark_v1/cases/m1_w1_bnd_01.gds": "4b981f5bf36c4759660cfa346f87b14b1dcf505f69a2f61c6a6f2f8a8498cd48",
+    "test_data/benchmark_v1/oracle/m1_w1_bnd_01.reference.lyrdb": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+    "test_data/benchmark_v1/oracle/m1_w1_bnd_01.lyrdb": "4477be63789b95a404a0b627890bb165ef344284ec9c454239925da6df6137cb",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_bnd_01_20261022_221931_9c8746/run_manifest.json": "3889d137f1652a29dd34c7452259c0c581ad5b58550c1825cb28a3b8ac63db41",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_bnd_01_20261022_221931_9c8746/input.gds": "4b981f5bf36c4759660cfa346f87b14b1dcf505f69a2f61c6a6f2f8a8498cd48",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_bnd_01_20261022_221931_9c8746/patched.gds": "4702b442ea7de654df783f7d49a4b4470a5f88fe28bae205ad0fee838573cdae",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_bnd_01_20261022_221931_9c8746/before.lyrdb": "f8c7d953eacab619adf674d807d470a768fe667c9947ef51a59845fbb1d22977",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_bnd_01_20261022_221931_9c8746/deck.lydrc": "e29677d9f867858c8f7d9856fe545dcd1174c7221b6bdd2c08a3db7fdefbb8ae",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_bnd_01_20261022_221931_9c8746/benchmark_result.json": "4867f8db1812c18eb0b5b20a00ed8b74e342f82e8d26ee482610018eb50a6e27",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_bnd_01_20261022_221931_9c8746/after.lyrdb": "74aee6190a2e27377a9147545b39cacacb08efa16ffb38b0d45146d439cfa301",
+    "test_data/benchmark_v1/references/m1_w1_bnd_04.gds": "6fdd42000bd30b51b4e8c3455ad0233d6998e9abee6b1559697e70eae5c7fec5",
+    "test_data/benchmark_v1/cases/m1_w1_bnd_04.gds": "6fdd42000bd30b51b4e8c3455ad0233d6998e9abee6b1559697e70eae5c7fec5",
+    "test_data/benchmark_v1/oracle/m1_w1_bnd_04.reference.lyrdb": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+    "test_data/benchmark_v1/oracle/m1_w1_bnd_04.lyrdb": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_bnd_04_20261022_221938_db701e/run_manifest.json": "1996b15666bbe409a5a7338e5c1522d093e190659a2f37d488868d6ba11bb219",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_bnd_04_20261022_221938_db701e/input.gds": "6fdd42000bd30b51b4e8c3455ad0233d6998e9abee6b1559697e70eae5c7fec5",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_bnd_04_20261022_221938_db701e/patched.gds": "bf49238f040e3220237afdd1f8f140a249ceffe7856ca8bb1db0f156b087166d",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_bnd_04_20261022_221938_db701e/before.lyrdb": "7836eea8f841d507cf4959b47a00be8cd0c3da2873fb12cd814a5539a05147f6",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_bnd_04_20261022_221938_db701e/deck.lydrc": "e29677d9f867858c8f7d9856fe545dcd1174c7221b6bdd2c08a3db7fdefbb8ae",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_bnd_04_20261022_221938_db701e/benchmark_result.json": "9bf236506770cd810eb10077f5fa48bb6bd177d5ce6739dd3c9c3d17ad4c8f1d",
+    "reports/runs/c1_corrected_heuristic/runs/m1_w1_bnd_04_20261022_221938_db701e/after.lyrdb": "7836eea8f841d507cf4959b47a00be8cd0c3da2873fb12cd814a5539a05147f6",
+    "test_data/benchmark_v1/references/m2_w1_iso_06.gds": "fd88cd515c507d47dce0b9ac4872e7d9badf7495579ba5356417a3f8458e78b7",
+    "test_data/benchmark_v1/cases/m2_w1_iso_06.gds": "2c758144de13973e18dcf7296684d8b022d8baf5ae6b8638d5377d0f8c8fca1a",
+    "test_data/benchmark_v1/oracle/m2_w1_iso_06.reference.lyrdb": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+    "test_data/benchmark_v1/oracle/m2_w1_iso_06.lyrdb": "363570bd61271d44122ed2875498d327ea29ba5313e1e69f3dccea9dc52a4fe7",
+    "reports/runs/c1_corrected_heuristic/runs/m2_w1_iso_06_20261022_222003_a58fa3/run_manifest.json": "e6a337159e8e3f02dd8699fefaf48d618be35d3442263e1e79ffbc893293a461",
+    "reports/runs/c1_corrected_heuristic/runs/m2_w1_iso_06_20261022_222003_a58fa3/input.gds": "2c758144de13973e18dcf7296684d8b022d8baf5ae6b8638d5377d0f8c8fca1a",
+    "reports/runs/c1_corrected_heuristic/runs/m2_w1_iso_06_20261022_222003_a58fa3/patched.gds": "b05f7d38b0e98382634fe2e2a5f9896a498f37764c52c4e875f181ae05db19ff",
+    "reports/runs/c1_corrected_heuristic/runs/m2_w1_iso_06_20261022_222003_a58fa3/before.lyrdb": "a4c466c93651d65c1b3b1074d6bddc906d2fbf19d2b360e3d6e6c58f0fad36c9",
+    "reports/runs/c1_corrected_heuristic/runs/m2_w1_iso_06_20261022_222003_a58fa3/deck.lydrc": "e29677d9f867858c8f7d9856fe545dcd1174c7221b6bdd2c08a3db7fdefbb8ae",
+    "reports/runs/c1_corrected_heuristic/runs/m2_w1_iso_06_20261022_222003_a58fa3/benchmark_result.json": "94b31bdc21bd6de49aa95db80615fa9ef052c7a4cedcc8f9f24fbaaa042feda1",
+    "reports/runs/c1_corrected_heuristic/runs/m2_w1_iso_06_20261022_222003_a58fa3/after.lyrdb": "9d186ac4076c0c726ca426f18f607718637c37d215f618d736748d2d44cfcebe",
+    "test_data/benchmark_v1/references/m1_a1_iso_01.gds": "a44123fde0631ee3c1518e9c187038b7f37d4bec9eb8a0c4e5760a53a0f5128b",
+    "test_data/benchmark_v1/cases/m1_a1_iso_01.gds": "449ca60f4236b6ec5ba33f1c01c6ecabb9e5bf1ff458ff3dbc8cf843d8d1bd1e",
+    "test_data/benchmark_v1/oracle/m1_a1_iso_01.reference.lyrdb": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+    "test_data/benchmark_v1/oracle/m1_a1_iso_01.lyrdb": "3eddbce6817ab93a59dda0e450ad66f65f337f160411d678d909101f32157917",
+    "reports/runs/c1_corrected_heuristic/runs/m1_a1_iso_01_20261022_222031_0d19a8/run_manifest.json": "4248e041df7d4984adb1419623755beca74d10568b310290787b255782bc305d",
+    "reports/runs/c1_corrected_heuristic/runs/m1_a1_iso_01_20261022_222031_0d19a8/input.gds": "449ca60f4236b6ec5ba33f1c01c6ecabb9e5bf1ff458ff3dbc8cf843d8d1bd1e",
+    "reports/runs/c1_corrected_heuristic/runs/m1_a1_iso_01_20261022_222031_0d19a8/patched.gds": "dbf557d473c22192b83d463c15433d7eecb620c4114708e204ad675d642dd3dd",
+    "reports/runs/c1_corrected_heuristic/runs/m1_a1_iso_01_20261022_222031_0d19a8/before.lyrdb": "6559df209538c8c88ba535a83305ffe0117a4e2af5fb764ed94cacafbe18b27a",
+    "reports/runs/c1_corrected_heuristic/runs/m1_a1_iso_01_20261022_222031_0d19a8/deck.lydrc": "e29677d9f867858c8f7d9856fe545dcd1174c7221b6bdd2c08a3db7fdefbb8ae",
+    "reports/runs/c1_corrected_heuristic/runs/m1_a1_iso_01_20261022_222031_0d19a8/benchmark_result.json": "423a7a84507e6ef18a136191c9c59b767b5a67f1b6f826ad8006b1c39eb35be4",
+    "reports/runs/c1_corrected_heuristic/runs/m1_a1_iso_01_20261022_222031_0d19a8/after.lyrdb": "3012001ed8bd1bc09ccd3f260caf64de9f8fc211e6321f9ed1a60e7253ede28a",
+    "test_data/benchmark_v1/references/m1_s1_iso_01.gds": "0c6ee56fc54c90a30b50a5e6dcb69a9e8c7019641f33a255aa4f93fca07af8e6",
+    "test_data/benchmark_v1/cases/m1_s1_iso_01.gds": "2a8646f11faaa890999c75b1f2d257d11456c2cb5345536d56ac76d9d69845f0",
+    "test_data/benchmark_v1/oracle/m1_s1_iso_01.reference.lyrdb": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+    "test_data/benchmark_v1/oracle/m1_s1_iso_01.lyrdb": "321b20c0c9e1643afba6c1811492803949c5f9539887e35fac064a1de737a5a8",
+    "reports/runs/c1_corrected_heuristic/runs/m1_s1_iso_01_20261022_222112_8e6e06/run_manifest.json": "a82424cb48cfe2a6eacbbe9ed5ef7854dca62507148cd6a36888fa852a6f97e2",
+    "reports/runs/c1_corrected_heuristic/runs/m1_s1_iso_01_20261022_222112_8e6e06/input.gds": "2a8646f11faaa890999c75b1f2d257d11456c2cb5345536d56ac76d9d69845f0",
+    "reports/runs/c1_corrected_heuristic/runs/m1_s1_iso_01_20261022_222112_8e6e06/patched.gds": "a6821075c3df752168b9638b8f8dd47d64a20e4ae916be1ce41bbe4ffcbbe4a8",
+    "reports/runs/c1_corrected_heuristic/runs/m1_s1_iso_01_20261022_222112_8e6e06/before.lyrdb": "943c0de1821e3b5441fd9f38034368e9f14238e3105539141e1f0906d3e50199",
+    "reports/runs/c1_corrected_heuristic/runs/m1_s1_iso_01_20261022_222112_8e6e06/deck.lydrc": "e29677d9f867858c8f7d9856fe545dcd1174c7221b6bdd2c08a3db7fdefbb8ae",
+    "reports/runs/c1_corrected_heuristic/runs/m1_s1_iso_01_20261022_222112_8e6e06/benchmark_result.json": "6a3f1863263535c6b94fdb789529f90b29868f1fec9a4f675902ec6d46804a60",
+    "test_data/benchmark_v1/references/m1_s1_neg_03.gds": "794141fba300c104a50169d5bf0c41299e840460e3e7a4911a161f6a37db8a61",
+    "test_data/benchmark_v1/cases/m1_s1_neg_03.gds": "794141fba300c104a50169d5bf0c41299e840460e3e7a4911a161f6a37db8a61",
+    "test_data/benchmark_v1/oracle/m1_s1_neg_03.reference.lyrdb": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+    "test_data/benchmark_v1/oracle/m1_s1_neg_03.lyrdb": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+    "reports/runs/c1_corrected_heuristic/runs/m1_s1_neg_03_20261022_222137_70216b/run_manifest.json": "5c4bbcd89ce6642728c985f62d1ab637d4eb01b020316c2c7f5e606e891def97",
+    "reports/runs/c1_corrected_heuristic/runs/m1_s1_neg_03_20261022_222137_70216b/input.gds": "794141fba300c104a50169d5bf0c41299e840460e3e7a4911a161f6a37db8a61",
+    "reports/runs/c1_corrected_heuristic/runs/m1_s1_neg_03_20261022_222137_70216b/patched.gds": "8ce0ee10f33678c154e670e733dc1e582d0dfd8780f88fdf7a3c589abce51598",
+    "reports/runs/c1_corrected_heuristic/runs/m1_s1_neg_03_20261022_222137_70216b/before.lyrdb": "d096b4f11cb3f78eca3c109c579a8f81dcbbc59a8769f25882c0186a38eaa96b",
+    "reports/runs/c1_corrected_heuristic/runs/m1_s1_neg_03_20261022_222137_70216b/deck.lydrc": "e29677d9f867858c8f7d9856fe545dcd1174c7221b6bdd2c08a3db7fdefbb8ae",
+    "reports/runs/c1_corrected_heuristic/runs/m1_s1_neg_03_20261022_222137_70216b/benchmark_result.json": "e569a02eff5e58df96c067dd8f1e2f177044a464f5c5e9fa3117ee6f36870a5c",
+    "test_data/benchmark_v1/references/v1_w1_iso_01.gds": "739493f30152b91b27a5e142f1bcbfc290c886b467d6ae3aa6133da43e56c2fd",
+    "test_data/benchmark_v1/cases/v1_w1_iso_01.gds": "50dfb9dc76e6c96a0102f9ffd3b1a6e52e43d3f2cc61b5285c2cb8c9afcfb257",
+    "test_data/benchmark_v1/oracle/v1_w1_iso_01.reference.lyrdb": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+    "test_data/benchmark_v1/oracle/v1_w1_iso_01.lyrdb": "b0bcdd65ff1c70e0e96d9cb0952fbdb742ddda9b43cfd04b919f169fb3c96175",
+    "reports/runs/c1_corrected_heuristic/runs/v1_w1_iso_01_20261022_222138_051ae6/run_manifest.json": "6216f1f0882b1217ecce0398766612a9cbc9cc02c3962590756b4e9106be0369",
+    "reports/runs/c1_corrected_heuristic/runs/v1_w1_iso_01_20261022_222138_051ae6/input.gds": "50dfb9dc76e6c96a0102f9ffd3b1a6e52e43d3f2cc61b5285c2cb8c9afcfb257",
+    "reports/runs/c1_corrected_heuristic/runs/v1_w1_iso_01_20261022_222138_051ae6/patched.gds": "dbd8fd59c96f6f6ebfae0a7daa6c507af8c40c5ae5a26c0ec3f235d497373b7e",
+    "reports/runs/c1_corrected_heuristic/runs/v1_w1_iso_01_20261022_222138_051ae6/before.lyrdb": "5f04a021148144f31ec3d533fcce1b6e96cf948bf1e15649f4f8e4be0ecb4b3c",
+    "reports/runs/c1_corrected_heuristic/runs/v1_w1_iso_01_20261022_222138_051ae6/deck.lydrc": "e29677d9f867858c8f7d9856fe545dcd1174c7221b6bdd2c08a3db7fdefbb8ae",
+    "reports/runs/c1_corrected_heuristic/runs/v1_w1_iso_01_20261022_222138_051ae6/benchmark_result.json": "12719ff3f8a72ef1a5c3765e63b062a758db463bf93f1bc02c2c8bee78dcfdab",
+    "reports/runs/c1_corrected_heuristic/runs/v1_w1_iso_01_20261022_222138_051ae6/after.lyrdb": "fd7bc44c9e4a4aaf8ce38af1fab5c2f2f866bc94e20ec919d6f2a17f6ecc05e3",
+    "test_data/benchmark_v1/references/m2_w1_int_02.gds": "a962ae1034c636e8752642bfbab1e5e865ad79346db4d868206b9182b995ed2b",
+    "test_data/benchmark_v1/cases/m2_w1_int_02.gds": "87daa3dbb7952dce80869fbf5e28479b9082d58e2847523eb33576ddc4754873",
+    "test_data/benchmark_v1/oracle/m2_w1_int_02.reference.lyrdb": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+    "test_data/benchmark_v1/oracle/m2_w1_int_02.lyrdb": "444f8b5e1cb5c2394e09ddbf5b3bba17c255a994083167c29a83ed46c96a474a",
+    "reports/runs/c1_corrected_heuristic/runs/m2_w1_int_02_20261022_222019_4b51e9/run_manifest.json": "f8bd49db15ed16c19066776aa7c6fdf4ce7697ea973c6630fbb4f0a1a0a9f62e",
+    "reports/runs/c1_corrected_heuristic/runs/m2_w1_int_02_20261022_222019_4b51e9/input.gds": "87daa3dbb7952dce80869fbf5e28479b9082d58e2847523eb33576ddc4754873",
+    "reports/runs/c1_corrected_heuristic/runs/m2_w1_int_02_20261022_222019_4b51e9/patched.gds": "f8bc699ea295485d356cf86963f1d29dc4fbce2484c326e2c51dbd879e96c30e",
+    "reports/runs/c1_corrected_heuristic/runs/m2_w1_int_02_20261022_222019_4b51e9/before.lyrdb": "a18ac3bc30ffe7a07dde353690b5ce6bd099747d5a41886641c90ff4ecf433ea",
+    "reports/runs/c1_corrected_heuristic/runs/m2_w1_int_02_20261022_222019_4b51e9/deck.lydrc": "e29677d9f867858c8f7d9856fe545dcd1174c7221b6bdd2c08a3db7fdefbb8ae",
+    "reports/runs/c1_corrected_heuristic/runs/m2_w1_int_02_20261022_222019_4b51e9/benchmark_result.json": "7fd66d95024c1035fa0ffd37981283b3655624c2ff0a72f6ccee39a3f44fd43d",
+    "reports/runs/c1_corrected_heuristic/runs/m2_w1_int_02_20261022_222019_4b51e9/after.lyrdb": "c369724c00c0227e8fe265c9011e5db516e98a44af36b9b919a6358a971f87fa"
+  },
+  "images_count": 32,
+  "cases": [
+    {
+      "number": 1,
+      "case_id": "m1_w1_iso_01",
+      "tier": "isolated",
+      "rule_id": "M1.W.1",
+      "verdict": "clean_success",
+      "pipeline_verdict": "success_geometry_only",
+      "validation": {
+        "is_valid": true,
+        "top_cell_name": "TOP",
+        "dbu_um": 0.00025,
+        "total_shapes": 1,
+        "bbox_um": [
+          -0.011,
+          -0.011,
+          0.021,
+          0.111
+        ],
+        "violations": []
+      },
+      "checker_version": "KLayout 0.28.16",
+      "duplicate_group": "a7af4323301a1e8cee7e60d24446a3a0d5d61389f8d01e949f573ae1d512a596",
+      "images": {
+        "reference": {
+          "image": "docs/reports/c1_visual_guide/01_m1_w1_iso_01_reference.png",
+          "sha256": "4a57a28db8e74fce22d4e211f27599a5ea35e8f04be6dd37bb45000636b8ae84",
+          "gds": "test_data/benchmark_v1/references/m1_w1_iso_01.gds",
+          "gds_sha256": "fd051ade00854eec35cf5ffbfa550b3a53c2e28c3f08f63ce0b4d3993a9f36c1",
+          "report": "test_data/benchmark_v1/oracle/m1_w1_iso_01.reference.lyrdb",
+          "report_sha256": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+          "counts": {},
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                0,
+                0,
+                96,
+                400
+              ],
+              "bbox_nm": [
+                0.0,
+                0.0,
+                24.0,
+                100.0
+              ],
+              "area_nm2": 2400.0,
+              "components": 1,
+              "geometry_dbu": "(0,0;0,400;96,400;96,0)"
+            }
+          },
+          "requested_window_um": [
+            -0.0354,
+            -0.03784,
+            0.0484,
+            0.1293
+          ],
+          "actual_window_um": [
+            -0.10094714285714285,
+            -0.037840000000000006,
+            0.11394714285714286,
+            0.1293
+          ],
+          "ruler_um": null,
+          "size_px": [
+            720,
+            750
+          ]
+        },
+        "input": {
+          "image": "docs/reports/c1_visual_guide/01_m1_w1_iso_01_input.png",
+          "sha256": "18960e54567b46a8f8bb73ed15177dbdd0d0a9427adb6cd338620c545207e1fc",
+          "gds": "test_data/benchmark_v1/cases/m1_w1_iso_01.gds",
+          "gds_sha256": "5030e816f195d81ae9dac563f0d9ac07dd80d02fd475e91b46da5c0849711353",
+          "report": "test_data/benchmark_v1/oracle/m1_w1_iso_01.lyrdb",
+          "report_sha256": "185fdfd34bb6844dfefd4a5115852bf908d68dac36980092e4e33f0b41467d2c",
+          "counts": {
+            "M1.W.1": 1
+          },
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                0,
+                0,
+                40,
+                400
+              ],
+              "bbox_nm": [
+                0.0,
+                0.0,
+                10.0,
+                100.0
+              ],
+              "area_nm2": 1000.0,
+              "components": 1,
+              "geometry_dbu": "(0,0;0,400;40,400;40,0)"
+            }
+          },
+          "requested_window_um": [
+            -0.0354,
+            -0.03784,
+            0.0484,
+            0.1293
+          ],
+          "actual_window_um": [
+            -0.10094714285714285,
+            -0.037840000000000006,
+            0.11394714285714286,
+            0.1293
+          ],
+          "ruler_um": [
+            0.0,
+            -0.008,
+            0.01,
+            -0.008,
+            "10 nm"
+          ],
+          "size_px": [
+            720,
+            750
+          ]
+        },
+        "output": {
+          "image": "docs/reports/c1_visual_guide/01_m1_w1_iso_01_output.png",
+          "sha256": "f46bd9aa8cb17d597819c77f5b899d89ec1802c61d241ce4290d61ed71fa06a4",
+          "gds": "reports/runs/c1_corrected_heuristic/runs/m1_w1_iso_01_20261022_221914_65bdb2/patched.gds",
+          "gds_sha256": "cd27ab205d3110b34daa6cc05cd00dab55942e47c732924ce8ce3b05c8105ede",
+          "report": "reports/runs/c1_corrected_heuristic/runs/m1_w1_iso_01_20261022_221914_65bdb2/after.lyrdb",
+          "report_sha256": "71e076ca7927d082f956b13d64f556825f67d53190dfcec4d71f8574516398eb",
+          "counts": {},
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                -44,
+                -44,
+                84,
+                444
+              ],
+              "bbox_nm": [
+                -11.0,
+                -11.0,
+                21.0,
+                111.0
+              ],
+              "area_nm2": 3904.0,
+              "components": 1,
+              "geometry_dbu": "(-44,-44;-44,444;84,444;84,-44)"
+            }
+          },
+          "requested_window_um": [
+            -0.0354,
+            -0.03784,
+            0.0484,
+            0.1293
+          ],
+          "actual_window_um": [
+            -0.10094714285714285,
+            -0.037840000000000006,
+            0.11394714285714286,
+            0.1293
+          ],
+          "ruler_um": null,
+          "size_px": [
+            720,
+            750
+          ]
+        }
+      }
+    },
+    {
+      "number": 2,
+      "case_id": "m1_w1_iso_08",
+      "tier": "isolated",
+      "rule_id": "M1.W.1",
+      "verdict": "clean_success",
+      "pipeline_verdict": "success_geometry_only",
+      "validation": {
+        "is_valid": true,
+        "top_cell_name": "TOP",
+        "dbu_um": 0.00025,
+        "total_shapes": 1,
+        "bbox_um": [
+          -0.006,
+          -0.006,
+          0.03,
+          0.106
+        ],
+        "violations": []
+      },
+      "checker_version": "KLayout 0.28.16",
+      "duplicate_group": "ec86baa89b34ca68491f0e5214a90c3a9d9fa1503085b33354bee8c5670150d5",
+      "images": {
+        "reference": {
+          "image": "docs/reports/c1_visual_guide/02_m1_w1_iso_08_reference.png",
+          "sha256": "9bee733c0cdf4d379922281efe137e601980ef1d529d7e29893fabd2edff1d3a",
+          "gds": "test_data/benchmark_v1/references/m1_w1_iso_08.gds",
+          "gds_sha256": "fd051ade00854eec35cf5ffbfa550b3a53c2e28c3f08f63ce0b4d3993a9f36c1",
+          "report": "test_data/benchmark_v1/oracle/m1_w1_iso_08.reference.lyrdb",
+          "report_sha256": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+          "counts": {},
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                0,
+                0,
+                96,
+                400
+              ],
+              "bbox_nm": [
+                0.0,
+                0.0,
+                24.0,
+                100.0
+              ],
+              "area_nm2": 2400.0,
+              "components": 1,
+              "geometry_dbu": "(0,0;0,400;96,400;96,0)"
+            }
+          },
+          "requested_window_um": [
+            -0.0284,
+            -0.03064,
+            0.0524,
+            0.12279999999999999
+          ],
+          "actual_window_um": [
+            -0.08664,
+            -0.03064,
+            0.11063999999999999,
+            0.12279999999999999
+          ],
+          "ruler_um": null,
+          "size_px": [
+            720,
+            750
+          ]
+        },
+        "input": {
+          "image": "docs/reports/c1_visual_guide/02_m1_w1_iso_08_input.png",
+          "sha256": "3f022386229d296fc0ee556b439b0faefa465bac739f417732cdea1ef4743a07",
+          "gds": "test_data/benchmark_v1/cases/m1_w1_iso_08.gds",
+          "gds_sha256": "f87d244ee43847a0de64e81768d62ab138178fb0f27d7556dad52d2912e92a25",
+          "report": "test_data/benchmark_v1/oracle/m1_w1_iso_08.lyrdb",
+          "report_sha256": "72308c73357abf9cd181cb80e02a6db1d8f20e8dd27208865a4e9e2aaeda85df",
+          "counts": {
+            "M1.W.1": 1
+          },
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                0,
+                0,
+                96,
+                400
+              ],
+              "bbox_nm": [
+                0.0,
+                0.0,
+                24.0,
+                100.0
+              ],
+              "area_nm2": 1920.0,
+              "components": 1,
+              "geometry_dbu": "(0,0;0,120;24,120;24,280;0,280;0,400;96,400;96,280;72,280;72,120;96,120;96,0)"
+            }
+          },
+          "requested_window_um": [
+            -0.0284,
+            -0.03064,
+            0.0524,
+            0.12279999999999999
+          ],
+          "actual_window_um": [
+            -0.08664,
+            -0.03064,
+            0.11063999999999999,
+            0.12279999999999999
+          ],
+          "ruler_um": [
+            0.006,
+            0.05,
+            0.018000000000000002,
+            0.05,
+            "12 nm"
+          ],
+          "size_px": [
+            720,
+            750
+          ]
+        },
+        "output": {
+          "image": "docs/reports/c1_visual_guide/02_m1_w1_iso_08_output.png",
+          "sha256": "3cfd0e5004d3b9cef0ba05095521e53dbcdb9a2f7e732a7a85d70a69919524c7",
+          "gds": "reports/runs/c1_corrected_heuristic/runs/m1_w1_iso_08_20261022_221923_dce062/patched.gds",
+          "gds_sha256": "bcf0067c2944c260163a41388430acf10fc3be401f66a625c129c568e95180b6",
+          "report": "reports/runs/c1_corrected_heuristic/runs/m1_w1_iso_08_20261022_221923_dce062/after.lyrdb",
+          "report_sha256": "908526fe6fb5978275e44fa2dd3b88f3555d6b17b0ba7e5fa9d467b25a9a290d",
+          "counts": {},
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                -24,
+                -24,
+                120,
+                424
+              ],
+              "bbox_nm": [
+                -6.0,
+                -6.0,
+                30.0,
+                106.0
+              ],
+              "area_nm2": 3976.0,
+              "components": 1,
+              "geometry_dbu": "(-24,-24;-24,144;-20,144;-20,256;-24,256;-24,424;120,424;120,256;116,256;116,144;120,144;120,-24)"
+            }
+          },
+          "requested_window_um": [
+            -0.0284,
+            -0.03064,
+            0.0524,
+            0.12279999999999999
+          ],
+          "actual_window_um": [
+            -0.08664,
+            -0.03064,
+            0.11063999999999999,
+            0.12279999999999999
+          ],
+          "ruler_um": null,
+          "size_px": [
+            720,
+            750
+          ]
+        }
+      }
+    },
+    {
+      "number": 3,
+      "case_id": "m1_w1_bnd_01",
+      "tier": "boundary",
+      "rule_id": "M1.W.1",
+      "verdict": "clean_success",
+      "pipeline_verdict": "success_geometry_only",
+      "validation": {
+        "is_valid": true,
+        "top_cell_name": "TOP",
+        "dbu_um": 0.00025,
+        "total_shapes": 1,
+        "bbox_um": [
+          -0.011,
+          -0.011,
+          0.02875,
+          0.111
+        ],
+        "violations": []
+      },
+      "checker_version": "KLayout 0.28.16",
+      "duplicate_group": "e38759165407759c9efc03cb442488ff18cbbbb32bb5d42d2f6c952573fb41f7",
+      "images": {
+        "reference": {
+          "image": "docs/reports/c1_visual_guide/03_m1_w1_bnd_01_reference.png",
+          "sha256": "7072c6621d03d5ea552dce3de8b8998441a721a20a26e61bf40f531f51b0b448",
+          "gds": "test_data/benchmark_v1/references/m1_w1_bnd_01.gds",
+          "gds_sha256": "fd051ade00854eec35cf5ffbfa550b3a53c2e28c3f08f63ce0b4d3993a9f36c1",
+          "report": "test_data/benchmark_v1/oracle/m1_w1_bnd_01.reference.lyrdb",
+          "report_sha256": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+          "counts": {},
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                0,
+                0,
+                96,
+                400
+              ],
+              "bbox_nm": [
+                0.0,
+                0.0,
+                24.0,
+                100.0
+              ],
+              "area_nm2": 2400.0,
+              "components": 1,
+              "geometry_dbu": "(0,0;0,400;96,400;96,0)"
+            }
+          },
+          "requested_window_um": [
+            -0.0354,
+            -0.03784,
+            0.05315,
+            0.1293
+          ],
+          "actual_window_um": [
+            -0.09857214285714286,
+            -0.037840000000000006,
+            0.11632214285714285,
+            0.1293
+          ],
+          "ruler_um": null,
+          "size_px": [
+            720,
+            750
+          ]
+        },
+        "input": {
+          "image": "docs/reports/c1_visual_guide/03_m1_w1_bnd_01_input.png",
+          "sha256": "591bd957e5eea9b682bc6731433585228f7a4a0b580bdb4325e284ddc244a9d0",
+          "gds": "test_data/benchmark_v1/cases/m1_w1_bnd_01.gds",
+          "gds_sha256": "4b981f5bf36c4759660cfa346f87b14b1dcf505f69a2f61c6a6f2f8a8498cd48",
+          "report": "test_data/benchmark_v1/oracle/m1_w1_bnd_01.lyrdb",
+          "report_sha256": "4477be63789b95a404a0b627890bb165ef344284ec9c454239925da6df6137cb",
+          "counts": {
+            "M1.W.1": 1
+          },
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                0,
+                0,
+                71,
+                400
+              ],
+              "bbox_nm": [
+                0.0,
+                0.0,
+                17.75,
+                100.0
+              ],
+              "area_nm2": 1775.0,
+              "components": 1,
+              "geometry_dbu": "(0,0;0,400;71,400;71,0)"
+            }
+          },
+          "requested_window_um": [
+            -0.0354,
+            -0.03784,
+            0.05315,
+            0.1293
+          ],
+          "actual_window_um": [
+            -0.09857214285714286,
+            -0.037840000000000006,
+            0.11632214285714285,
+            0.1293
+          ],
+          "ruler_um": [
+            0.0,
+            -0.008,
+            0.017750000000000002,
+            -0.008,
+            "17.75 nm"
+          ],
+          "size_px": [
+            720,
+            750
+          ]
+        },
+        "output": {
+          "image": "docs/reports/c1_visual_guide/03_m1_w1_bnd_01_output.png",
+          "sha256": "17e4cc6e0cd013dbbc24dcf3f7c5c04bb644a4ff26ad5442644a4545d17ab8b1",
+          "gds": "reports/runs/c1_corrected_heuristic/runs/m1_w1_bnd_01_20261022_221931_9c8746/patched.gds",
+          "gds_sha256": "4702b442ea7de654df783f7d49a4b4470a5f88fe28bae205ad0fee838573cdae",
+          "report": "reports/runs/c1_corrected_heuristic/runs/m1_w1_bnd_01_20261022_221931_9c8746/after.lyrdb",
+          "report_sha256": "74aee6190a2e27377a9147545b39cacacb08efa16ffb38b0d45146d439cfa301",
+          "counts": {},
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                -44,
+                -44,
+                115,
+                444
+              ],
+              "bbox_nm": [
+                -11.0,
+                -11.0,
+                28.75,
+                111.0
+              ],
+              "area_nm2": 4849.5,
+              "components": 1,
+              "geometry_dbu": "(-44,-44;-44,444;115,444;115,-44)"
+            }
+          },
+          "requested_window_um": [
+            -0.0354,
+            -0.03784,
+            0.05315,
+            0.1293
+          ],
+          "actual_window_um": [
+            -0.09857214285714286,
+            -0.037840000000000006,
+            0.11632214285714285,
+            0.1293
+          ],
+          "ruler_um": null,
+          "size_px": [
+            720,
+            750
+          ]
+        }
+      },
+      "edge_detail": {
+        "image": "docs/reports/c1_visual_guide/03_m1_w1_bnd_01_edge_detail.png",
+        "sha256": "142cf16d9ab1b70ab9ad106c3d049d1b6fedff620dc6a28784966b8d6b42821c",
+        "gds": "test_data/benchmark_v1/cases/m1_w1_bnd_01.gds",
+        "gds_sha256": "4b981f5bf36c4759660cfa346f87b14b1dcf505f69a2f61c6a6f2f8a8498cd48",
+        "report": "test_data/benchmark_v1/oracle/m1_w1_bnd_01.lyrdb",
+        "report_sha256": "4477be63789b95a404a0b627890bb165ef344284ec9c454239925da6df6137cb",
+        "counts": {
+          "M1.W.1": 1
+        },
+        "geometry": {
+          "19/0": {
+            "bbox_dbu": [
+              0,
+              0,
+              71,
+              400
+            ],
+            "bbox_nm": [
+              0.0,
+              0.0,
+              17.75,
+              100.0
+            ],
+            "area_nm2": 1775.0,
+            "components": 1,
+            "geometry_dbu": "(0,0;0,400;71,400;71,0)"
+          }
+        },
+        "requested_window_um": [
+          0.015,
+          0.046,
+          0.021,
+          0.052
+        ],
+        "actual_window_um": [
+          0.014142857142857146,
+          0.046000000000000006,
+          0.02185714285714286,
+          0.052
+        ],
+        "ruler_um": [
+          0.01775,
+          0.048,
+          0.018,
+          0.048,
+          "0.25 nm"
+        ],
+        "size_px": [
+          720,
+          750
+        ]
+      }
+    },
+    {
+      "number": 4,
+      "case_id": "m1_w1_bnd_04",
+      "tier": "boundary",
+      "rule_id": "M1.W.1",
+      "verdict": "unnecessary_edit",
+      "pipeline_verdict": "success_geometry_only",
+      "validation": {
+        "is_valid": true,
+        "top_cell_name": "TOP",
+        "dbu_um": 0.00025,
+        "total_shapes": 1,
+        "bbox_um": [
+          -0.006,
+          -0.006,
+          0.024,
+          0.106
+        ],
+        "violations": []
+      },
+      "checker_version": "KLayout 0.28.16",
+      "duplicate_group": "9e12860db45ff73ee55fe105c3cfb0c2ede01993ed982737e57b21dd123b0367",
+      "images": {
+        "reference": {
+          "image": "docs/reports/c1_visual_guide/04_m1_w1_bnd_04_reference.png",
+          "sha256": "571b975b4fa9e04f77adde3296076d8062ee5f0773e931e7e343b1987c47e1f8",
+          "gds": "test_data/benchmark_v1/references/m1_w1_bnd_04.gds",
+          "gds_sha256": "6fdd42000bd30b51b4e8c3455ad0233d6998e9abee6b1559697e70eae5c7fec5",
+          "report": "test_data/benchmark_v1/oracle/m1_w1_bnd_04.reference.lyrdb",
+          "report_sha256": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+          "counts": {},
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                0,
+                0,
+                72,
+                400
+              ],
+              "bbox_nm": [
+                0.0,
+                0.0,
+                18.0,
+                100.0
+              ],
+              "area_nm2": 1800.0,
+              "components": 1,
+              "geometry_dbu": "(0,0;0,400;72,400;72,0)"
+            }
+          },
+          "requested_window_um": [
+            -0.0284,
+            -0.03064,
+            0.046400000000000004,
+            0.12279999999999999
+          ],
+          "actual_window_um": [
+            -0.08964,
+            -0.03064,
+            0.10763999999999999,
+            0.12279999999999999
+          ],
+          "ruler_um": null,
+          "size_px": [
+            720,
+            750
+          ]
+        },
+        "input": {
+          "image": "docs/reports/c1_visual_guide/04_m1_w1_bnd_04_input.png",
+          "sha256": "6f8a91b8a46dd96943525873f0e3d21905ee7378c18fd7f6e570f17c7ea4733b",
+          "gds": "test_data/benchmark_v1/cases/m1_w1_bnd_04.gds",
+          "gds_sha256": "6fdd42000bd30b51b4e8c3455ad0233d6998e9abee6b1559697e70eae5c7fec5",
+          "report": "test_data/benchmark_v1/oracle/m1_w1_bnd_04.lyrdb",
+          "report_sha256": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+          "counts": {},
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                0,
+                0,
+                72,
+                400
+              ],
+              "bbox_nm": [
+                0.0,
+                0.0,
+                18.0,
+                100.0
+              ],
+              "area_nm2": 1800.0,
+              "components": 1,
+              "geometry_dbu": "(0,0;0,400;72,400;72,0)"
+            }
+          },
+          "requested_window_um": [
+            -0.0284,
+            -0.03064,
+            0.046400000000000004,
+            0.12279999999999999
+          ],
+          "actual_window_um": [
+            -0.08964,
+            -0.03064,
+            0.10763999999999999,
+            0.12279999999999999
+          ],
+          "ruler_um": [
+            0.0,
+            -0.008,
+            0.018000000000000002,
+            -0.008,
+            "18 nm"
+          ],
+          "size_px": [
+            720,
+            750
+          ]
+        },
+        "output": {
+          "image": "docs/reports/c1_visual_guide/04_m1_w1_bnd_04_output.png",
+          "sha256": "8879cd8aab7d5a3cb6218a252de74cb351918a4974be70b311ac364cb19ac1d9",
+          "gds": "reports/runs/c1_corrected_heuristic/runs/m1_w1_bnd_04_20261022_221938_db701e/patched.gds",
+          "gds_sha256": "bf49238f040e3220237afdd1f8f140a249ceffe7856ca8bb1db0f156b087166d",
+          "report": "reports/runs/c1_corrected_heuristic/runs/m1_w1_bnd_04_20261022_221938_db701e/after.lyrdb",
+          "report_sha256": "7836eea8f841d507cf4959b47a00be8cd0c3da2873fb12cd814a5539a05147f6",
+          "counts": {},
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                -24,
+                -24,
+                96,
+                424
+              ],
+              "bbox_nm": [
+                -6.0,
+                -6.0,
+                24.0,
+                106.0
+              ],
+              "area_nm2": 3360.0,
+              "components": 1,
+              "geometry_dbu": "(-24,-24;-24,424;96,424;96,-24)"
+            }
+          },
+          "requested_window_um": [
+            -0.0284,
+            -0.03064,
+            0.046400000000000004,
+            0.12279999999999999
+          ],
+          "actual_window_um": [
+            -0.08964,
+            -0.03064,
+            0.10763999999999999,
+            0.12279999999999999
+          ],
+          "ruler_um": null,
+          "size_px": [
+            720,
+            750
+          ]
+        }
+      },
+      "edge_detail": {
+        "image": "docs/reports/c1_visual_guide/04_m1_w1_bnd_04_edge_detail.png",
+        "sha256": "4e8d7fc40e2d8b1cd8192329fe7f73dea794f31148072a3ee9509c7730500777",
+        "gds": "test_data/benchmark_v1/cases/m1_w1_bnd_04.gds",
+        "gds_sha256": "6fdd42000bd30b51b4e8c3455ad0233d6998e9abee6b1559697e70eae5c7fec5",
+        "report": "test_data/benchmark_v1/oracle/m1_w1_bnd_04.lyrdb",
+        "report_sha256": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+        "counts": {},
+        "geometry": {
+          "19/0": {
+            "bbox_dbu": [
+              0,
+              0,
+              72,
+              400
+            ],
+            "bbox_nm": [
+              0.0,
+              0.0,
+              18.0,
+              100.0
+            ],
+            "area_nm2": 1800.0,
+            "components": 1,
+            "geometry_dbu": "(0,0;0,400;72,400;72,0)"
+          }
+        },
+        "requested_window_um": [
+          0.015,
+          0.046,
+          0.021,
+          0.052
+        ],
+        "actual_window_um": [
+          0.014142857142857146,
+          0.046000000000000006,
+          0.02185714285714286,
+          0.052
+        ],
+        "ruler_um": [
+          0.01775,
+          0.048,
+          0.018,
+          0.048,
+          "0.25 nm"
+        ],
+        "size_px": [
+          720,
+          750
+        ]
+      }
+    },
+    {
+      "number": 5,
+      "case_id": "m2_w1_iso_06",
+      "tier": "isolated",
+      "rule_id": "M2.W.1",
+      "verdict": "clean_success",
+      "pipeline_verdict": "success_geometry_only",
+      "validation": {
+        "is_valid": true,
+        "top_cell_name": "TOP",
+        "dbu_um": 0.00025,
+        "total_shapes": 1,
+        "bbox_um": [
+          -0.005,
+          -0.005,
+          0.105,
+          0.017
+        ],
+        "violations": []
+      },
+      "checker_version": "KLayout 0.28.16",
+      "duplicate_group": "f729ecd15d8b15d928af9998f92d2ad225c90339f906cadb6915defdee542f2c",
+      "images": {
+        "reference": {
+          "image": "docs/reports/c1_visual_guide/05_m2_w1_iso_06_reference.png",
+          "sha256": "c5362e353046daa360c9eab6a9935666e6db0e4186e9c1bfb5a463a2cf133c0e",
+          "gds": "test_data/benchmark_v1/references/m2_w1_iso_06.gds",
+          "gds_sha256": "fd88cd515c507d47dce0b9ac4872e7d9badf7495579ba5356417a3f8458e78b7",
+          "report": "test_data/benchmark_v1/oracle/m2_w1_iso_06.reference.lyrdb",
+          "report_sha256": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+          "counts": {},
+          "geometry": {
+            "20/0": {
+              "bbox_dbu": [
+                0,
+                0,
+                400,
+                160
+              ],
+              "bbox_nm": [
+                0.0,
+                0.0,
+                100.0,
+                40.0
+              ],
+              "area_nm2": 4000.0,
+              "components": 1,
+              "geometry_dbu": "(0,0;0,160;400,160;400,0)"
+            }
+          },
+          "requested_window_um": [
+            -0.027000000000000003,
+            -0.0292,
+            0.127,
+            0.0565
+          ],
+          "actual_window_um": [
+            -0.026999999999999996,
+            -0.046238888888888885,
+            0.127,
+            0.07353888888888889
+          ],
+          "ruler_um": null,
+          "size_px": [
+            720,
+            750
+          ]
+        },
+        "input": {
+          "image": "docs/reports/c1_visual_guide/05_m2_w1_iso_06_input.png",
+          "sha256": "85f8f5a4c4368fcf7ee94ac0fb2ae21626986b85d23dd283af66e84ee3875b93",
+          "gds": "test_data/benchmark_v1/cases/m2_w1_iso_06.gds",
+          "gds_sha256": "2c758144de13973e18dcf7296684d8b022d8baf5ae6b8638d5377d0f8c8fca1a",
+          "report": "test_data/benchmark_v1/oracle/m2_w1_iso_06.lyrdb",
+          "report_sha256": "363570bd61271d44122ed2875498d327ea29ba5313e1e69f3dccea9dc52a4fe7",
+          "counts": {
+            "M2.W.1": 1
+          },
+          "geometry": {
+            "20/0": {
+              "bbox_dbu": [
+                0,
+                0,
+                400,
+                48
+              ],
+              "bbox_nm": [
+                0.0,
+                0.0,
+                100.0,
+                12.0
+              ],
+              "area_nm2": 1200.0,
+              "components": 1,
+              "geometry_dbu": "(0,0;0,48;400,48;400,0)"
+            }
+          },
+          "requested_window_um": [
+            -0.027000000000000003,
+            -0.0292,
+            0.127,
+            0.0565
+          ],
+          "actual_window_um": [
+            -0.026999999999999996,
+            -0.046238888888888885,
+            0.127,
+            0.07353888888888889
+          ],
+          "ruler_um": [
+            0.05,
+            0.0,
+            0.05,
+            0.012,
+            "12 nm"
+          ],
+          "size_px": [
+            720,
+            750
+          ]
+        },
+        "output": {
+          "image": "docs/reports/c1_visual_guide/05_m2_w1_iso_06_output.png",
+          "sha256": "7bd779dd8122b729b1ed1e35d07b91185602af5f4b3c216c5171e2b1e0d8185c",
+          "gds": "reports/runs/c1_corrected_heuristic/runs/m2_w1_iso_06_20261022_222003_a58fa3/patched.gds",
+          "gds_sha256": "b05f7d38b0e98382634fe2e2a5f9896a498f37764c52c4e875f181ae05db19ff",
+          "report": "reports/runs/c1_corrected_heuristic/runs/m2_w1_iso_06_20261022_222003_a58fa3/after.lyrdb",
+          "report_sha256": "9d186ac4076c0c726ca426f18f607718637c37d215f618d736748d2d44cfcebe",
+          "counts": {},
+          "geometry": {
+            "20/0": {
+              "bbox_dbu": [
+                -20,
+                -20,
+                420,
+                68
+              ],
+              "bbox_nm": [
+                -5.0,
+                -5.0,
+                105.0,
+                17.0
+              ],
+              "area_nm2": 2420.0,
+              "components": 1,
+              "geometry_dbu": "(-20,-20;-20,68;420,68;420,-20)"
+            }
+          },
+          "requested_window_um": [
+            -0.027000000000000003,
+            -0.0292,
+            0.127,
+            0.0565
+          ],
+          "actual_window_um": [
+            -0.026999999999999996,
+            -0.046238888888888885,
+            0.127,
+            0.07353888888888889
+          ],
+          "ruler_um": null,
+          "size_px": [
+            720,
+            750
+          ]
+        }
+      }
+    },
+    {
+      "number": 6,
+      "case_id": "m1_a1_iso_01",
+      "tier": "isolated",
+      "rule_id": "M1.A.1",
+      "verdict": "clean_success",
+      "pipeline_verdict": "success_geometry_only",
+      "validation": {
+        "is_valid": true,
+        "top_cell_name": "TOP",
+        "dbu_um": 0.00025,
+        "total_shapes": 1,
+        "bbox_um": [
+          -0.006,
+          -0.006,
+          0.024,
+          0.024
+        ],
+        "violations": []
+      },
+      "checker_version": "KLayout 0.28.16",
+      "duplicate_group": "f1d0d199277b85dbe85e1e6ba9bf616e43349d2e982cddbb4c46ea5bfcc61618",
+      "images": {
+        "reference": {
+          "image": "docs/reports/c1_visual_guide/06_m1_a1_iso_01_reference.png",
+          "sha256": "8b043d59e1c160e8b0474b305e3a0590c97bf73d2ff2545a2f19d6ee59b97295",
+          "gds": "test_data/benchmark_v1/references/m1_a1_iso_01.gds",
+          "gds_sha256": "a44123fde0631ee3c1518e9c187038b7f37d4bec9eb8a0c4e5760a53a0f5128b",
+          "report": "test_data/benchmark_v1/oracle/m1_a1_iso_01.reference.lyrdb",
+          "report_sha256": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+          "counts": {},
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                0,
+                0,
+                96,
+                160
+              ],
+              "bbox_nm": [
+                0.0,
+                0.0,
+                24.0,
+                40.0
+              ],
+              "area_nm2": 960.0,
+              "components": 1,
+              "geometry_dbu": "(0,0;0,160;96,160;96,0)"
+            }
+          },
+          "requested_window_um": [
+            -0.0152,
+            -0.016120000000000002,
+            0.0332,
+            0.0469
+          ],
+          "actual_window_um": [
+            -0.031512857142857134,
+            -0.01612,
+            0.049512857142857136,
+            0.0469
+          ],
+          "ruler_um": null,
+          "size_px": [
+            720,
+            750
+          ]
+        },
+        "input": {
+          "image": "docs/reports/c1_visual_guide/06_m1_a1_iso_01_input.png",
+          "sha256": "ca9d34fe9468ef7d8995a7c3783adde234d1deda219ac5e932d49521aeb72b3c",
+          "gds": "test_data/benchmark_v1/cases/m1_a1_iso_01.gds",
+          "gds_sha256": "449ca60f4236b6ec5ba33f1c01c6ecabb9e5bf1ff458ff3dbc8cf843d8d1bd1e",
+          "report": "test_data/benchmark_v1/oracle/m1_a1_iso_01.lyrdb",
+          "report_sha256": "3eddbce6817ab93a59dda0e450ad66f65f337f160411d678d909101f32157917",
+          "counts": {
+            "M1.A.1": 1
+          },
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                0,
+                0,
+                72,
+                72
+              ],
+              "bbox_nm": [
+                0.0,
+                0.0,
+                18.0,
+                18.0
+              ],
+              "area_nm2": 324.0,
+              "components": 1,
+              "geometry_dbu": "(0,0;0,72;72,72;72,0)"
+            }
+          },
+          "requested_window_um": [
+            -0.0152,
+            -0.016120000000000002,
+            0.0332,
+            0.0469
+          ],
+          "actual_window_um": [
+            -0.031512857142857134,
+            -0.01612,
+            0.049512857142857136,
+            0.0469
+          ],
+          "ruler_um": [
+            0.0,
+            -0.008,
+            0.018000000000000002,
+            -0.008,
+            "18 nm"
+          ],
+          "size_px": [
+            720,
+            750
+          ]
+        },
+        "output": {
+          "image": "docs/reports/c1_visual_guide/06_m1_a1_iso_01_output.png",
+          "sha256": "5c364331c47b6b3726300c45f2d58b85ddb403d53b0c0c6b8f81620ad0589589",
+          "gds": "reports/runs/c1_corrected_heuristic/runs/m1_a1_iso_01_20261022_222031_0d19a8/patched.gds",
+          "gds_sha256": "dbf557d473c22192b83d463c15433d7eecb620c4114708e204ad675d642dd3dd",
+          "report": "reports/runs/c1_corrected_heuristic/runs/m1_a1_iso_01_20261022_222031_0d19a8/after.lyrdb",
+          "report_sha256": "3012001ed8bd1bc09ccd3f260caf64de9f8fc211e6321f9ed1a60e7253ede28a",
+          "counts": {},
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                -24,
+                -24,
+                96,
+                96
+              ],
+              "bbox_nm": [
+                -6.0,
+                -6.0,
+                24.0,
+                24.0
+              ],
+              "area_nm2": 900.0,
+              "components": 1,
+              "geometry_dbu": "(-24,-24;-24,96;96,96;96,-24)"
+            }
+          },
+          "requested_window_um": [
+            -0.0152,
+            -0.016120000000000002,
+            0.0332,
+            0.0469
+          ],
+          "actual_window_um": [
+            -0.031512857142857134,
+            -0.01612,
+            0.049512857142857136,
+            0.0469
+          ],
+          "ruler_um": null,
+          "size_px": [
+            720,
+            750
+          ]
+        }
+      }
+    },
+    {
+      "number": 7,
+      "case_id": "m1_s1_iso_01",
+      "tier": "isolated",
+      "rule_id": "M1.S.1",
+      "verdict": "invalid_patch",
+      "pipeline_verdict": "invalid_patch",
+      "validation": {
+        "is_valid": false,
+        "top_cell_name": "TOP",
+        "dbu_um": 0.00025,
+        "total_shapes": 1,
+        "bbox_um": [
+          -0.006,
+          -0.006,
+          0.096,
+          0.08600000000000001
+        ],
+        "violations": [
+          "Component preservation failed on 19/0: expected 2, observed 1"
+        ]
+      },
+      "checker_version": "KLayout 0.28.16",
+      "duplicate_group": "10b82ac72ab72f82276fdbb524a7f88085966b9db24680763708acb13547451b",
+      "images": {
+        "reference": {
+          "image": "docs/reports/c1_visual_guide/07_m1_s1_iso_01_reference.png",
+          "sha256": "4d5cca55159c13ef84fbba68cddca20e842219bcd22cc2640d415c56c7a1e0c0",
+          "gds": "test_data/benchmark_v1/references/m1_s1_iso_01.gds",
+          "gds_sha256": "0c6ee56fc54c90a30b50a5e6dcb69a9e8c7019641f33a255aa4f93fca07af8e6",
+          "report": "test_data/benchmark_v1/oracle/m1_s1_iso_01.reference.lyrdb",
+          "report_sha256": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+          "counts": {},
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                0,
+                0,
+                512,
+                320
+              ],
+              "bbox_nm": [
+                0.0,
+                0.0,
+                128.0,
+                80.0
+              ],
+              "area_nm2": 6400.0,
+              "components": 2,
+              "geometry_dbu": "(0,0;0,320;160,320;160,0);(352,0;352,320;512,320;512,0)"
+            }
+          },
+          "requested_window_um": [
+            -0.0328,
+            -0.035480000000000005,
+            0.1548,
+            0.1061
+          ],
+          "actual_window_um": [
+            -0.032799999999999996,
+            -0.03764555555555556,
+            0.1548,
+            0.10826555555555555
+          ],
+          "ruler_um": null,
+          "size_px": [
+            720,
+            750
+          ]
+        },
+        "input": {
+          "image": "docs/reports/c1_visual_guide/07_m1_s1_iso_01_input.png",
+          "sha256": "96de41b5495e3e17cdc069e75d8d398dc4877d5e822f0d0b4a84c38d89aad414",
+          "gds": "test_data/benchmark_v1/cases/m1_s1_iso_01.gds",
+          "gds_sha256": "2a8646f11faaa890999c75b1f2d257d11456c2cb5345536d56ac76d9d69845f0",
+          "report": "test_data/benchmark_v1/oracle/m1_s1_iso_01.lyrdb",
+          "report_sha256": "321b20c0c9e1643afba6c1811492803949c5f9539887e35fac064a1de737a5a8",
+          "counts": {
+            "M1.S.1": 1
+          },
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                0,
+                0,
+                360,
+                320
+              ],
+              "bbox_nm": [
+                0.0,
+                0.0,
+                90.0,
+                80.0
+              ],
+              "area_nm2": 6400.0,
+              "components": 2,
+              "geometry_dbu": "(0,0;0,320;160,320;160,0);(200,0;200,320;360,320;360,0)"
+            }
+          },
+          "requested_window_um": [
+            -0.0328,
+            -0.035480000000000005,
+            0.1548,
+            0.1061
+          ],
+          "actual_window_um": [
+            -0.032799999999999996,
+            -0.03764555555555556,
+            0.1548,
+            0.10826555555555555
+          ],
+          "ruler_um": [
+            0.04,
+            -0.009,
+            0.05,
+            -0.009,
+            "10 nm gap"
+          ],
+          "size_px": [
+            720,
+            750
+          ]
+        },
+        "output": {
+          "image": "docs/reports/c1_visual_guide/07_m1_s1_iso_01_output.png",
+          "sha256": "4747a6a361770c261244bf57e3c8a969835fdc50153ca1f6bb11119226fe4908",
+          "gds": "reports/runs/c1_corrected_heuristic/runs/m1_s1_iso_01_20261022_222112_8e6e06/patched.gds",
+          "gds_sha256": "a6821075c3df752168b9638b8f8dd47d64a20e4ae916be1ce41bbe4ffcbbe4a8",
+          "report": null,
+          "report_sha256": null,
+          "counts": null,
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                -24,
+                -24,
+                384,
+                344
+              ],
+              "bbox_nm": [
+                -6.0,
+                -6.0,
+                96.0,
+                86.0
+              ],
+              "area_nm2": 9384.0,
+              "components": 1,
+              "geometry_dbu": "(-24,-24;-24,344;384,344;384,-24)"
+            }
+          },
+          "requested_window_um": [
+            -0.0328,
+            -0.035480000000000005,
+            0.1548,
+            0.1061
+          ],
+          "actual_window_um": [
+            -0.032799999999999996,
+            -0.03764555555555556,
+            0.1548,
+            0.10826555555555555
+          ],
+          "ruler_um": null,
+          "size_px": [
+            720,
+            750
+          ]
+        }
+      }
+    },
+    {
+      "number": 8,
+      "case_id": "m1_s1_neg_03",
+      "tier": "negative",
+      "rule_id": "M1.S.1",
+      "verdict": "invalid_patch",
+      "pipeline_verdict": "invalid_patch",
+      "validation": {
+        "is_valid": false,
+        "top_cell_name": "TOP",
+        "dbu_um": 0.00025,
+        "total_shapes": 1,
+        "bbox_um": [
+          -0.006,
+          -0.006,
+          0.098,
+          0.036000000000000004
+        ],
+        "violations": [
+          "Component preservation failed on 19/0: expected 2, observed 1"
+        ]
+      },
+      "checker_version": "KLayout 0.28.16",
+      "duplicate_group": "842418257b1ff561485ffc1666e3fa81b7f9fd38c0afb55cd44257b468c7495e",
+      "images": {
+        "reference": {
+          "image": "docs/reports/c1_visual_guide/08_m1_s1_neg_03_reference.png",
+          "sha256": "560caaad5482ecdf7892226fc15eb1d4d9b1c4a048e405d27f6dd239ac341697",
+          "gds": "test_data/benchmark_v1/references/m1_s1_neg_03.gds",
+          "gds_sha256": "794141fba300c104a50169d5bf0c41299e840460e3e7a4911a161f6a37db8a61",
+          "report": "test_data/benchmark_v1/oracle/m1_s1_neg_03.reference.lyrdb",
+          "report_sha256": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+          "counts": {},
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                0,
+                0,
+                368,
+                120
+              ],
+              "bbox_nm": [
+                0.0,
+                0.0,
+                92.0,
+                30.0
+              ],
+              "area_nm2": 2400.0,
+              "components": 2,
+              "geometry_dbu": "(0,0;0,120;160,120;160,0);(208,0;208,120;368,120;368,0)"
+            }
+          },
+          "requested_window_um": [
+            -0.026800000000000004,
+            -0.028880000000000003,
+            0.1188,
+            0.05160000000000001
+          ],
+          "actual_window_um": [
+            -0.026800000000000004,
+            -0.045262222222222225,
+            0.1188,
+            0.06798222222222222
+          ],
+          "ruler_um": null,
+          "size_px": [
+            720,
+            750
+          ]
+        },
+        "input": {
+          "image": "docs/reports/c1_visual_guide/08_m1_s1_neg_03_input.png",
+          "sha256": "1804a8f7822b00b62fbf695e450d5846d926409823b94adccdf66f00a469a541",
+          "gds": "test_data/benchmark_v1/cases/m1_s1_neg_03.gds",
+          "gds_sha256": "794141fba300c104a50169d5bf0c41299e840460e3e7a4911a161f6a37db8a61",
+          "report": "test_data/benchmark_v1/oracle/m1_s1_neg_03.lyrdb",
+          "report_sha256": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+          "counts": {},
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                0,
+                0,
+                368,
+                120
+              ],
+              "bbox_nm": [
+                0.0,
+                0.0,
+                92.0,
+                30.0
+              ],
+              "area_nm2": 2400.0,
+              "components": 2,
+              "geometry_dbu": "(0,0;0,120;160,120;160,0);(208,0;208,120;368,120;368,0)"
+            }
+          },
+          "requested_window_um": [
+            -0.026800000000000004,
+            -0.028880000000000003,
+            0.1188,
+            0.05160000000000001
+          ],
+          "actual_window_um": [
+            -0.026800000000000004,
+            -0.045262222222222225,
+            0.1188,
+            0.06798222222222222
+          ],
+          "ruler_um": [
+            0.04,
+            -0.009,
+            0.052000000000000005,
+            -0.009,
+            "12 nm gap"
+          ],
+          "size_px": [
+            720,
+            750
+          ]
+        },
+        "output": {
+          "image": "docs/reports/c1_visual_guide/08_m1_s1_neg_03_output.png",
+          "sha256": "533d00b218fb96ab0babdc980863d9eb8561a41575b85c5e9d444310f6754d8e",
+          "gds": "reports/runs/c1_corrected_heuristic/runs/m1_s1_neg_03_20261022_222137_70216b/patched.gds",
+          "gds_sha256": "8ce0ee10f33678c154e670e733dc1e582d0dfd8780f88fdf7a3c589abce51598",
+          "report": null,
+          "report_sha256": null,
+          "counts": null,
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                -24,
+                -24,
+                392,
+                144
+              ],
+              "bbox_nm": [
+                -6.0,
+                -6.0,
+                98.0,
+                36.0
+              ],
+              "area_nm2": 4368.0,
+              "components": 1,
+              "geometry_dbu": "(-24,-24;-24,144;392,144;392,-24)"
+            }
+          },
+          "requested_window_um": [
+            -0.026800000000000004,
+            -0.028880000000000003,
+            0.1188,
+            0.05160000000000001
+          ],
+          "actual_window_um": [
+            -0.026800000000000004,
+            -0.045262222222222225,
+            0.1188,
+            0.06798222222222222
+          ],
+          "ruler_um": null,
+          "size_px": [
+            720,
+            750
+          ]
+        }
+      }
+    },
+    {
+      "number": 9,
+      "case_id": "v1_w1_iso_01",
+      "tier": "isolated",
+      "rule_id": "V1.W.1",
+      "verdict": "clean_success",
+      "pipeline_verdict": "success_geometry_only",
+      "validation": {
+        "is_valid": true,
+        "top_cell_name": "TOP",
+        "dbu_um": 0.00025,
+        "total_shapes": 2,
+        "bbox_um": [
+          -0.015,
+          -0.015,
+          0.025,
+          0.025
+        ],
+        "violations": []
+      },
+      "checker_version": "KLayout 0.28.16",
+      "duplicate_group": "44c171346a3de18103c01a511490036378d30ee0b3fb4b5d6b13527a50ef8b47",
+      "images": {
+        "reference": {
+          "image": "docs/reports/c1_visual_guide/09_v1_w1_iso_01_reference.png",
+          "sha256": "f03d1beb0c3695599f9cc018a95f8c4823c9725681969a2a7607799ec6f13999",
+          "gds": "test_data/benchmark_v1/references/v1_w1_iso_01.gds",
+          "gds_sha256": "739493f30152b91b27a5e142f1bcbfc290c886b467d6ae3aa6133da43e56c2fd",
+          "report": "test_data/benchmark_v1/oracle/v1_w1_iso_01.reference.lyrdb",
+          "report_sha256": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+          "counts": {},
+          "geometry": {
+            "21/0": {
+              "bbox_dbu": [
+                0,
+                0,
+                96,
+                160
+              ],
+              "bbox_nm": [
+                0.0,
+                0.0,
+                24.0,
+                40.0
+              ],
+              "area_nm2": 960.0,
+              "components": 1,
+              "geometry_dbu": "(0,0;0,160;96,160;96,0)"
+            }
+          },
+          "requested_window_um": [
+            -0.026000000000000002,
+            -0.0271,
+            0.036000000000000004,
+            0.04825
+          ],
+          "actual_window_um": [
+            -0.04343928571428572,
+            -0.0271,
+            0.05343928571428572,
+            0.04825
+          ],
+          "ruler_um": null,
+          "size_px": [
+            720,
+            750
+          ]
+        },
+        "input": {
+          "image": "docs/reports/c1_visual_guide/09_v1_w1_iso_01_input.png",
+          "sha256": "fcad60750e9d3ab06948445cf28a18fcf42fa1c9f1ba841e214fe9456d6001d0",
+          "gds": "test_data/benchmark_v1/cases/v1_w1_iso_01.gds",
+          "gds_sha256": "50dfb9dc76e6c96a0102f9ffd3b1a6e52e43d3f2cc61b5285c2cb8c9afcfb257",
+          "report": "test_data/benchmark_v1/oracle/v1_w1_iso_01.lyrdb",
+          "report_sha256": "b0bcdd65ff1c70e0e96d9cb0952fbdb742ddda9b43cfd04b919f169fb3c96175",
+          "counts": {
+            "V1.W.1": 2
+          },
+          "geometry": {
+            "21/0": {
+              "bbox_dbu": [
+                0,
+                0,
+                40,
+                40
+              ],
+              "bbox_nm": [
+                0.0,
+                0.0,
+                10.0,
+                10.0
+              ],
+              "area_nm2": 100.0,
+              "components": 1,
+              "geometry_dbu": "(0,0;0,40;40,40;40,0)"
+            }
+          },
+          "requested_window_um": [
+            -0.026000000000000002,
+            -0.0271,
+            0.036000000000000004,
+            0.04825
+          ],
+          "actual_window_um": [
+            -0.04343928571428572,
+            -0.0271,
+            0.05343928571428572,
+            0.04825
+          ],
+          "ruler_um": [
+            0.0,
+            -0.008,
+            0.01,
+            -0.008,
+            "10 nm"
+          ],
+          "size_px": [
+            720,
+            750
+          ]
+        },
+        "output": {
+          "image": "docs/reports/c1_visual_guide/09_v1_w1_iso_01_output.png",
+          "sha256": "306aa171cb60d74910fe3e35d6a9b33f5124c3f64ecdc71fc8744dbbe0e331ab",
+          "gds": "reports/runs/c1_corrected_heuristic/runs/v1_w1_iso_01_20261022_222138_051ae6/patched.gds",
+          "gds_sha256": "dbd8fd59c96f6f6ebfae0a7daa6c507af8c40c5ae5a26c0ec3f235d497373b7e",
+          "report": "reports/runs/c1_corrected_heuristic/runs/v1_w1_iso_01_20261022_222138_051ae6/after.lyrdb",
+          "report_sha256": "fd7bc44c9e4a4aaf8ce38af1fab5c2f2f866bc94e20ec919d6f2a17f6ecc05e3",
+          "counts": {},
+          "geometry": {
+            "21/0": {
+              "bbox_dbu": [
+                -20,
+                -20,
+                60,
+                60
+              ],
+              "bbox_nm": [
+                -5.0,
+                -5.0,
+                15.0,
+                15.0
+              ],
+              "area_nm2": 400.0,
+              "components": 1,
+              "geometry_dbu": "(-20,-20;-20,60;60,60;60,-20)"
+            },
+            "19/0": {
+              "bbox_dbu": [
+                -60,
+                -60,
+                100,
+                100
+              ],
+              "bbox_nm": [
+                -15.0,
+                -15.0,
+                25.0,
+                25.0
+              ],
+              "area_nm2": 1600.0,
+              "components": 1,
+              "geometry_dbu": "(-60,-60;-60,100;100,100;100,-60)"
+            }
+          },
+          "requested_window_um": [
+            -0.026000000000000002,
+            -0.0271,
+            0.036000000000000004,
+            0.04825
+          ],
+          "actual_window_um": [
+            -0.04343928571428572,
+            -0.0271,
+            0.05343928571428572,
+            0.04825
+          ],
+          "ruler_um": null,
+          "size_px": [
+            720,
+            750
+          ]
+        }
+      }
+    },
+    {
+      "number": 10,
+      "case_id": "m2_w1_int_02",
+      "tier": "interaction",
+      "rule_id": "M2.W.1",
+      "verdict": "clean_success",
+      "pipeline_verdict": "success_geometry_only",
+      "validation": {
+        "is_valid": true,
+        "top_cell_name": "TOP",
+        "dbu_um": 0.00025,
+        "total_shapes": 2,
+        "bbox_um": [
+          -0.011,
+          -0.011,
+          0.105,
+          0.111
+        ],
+        "violations": []
+      },
+      "checker_version": "KLayout 0.28.16",
+      "duplicate_group": "2d40fa84b41292be510f71a682304ff411b09219dc6604c38246c8bfc8cf999a",
+      "images": {
+        "reference": {
+          "image": "docs/reports/c1_visual_guide/10_m2_w1_int_02_reference.png",
+          "sha256": "3031ee4a89af563e2da648348afd4f4e10f73a7cb3c003a028b898c6c685b41d",
+          "gds": "test_data/benchmark_v1/references/m2_w1_int_02.gds",
+          "gds_sha256": "a962ae1034c636e8752642bfbab1e5e865ad79346db4d868206b9182b995ed2b",
+          "report": "test_data/benchmark_v1/oracle/m2_w1_int_02.reference.lyrdb",
+          "report_sha256": "de7db171cba97664ed2ec79b7ab261fbe2feabb56a1728a54cf7da37872c564b",
+          "counts": {},
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                0,
+                0,
+                96,
+                400
+              ],
+              "bbox_nm": [
+                0.0,
+                0.0,
+                24.0,
+                100.0
+              ],
+              "area_nm2": 2400.0,
+              "components": 1,
+              "geometry_dbu": "(0,0;0,400;96,400;96,0)"
+            },
+            "20/0": {
+              "bbox_dbu": [
+                0,
+                0,
+                400,
+                160
+              ],
+              "bbox_nm": [
+                0.0,
+                0.0,
+                100.0,
+                40.0
+              ],
+              "area_nm2": 4000.0,
+              "components": 1,
+              "geometry_dbu": "(0,0;0,160;400,160;400,0)"
+            }
+          },
+          "requested_window_um": [
+            -0.0354,
+            -0.03784,
+            0.1294,
+            0.1293
+          ],
+          "actual_window_um": [
+            -0.06044714285714286,
+            -0.037840000000000006,
+            0.15444714285714284,
+            0.1293
+          ],
+          "ruler_um": null,
+          "size_px": [
+            720,
+            750
+          ]
+        },
+        "input": {
+          "image": "docs/reports/c1_visual_guide/10_m2_w1_int_02_input.png",
+          "sha256": "33c5b7524ff3c4a17f31861ddebd314db1d71e08e1f62460e4dc9d9778bcb97d",
+          "gds": "test_data/benchmark_v1/cases/m2_w1_int_02.gds",
+          "gds_sha256": "87daa3dbb7952dce80869fbf5e28479b9082d58e2847523eb33576ddc4754873",
+          "report": "test_data/benchmark_v1/oracle/m2_w1_int_02.lyrdb",
+          "report_sha256": "444f8b5e1cb5c2394e09ddbf5b3bba17c255a994083167c29a83ed46c96a474a",
+          "counts": {
+            "M1.W.1": 1,
+            "M2.W.1": 1
+          },
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                0,
+                0,
+                48,
+                400
+              ],
+              "bbox_nm": [
+                0.0,
+                0.0,
+                12.0,
+                100.0
+              ],
+              "area_nm2": 1200.0,
+              "components": 1,
+              "geometry_dbu": "(0,0;0,400;48,400;48,0)"
+            },
+            "20/0": {
+              "bbox_dbu": [
+                0,
+                160,
+                400,
+                208
+              ],
+              "bbox_nm": [
+                0.0,
+                40.0,
+                100.0,
+                52.0
+              ],
+              "area_nm2": 1200.0,
+              "components": 1,
+              "geometry_dbu": "(0,160;0,208;400,208;400,160)"
+            }
+          },
+          "requested_window_um": [
+            -0.0354,
+            -0.03784,
+            0.1294,
+            0.1293
+          ],
+          "actual_window_um": [
+            -0.06044714285714286,
+            -0.037840000000000006,
+            0.15444714285714284,
+            0.1293
+          ],
+          "ruler_um": [
+            0.0,
+            -0.008,
+            0.012,
+            -0.008,
+            "12 nm"
+          ],
+          "size_px": [
+            720,
+            750
+          ]
+        },
+        "output": {
+          "image": "docs/reports/c1_visual_guide/10_m2_w1_int_02_output.png",
+          "sha256": "a097a98b55ff96245ddcfd6b3e05ff139a98569f66482434982a7ecb0cab2668",
+          "gds": "reports/runs/c1_corrected_heuristic/runs/m2_w1_int_02_20261022_222019_4b51e9/patched.gds",
+          "gds_sha256": "f8bc699ea295485d356cf86963f1d29dc4fbce2484c326e2c51dbd879e96c30e",
+          "report": "reports/runs/c1_corrected_heuristic/runs/m2_w1_int_02_20261022_222019_4b51e9/after.lyrdb",
+          "report_sha256": "c369724c00c0227e8fe265c9011e5db516e98a44af36b9b919a6358a971f87fa",
+          "counts": {},
+          "geometry": {
+            "19/0": {
+              "bbox_dbu": [
+                -44,
+                -44,
+                92,
+                444
+              ],
+              "bbox_nm": [
+                -11.0,
+                -11.0,
+                23.0,
+                111.0
+              ],
+              "area_nm2": 4148.0,
+              "components": 1,
+              "geometry_dbu": "(-44,-44;-44,444;92,444;92,-44)"
+            },
+            "20/0": {
+              "bbox_dbu": [
+                -20,
+                140,
+                420,
+                228
+              ],
+              "bbox_nm": [
+                -5.0,
+                35.0,
+                105.0,
+                57.0
+              ],
+              "area_nm2": 2420.0,
+              "components": 1,
+              "geometry_dbu": "(-20,140;-20,228;420,228;420,140)"
+            }
+          },
+          "requested_window_um": [
+            -0.0354,
+            -0.03784,
+            0.1294,
+            0.1293
+          ],
+          "actual_window_um": [
+            -0.06044714285714286,
+            -0.037840000000000006,
+            0.15444714285714284,
+            0.1293
+          ],
+          "ruler_um": null,
+          "size_px": [
+            720,
+            750
+          ]
+        }
+      }
+    }
+  ],
+  "pdf": {
+    "path": "output/pdf/c1_visual_guide.pdf",
+    "sha256": "ff8c6d50131877e42fd02d11ead422633ea1f56ae1d00ecc0855fafe3d0bcd1a",
+    "pages": 15
+  }
+}

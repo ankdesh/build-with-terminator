@@ -1,0 +1,279 @@
+{
+  "profile": "asap7_c2c3_v1",
+  "checker": {
+    "path": "/usr/bin/klayout",
+    "sha256": "32441e21747f7718500e6c36c028229f6f1ce2ffcfe5b11acf03305047639ee3",
+    "runtime_path": "/usr/lib/klayout/klayout",
+    "runtime_sha256": "5a0fb60d0e2128ccab82cef157042568323989077f64d4bba830674fccd75ff5",
+    "version": "KLayout 0.28.16",
+    "python_klayout_version": "0.30.8"
+  },
+  "deck_sha256": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+  "passed": true,
+  "cases": [
+    {
+      "rule": "M2.S.1",
+      "state": "legal",
+      "observed": {},
+      "passed": true,
+      "nominal_enclosure_um": null,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "3d19632ffa339e79944a5909233f965e70ea7fcc5fa4fe5225daf3fbad9c5462"
+    },
+    {
+      "rule": "M2.S.1",
+      "state": "legal_boundary",
+      "observed": {},
+      "passed": true,
+      "nominal_enclosure_um": null,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "f45391fdc135ffb9a818c4e4b9aee0d2dadbe7da8e85d5fb0181e62d24ced860"
+    },
+    {
+      "rule": "M2.S.1",
+      "state": "illegal_boundary",
+      "observed": {
+        "M2.S.1": 1
+      },
+      "passed": true,
+      "nominal_enclosure_um": null,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "866baf7085f7263cf315f689f1dd96effd9dc511308eda34815b0c86530d7367"
+    },
+    {
+      "rule": "M2.S.1",
+      "state": "illegal",
+      "observed": {
+        "M2.S.1": 1
+      },
+      "passed": true,
+      "nominal_enclosure_um": null,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "ca9cdb67dc3081888c6b5c7e6393987a1fe1ccfb8c9900ca7b810cba8dd596b8"
+    },
+    {
+      "rule": "M3.W.1",
+      "state": "legal",
+      "observed": {},
+      "passed": true,
+      "nominal_enclosure_um": null,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "d0bb39f2798b53b16f10a82f3641ec7b1507a4bf65e48f2e759d121be0b72fea"
+    },
+    {
+      "rule": "M3.W.1",
+      "state": "legal_boundary",
+      "observed": {},
+      "passed": true,
+      "nominal_enclosure_um": null,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "eab57fb2f230efd892c95ad69d2ab49fef4b20585a3a955da32febcf02e72e77"
+    },
+    {
+      "rule": "M3.W.1",
+      "state": "illegal_boundary",
+      "observed": {
+        "M3.W.1": 1
+      },
+      "passed": true,
+      "nominal_enclosure_um": null,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "ecf98857dbcfe66a863f8a2a8238f3eae1056aaa09734f893ff7863200ae1f4f"
+    },
+    {
+      "rule": "M3.W.1",
+      "state": "illegal",
+      "observed": {
+        "M3.W.1": 1
+      },
+      "passed": true,
+      "nominal_enclosure_um": null,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "07a0b538b6cc8ab963e6aaca53d414e66950aab3331cd39d51b25b8ed46fd3a6"
+    },
+    {
+      "rule": "V2.W.1",
+      "state": "legal",
+      "observed": {},
+      "passed": true,
+      "nominal_enclosure_um": null,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "59d4dffa1e1ecefa9ea91dc9a67476730d1092d6bf0917f4222c001a1257f6ad"
+    },
+    {
+      "rule": "V2.W.1",
+      "state": "legal_boundary",
+      "observed": {},
+      "passed": true,
+      "nominal_enclosure_um": null,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "e29726717961728ab0c572eec72c1abeeac58ab679c99de1b27316de3d34c127"
+    },
+    {
+      "rule": "V2.W.1",
+      "state": "illegal_boundary",
+      "observed": {
+        "V2.W.1": 1
+      },
+      "passed": true,
+      "nominal_enclosure_um": null,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "3a4bcc3b18054177d2fc743e71b2afb275ce37b72149ffc3483631d5cdee3602"
+    },
+    {
+      "rule": "V2.W.1",
+      "state": "illegal",
+      "observed": {
+        "V2.W.1": 1
+      },
+      "passed": true,
+      "nominal_enclosure_um": null,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "f5696d1f07d1f0f5e4ebcdb1526b1754466ccdb73571b3647d0dce0ae48e3728"
+    },
+    {
+      "rule": "V1.M2.EN.2",
+      "state": "legal",
+      "observed": {},
+      "passed": true,
+      "nominal_enclosure_um": 0.005,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "55df8c0a99d9d21cbba1e6a110257dc7fc5c8e882f0bbc4466bc076f25ef2dd5"
+    },
+    {
+      "rule": "V1.M2.EN.2",
+      "state": "legal_boundary",
+      "observed": {},
+      "passed": true,
+      "nominal_enclosure_um": 0.005,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "8bacc79fad00f599fda04fd7962d9e00b08b21637d9c0d4a15a070ef618a41d3"
+    },
+    {
+      "rule": "V1.M2.EN.2",
+      "state": "illegal_boundary",
+      "observed": {
+        "V1.M2.EN.2": 1
+      },
+      "passed": true,
+      "nominal_enclosure_um": 0.005,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "4dd6dbfab53151e9fbf6ff96b1301311aea9c4e83387e6b1a36becb439970a4e"
+    },
+    {
+      "rule": "V1.M2.EN.2",
+      "state": "illegal",
+      "observed": {
+        "V1.M2.EN.2": 1
+      },
+      "passed": true,
+      "nominal_enclosure_um": 0.005,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "ff923ab86492fa077ee96d7c2271872b0183755162d4757bcb7d76533b633d57"
+    },
+    {
+      "rule": "V2.M2.EN.1",
+      "state": "legal",
+      "observed": {},
+      "passed": true,
+      "nominal_enclosure_um": 0.005,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "d41591cd43a9cc2e78c153658ab2d6de189f844c8a2a8f891e0e5d61e46242af"
+    },
+    {
+      "rule": "V2.M2.EN.1",
+      "state": "legal_boundary",
+      "observed": {},
+      "passed": true,
+      "nominal_enclosure_um": 0.005,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "5dc783c335568236ba1fb4927851105908d4996c2a4a77c4f9dd9cc91447ddc8"
+    },
+    {
+      "rule": "V2.M2.EN.1",
+      "state": "illegal_boundary",
+      "observed": {
+        "V2.M2.EN.1": 4
+      },
+      "passed": true,
+      "nominal_enclosure_um": 0.005,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "4fd607292c66e9b28c85e3e7870c8293dd910a1f89ecafe16f18626651d8d5c3"
+    },
+    {
+      "rule": "V2.M2.EN.1",
+      "state": "illegal",
+      "observed": {
+        "V2.M2.EN.1": 4
+      },
+      "passed": true,
+      "nominal_enclosure_um": 0.005,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "4d4d5044614c8ad8d7f8e0e5ac45e4da15780f8168fd8b0efe371b1a3b8a3996"
+    },
+    {
+      "rule": "V2.M3.EN.2",
+      "state": "legal",
+      "observed": {},
+      "passed": true,
+      "nominal_enclosure_um": 0.005,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "9288150b609d917cef2e8bc32b6ee6bf5ce3c68e0fadf99b9e21eefa7989bf14"
+    },
+    {
+      "rule": "V2.M3.EN.2",
+      "state": "legal_boundary",
+      "observed": {},
+      "passed": true,
+      "nominal_enclosure_um": 0.005,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "2f53053a8fb33cb5ef17672f19c3a9c7bead97b185988765c433ffecfe5da079"
+    },
+    {
+      "rule": "V2.M3.EN.2",
+      "state": "illegal_boundary",
+      "observed": {
+        "V2.M3.EN.2": 1
+      },
+      "passed": true,
+      "nominal_enclosure_um": 0.005,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "070176d63f9e1581c04e19041dd23983f9e49215d3dc45d6b2d688e0e80a6562"
+    },
+    {
+      "rule": "V2.M3.EN.2",
+      "state": "illegal",
+      "observed": {
+        "V2.M3.EN.2": 1
+      },
+      "passed": true,
+      "nominal_enclosure_um": 0.005,
+      "boundary_basis": "observed pinned-checker transition on the 1 nm manufacturing grid",
+      "manufacturing_grid_um": 0.001,
+      "gds_sha256": "510fa7d7f4a1468a71d11694a79d42f4b206fe7d80b445e2b82920eb2b3b0b14"
+    }
+  ]
+}

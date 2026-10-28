@@ -29,14 +29,15 @@ class EvaluationSummary:
 
     verdict: str
     validation_level: str
-    total_before: int
+    total_before: int | None
     total_after: int | None
-    violations_before: dict[str, int]
+    violations_before: dict[str, int] | None
     violations_after: dict[str, int] | None
     execution_result: ExecutionResult
     validation_result: ValidationResult | None
     diff_report: LayoutDiffReport | None
     error_message: str | None = None
+    marker_comparison: dict | None = None
 
 
 class RunReporter:
@@ -60,17 +61,20 @@ class RunReporter:
     def evaluate(
         self,
         execution: ExecutionResult,
-        violations_before: dict[str, int],
-        total_before: int,
+        violations_before: dict[str, int] | None,
+        total_before: int | None,
         violations_after: dict[str, int] | None = None,
         total_after: int | None = None,
         validation: ValidationResult | None = None,
         diff_report: LayoutDiffReport | None = None,
         generation_error: str | None = None,
         drc_error: str | None = None,
+        marker_comparison: dict | None = None,
     ) -> EvaluationSummary:
         """Assign typed verdict based on observed execution, validation, and DRC signals."""
-        if generation_error:
+        if execution.status in ("blocked", "oracle_mismatch"):
+            verdict = execution.status
+        elif generation_error:
             verdict = VERDICT_MODEL_ERROR
         elif drc_error:
             verdict = VERDICT_DRC_ERROR
@@ -80,11 +84,17 @@ class RunReporter:
             verdict = VERDICT_INVALID_PATCH
         elif validation is not None and not validation.is_valid:
             verdict = VERDICT_INVALID_PATCH
-        elif total_after is None:
+        elif validation is None or total_before is None or violations_before is None or total_after is None or violations_after is None:
             verdict = VERDICT_DRC_ERROR
+        elif marker_comparison and marker_comparison["introduced"]:
+            verdict = "regression"
+        elif marker_comparison and marker_comparison["ambiguous"]:
+            verdict = "ambiguous"
         elif total_after == 0:
             verdict = VERDICT_SUCCESS_GEOMETRY_ONLY
-        elif total_after < total_before:
+        elif any(n > (violations_before or {}).get(r, 0) for r, n in (violations_after or {}).items()):
+            verdict = "regression"
+        elif total_before is not None and total_after < total_before:
             verdict = VERDICT_PARTIAL
         elif total_after == total_before:
             verdict = VERDICT_NO_CHANGE
@@ -93,7 +103,7 @@ class RunReporter:
 
         return EvaluationSummary(
             verdict=verdict,
-            validation_level="geometry_only",
+            validation_level="geometry_only" if validation is not None and validation.is_valid and total_after is not None else "not_run",
             total_before=total_before,
             total_after=total_after,
             violations_before=violations_before,
@@ -102,11 +112,13 @@ class RunReporter:
             validation_result=validation,
             diff_report=diff_report,
             error_message=generation_error or drc_error or execution.error_message,
+            marker_comparison=marker_comparison,
         )
 
     def write_results_json(self, summary: EvaluationSummary, output_path: Path) -> dict[str, Any]:
         """Write structured results.json artifact."""
         data: dict[str, Any] = {
+            "schema_version": 2,
             "run_id": self.run_id,
             "case_name": self.case_name,
             "profile_name": self.profile_name,
@@ -116,6 +128,7 @@ class RunReporter:
             "caveats": [
                 "Truthful reporting: DRC clean does not prove electrical connectivity (LVS unverified)."
             ],
+            "marker_comparison": summary.marker_comparison,
             "drc_metrics": {
                 "total_before": summary.total_before,
                 "total_after": summary.total_after,
@@ -126,6 +139,7 @@ class RunReporter:
                 "status": summary.execution_result.status,
                 "exit_code": summary.execution_result.exit_code,
                 "duration_seconds": round(summary.execution_result.duration_seconds, 4),
+                "sampled_peak_rss_bytes": summary.execution_result.peak_rss_bytes,
                 "error_message": summary.error_message,
             },
             "validation": summary.validation_result.to_dict() if summary.validation_result else None,
@@ -152,12 +166,12 @@ class RunReporter:
         ]
 
         all_rules = sorted(
-            set(summary.violations_before.keys())
+            set((summary.violations_before or {}).keys())
             | set((summary.violations_after or {}).keys())
         )
         if all_rules:
             for rule in all_rules:
-                count_before = summary.violations_before.get(rule, 0)
+                count_before = (summary.violations_before or {}).get(rule, 0)
                 count_after = (
                     summary.violations_after.get(rule, 0)
                     if summary.violations_after is not None
@@ -174,11 +188,12 @@ class RunReporter:
                 f"**{summary.total_after if summary.total_after is not None else 'N/A'}** | |"
             )
         else:
-            lines.append("| (No violations detected) | 0 | 0 | 0 |")
+            lines.append(f"| No observed markers | {summary.total_before} | {summary.total_after} | N/A |")
 
         lines.extend([
             "",
             "## 2. Patch Execution & Diagnostics",
+            f"Marker comparison: {summary.marker_comparison}",
             "",
             f"- **Status:** `{summary.execution_result.status}`",
             f"- **Exit Code:** `{summary.execution_result.exit_code}`",

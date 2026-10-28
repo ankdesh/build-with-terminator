@@ -1,0 +1,141 @@
+{
+  "beol_drc": {
+    "categories": {},
+    "deck_sha256": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "directory": "audits/beol_001",
+    "exit_code": 0,
+    "finished_at": "2026-10-28T11:28:43.311066+00:00",
+    "gds_sha256": "b8218c1fbaab1c53fdecc3297c0ee8678be42ab7b4ea01084f1a34b99a120234",
+    "image": "openroad/orfs@sha256:6810dbf0e03dddbc89ed8c0a1e13cad09ce4c98d40c4ac0ab99fdc04b0676347",
+    "items": 0,
+    "memory_gib": 4,
+    "profile": "beol",
+    "report": "audits/beol_001/report.lyrdb",
+    "report_sha256": "75535565d73160196fab84fb5800b415e96a2b473e5a11a2643f54990a889d7d",
+    "started_at": "2026-10-28T11:27:22.091165+00:00",
+    "status": "complete",
+    "threads": 2,
+    "wall_seconds": 81.165
+  },
+  "case": "picorv32_asap7_baseline",
+  "core": {
+    "barrel_shifter": true,
+    "divider": true,
+    "interface": "native memory",
+    "isa": "RV32IMC",
+    "module": "picorv32",
+    "multiplier": "iterative"
+  },
+  "faults_injected": false,
+  "final_artifacts": {
+    "def": {
+      "bytes": 18129194,
+      "path": "output/picorv32_asap7/runs/baseline/results/asap7/picorv32_autofix/baseline/6_final.def",
+      "sha256": "22de142e4d1e7fdf30336455f18533f82c6de263d95d6be84f29aa48c63f0041"
+    },
+    "gds": {
+      "bytes": 21374196,
+      "path": "output/picorv32_asap7/runs/baseline/results/asap7/picorv32_autofix/baseline/6_final.gds",
+      "sha256": "b8218c1fbaab1c53fdecc3297c0ee8678be42ab7b4ea01084f1a34b99a120234"
+    },
+    "odb": {
+      "bytes": 31163536,
+      "path": "output/picorv32_asap7/runs/baseline/results/asap7/picorv32_autofix/baseline/6_final.odb",
+      "sha256": "83c7d8f348a484fffe74fc8dae49a21c4d76e07d146576f1e6754541b38717ed"
+    },
+    "sdc": {
+      "bytes": 39491,
+      "path": "output/picorv32_asap7/runs/baseline/results/asap7/picorv32_autofix/baseline/6_final.sdc",
+      "sha256": "f4fccdd5668c626c015a4afbae14c4a26b54c0e5984bd58446f7561fcf83c99c"
+    },
+    "spef": {
+      "bytes": 23605135,
+      "path": "output/picorv32_asap7/runs/baseline/results/asap7/picorv32_autofix/baseline/6_final.spef",
+      "sha256": "d9b966ebf10ac2290a94642e84246e106447e3ae3b0482d31bdfebeee385fa18"
+    },
+    "v": {
+      "bytes": 1786279,
+      "path": "output/picorv32_asap7/runs/baseline/results/asap7/picorv32_autofix/baseline/6_final.v",
+      "sha256": "9eaf5fe7ab9f9373545a0ed3fa84e36611c37f8c8c48858cda370d938e549126"
+    }
+  },
+  "firmware_simulation": "not_run",
+  "flow_status": "complete",
+  "focused_tests_passed": 9,
+  "full_public_audit_completed": false,
+  "gds_inspection": {
+    "cell_count": 72,
+    "dbu_um": 0.00025,
+    "direct_instance_count": 217689,
+    "gds_bbox_um": [
+      0.0,
+      0.0,
+      74.218,
+      74.218
+    ],
+    "gds_sha256": "b8218c1fbaab1c53fdecc3297c0ee8678be42ab7b4ea01084f1a34b99a120234",
+    "status": "passed",
+    "top_cell": "picorv32"
+  },
+  "implementation": {
+    "antenna_net_violations": 0,
+    "antenna_pin_violations": 0,
+    "core_area_um2": 4905.31,
+    "core_utilization_percent": 40,
+    "odb_instances_including_fillers": 41863,
+    "openroad_route_drc_violations": 0,
+    "placement_density": 0.55,
+    "standard_cells_excluding_fillers": 17273
+  },
+  "initial_combined_run_status": "drc_failed",
+  "lvs": "not_run",
+  "native_full_public_marker_count": null,
+  "public_drc": {
+    "deck_sha256": "dc78ccd8b2b30498f25ef885c2c28a9c2a565c38cb30a87460282c8a36c7765d",
+    "directory": "audits/public_002",
+    "exit_code": 137,
+    "finished_at": "2026-10-28T11:41:31.895083+00:00",
+    "gds_sha256": "b8218c1fbaab1c53fdecc3297c0ee8678be42ab7b4ea01084f1a34b99a120234",
+    "image": "openroad/orfs@sha256:6810dbf0e03dddbc89ed8c0a1e13cad09ce4c98d40c4ac0ab99fdc04b0676347",
+    "memory_gib": 6,
+    "profile": "public",
+    "reason": "KLayout was killed at the container memory limit",
+    "started_at": "2026-10-28T11:29:43.400779+00:00",
+    "status": "failed",
+    "threads": 2,
+    "wall_seconds": 708.442
+  },
+  "repair_agent_run": false,
+  "repeated_setup_preserved_toolchain_receipt": true,
+  "run_receipt": "output/picorv32_asap7/runs/baseline/run.json",
+  "schema_version": 1,
+  "sequential_equivalence": "not_run",
+  "source_pins": {
+    "container": "openroad/orfs@sha256:6810dbf0e03dddbc89ed8c0a1e13cad09ce4c98d40c4ac0ab99fdc04b0676347",
+    "orfs": {
+      "commit": "64939f3717ad7c694199ba04cb98924b98022868",
+      "repository": "https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts"
+    },
+    "rtl": {
+      "commit": "ef203c2b0a3fb793280f5114941416c425c5b461",
+      "files": {
+        "rtl/COPYING": "041ebc727233e5bf096dd41260cbb81014d3d29ca007a15f3b1807d4e9ff288e",
+        "rtl/picorv32.v": "0836050971b3c6cdd28ac3b1e5719a67fb645161912bef1e472e63995ceb0622"
+      },
+      "repository": "https://github.com/YosysHQ/picorv32"
+    },
+    "schema_version": 1
+  },
+  "timing": {
+    "corner": "TC",
+    "hold_tns_ps": 0,
+    "hold_worst_slack_ps": 47.4385,
+    "period_ps": 1000,
+    "setup_tns_ps": 0,
+    "setup_worst_slack_ps": 27.0727,
+    "temperature_c": 0,
+    "voltage_v": 0.7,
+    "vt": "RVT"
+  },
+  "toolchain_receipt": "output/picorv32_asap7/toolchain.json"
+}

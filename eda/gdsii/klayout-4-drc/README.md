@@ -195,7 +195,11 @@ Run the flow from `harness/`:
 
 ```bash
 cd harness
-npm run flow:drc
+npm run flow:drc -- --profile legacy_mini \
+  --gds ../test_data/layouts/asap7_test.gds \
+  --deck ../test_data/rules/asap7_mini.drc \
+  --report-db ../reports/standalone/before.lyrdb \
+  --output-script ../reports/standalone/candidate_fix.py
 ```
 
 The flow executes context extraction nodes, queries the model phase, and writes the candidate Python repair script.
@@ -218,8 +222,62 @@ uv run python -m klayout_drc.cli --mode benchmark-evaluate --candidate-mode agen
 
 ### 4. Run Automated Tests
 
-Execute the comprehensive integration test suite (69 passing tests):
+Execute the test suite (live API tests are opt-in):
 
 ```bash
 uv run pytest
 ```
+
+## Corrected C1 evaluation
+
+C1 acceptance now uses result schema 2 and dataset release 1.1.0. The original
+100 case geometries are unchanged. Repair rates exclude the 22 clean controls.
+The 100 entries contain 93 distinct layouts. Candidate execution requires a
+working Bubblewrap sandbox; it has no unrestricted fallback. Model requests
+use profile-scoped facts and save exact request/response evidence.
+
+See [C1 evaluation corrections](docs/C1_EVALUATION_CORRECTIONS.md) for contracts,
+limits, tests, campaign commands, and remaining validation limits. The canonical
+synthesis runner and declarative flow use the same request contract. Ordinary
+tests do not make live API calls unless explicitly enabled.
+
+For AWS Bedrock synthesis, set `KLAYOUT_DRC_MODEL_PROVIDER=bedrock`,
+`BEDROCK_MODEL`, and `AWS_API_KEY`. `BEDROCK_REGION` defaults to
+`ap-southeast-2`. See the
+[AWS configuration and campaign instructions](docs/C1_EVALUATION_CORRECTIONS.md#aws-bedrock-candidate-provider).
+
+The model now receives a runtime-verified KLayout Python API reference. See
+[API guidance and matched ten-case results](docs/reports/c1_api_guidance_comparison.md).
+The reference checks passed; the new pilot still had API execution failures and
+did not meet the clean-control target. It was not expanded to 100 cases.
+
+The four failed candidate copies now pass local checks after explicit API
+corrections. See [local corrections and expanded API guidance](docs/reports/c1_api_failure_corrections.md).
+These corrections do not change the recorded model scores.
+
+The [single KLayout Python API reference](knowledge/klayout_api_patterns.md)
+now covers repair and hierarchical geometry access in one generated document.
+Both synthesis routes include it once. Every listed call form has executable
+checks for the installed binding, and the document is capped at 18,000 characters.
+
+## C2+C3 five-level benchmark
+
+The independent C2+C3 benchmark adds real ASAP7 cell hierarchies, routed GCD and
+UART sources, case-specific edit policies, and separate repair/control scoring.
+Read [the benchmark guide](docs/C2_C3_BENCHMARK.md) for source pins and commands.
+Read [the dataset manifest](test_data/benchmark_c2c3/manifest.json) for accepted
+cases and completion status. Only qualified cases count toward the 50-case target.
+
+The v1 corpus and evaluation are complete. Use the [50-case index](test_data/benchmark_c2c3/CASE_INDEX.md)
+to inspect the full GDS files and clips. See the [measured results and failure analysis](docs/reports/c2_c3_benchmark_report.md)
+for all three baselines, request accounting, and scope limits.
+
+Use `.venv/bin/python -m klayout_drc.benchmark.c2c3.cli --help`. C1 files and
+profiles remain separate. All C2+C3 outcomes are geometry-only.
+
+## PicoRV32 ASAP7 flow
+
+The [dedicated PicoRV32 case](flows/picorv32_asap7/README.md) runs pinned upstream
+RV32IMC RTL through the OpenROAD RTL-to-GDS flow on ASAP7. It retains the final
+GDS, DEF, OpenDB, netlist, SDC, SPEF, and public DRC audit for later autofix work.
+See the case guide for setup, run, resume, and inspection commands.

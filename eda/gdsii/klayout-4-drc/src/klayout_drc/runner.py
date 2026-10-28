@@ -5,6 +5,8 @@ validates return status, and verifies that the report database is materialized.
 """
 
 import logging
+import json
+import time
 import subprocess
 from pathlib import Path
 
@@ -52,6 +54,7 @@ class DRCRunner:
 
         logger.info("Executing KLayout command: %s", " ".join(cmd))
 
+        started = time.monotonic()
         try:
             result = subprocess.run(
                 cmd,
@@ -68,6 +71,9 @@ class DRCRunner:
                 f"KLayout executable '{self.config.klayout_bin}' not found on PATH."
             ) from exc
 
+        output_lyrdb.with_suffix(".stage.json").write_text(json.dumps({
+            "command": cmd, "returncode": result.returncode, "stdout": result.stdout,
+            "stderr": result.stderr, "elapsed_seconds": time.monotonic()-started}, indent=2))
         if result.returncode != 0:
             stderr_msg = result.stderr.strip() if result.stderr else "Unknown error"
             raise DRCExecutionError(

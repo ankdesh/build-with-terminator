@@ -46,7 +46,7 @@ from klayout_drc.config import (
     ASAP7_LAYER_V1,
 )
 
-BENCHMARK_VERSION: str = "1.0.0"
+BENCHMARK_VERSION: str = "1.1.0"
 BENCHMARK_DESCRIPTION: str = "ASAP7 7nm Predictive BEOL DRC Benchmark Suite (100 synthetic & boundary mutation cases)"
 RULE_FAMILIES: List[str] = ["M1.W.1", "M2.W.1", "M1.A.1", "M1.S.1", "V1.W.1"]
 
@@ -55,6 +55,8 @@ class BenchmarkGenerator:
     """Orchestrates deterministic layout creation and manifest generation for the 100 benchmark cases."""
 
     def __init__(self, dbu_um: float = ASAP7_DBU_UM) -> None:
+        if dbu_um != ASAP7_DBU_UM:
+            raise ValueError("The frozen C1 catalog requires DBU 0.00025 um")
         self.dbu_um = dbu_um
 
     def generate_all(self, output_dir: Path) -> BenchmarkManifest:
@@ -96,6 +98,8 @@ class BenchmarkGenerator:
             cases=specs,
         )
 
+        from .acceptance import accept_manifest
+        manifest = accept_manifest(manifest, output_dir)
         manifest_path = output_dir / "manifest.json"
         BenchmarkManifestManager.save(manifest, manifest_path)
         return manifest

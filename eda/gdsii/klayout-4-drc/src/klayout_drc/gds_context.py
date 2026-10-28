@@ -29,6 +29,7 @@ class PolygonGeometry:
     bbox_um: tuple[float, float, float, float]
     shape_type: str = "polygon"
     source_cell: str = ""
+    holes_um: list[list[tuple[float, float]]] = field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -41,6 +42,7 @@ class ViolationNeighborhoodWindow:
     window_bbox_um: tuple[float, float, float, float]
     polygons: list[PolygonGeometry] = field(default_factory=list)
     is_truncated: bool = False
+    omitted_windows: int = 0
 
 
 class GDSContextProcessor:
@@ -91,7 +93,10 @@ class GDSContextProcessor:
                 if window:
                     windows.append(window)
 
-        return windows
+        # Window caps are a separate loss of context from the shape cap.
+        from dataclasses import replace
+        omitted = sum(max(0, len(c.violations)-max_windows_per_rule) for c in report_data.categories)
+        return [replace(window, omitted_windows=omitted) for window in windows]
 
     def format_as_text(
         self,
@@ -104,8 +109,10 @@ class GDSContextProcessor:
         lines = [
             "=== GDS Layout Context (Violation Neighborhood Windows) ===",
             f"Layout File: {self.gds_path.name}",
-            f"Window Halo Margin: {self.halo_um * 1000:.1f} nm ({self.halo_um:.4f} um)",
+            f"Window Halo Margin: {self.halo_um * 1000:.1f} nm ({self.halo_um:.9f} um)",
             f"Total Neighborhood Windows Extracted: {len(windows)}",
+            f"Omitted marker windows: {sum(max(0, len(c.violations)-max_windows_per_rule) for c in report_data.categories)}",
+            f"Layout DBU (um): {self._layout_dbu():.12g}",
             "",
         ]
 
@@ -114,10 +121,10 @@ class GDSContextProcessor:
                 f"--- Window {win.violation_index}: Rule {win.rule_name} (Cell: {win.cell_name}) ---"
             )
             lines.append(
-                f"Violation Marker Box (um): [{win.marker_bbox_um[0]:.4f}, {win.marker_bbox_um[1]:.4f}] to [{win.marker_bbox_um[2]:.4f}, {win.marker_bbox_um[3]:.4f}]"
+                f"Violation Marker Box (um): [{win.marker_bbox_um[0]:.9f}, {win.marker_bbox_um[1]:.9f}] to [{win.marker_bbox_um[2]:.9f}, {win.marker_bbox_um[3]:.9f}]"
             )
             lines.append(
-                f"Inspection Window (um):    [{win.window_bbox_um[0]:.4f}, {win.window_bbox_um[1]:.4f}] to [{win.window_bbox_um[2]:.4f}, {win.window_bbox_um[3]:.4f}]"
+                f"Inspection Window (um):    [{win.window_bbox_um[0]:.9f}, {win.window_bbox_um[1]:.9f}] to [{win.window_bbox_um[2]:.9f}, {win.window_bbox_um[3]:.9f}]"
             )
             lines.append(f"Intersecting Shapes Count: {len(win.polygons)}")
             if win.is_truncated:
@@ -132,12 +139,12 @@ class GDSContextProcessor:
                         f"  Shape {idx}: Layer {poly.layer}/{poly.datatype} ({poly.shape_type}){cell_info}"
                     )
                     lines.append(
-                        f"    BBox (um): [{poly.bbox_um[0]:.4f}, {poly.bbox_um[1]:.4f}] to [{poly.bbox_um[2]:.4f}, {poly.bbox_um[3]:.4f}]"
+                        f"    BBox (um): [{poly.bbox_um[0]:.9f}, {poly.bbox_um[1]:.9f}] to [{poly.bbox_um[2]:.9f}, {poly.bbox_um[3]:.9f}]"
                     )
-                    pts_str = ", ".join(f"({x:.4f}, {y:.4f})" for x, y in poly.points_um[:8])
-                    if len(poly.points_um) > 8:
-                        pts_str += f"... ({len(poly.points_um)} vertices total)"
+                    pts_str = ", ".join(f"({x:.9f}, {y:.9f})" for x, y in poly.points_um)
                     lines.append(f"    Vertices (um): [{pts_str}]")
+                    for hole in poly.holes_um:
+                        lines.append("    Hole vertices (um): " + str(hole))
 
             lines.append("")
 
@@ -236,6 +243,7 @@ class GDSContextProcessor:
                             bbox_um=poly_bbox,
                             shape_type="polygon",
                             source_cell=source_cell,
+                            holes_um=[[(pt.x*dbu, pt.y*dbu) for pt in p.each_point_hole(h)] for h in range(p.holes())],
                         )
                     )
                 elif shape.is_path():
@@ -268,3 +276,7 @@ class GDSContextProcessor:
             polygons=extracted_polys,
             is_truncated=is_truncated,
         )
+
+    def _layout_dbu(self):
+        layout = db.Layout(); layout.read(str(self.gds_path))
+        return layout.dbu

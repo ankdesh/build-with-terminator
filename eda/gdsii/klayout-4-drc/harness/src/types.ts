@@ -2,6 +2,7 @@ import type { JsonSchemaNode } from "@deepseek-ai/dsh-tools";
 
 // --- 1. Run DRC ---
 export interface RunDrcInputs {
+  profile_name?: string;
   gds_path: string;
   drc_script_path: string;
   output_report_path?: string;
@@ -19,6 +20,7 @@ export interface RunDrcOutputs {
 export const runDrcInputSchema: JsonSchemaNode = {
   type: "object",
   properties: {
+    profile_name: { type: "string" },
     gds_path: { type: "string", description: "Path to input GDS layout" },
     drc_script_path: { type: "string", description: "Path to KLayout DRC deck" },
     output_report_path: { type: "string", description: "Optional output path for .lyrdb" },
@@ -43,6 +45,8 @@ export const runDrcOutputSchema: JsonSchemaNode = {
 
 // --- 2. Violation Context ---
 export interface ViolationCtxInputs {
+  edit_policy_path?: string;
+  profile_name?: string;
   report_db: string;
   output_text_path?: string;
 }
@@ -59,6 +63,8 @@ export interface ViolationCtxOutputs {
 export const violationCtxInputSchema: JsonSchemaNode = {
   type: "object",
   properties: {
+    edit_policy_path: { type: "string" },
+    profile_name: { type: "string" },
     report_db: { type: "string", description: "Path to .lyrdb database" },
     output_text_path: { type: "string", description: "Optional path to save text report" },
   },
@@ -82,6 +88,8 @@ export const violationCtxOutputSchema: JsonSchemaNode = {
 
 // --- 3. DRC Context ---
 export interface DrcCtxInputs {
+  edit_policy_path?: string;
+  profile_name?: string;
   drc_script_path: string;
   report_db: string;
 }
@@ -96,6 +104,8 @@ export interface DrcCtxOutputs {
 export const drcCtxInputSchema: JsonSchemaNode = {
   type: "object",
   properties: {
+    edit_policy_path: { type: "string" },
+    profile_name: { type: "string" },
     drc_script_path: { type: "string", description: "Path to DRC rule deck" },
     report_db: { type: "string", description: "Path to .lyrdb database to match violated rules" },
   },
@@ -117,6 +127,8 @@ export const drcCtxOutputSchema: JsonSchemaNode = {
 
 // --- 4. GDS Context ---
 export interface GdsCtxInputs {
+  edit_policy_path?: string;
+  profile_name?: string;
   gds_path: string;
   report_db: string;
   halo_um?: number;
@@ -132,6 +144,8 @@ export interface GdsCtxOutputs {
 export const gdsCtxInputSchema: JsonSchemaNode = {
   type: "object",
   properties: {
+    edit_policy_path: { type: "string" },
+    profile_name: { type: "string" },
     gds_path: { type: "string", description: "Path to GDS file" },
     report_db: { type: "string", description: "Path to .lyrdb database" },
     halo_um: { type: "number", description: "Halo window margin in um (default: 0.1)" },
@@ -154,6 +168,7 @@ export const gdsCtxOutputSchema: JsonSchemaNode = {
 
 // --- 5. Knowledge Loader ---
 export interface KnowledgeLoaderInputs {
+  profile_name?: string;
   knowledge_dir?: string;
 }
 
@@ -166,6 +181,7 @@ export interface KnowledgeLoaderOutputs {
 export const knowledgeLoaderInputSchema: JsonSchemaNode = {
   type: "object",
   properties: {
+    profile_name: { type: "string" },
     knowledge_dir: { type: "string", description: "Directory with markdown knowledge files" },
   },
   additionalProperties: false,
@@ -184,6 +200,7 @@ export const knowledgeLoaderOutputSchema: JsonSchemaNode = {
 
 // --- 6. Save Fix Script ---
 export interface SaveScriptInputs {
+  profile_name?: string;
   script_content: string;
   output_path?: string;
 }
@@ -196,6 +213,7 @@ export interface SaveScriptOutputs {
 export const saveScriptInputSchema: JsonSchemaNode = {
   type: "object",
   properties: {
+    profile_name: { type: "string" },
     script_content: { type: "string", description: "Content of the generated Python fix script" },
     output_path: { type: "string", description: "Target path to write the script" },
   },
@@ -215,6 +233,7 @@ export const saveScriptOutputSchema: JsonSchemaNode = {
 
 // --- Legacy / Composite Operation (for backwards compatibility) ---
 export interface DrcFlowInputs {
+  profile_name?: string;
   gds_path: string;
   drc_script_path: string;
   output_report_path?: string;
@@ -236,6 +255,7 @@ export interface DrcFlowOutputs {
 export const drcInputSchema: JsonSchemaNode = {
   type: "object",
   properties: {
+    profile_name: { type: "string" },
     gds_path: { type: "string" },
     drc_script_path: { type: "string" },
     output_report_path: { type: "string" },

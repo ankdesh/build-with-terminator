@@ -1,0 +1,269 @@
+{
+  "case_id": "l3_g0_c0",
+  "edit_policy": {
+    "context_layers": [
+      [
+        19,
+        0
+      ],
+      [
+        20,
+        0
+      ],
+      [
+        21,
+        0
+      ],
+      [
+        25,
+        0
+      ],
+      [
+        30,
+        0
+      ]
+    ],
+    "editable_cells": {
+      "EDIT_ROUTE_0": {
+        "anchors": [
+          {
+            "box_dbu": [
+              8476,
+              12312,
+              8484,
+              12384
+            ],
+            "layer": [
+              20,
+              0
+            ]
+          }
+        ],
+        "box_dbu": [
+          8732,
+          12192,
+          9052,
+          12448
+        ],
+        "layers": [
+          [
+            20,
+            0
+          ],
+          [
+            21,
+            0
+          ],
+          [
+            25,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "net_owner": "_000_"
+      }
+    },
+    "grid_dbu": 4,
+    "max_context_shapes": 1024,
+    "schema_version": 1,
+    "windows_um": [
+      [
+        2.1029999999999998,
+        2.968,
+        2.343,
+        3.192
+      ]
+    ]
+  },
+  "evidence": {
+    "canonical_geometry_sha256": "7b7b2ca3beb058e216104eae2ff1adcdc79ab90b74ad7db605686b499b63f3f4",
+    "deck_sha256": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "input_markers": [
+      {
+        "boxes": [
+          [
+            2.20175,
+            3.082,
+            2.24425,
+            3.096
+          ]
+        ],
+        "cell": "gcd",
+        "geometry": [
+          [
+            "edge_pair",
+            [
+              [
+                [
+                  2.20175,
+                  3.096
+                ],
+                [
+                  2.24425,
+                  3.096
+                ]
+              ],
+              [
+                [
+                  2.213,
+                  3.082
+                ],
+                [
+                  2.233,
+                  3.082
+                ]
+              ]
+            ]
+          ]
+        ],
+        "rule": "M2.W.1"
+      }
+    ],
+    "input_report": "oracle/l3_g0_c0.lyrdb",
+    "input_report_sha256": "8098b81587a9250d2145ddfc4ed49439777378e5d72bc79bec2e9d7df76d351c",
+    "mutation": {
+      "candidate_index": 0,
+      "cuts_dbu": [
+        "(8852,12312;8932,12328)"
+      ],
+      "net": "_000_",
+      "target_rules": [
+        "M2.W.1"
+      ]
+    },
+    "native_markers": [],
+    "recipe_hashes": {
+      "edit_policy.py": "a5a56cdfd45481ef0e4efe83b937fa49612e967bf696ef6d9ed77ca438992d2e",
+      "generator.py": "ccd58d9f2f62e818015f1286f18eab84e0dcdd0db3f6c89b1874925914803e4e",
+      "routed_generator.py": "751f8a56a0a284e5c099b13f30685de9318112618ac16d273957ce9c6b9793aa",
+      "routes.py": "6696208961fb18d21fdeb17e78f5441c6920255a59f94688cd42defc575f49d1"
+    },
+    "reference_gds": "oracle/l3_g0_c0.reference.gds",
+    "reference_policy_errors": [],
+    "reference_report": "oracle/l3_g0_c0.reference.lyrdb",
+    "reference_report_sha256": "b5f69a21035ba437ce3b243e221389f446a20782d294a224a326c5b4c74eb894",
+    "reference_sha256": "f62afd28f601cfea6f4c5ceaf1b8e54e07a5d13f5c63a93abb9acb8ebb67c8d5",
+    "target_markers": [
+      {
+        "boxes": [
+          [
+            2.20175,
+            3.082,
+            2.24425,
+            3.096
+          ]
+        ],
+        "cell": "gcd",
+        "geometry": [
+          [
+            "edge_pair",
+            [
+              [
+                [
+                  2.20175,
+                  3.096
+                ],
+                [
+                  2.24425,
+                  3.096
+                ]
+              ],
+              [
+                [
+                  2.213,
+                  3.082
+                ],
+                [
+                  2.233,
+                  3.082
+                ]
+              ]
+            ]
+          ]
+        ],
+        "rule": "M2.W.1"
+      }
+    ],
+    "target_scope_rules": [
+      "M2.W.1"
+    ]
+  },
+  "gds": "cases/l3_g0_c0.gds",
+  "gds_sha256": "76bd850723d47dec1dd3a269b06097b951c6a69f784921446d42351aa8226f95",
+  "kind": "repair",
+  "level": 3,
+  "metrics": {
+    "cell_definitions": 40,
+    "context_shapes": 43,
+    "coupled_rules": 1,
+    "dbu_um": 0.00025,
+    "decoded_route_primitive_count": 10613,
+    "editable_shape_count": 7,
+    "hierarchy_depth": 2,
+    "instance_count": 721,
+    "local_route_polygons": 12,
+    "local_routing_occupancy": 0.1803013392857143,
+    "occupancy_box_um": [
+      2.1029999999999998,
+      2.968,
+      2.343,
+      3.192
+    ],
+    "occupancy_layers": [
+      [
+        20,
+        0
+      ],
+      [
+        30,
+        0
+      ]
+    ],
+    "protected_obstacle_count": 36,
+    "route_segment_count": 2632,
+    "shape_count": 66103,
+    "target_markers": 1,
+    "via_count": 3870
+  },
+  "scope_box_um": [
+    2.183,
+    3.048,
+    2.263,
+    3.112
+  ],
+  "source": {
+    "build_sha256": "73cf3bb8a4f482a9cf3d78761c482a8b4a135dcd3a50c483c89b1acab59ffdea",
+    "clock_protection_verified": true,
+    "design": "gcd",
+    "image": "openroad/orfs@sha256:6810dbf0e03dddbc89ed8c0a1e13cad09ce4c98d40c4ac0ab99fdc04b0676347",
+    "kind": "routed_asap7",
+    "native_public_audit": {
+      "acceptance_gate": false,
+      "counts": {
+        "  ": 5,
+        "GATE.ACTIVE.S.4": 1,
+        "LIG.S.4-5": 2,
+        "M1.S.6": 7,
+        "M4.S.5": 20,
+        "V1.S.4": 2,
+        "V2.M3.AUX.2": 1,
+        "V4.M5.AUX.2": 2,
+        "V5.M6.AUX.2": 3
+      },
+      "deck_sha256": "dc78ccd8b2b30498f25ef885c2c28a9c2a565c38cb30a87460282c8a36c7765d",
+      "frame": "original routed hierarchy; diagnostic only",
+      "profile": "asap7_public_full",
+      "report": "oracle/l3_g0.native_public.lyrdb",
+      "report_sha256": "946d239ed0bf0c6ed08ae51d8353e8b77f94c1272060189ffe8b6a9f9c0d20a2"
+    },
+    "net_catalog_sha256": "85c6d12080dac408ea836547710bf10f37db31d193a40ef4785acea8e117aafe",
+    "net_owner_source": "DEF properties checked against ODB catalog",
+    "orfs_commit": "64939f3717ad7c694199ba04cb98924b98022868",
+    "source_gds_sha256": "605199f76786b6382575f8432196339e09b1ec4d490a239ccd12373aab2411bf",
+    "units_verified": true
+  },
+  "source_group": "l3_source_0"
+}

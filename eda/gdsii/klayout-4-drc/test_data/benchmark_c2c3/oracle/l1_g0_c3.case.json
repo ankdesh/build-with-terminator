@@ -1,0 +1,155 @@
+{
+  "case_id": "l1_g0_c3",
+  "edit_policy": {
+    "context_layers": [
+      [
+        19,
+        0
+      ],
+      [
+        20,
+        0
+      ],
+      [
+        21,
+        0
+      ],
+      [
+        25,
+        0
+      ],
+      [
+        30,
+        0
+      ]
+    ],
+    "editable_cells": {
+      "SIGNAL_ROUTE": {
+        "anchors": [
+          {
+            "box_dbu": [
+              0,
+              0,
+              96,
+              24
+            ],
+            "layer": [
+              19,
+              0
+            ]
+          },
+          {
+            "box_dbu": [
+              0,
+              376,
+              96,
+              400
+            ],
+            "layer": [
+              19,
+              0
+            ]
+          }
+        ],
+        "box_dbu": [
+          -64,
+          -64,
+          160,
+          464
+        ],
+        "layers": [
+          [
+            19,
+            0
+          ],
+          [
+            20,
+            0
+          ],
+          [
+            21,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ]
+      }
+    },
+    "grid_dbu": 4,
+    "max_context_shapes": 1024,
+    "schema_version": 1,
+    "windows_um": [
+      [
+        5.912,
+        0.19999999999999998,
+        6.2620000000000005,
+        0.626
+      ]
+    ]
+  },
+  "evidence": {
+    "canonical_geometry_sha256": "fa7e7e2728e1b8a659ed25bc5d6b2d3e50d47638122dfce6431a5fff7f5c29dd",
+    "deck_sha256": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "input_markers": [],
+    "input_report": "oracle/l1_g0_c3.lyrdb",
+    "input_report_sha256": "51a018f0815761552793de970aba89b55ad5fbf2b19cd22782ddbcaa272084a1",
+    "mutation": {
+      "constructor": "M1.W.1",
+      "coupled": false,
+      "slot": 3
+    },
+    "native_markers": [],
+    "recipe_hashes": {
+      "edit_policy.py": "a5a56cdfd45481ef0e4efe83b937fa49612e967bf696ef6d9ed77ca438992d2e",
+      "generator.py": "ccd58d9f2f62e818015f1286f18eab84e0dcdd0db3f6c89b1874925914803e4e",
+      "routed_generator.py": "751f8a56a0a284e5c099b13f30685de9318112618ac16d273957ce9c6b9793aa",
+      "routes.py": "6696208961fb18d21fdeb17e78f5441c6920255a59f94688cd42defc575f49d1"
+    },
+    "reference_gds": "oracle/l1_g0_c3.reference.gds",
+    "reference_policy_errors": [],
+    "reference_report": "oracle/l1_g0_c3.reference.lyrdb",
+    "reference_report_sha256": "51a018f0815761552793de970aba89b55ad5fbf2b19cd22782ddbcaa272084a1",
+    "reference_sha256": "cb6844ad2cfae8f41b0e05b1dcf73bf74d82db58e387ce9d7ac32152bcab2df8",
+    "target_markers": [],
+    "target_scope_rules": [
+      "M1.W.1"
+    ]
+  },
+  "gds": "cases/l1_g0_c3.gds",
+  "gds_sha256": "cb6844ad2cfae8f41b0e05b1dcf73bf74d82db58e387ce9d7ac32152bcab2df8",
+  "kind": "clean_control",
+  "level": 1,
+  "metrics": {
+    "cell_definitions": 7,
+    "context_shapes": 7,
+    "coupled_rules": 0,
+    "dbu_um": 0.00025,
+    "editable_shape_count": 1,
+    "hierarchy_depth": 2,
+    "instance_count": 11,
+    "protected_obstacle_count": 6,
+    "shape_count": 1255,
+    "target_markers": 0
+  },
+  "scope_box_um": [
+    6.072,
+    0.36,
+    6.102,
+    0.466
+  ],
+  "source": {
+    "families": [
+      "INV",
+      "BUF",
+      "NAND",
+      "NOR",
+      "DFF"
+    ],
+    "kind": "real_asap7_cells",
+    "library_sha256": "f43d5b33df635cf9e66cbca66b6bdd05364f824d8040cd21528b9e12808b9263",
+    "units_verified": true
+  },
+  "source_group": "l1_source_0"
+}

@@ -1,0 +1,22 @@
+{
+  "final_c2c3_regression": {
+    "log_sha256": "d48f76aae6e739f6a2611de99ae982ef44dac48ecb31e541e17b463007e7c977",
+    "passed": 33
+  },
+  "full_regression": {
+    "log_sha256": "366c0bdbee9a25eb7f1fc1bb31b7cc996339a6822ceb996771f524588f93d7a8",
+    "passed": 233,
+    "skipped": 2
+  },
+  "harness_node_test_files": {
+    "failed": 0,
+    "passed": 2
+  },
+  "harness_typecheck": "passed",
+  "new_rule_qualification": {
+    "failed": 0,
+    "passed": 24
+  },
+  "note": "The full regression preceded the final C2+C3 report and qualification refinements. Focused checks and live rule qualification cover those refinements.",
+  "reproduction": "50 cases passed"
+}

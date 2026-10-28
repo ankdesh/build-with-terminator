@@ -27,3 +27,5 @@ packages = ["src/klayout_drc"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+
+markers = ["integration_sandbox: requires working Bubblewrap user namespaces"]

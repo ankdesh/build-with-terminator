@@ -5,7 +5,7 @@ This document defines the architectural guidelines, standards, and workflow inva
 ---
 
 ## 1. Environment & Dependency Management
-- **Python Toolchain**: Exclusively use `uv` and `uv venv` for dependency resolution, virtual environment management, and script execution (`uv run pytest`, `uv run python -m klayout_drc.cli`).
+- **Python Toolchain**: Use `uv` for dependency management and normal execution. If the launcher cannot run inside a restricted session, use the existing uv-managed virtual environment. The harness inherits that interpreter from the orchestrator.
 - **Harness Subsystem**: Managed in the `harness/` directory using npm/node and linked to local `/home/ankdesh/explore/deepseek-harness` workspaces via `node scripts/link-harness.mjs`. Zero modifications are made to the core harness repository.
 
 ---
@@ -33,7 +33,7 @@ This document defines the architectural guidelines, standards, and workflow inva
   - `src/klayout_drc/benchmark/types.py`: Benchmark data contracts (`BenchmarkCaseSpec`, `DifficultyTier`, `BenchmarkVerdict`, `EvaluationResult`, `BenchmarkSummary`).
   - `src/klayout_drc/benchmark/manifest.py` (`BenchmarkManifestManager`): Manifest serialization, query filtering, and SHA-256 integrity verification.
   - `src/klayout_drc/benchmark/mutations.py`: Geometric shape operators for synthetic BEOL layout generation.
-  - `src/klayout_drc/benchmark/generator.py` (`BenchmarkGenerator`): Seeded deterministic layout generation across the 100 benchmark cases.
+  - `src/klayout_drc/benchmark/generator.py` (`BenchmarkGenerator`): Fixed-catalog deterministic layout generation across the 100 benchmark cases.
   - `src/klayout_drc/benchmark/evaluator.py` (`BenchmarkEvaluator`): Batch execution orchestrator for benchmark evaluation.
   - `src/klayout_drc/benchmark/scorer.py` (`BenchmarkScorer`): Metric calculation, verdict classification, regression detection, and report generation (`.json`, `.csv`, `.md`).
   - `src/klayout_drc/cli.py`: Unified CLI supporting granular node modes, end-to-end evaluation (`--mode single-shot`), and benchmark suite operations (`benchmark-list`, `benchmark-verify`, `benchmark-generate`, `benchmark-evaluate`).
@@ -73,3 +73,12 @@ This document defines the architectural guidelines, standards, and workflow inva
 - `reports/`: Output directory for report databases (`.lyrdb`), textual reports (`.txt`), and isolated run bundles (`reports/runs/<run_id>/`).
 - `docs/`: Architecture documents, staged implementation plans, and evaluation reports (`docs/reports/`).
 - `harness/`: Isolated DeepSeek Harness product bundle (`package.json`, `harness.product.json`, `scripts/`, `src/`, `profile/`).
+
+## C1 acceptance corrections
+
+Use docs/C1_EVALUATION_CORRECTIONS.md for current evaluation contracts. The
+original completion reports are historical. Schema 2 and dataset release 1.1.0
+separate clean controls, rejected patches, blocked infrastructure, and geometry
+repair outcomes. Candidate code requires Bubblewrap and the worker syscall
+policy. Never substitute ordinary subprocess execution when isolation fails.
+Live model tests are opt-in. The fixed catalog has no random generation seed.

@@ -72,6 +72,16 @@ class DRCProfileManager:
         )
         self.register_profile(asap7_curated)
 
+        self.register_profile(DRCProfile(
+            name="asap7_c2c3_v1",
+            description="C2+C3 v1 scored BEOL rules, qualified independently from C1",
+            deck_path=DEFAULT_RULES_DIR / "asap7_c2c3_v1.lydrc",
+            param_in_gds="in_gds", param_report="report_file",
+            layers={"M1": (19, 0), "M2": (20, 0), "V1": (21, 0), "V2": (25, 0), "M3": (30, 0)},
+            dbu_um=.00025, manufacturing_grid_um=.001,
+            editable_layers=("M1", "M2", "V1", "V2", "M3"),
+        ))
+
         asap7_public = DRCProfile(
             name="asap7_public_full",
             description="Public ASAP7 KLayout DRC deck with authentic PDK layer conventions",

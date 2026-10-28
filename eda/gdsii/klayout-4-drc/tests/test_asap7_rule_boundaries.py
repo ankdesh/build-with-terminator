@@ -93,19 +93,19 @@ def test_beol_rule_boundary_matrix(
     """Verify that legal cases produce 0 violations and illegal cases produce the exact violation."""
     # Case 1: Legal (Wide Margin) -> 0 violations
     res_legal = run_curated_drc(FIXTURES_DIR / legal_file, tmp_path / "c1")
-    assert res_legal.get(rule_family, 0) == 0, f"Expected 0 violations for {legal_file}, got {res_legal}"
+    assert res_legal == {}, f"Expected 0 violations for {legal_file}, got {res_legal}"
 
     # Case 2: Legal Boundary (Exact Threshold) -> 0 violations
     res_legal_bound = run_curated_drc(FIXTURES_DIR / legal_bound_file, tmp_path / "c2")
-    assert res_legal_bound.get(rule_family, 0) == 0, f"Expected 0 violations for {legal_bound_file}, got {res_legal_bound}"
+    assert res_legal_bound == {}, f"Expected 0 violations for {legal_bound_file}, got {res_legal_bound}"
 
     # Case 3: Illegal Boundary (-1 Grid Step: -0.25 nm) -> Violation detected
     res_illegal_bound = run_curated_drc(FIXTURES_DIR / illegal_bound_file, tmp_path / "c3")
-    assert res_illegal_bound.get(rule_family, 0) > 0, f"Expected {rule_family} violation for {illegal_bound_file}, got {res_illegal_bound}"
+    assert res_illegal_bound == {rule_family: (2 if rule_family == "V1.W.1" else 1)}, f"Expected {rule_family} violation for {illegal_bound_file}, got {res_illegal_bound}"
 
     # Case 4: Clearly Illegal (Gross Defect) -> Violation detected
     res_clearly_illegal = run_curated_drc(FIXTURES_DIR / clearly_illegal_file, tmp_path / "c4")
-    assert res_clearly_illegal.get(rule_family, 0) > 0, f"Expected {rule_family} violation for {clearly_illegal_file}, got {res_clearly_illegal}"
+    assert res_clearly_illegal == {rule_family: (2 if rule_family == "V1.W.1" else 1)}, f"Expected {rule_family} violation for {clearly_illegal_file}, got {res_clearly_illegal}"
 
 
 def test_compound_beol_interaction(tmp_path: Path):

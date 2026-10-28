@@ -9,6 +9,8 @@ from pathlib import Path
 import re
 from typing import Optional, Sequence
 
+from .deck_extractor import DRCDeckExtractor
+from .rule_catalog import DRCRuleCatalog
 from .config import DRCConfigurationError, DRCParserError
 
 
@@ -41,15 +43,24 @@ class DRCContextProcessor:
             Dictionary mapping rule name to ExtractedRuleInfo.
         """
         try:
-            deck_content = self.drc_script_path.read_text(encoding="utf-8")
+            deck_content = DRCDeckExtractor().extract(self.drc_script_path).script_text
         except OSError as e:
             raise DRCParserError(f"Failed to read DRC deck '{self.drc_script_path}': {e}") from e
 
+        catalog = DRCRuleCatalog()
+        catalog.bind_deck_provenance(self.drc_script_path)
         extracted: dict[str, ExtractedRuleInfo] = {}
         lines = deck_content.splitlines()
 
         for rule_name in violated_rule_names:
-            info = self._find_rule_in_lines(rule_name, lines)
+            audited = catalog.get_rule_by_category(rule_name)
+            if audited and audited.source_branches:
+                constraints = "; ".join(f"{c.constraint_type}={c.value_um:g} {c.unit}" + (f" ({c.condition})" if c.condition else "") for c in audited.constraints)
+                info = ExtractedRuleInfo(rule_name, audited.raw_source_snippet,
+                    audited.description + "; " + constraints + f"; source lines {audited.source_line_start}-{audited.source_line_end}",
+                    audited.constraints[0].value_um if audited.constraints and audited.constraints[0].unit == "um" else None)
+            else:
+                info = self._find_rule_in_lines(rule_name, lines)
             if info:
                 extracted[rule_name] = info
             else:
@@ -81,7 +92,7 @@ class DRCContextProcessor:
             if info.comment:
                 lines.append(f"Description: {info.comment}")
             if info.threshold_um is not None:
-                lines.append(f"Constraint Threshold: {info.threshold_um:.4f} um ({info.threshold_um * 1000:.1f} nm)")
+                lines.append(f"Constraint Threshold: {info.threshold_um:.8g} um ({info.threshold_um * 1000:.1f} nm)")
             lines.append("Code Definition:")
             for code_line in info.code_block.splitlines():
                 lines.append(f"  {code_line}")

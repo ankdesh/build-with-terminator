@@ -37,7 +37,8 @@ def test_evaluator_heuristic_sample(tmp_path: Path):
 
     assert summary.total_cases == 4
     # All 4 should achieve CLEAN_SUCCESS under heuristic (isolated and boundary widen; negative/clean stay 0)
-    assert summary.clean_success_count >= 3
+    assert summary.clean_success_count == 2
+    assert summary.clean_controls == 2
     assert summary.execution_error_count == 0
 
     # Verify summary files written to disk

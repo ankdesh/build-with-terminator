@@ -1,5 +1,6 @@
 /** Flow operations for executing KLayout DRC and context processors via the local Python engine. */
 import { spawn } from "node:child_process";
+import { existsSync } from "node:fs";
 import { resolve, isAbsolute } from "node:path";
 import type { Context } from "@deepseek-ai/cordis";
 import {
@@ -47,11 +48,15 @@ export interface FlowOperation {
 /**
  * Execute a Python CLI command through 'uv run python -m klayout_drc.cli' and parse stdout JSON.
  */
-function runPythonCli<T>(projectRoot: string, cliArgs: string[]): Promise<T> {
-  const args = ["run", "python", "-m", "klayout_drc.cli", ...cliArgs, "--json"];
+function runPythonCli<T>(projectRoot: string, cliArgs: string[], profileName?: string): Promise<T> {
+  const localPython = resolve(projectRoot, '.venv/bin/python');
+  const python = process.env.KLAYOUT_DRC_PYTHON || (existsSync(localPython) ? localPython : undefined);
+  const launcher = python || "uv";
+  const args = [...(python ? [] : ["run", "python"]), "-m", "klayout_drc.cli", ...cliArgs,
+    ...(profileName ? ["--profile", profileName] : []), "--json"];
 
   return new Promise<T>((resolvePromise, rejectPromise) => {
-    const proc = spawn("uv", args, {
+    const proc = spawn(launcher, args, {
       cwd: projectRoot,
       stdio: ["ignore", "pipe", "pipe"],
     });
@@ -73,6 +78,13 @@ function runPythonCli<T>(projectRoot: string, cliArgs: string[]): Promise<T> {
 
     proc.on("close", (code: number | null) => {
       if (code !== 0) {
+        try {
+          const failure = JSON.parse(stderr || stdout);
+          if (failure.stage === 'api_reference') {
+            rejectPromise(Object.assign(new Error(failure.message), {stage: failure.stage}));
+            return;
+          }
+        } catch { /* Non-JSON tool errors keep the captured diagnostic below. */ }
         rejectPromise(
           new Error(
             `KLayout CLI process exited with code ${code}.\nStderr: ${stderr}\nStdout: ${stdout}`
@@ -141,7 +153,7 @@ export function registerDrcOperations(ctx: Context, projectRoot: string): () => 
           deck,
           "--report-db",
           reportDb,
-        ]);
+        ], inputs.profile_name);
       },
     })
   );
@@ -160,11 +172,12 @@ export function registerDrcOperations(ctx: Context, projectRoot: string): () => 
         const inputs = rawInput as ViolationCtxInputs;
         const reportDb = resolvePath(projectRoot, inputs.report_db);
         const cliArgs = ["--mode", "violation-ctx", "--report-db", reportDb];
+        if (inputs.edit_policy_path) cliArgs.push("--edit-policy", resolvePath(projectRoot, inputs.edit_policy_path));
         if (inputs.output_text_path) {
           cliArgs.push("--text-report", resolvePath(projectRoot, inputs.output_text_path));
         }
 
-        return runPythonCli<ViolationCtxOutputs>(projectRoot, cliArgs);
+        return runPythonCli<ViolationCtxOutputs>(projectRoot, cliArgs, inputs.profile_name);
       },
     })
   );
@@ -191,7 +204,8 @@ export function registerDrcOperations(ctx: Context, projectRoot: string): () => 
           deck,
           "--report-db",
           reportDb,
-        ]);
+          ...(inputs.edit_policy_path ? ["--edit-policy", resolvePath(projectRoot, inputs.edit_policy_path)] : []),
+        ], inputs.profile_name);
       },
     })
   );
@@ -211,11 +225,12 @@ export function registerDrcOperations(ctx: Context, projectRoot: string): () => 
         const gds = resolvePath(projectRoot, inputs.gds_path);
         const reportDb = resolvePath(projectRoot, inputs.report_db);
         const cliArgs = ["--mode", "gds-ctx", "--gds", gds, "--report-db", reportDb];
+        if (inputs.edit_policy_path) cliArgs.push("--edit-policy", resolvePath(projectRoot, inputs.edit_policy_path));
         if (inputs.halo_um !== undefined) {
           cliArgs.push("--halo-um", String(inputs.halo_um));
         }
 
-        return runPythonCli<GdsCtxOutputs>(projectRoot, cliArgs);
+        return runPythonCli<GdsCtxOutputs>(projectRoot, cliArgs, inputs.profile_name);
       },
     })
   );
@@ -239,10 +254,36 @@ export function registerDrcOperations(ctx: Context, projectRoot: string): () => 
           "load-knowledge",
           "--knowledge-dir",
           kbDir,
-        ]);
+        ], inputs.profile_name);
       },
     })
   );
+
+  // The declarative flow and standalone baseline use the same request contract.
+  disposers.push(ctx.flows.registerOperation({
+    id: "klayout.synthesize_candidate", version: "1.0.0", effect: "write",
+    cancellation: "abort", recovery: "manual",
+    inputSchema: { type: "object", properties: {
+      violations: { type: "string" }, drc_rules: { type: "string" },
+      gds_sections: { type: "string" }, knowledge: { type: "string" },
+      profile_name: { type: "string" }, output_script_path: { type: "string" }
+    }, required: ["violations", "drc_rules", "gds_sections", "knowledge", "profile_name", "output_script_path"], additionalProperties: false },
+    outputSchema: { type: "object", properties: { python_script: { type: "string" }, rationale: { type: "string" }, returned_model: { oneOf: [{ type: "string" }, { type: "null" }] } },
+      required: ["python_script", "rationale", "returned_model"], additionalProperties: false },
+    execute: async (input: any) => {
+      const { pathToFileURL } = await import("node:url");
+      const { readFileSync, mkdirSync } = await import("node:fs");
+      const { dirname } = await import("node:path");
+      const contract = await import(pathToFileURL(resolve(projectRoot, "harness/scripts/baseline-contract.mjs")).href);
+      const directory = dirname(resolvePath(projectRoot, input.output_script_path));
+      mkdirSync(directory, { recursive: true });
+      const instructions = readFileSync(resolve(projectRoot, "harness/profile/catalog/flows/generate_fix.md"), "utf8");
+      return contract.generateCandidate(instructions, {
+        violations: input.violations, drc_rules: input.drc_rules,
+        gds_sections: input.gds_sections, knowledge: input.knowledge
+      }, directory, input.profile_name);
+    },
+  }));
 
   // 6. klayout.save_script
   disposers.push(
@@ -269,7 +310,7 @@ export function registerDrcOperations(ctx: Context, projectRoot: string): () => 
           inputs.script_content,
           "--output-script",
           outPath,
-        ]);
+        ], inputs.profile_name);
       },
     })
   );
@@ -308,7 +349,7 @@ export function registerDrcOperations(ctx: Context, projectRoot: string): () => 
           reportDb,
           "--text-report",
           textReport,
-        ]);
+        ], inputs.profile_name);
       },
     })
   );

@@ -4,7 +4,7 @@ Maintains canonical definitions, physical constraints, layer bindings, and handl
 upstream deck anomalies (such as blank categories or duplicate category names).
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Final
 
@@ -18,6 +18,10 @@ class RuleConstraint:
 
     constraint_type: str  # "min_width", "min_spacing", "min_area", "min_enclosure"
     value_um: float
+    @property
+    def unit(self) -> str:
+        return "um2" if self.constraint_type == "min_area" else "um"
+
     condition: str | None = None  # e.g., "parallel_run_length > 36nm"
 
 
@@ -36,6 +40,7 @@ class DRCRuleDefinition:
     raw_source_snippet: str = ""
     is_ambiguous: bool = False
     upstream_anomaly: str | None = None
+    source_branches: tuple[tuple[int, str], ...] = ()
 
 
 # Known audited definitions for ASAP7 BEOL rules
@@ -48,6 +53,10 @@ ASAP7_AUDITED_RULES: Final[dict[str, DRCRuleDefinition]] = {
         constraints=(
             RuleConstraint(constraint_type="min_width", value_um=0.018),
         ),
+    ),
+    "V1.W.1": DRCRuleDefinition(
+        rule_id="V1.W.1", category_name="V1.W.1", description="V1 minimum width is 18nm",
+        target_layers=("V1",), constraints=(RuleConstraint("min_width", .018),),
     ),
     "M2.W.1": DRCRuleDefinition(
         rule_id="M2.W.1",
@@ -230,24 +239,21 @@ class DRCRuleCatalog:
         extractor = DRCDeckExtractor()
         extracted: ExtractedDeck = extractor.extract(deck_path)
 
-        for line_idx, line in enumerate(extracted.script_lines, start=1):
-            for rule_id, rule in list(self._rules_by_id.items()):
-                # Check for output match: e.g. .output("M1.W.1"
-                cat = rule.category_name
-                pattern = f'.output("{cat}"'
-                if pattern in line:
-                    actual_line = extracted.text_start_line + line_idx - 1 if extracted.is_xml_macro else line_idx
-                    updated = DRCRuleDefinition(
-                        rule_id=rule.rule_id,
-                        category_name=rule.category_name,
-                        description=rule.description,
-                        target_layers=rule.target_layers,
-                        constraints=rule.constraints,
-                        source_deck=deck_path.name,
-                        source_line_start=actual_line,
-                        source_line_end=actual_line,
-                        raw_source_snippet=line.strip(),
-                        is_ambiguous=rule.is_ambiguous,
-                        upstream_anomaly=rule.upstream_anomaly,
-                    )
-                    self.register_rule(updated)
+        # Rebinding must not retain branches from a different deck.
+        for rule_id, rule in list(self._rules_by_id.items()):
+            branches = []
+            for index, line in enumerate(extracted.script_lines):
+                if f'.output("{rule.category_name}"' not in line:
+                    continue
+                start = index
+                while start > 0 and extracted.script_lines[start-1].strip():
+                    start -= 1
+                actual_line = extracted.text_start_line + start if extracted.is_xml_macro else start+1
+                branches.append((actual_line, "\n".join(extracted.script_lines[start:index+1])))
+            if branches:
+                first = branches[0][0]
+                last = branches[-1][0] + len(branches[-1][1].splitlines()) - 1
+                self.register_rule(replace(rule, source_deck=deck_path.name,
+                    source_line_start=first, source_line_end=last,
+                    raw_source_snippet="\n\n".join(source for _, source in branches),
+                    source_branches=tuple(branches)))

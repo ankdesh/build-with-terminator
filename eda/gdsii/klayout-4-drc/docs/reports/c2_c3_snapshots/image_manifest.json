@@ -1,0 +1,5935 @@
+{
+  "case_count": 50,
+  "snapshot_count": 150,
+  "page_count": 25,
+  "scope": "Frozen full input GDS; no model outputs or reference repairs",
+  "rendering": "Native offscreen KLayout; full source all layers; clips retain original TOP coordinates",
+  "renderer_version": "0.30.8",
+  "generator_sha256": "1345470f64055706b8a84f637e036c431546370868edb4474670eca7603fa0fe",
+  "style_reference": {
+    "path": "output/pdf/c1_bedrock_quick_review.pdf",
+    "sha256": "f719f431d863761e4b60bde3c9ba692695c3ced8bd04b7bb2f3a09cecf4ba429"
+  },
+  "notes": [
+    "Cyan overview window has a minimum size of 8 pixels for visibility.",
+    "Teal outlines show spatial permission only; cell and layer restrictions still apply.",
+    "Scored marker overlays use saved flat TOP-coordinate reports; public audit markers are excluded.",
+    "Clean controls have no target defect; read-only cases permit no geometry edits."
+  ],
+  "verified_sources": {
+    "test_data/benchmark_c2c3/manifest.json": "4a566ed1fe78e7deea54831a4d674dd526bd402b9796ec110cd97d8c9205d1fd",
+    "test_data/benchmark_c2c3/windows/manifest.json": "8b9750e85da609e61eabb56848fec5e8434119915e24adfc8a0d2452d1af2f65",
+    "test_data/benchmark_c2c3/cases/l1_g0_c0.gds": "8fe3cbd55986edd4ffb0d950d315267b1f2a102252b657bd16629616a5efdbbb",
+    "test_data/benchmark_c2c3/windows/l1_g0_c0.gds": "bb6aa07c68e3a831b872facfa9bc45b80f76c08e8fc05c2a2d67bc0611969261",
+    "test_data/benchmark_c2c3/oracle/l1_g0_c0.lyrdb": "58731390565d85a303bb05785303a8d00370cedf3673f867c886df340715fa27",
+    "test_data/benchmark_c2c3/cases/l1_g0_c1.gds": "afbef0037ef834f68270025cfc3a8b26882b68bf3bc2983ff3bad02998eb2c7c",
+    "test_data/benchmark_c2c3/windows/l1_g0_c1.gds": "233cf06c1e9b1f75b218cdf25af32122cbdb7cd95f5b049ce0e7630f79361381",
+    "test_data/benchmark_c2c3/oracle/l1_g0_c1.lyrdb": "9ed711a5019a6664d3720791d93e3de01771b5123ccbe86fb3dbc35986095886",
+    "test_data/benchmark_c2c3/cases/l1_g0_c2.gds": "a564c7f669f0068a0ee1bd59b24c716a05c00f718f79ed24cbbe12f2a2a3b186",
+    "test_data/benchmark_c2c3/windows/l1_g0_c2.gds": "f1f6a3485787d155ede3ee076884d4b5ee91c7ab78e90c9abed8e28912fb69a1",
+    "test_data/benchmark_c2c3/oracle/l1_g0_c2.lyrdb": "f24cdf02f19eac2425551df05793ededbf9179a2ebf1f9c9496a5d6188da7d16",
+    "test_data/benchmark_c2c3/cases/l1_g0_c3.gds": "cb6844ad2cfae8f41b0e05b1dcf73bf74d82db58e387ce9d7ac32152bcab2df8",
+    "test_data/benchmark_c2c3/windows/l1_g0_c3.gds": "99dacadbe203053aaac5f54dd1820f89cb872729153ef6e19784a3ea045efeba",
+    "test_data/benchmark_c2c3/oracle/l1_g0_c3.lyrdb": "51a018f0815761552793de970aba89b55ad5fbf2b19cd22782ddbcaa272084a1",
+    "test_data/benchmark_c2c3/cases/l1_g0_c4.gds": "75d57ac6bab54b3551d7b62c7cd9ae571301790d86f39bfc8b56239249ca7bd5",
+    "test_data/benchmark_c2c3/windows/l1_g0_c4.gds": "6acd7f982d8f84d6386456384942410a61edbc01e829a032cc3d96b1c7f55487",
+    "test_data/benchmark_c2c3/oracle/l1_g0_c4.lyrdb": "7c32ecb0faa38fc1a03682327992a4a98bfcfd528e77f0889ce0f77686c28ff6",
+    "test_data/benchmark_c2c3/cases/l1_g1_c0.gds": "8bfb6a8dca4b8cbd04e8eae6541e7fd09ccdc7dbe52935fa1d7f9eded5cc6c34",
+    "test_data/benchmark_c2c3/windows/l1_g1_c0.gds": "bc42bc2afe82382f54999ce7b522b13e68bdb1c9a323fc236466ca524571be69",
+    "test_data/benchmark_c2c3/oracle/l1_g1_c0.lyrdb": "e245ce9981cc674e22d6ad1884f7e6575236e1cf74b7986d6905f3863a82528e",
+    "test_data/benchmark_c2c3/cases/l1_g1_c1.gds": "0837b3ae68797bbda0a8e9a3520f11ac78dd1d9721d4e0683b12f28164a4ce0b",
+    "test_data/benchmark_c2c3/windows/l1_g1_c1.gds": "d00895826da78b116fb3ed587fae499b4b64b29651d78d6e23c00e4437fa88f1",
+    "test_data/benchmark_c2c3/oracle/l1_g1_c1.lyrdb": "8a8d87ea9a1028fd3ebd7d73a1c6fca4f491fe11212f0c68f158dd97b244b3c6",
+    "test_data/benchmark_c2c3/cases/l1_g1_c2.gds": "5f5b5864c6b50cd2f31a1e687fc7f49d5c2103ef70cb851e01f78ba9a6ad609c",
+    "test_data/benchmark_c2c3/windows/l1_g1_c2.gds": "9a90843abea1da994546214ebe905ae671f05fb055b377a16c196a759766c923",
+    "test_data/benchmark_c2c3/oracle/l1_g1_c2.lyrdb": "5379be7c89ef3c170df122bdc53ec6573febb3e0d533d513e2e510c8c492c89b",
+    "test_data/benchmark_c2c3/cases/l1_g1_c3.gds": "6d2a4e75c437f003ea0561a2ecb7dda01a0bcbd3ce74b1181b7c5d86d0df7e28",
+    "test_data/benchmark_c2c3/windows/l1_g1_c3.gds": "9c4a67f0e4b42712d725334dd51152ceb48edbcccc50d3dd3d1a213d5c3f68b0",
+    "test_data/benchmark_c2c3/oracle/l1_g1_c3.lyrdb": "51a018f0815761552793de970aba89b55ad5fbf2b19cd22782ddbcaa272084a1",
+    "test_data/benchmark_c2c3/cases/l1_g1_c4.gds": "3c6c40e539d954a5644f9c221db3fd0def7d8982afb303f0fc0e89360a347288",
+    "test_data/benchmark_c2c3/windows/l1_g1_c4.gds": "743df612dd4bf9ec7bc3742aa2e09ccbb96eb5efafea39e7b52885f4b5f0448e",
+    "test_data/benchmark_c2c3/oracle/l1_g1_c4.lyrdb": "74e34c7cbe6cb50f2e75b35f21dbdaaf4f2c3d60211f6b748a209b4d0b4c18e3",
+    "test_data/benchmark_c2c3/cases/l2_g0_c0.gds": "17d6d374645cff0a6dbf7fe76f808fe126d8cefd19843434be985aa13cd6259e",
+    "test_data/benchmark_c2c3/windows/l2_g0_c0.gds": "d16f5c55eccc436588f976024cc05764768aea714b28c0b6d98d618d946665f9",
+    "test_data/benchmark_c2c3/oracle/l2_g0_c0.lyrdb": "3d361c7481133455d3d8b36143ed5eebd22dd30a5c36d9dfcf92a088c26b8f1e",
+    "test_data/benchmark_c2c3/cases/l2_g0_c1.gds": "35fd9d4841e57c5f61bcfae3965a584287b6e1e7894089ea97ad494dd237f0e5",
+    "test_data/benchmark_c2c3/windows/l2_g0_c1.gds": "5dc482188b7891a9beacef062ebd56b1dc5c7deffabcd8141788e39d8f734d28",
+    "test_data/benchmark_c2c3/oracle/l2_g0_c1.lyrdb": "8925a697098558b01510d36aab87665f328e9f496921bae009211608ea44b2cc",
+    "test_data/benchmark_c2c3/cases/l2_g0_c2.gds": "db63b2fd3d587d16d11401b2dd2ca2b5e0c200d2eb03af4ff0b6bbcd415bb1ac",
+    "test_data/benchmark_c2c3/windows/l2_g0_c2.gds": "e33e3a247f58bc317cf7be40dcd9caacf401e67c477b10d23a8bafece5b63581",
+    "test_data/benchmark_c2c3/oracle/l2_g0_c2.lyrdb": "cd8667ce7afc68c9061cb7398feb4a87b5f82d8c99898cd4ff71ccb71925344c",
+    "test_data/benchmark_c2c3/cases/l2_g0_c3.gds": "56c848832a7d2aac915c9160b16aa30ac5257a47ae6ddbfa7713b8a0320fab00",
+    "test_data/benchmark_c2c3/windows/l2_g0_c3.gds": "8615ce23c303d12930199b2a65d47139494c3dc48000e4969652bcc122ed8801",
+    "test_data/benchmark_c2c3/oracle/l2_g0_c3.lyrdb": "51a018f0815761552793de970aba89b55ad5fbf2b19cd22782ddbcaa272084a1",
+    "test_data/benchmark_c2c3/cases/l2_g0_c4.gds": "1f43466306fd68568054d8af7cde787aa9a68203c116d33da8ad5d79d13c2810",
+    "test_data/benchmark_c2c3/windows/l2_g0_c4.gds": "f3be4a17ae3efa4446449bd379fd1a11692175bb03e8615fb1130078e97edbc6",
+    "test_data/benchmark_c2c3/oracle/l2_g0_c4.lyrdb": "28f9bf0dfce35378f858a1a12a2e4ba199f922db6f88dd33a5163ebd20150b3e",
+    "test_data/benchmark_c2c3/cases/l2_g1_c0.gds": "74f65020af4aa95d536f43b485bf85efaaba2dcd8f80a5e0a463f89f37a0244e",
+    "test_data/benchmark_c2c3/windows/l2_g1_c0.gds": "4d438b500c47b3daac846eb54e08c686257e8e40f46d94b5998ea61fa0d87807",
+    "test_data/benchmark_c2c3/oracle/l2_g1_c0.lyrdb": "b5b0cc4107a213017ef56b59fbbc0a0cd91023f84f0d4692c076917e34af5745",
+    "test_data/benchmark_c2c3/cases/l2_g1_c1.gds": "a0bce046f0b6e464d0c88fd93f326e6afdb7334e886444e073dbe8b93cba19d3",
+    "test_data/benchmark_c2c3/windows/l2_g1_c1.gds": "173fa43ffb0c758d7ce411decea4a1b3a8ba2b691dd92f55e62c75e718dd1afc",
+    "test_data/benchmark_c2c3/oracle/l2_g1_c1.lyrdb": "a2bb24c32f76f3ae95f22004ef3663beff42a2eb5256aa1836026b73fe0c7efc",
+    "test_data/benchmark_c2c3/cases/l2_g1_c2.gds": "3805ce7a75501bd547b68087f509c0e2262f73ba7076aaea76d9bf9b2cd53c4c",
+    "test_data/benchmark_c2c3/windows/l2_g1_c2.gds": "7a772847fa0cbf7322cbbf298633f8311e6e6ed6afd60b932074b131e1edc040",
+    "test_data/benchmark_c2c3/oracle/l2_g1_c2.lyrdb": "e016e276af6cd8b027a0d5dd3f0f33781629fcc2c93884fab70f70521110fcc1",
+    "test_data/benchmark_c2c3/cases/l2_g1_c3.gds": "3441cc400547385b95d425d3bd611b39ff4e8f02ac92159b8a9b6d278db307d5",
+    "test_data/benchmark_c2c3/windows/l2_g1_c3.gds": "8cc0fdf565e27793de15858331d6f0425ea97299f71cd7046e3bcbcef6eb9675",
+    "test_data/benchmark_c2c3/oracle/l2_g1_c3.lyrdb": "51a018f0815761552793de970aba89b55ad5fbf2b19cd22782ddbcaa272084a1",
+    "test_data/benchmark_c2c3/cases/l2_g1_c4.gds": "11f4038787feb6f454e1741b08d19236839631468772a294d5d450c5292b0e4e",
+    "test_data/benchmark_c2c3/windows/l2_g1_c4.gds": "7ca21da2d7305be598684c65522efcbecfa0eb0289dfae95a8dfceee6df15404",
+    "test_data/benchmark_c2c3/oracle/l2_g1_c4.lyrdb": "9ac036379b03935c0e8fee29562c1d80770c079b2814ff2ef6eb1623781a57ce",
+    "test_data/benchmark_c2c3/cases/l3_g0_c0.gds": "76bd850723d47dec1dd3a269b06097b951c6a69f784921446d42351aa8226f95",
+    "test_data/benchmark_c2c3/windows/l3_g0_c0.gds": "9710581a5e0457e25b69e9b54b9dca61bcb10c436fcd5c0411a81f285a114510",
+    "test_data/benchmark_c2c3/oracle/l3_g0_c0.lyrdb": "8098b81587a9250d2145ddfc4ed49439777378e5d72bc79bec2e9d7df76d351c",
+    "test_data/benchmark_c2c3/cases/l3_g0_c1.gds": "a367fe80531325357c5997a3702048d3dd684cce90ab8fd40fafe0bfcf2d704a",
+    "test_data/benchmark_c2c3/windows/l3_g0_c1.gds": "f1903a8a3c13d7af1fb51c5da3c8e8557a25b026d00e23c566ee61545d0e3a6e",
+    "test_data/benchmark_c2c3/oracle/l3_g0_c1.lyrdb": "c8a15049494f9224d8ff435be934e58969330f76f6ae1a4eeee9ea5a9cee9da4",
+    "test_data/benchmark_c2c3/cases/l3_g0_c2.gds": "52f3fb6f216d601269b63eba875e17cf2a332306617a410d1e3a6cbe3a1617c5",
+    "test_data/benchmark_c2c3/windows/l3_g0_c2.gds": "09a374ad21bd2628e15191c533b6c5bade50048c86978c6ee3658e1e99c2e51b",
+    "test_data/benchmark_c2c3/oracle/l3_g0_c2.lyrdb": "420f2fb0269486828818583dd6b203c3f9cc0bf83c5de733beb04811872659e0",
+    "test_data/benchmark_c2c3/cases/l3_g0_c3.gds": "0c2455faf7beeb705d9587bffd8c061a49c29025770f28416f37f3d78cf3940a",
+    "test_data/benchmark_c2c3/windows/l3_g0_c3.gds": "ca937f621eee344a033a99adda50429c10d117fefba569da4992d402941f227b",
+    "test_data/benchmark_c2c3/oracle/l3_g0_c3.lyrdb": "b5f69a21035ba437ce3b243e221389f446a20782d294a224a326c5b4c74eb894",
+    "test_data/benchmark_c2c3/cases/l3_g0_c4.gds": "c4c92f16d02fc9adfe93749c5de3823746afead539b8122b8283db8ee909633a",
+    "test_data/benchmark_c2c3/windows/l3_g0_c4.gds": "fba73321b0ee45b4c1ccf594151151f627b0bac13ab7623904eebafe339c6d0f",
+    "test_data/benchmark_c2c3/oracle/l3_g0_c4.lyrdb": "4086e8037702b2da6fb1e77ed4ac80d3c4d492a877be6db21168e7b62e1a4dbe",
+    "test_data/benchmark_c2c3/cases/l3_g1_c0.gds": "5fd93e53f5293a658772959290f4477658ae711d25594c62f6ed1888823675d4",
+    "test_data/benchmark_c2c3/windows/l3_g1_c0.gds": "deb2f406adebb6db0c94128004136ccd032cc0eab7c02af6e1d98ab93f1428ee",
+    "test_data/benchmark_c2c3/oracle/l3_g1_c0.lyrdb": "96361da398a2d0ba61a025a46d5da22e15ba287ae01361864d80a79cdebad67b",
+    "test_data/benchmark_c2c3/cases/l3_g1_c1.gds": "fc0f1643dbdc747c033363fc96adfa517ed8bd91ca8849f89658f810fb7a2574",
+    "test_data/benchmark_c2c3/windows/l3_g1_c1.gds": "110842cacbfe116d253a80d0aa3b1adf75747c51a865b87800198c1c35c978f8",
+    "test_data/benchmark_c2c3/oracle/l3_g1_c1.lyrdb": "e41ddccfcfaee201931aa61d6997fef7c4fae9d9f495ba91360fa0fa513d4de7",
+    "test_data/benchmark_c2c3/cases/l3_g1_c2.gds": "325ee1266ac78538734500bfbc89ffb1e53927be00bacbe04d5c9baf41d2dde6",
+    "test_data/benchmark_c2c3/windows/l3_g1_c2.gds": "40a66077a1a4091139b823595e4955a91cecb39ad116e7fb5760d565206dae25",
+    "test_data/benchmark_c2c3/oracle/l3_g1_c2.lyrdb": "7e152ef4c450f8af1f24efc60073120c0ab94d267f7e758033b00fea958af15f",
+    "test_data/benchmark_c2c3/cases/l3_g1_c3.gds": "f53266dc4fe0076df4228925adaae1a908ae3cd5050ac01296c25488f9203fbe",
+    "test_data/benchmark_c2c3/windows/l3_g1_c3.gds": "ddadb0d443ca3675eea5825942c7326787212942924021bffebab7087d840270",
+    "test_data/benchmark_c2c3/oracle/l3_g1_c3.lyrdb": "b5f69a21035ba437ce3b243e221389f446a20782d294a224a326c5b4c74eb894",
+    "test_data/benchmark_c2c3/cases/l3_g1_c4.gds": "ce24019baf00208f7cd4c82e827d32181104ee46fac2c08eabd818c9361cc460",
+    "test_data/benchmark_c2c3/windows/l3_g1_c4.gds": "730264fcdf8d0a9173dbc8dd32006cc6b80c72a379c153cf6026f7b61d78af70",
+    "test_data/benchmark_c2c3/oracle/l3_g1_c4.lyrdb": "54c092605946c6bbb4870593d0c47eea82763df764f3f892c6bca6c5f504ded3",
+    "test_data/benchmark_c2c3/cases/l4_g0_c0.gds": "722fc4c90b5073770a3a39ce5d04b8269750dbc30cc1f5f9b282704f51b31fd9",
+    "test_data/benchmark_c2c3/windows/l4_g0_c0.gds": "d535935bfd01fdbe07dd63c56d4f4f178e7f0f47ac83b42e6a0b34e0f721761f",
+    "test_data/benchmark_c2c3/oracle/l4_g0_c0.lyrdb": "1c98cfeac3dadac8a715004fa1e172df82c0fe60122922606164dfb294fb6a92",
+    "test_data/benchmark_c2c3/cases/l4_g0_c1.gds": "416355ecb0fc60b9d8a3d8cde04dabcfd7c411e08283de6ea86412208266ca2e",
+    "test_data/benchmark_c2c3/windows/l4_g0_c1.gds": "6ce5b026347c28129418ce7de7e474b0c78b873288de0cd1e221b80fcaa6f3b7",
+    "test_data/benchmark_c2c3/oracle/l4_g0_c1.lyrdb": "0f1cae33694ca518f2faf6187a079128a318ef864e8d768f7a095f095cd45649",
+    "test_data/benchmark_c2c3/cases/l4_g0_c2.gds": "97fc0e46dfab77dab5ac71e51c7330045351439ece1571bd826915129a6d5151",
+    "test_data/benchmark_c2c3/windows/l4_g0_c2.gds": "1388dbd2768a756ab4b4b6ef910e946574365edd621dfaab3d8c8c6a78510114",
+    "test_data/benchmark_c2c3/oracle/l4_g0_c2.lyrdb": "e61f86913643bda64001c72bca0466af57faa2b686e04ea9e18d386d5e0cc6af",
+    "test_data/benchmark_c2c3/cases/l4_g0_c3.gds": "0c5b447e574f58a9fd5601b8d143f5956ffa8f8f59432b371774a9d9ac0f04ea",
+    "test_data/benchmark_c2c3/windows/l4_g0_c3.gds": "88a32be4419228a47c7be81c0219092e376420ad8645ef4bee27477b7622d5ed",
+    "test_data/benchmark_c2c3/oracle/l4_g0_c3.lyrdb": "cd5d2a750cc7cb5d25cdf5a7e4204d038754fe6a7d3aff739deaf462ea86ce65",
+    "test_data/benchmark_c2c3/cases/l4_g0_c4.gds": "7fca998728ee1d38a2d00e02152b54d959b29f2a730d66340630916c028d1cdd",
+    "test_data/benchmark_c2c3/windows/l4_g0_c4.gds": "ae9498fbbefb4df42c11ba5cbc1523584fbad1b645c64d825c17121229a67705",
+    "test_data/benchmark_c2c3/oracle/l4_g0_c4.lyrdb": "58c5b5cac48e9808ce3967928a909c8603321668bb1d3e31363cc12200e5d1e4",
+    "test_data/benchmark_c2c3/cases/l4_g1_c0.gds": "20d5bb9a5eca73bc61fceb681ea8cd414e3276793faab4293776f83a3bfe8a7a",
+    "test_data/benchmark_c2c3/windows/l4_g1_c0.gds": "c5e14856fb504a9c38ea2d6629c24c14dc1da79d2e7b4e4616eb734632da484b",
+    "test_data/benchmark_c2c3/oracle/l4_g1_c0.lyrdb": "9321b326519e53f43f5bf0f479e9707a9bccbe0c0d597cc977a47c5479eab3ec",
+    "test_data/benchmark_c2c3/cases/l4_g1_c1.gds": "9c7f7ef59f8097d581bbc862fac87efcea05fae2becdae6905f2d3c910242fc7",
+    "test_data/benchmark_c2c3/windows/l4_g1_c1.gds": "bd2d00caae30864195ec078e274f8ab9ab2cd1cd9451d17e9e91745499915fff",
+    "test_data/benchmark_c2c3/oracle/l4_g1_c1.lyrdb": "6fbc80c5c69a8693d57154027876bdd444fe2e92de9ab3df081adba202050a79",
+    "test_data/benchmark_c2c3/cases/l4_g1_c2.gds": "f1e576c4fa7fcfc5369dbbbfb523254b8f3a59ed8e887bdac82aba5824692eb4",
+    "test_data/benchmark_c2c3/windows/l4_g1_c2.gds": "4b7ad078ce76878375509d7ef55b0c376176fed97c4bf01709826b406a9aabed",
+    "test_data/benchmark_c2c3/oracle/l4_g1_c2.lyrdb": "755ec705d6501228332855dd79ace6111c95fd6d71735a11657a238cf57ae7b4",
+    "test_data/benchmark_c2c3/cases/l4_g1_c3.gds": "09e77a1f5bd96ebaace4cd6e7b4947a82753685f310a990acb6136b62e5008f6",
+    "test_data/benchmark_c2c3/windows/l4_g1_c3.gds": "794891c016b2aa88ca29af59586a2181eb2da21d8f75c75b7eec382877e9aba4",
+    "test_data/benchmark_c2c3/oracle/l4_g1_c3.lyrdb": "cd5d2a750cc7cb5d25cdf5a7e4204d038754fe6a7d3aff739deaf462ea86ce65",
+    "test_data/benchmark_c2c3/cases/l4_g1_c4.gds": "2b11a7593601573de6e92921dcf642682c544a16eab6429f24e543e3d87586ae",
+    "test_data/benchmark_c2c3/windows/l4_g1_c4.gds": "eaea16c23d15a9c3e8ec2c4b222dc3685a0e0cde5faf69321f757f29afeb16bf",
+    "test_data/benchmark_c2c3/oracle/l4_g1_c4.lyrdb": "7114423a97e6dcfbed17cb8ba34dfe919eabf15f5dab02d2b450c2217b26ea1d",
+    "test_data/benchmark_c2c3/cases/l5_g0_c0.gds": "4b6b2089a1a88b2b79143ba1616eebd8172f95209bf2ef29b100a0530fcd6b62",
+    "test_data/benchmark_c2c3/windows/l5_g0_c0.gds": "7a72b0c08125166ae9c3e732a66e9fe82e2b44f37905789a3c2b9198c3bceab9",
+    "test_data/benchmark_c2c3/oracle/l5_g0_c0.lyrdb": "47de4a8c3263ce079f6016441814990a0ba7e9902cd4a9f0600f82d9d2f151f8",
+    "test_data/benchmark_c2c3/cases/l5_g0_c1.gds": "653c135bb9fcc2de8ac71bbb9e6329c79225240c62d81862ec91612059f663ab",
+    "test_data/benchmark_c2c3/windows/l5_g0_c1.gds": "761813679d9eeb7f867f4a6030d0a6c339a84057636c787f6778184fe3d00527",
+    "test_data/benchmark_c2c3/oracle/l5_g0_c1.lyrdb": "51f72fd7581b02457523f0df56d6d44ba3ccafa91b6be96283c1dcb2beb9c184",
+    "test_data/benchmark_c2c3/cases/l5_g0_c2.gds": "abd92fb579e39d634cc0b20d587e64f3cda54631e5c8afe23fcdb2695e2dcb5d",
+    "test_data/benchmark_c2c3/windows/l5_g0_c2.gds": "8f1891201cfd9d385346e080f6e025e3161d7c93e7c7a556e8d495bfbc444562",
+    "test_data/benchmark_c2c3/oracle/l5_g0_c2.lyrdb": "2ef3b956ffc7c6862107ab2b3efcc8dbedede070a03c29f963960b584483e388",
+    "test_data/benchmark_c2c3/cases/l5_g0_c3.gds": "befc956f59db066b8775185c3cf30c04e052920810d420d4c55b4fb4ee574320",
+    "test_data/benchmark_c2c3/windows/l5_g0_c3.gds": "087eec129d5e06e4f5df707444149f0357453fe3ba2787517b2940a9bcb82be5",
+    "test_data/benchmark_c2c3/oracle/l5_g0_c3.lyrdb": "cd5d2a750cc7cb5d25cdf5a7e4204d038754fe6a7d3aff739deaf462ea86ce65",
+    "test_data/benchmark_c2c3/cases/l5_g0_c4.gds": "2a27b42fb7c76542e6793f476092cd8429dda8fc592b3e9edbf1879719db58f6",
+    "test_data/benchmark_c2c3/windows/l5_g0_c4.gds": "852e2cec25955af0a4d92091398b246b457b20118a47e5abc1e0e866b7819025",
+    "test_data/benchmark_c2c3/oracle/l5_g0_c4.lyrdb": "bdb5bddcb0ead16ab41db362778570a51d5daac29d93e7919e23a525d44dd90b",
+    "test_data/benchmark_c2c3/cases/l5_g1_c0.gds": "c45cf9d0affae16a7e7738c75bede7af7da707ae026c4d96d4aa00ce9927c3d9",
+    "test_data/benchmark_c2c3/windows/l5_g1_c0.gds": "52f64da227820ae48e1618a130800b6f81d4d01b7eb041c1812756e06e3e3d9f",
+    "test_data/benchmark_c2c3/oracle/l5_g1_c0.lyrdb": "2d9d6a265ddb1bf33a446e22692783463f62bf3e1745c008d1900c920ebddb5d",
+    "test_data/benchmark_c2c3/cases/l5_g1_c1.gds": "8983f28ee48ac87b378216e386b2e6410c49c11868c6d03ec08c51f79ba786c1",
+    "test_data/benchmark_c2c3/windows/l5_g1_c1.gds": "432365c581751570d1bcec403630f7a4930471472717272fae84106dee47bca9",
+    "test_data/benchmark_c2c3/oracle/l5_g1_c1.lyrdb": "163ce75d4d5ca1acfd76677f7ec130f58680ca540cb7d413f134115d263db470",
+    "test_data/benchmark_c2c3/cases/l5_g1_c2.gds": "ca1c56e74f555b00dd6170f4e7ced8cda350bd19fcf139e111d4113c8fc06ce7",
+    "test_data/benchmark_c2c3/windows/l5_g1_c2.gds": "9c0f0890493e48a01715c73df1529faec7748fc04c19699f264bd3de0d9c87ae",
+    "test_data/benchmark_c2c3/oracle/l5_g1_c2.lyrdb": "9a122835afd5b8f081bbb2b7257a7e0607d619e91dfee7b98dfcacef43d71e9b",
+    "test_data/benchmark_c2c3/cases/l5_g1_c3.gds": "39f6852815493f23f96cf074f4f202cd04611beb6b9983d2e1fa982589cb1e00",
+    "test_data/benchmark_c2c3/windows/l5_g1_c3.gds": "c8406a50427a8968a3d846e38e5d1bb65d2e8f8e79dd5ab151b73bca6e18592b",
+    "test_data/benchmark_c2c3/oracle/l5_g1_c3.lyrdb": "cd5d2a750cc7cb5d25cdf5a7e4204d038754fe6a7d3aff739deaf462ea86ce65",
+    "test_data/benchmark_c2c3/cases/l5_g1_c4.gds": "e9dc9d671b25ea44232b243ef63d6ea10dbdc3dc6346392c10db9606baf38efc",
+    "test_data/benchmark_c2c3/windows/l5_g1_c4.gds": "2079c5ce27fae7fbbf8f073c7b72e7ea3b24f7be0cc539cf733b321832b50bcc",
+    "test_data/benchmark_c2c3/oracle/l5_g1_c4.lyrdb": "79014723609515562b7e860047f32692b31667d952f6e8223973caec0ed75907"
+  },
+  "cases": [
+    {
+      "number": 1,
+      "case_id": "l1_g0_c0",
+      "level": 1,
+      "kind": "repair",
+      "source_group": "l1_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l1_g0_c0.gds",
+      "gds_sha256": "8fe3cbd55986edd4ffb0d950d315267b1f2a102252b657bd16629616a5efdbbb",
+      "metrics": {
+        "cell_definitions": 7,
+        "context_shapes": 5,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 1,
+        "hierarchy_depth": 2,
+        "instance_count": 11,
+        "protected_obstacle_count": 4,
+        "shape_count": 1255,
+        "target_markers": 1
+      },
+      "marker_counts": {
+        "M1.W.1": 1
+      },
+      "target_rules": [
+        "M1.W.1"
+      ],
+      "scope_um": [
+        0.07200000000000001,
+        0.36,
+        0.10200000000000001,
+        0.466
+      ],
+      "inspection_window_um": [
+        -0.088,
+        0.19999999999999998,
+        0.262,
+        0.626
+      ],
+      "permitted_regions_um": [
+        [
+          0.059000000000000004,
+          0.34700000000000003,
+          0.115,
+          0.47900000000000004
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/01_l1_g0_c0_full.png",
+          "sha256": "b79e326354dbc73af9f5825643df550c9ac785c134671ebf2779f538dccb9319",
+          "camera_um": [
+            -0.3646400000000005,
+            -2.48212,
+            9.480640000000001,
+            3.35212
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l1_g0_c0.gds",
+          "render_source_sha256": "8fe3cbd55986edd4ffb0d950d315267b1f2a102252b657bd16629616a5efdbbb",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 1,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/01_l1_g0_c0_context.png",
+          "sha256": "67c005add53c226e3fddb2e46f063005256e2c034dbfac177f852dd3d874443d",
+          "camera_um": [
+            -0.30119250000000003,
+            0.18295999999999993,
+            0.4751925000000001,
+            0.6430400000000001
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l1_g0_c0.gds",
+          "render_source_sha256": "bb6aa07c68e3a831b872facfa9bc45b80f76c08e8fc05c2a2d67bc0611969261",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/01_l1_g0_c0_detail.png",
+          "sha256": "c77784679d6ae414e90ca7a49dfa465d648e34664b41d2f5e685663e7b43ee45",
+          "camera_um": [
+            -0.059677500000000064,
+            0.32608,
+            0.2336775000000001,
+            0.4999200000000001
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l1_g0_c0.gds",
+          "render_source_sha256": "bb6aa07c68e3a831b872facfa9bc45b80f76c08e8fc05c2a2d67bc0611969261",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 2,
+      "case_id": "l1_g0_c1",
+      "level": 1,
+      "kind": "repair",
+      "source_group": "l1_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l1_g0_c1.gds",
+      "gds_sha256": "afbef0037ef834f68270025cfc3a8b26882b68bf3bc2983ff3bad02998eb2c7c",
+      "metrics": {
+        "cell_definitions": 7,
+        "context_shapes": 7,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 2,
+        "hierarchy_depth": 2,
+        "instance_count": 11,
+        "protected_obstacle_count": 5,
+        "shape_count": 1256,
+        "target_markers": 1
+      },
+      "marker_counts": {
+        "M1.S.1": 1
+      },
+      "target_rules": [
+        "M1.S.1"
+      ],
+      "scope_um": [
+        2.072,
+        0.36,
+        2.218,
+        0.466
+      ],
+      "inspection_window_um": [
+        1.9120000000000001,
+        0.19999999999999998,
+        2.378,
+        0.626
+      ],
+      "permitted_regions_um": [
+        [
+          2.059,
+          0.34700000000000003,
+          2.231,
+          0.47900000000000004
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/02_l1_g0_c1_full.png",
+          "sha256": "a33aa42d1bf906bd473244c51631b352b5866dcf9d977e6372bf1766b9ae6397",
+          "camera_um": [
+            -0.3646400000000005,
+            -2.48212,
+            9.480640000000001,
+            3.35212
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l1_g0_c1.gds",
+          "render_source_sha256": "afbef0037ef834f68270025cfc3a8b26882b68bf3bc2983ff3bad02998eb2c7c",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 1,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/02_l1_g0_c1_context.png",
+          "sha256": "e663a236fa4966fa3bf9a21145944f385589d813450d42c2dba9fac4a1ba75e5",
+          "camera_um": [
+            1.7568074999999999,
+            0.18295999999999993,
+            2.5331925,
+            0.6430400000000001
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l1_g0_c1.gds",
+          "render_source_sha256": "233cf06c1e9b1f75b218cdf25af32122cbdb7cd95f5b049ce0e7630f79361381",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/02_l1_g0_c1_detail.png",
+          "sha256": "a9485e815b48f3f7fa93ef2f92b4fa303271f93624fdec1bf734e7fe64635cdf",
+          "camera_um": [
+            1.9983225,
+            0.32608,
+            2.2916775,
+            0.4999200000000001
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l1_g0_c1.gds",
+          "render_source_sha256": "233cf06c1e9b1f75b218cdf25af32122cbdb7cd95f5b049ce0e7630f79361381",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 3,
+      "case_id": "l1_g0_c2",
+      "level": 1,
+      "kind": "repair",
+      "source_group": "l1_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l1_g0_c2.gds",
+      "gds_sha256": "a564c7f669f0068a0ee1bd59b24c716a05c00f718f79ed24cbbe12f2a2a3b186",
+      "metrics": {
+        "cell_definitions": 7,
+        "context_shapes": 6,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 2,
+        "hierarchy_depth": 2,
+        "instance_count": 11,
+        "protected_obstacle_count": 4,
+        "shape_count": 1256,
+        "target_markers": 1
+      },
+      "marker_counts": {
+        "V1.W.1": 1
+      },
+      "target_rules": [
+        "V1.W.1"
+      ],
+      "scope_um": [
+        4.065,
+        0.353,
+        4.103,
+        0.391
+      ],
+      "inspection_window_um": [
+        3.9050000000000002,
+        0.19299999999999998,
+        4.263,
+        0.551
+      ],
+      "permitted_regions_um": [
+        [
+          4.0520000000000005,
+          0.34,
+          4.116,
+          0.404
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/03_l1_g0_c2_full.png",
+          "sha256": "d99fdc4e9e7f3aae2db49acbbf84024f70cdde9826663358029b315eb065843c",
+          "camera_um": [
+            -0.3646400000000005,
+            -2.48212,
+            9.480640000000001,
+            3.35212
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l1_g0_c2.gds",
+          "render_source_sha256": "a564c7f669f0068a0ee1bd59b24c716a05c00f718f79ed24cbbe12f2a2a3b186",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 1,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/03_l1_g0_c2_context.png",
+          "sha256": "7cb19405387973304798c287433b79006bbcea6702b2db03f910d851ad159ae7",
+          "camera_um": [
+            3.7577724999999997,
+            0.17867999999999992,
+            4.4102274999999995,
+            0.56532
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l1_g0_c2.gds",
+          "render_source_sha256": "f1f6a3485787d155ede3ee076884d4b5ee91c7ab78e90c9abed8e28912fb69a1",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/03_l1_g0_c2_detail.png",
+          "sha256": "267dc43a06a0e7efd85360a2a1c3fcb70a50b812cb40bf581eebdc118151cd2a",
+          "camera_um": [
+            4.0314175,
+            0.34084,
+            4.136582499999999,
+            0.40316
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l1_g0_c2.gds",
+          "render_source_sha256": "f1f6a3485787d155ede3ee076884d4b5ee91c7ab78e90c9abed8e28912fb69a1",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.01,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 4,
+      "case_id": "l1_g0_c3",
+      "level": 1,
+      "kind": "clean_control",
+      "source_group": "l1_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l1_g0_c3.gds",
+      "gds_sha256": "cb6844ad2cfae8f41b0e05b1dcf73bf74d82db58e387ce9d7ac32152bcab2df8",
+      "metrics": {
+        "cell_definitions": 7,
+        "context_shapes": 7,
+        "coupled_rules": 0,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 1,
+        "hierarchy_depth": 2,
+        "instance_count": 11,
+        "protected_obstacle_count": 6,
+        "shape_count": 1255,
+        "target_markers": 0
+      },
+      "marker_counts": {},
+      "target_rules": [
+        "M1.W.1"
+      ],
+      "scope_um": [
+        6.072,
+        0.36,
+        6.102,
+        0.466
+      ],
+      "inspection_window_um": [
+        5.912,
+        0.19999999999999998,
+        6.2620000000000005,
+        0.626
+      ],
+      "permitted_regions_um": [
+        [
+          6.059,
+          0.34700000000000003,
+          6.115,
+          0.47900000000000004
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/04_l1_g0_c3_full.png",
+          "sha256": "3c4d17d77fbcd393cc196e68f35a89a29a0cbe0218788b79a695d41b233fe5e4",
+          "camera_um": [
+            -0.3646400000000005,
+            -2.48212,
+            9.480640000000001,
+            3.35212
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l1_g0_c3.gds",
+          "render_source_sha256": "cb6844ad2cfae8f41b0e05b1dcf73bf74d82db58e387ce9d7ac32152bcab2df8",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 1,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/04_l1_g0_c3_context.png",
+          "sha256": "30622e01996593aaa573dc2417d0cf489db9e7b2b800f5c0b5a16770830b57a7",
+          "camera_um": [
+            5.6988075,
+            0.18295999999999993,
+            6.4751924999999995,
+            0.6430400000000001
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l1_g0_c3.gds",
+          "render_source_sha256": "99dacadbe203053aaac5f54dd1820f89cb872729153ef6e19784a3ea045efeba",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/04_l1_g0_c3_detail.png",
+          "sha256": "3d335b8fb78f6214cd1aa77e6fc3f2c7582703b03e50f2ef080c0216e0f400ea",
+          "camera_um": [
+            5.9403225,
+            0.32608,
+            6.2336775,
+            0.4999200000000001
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l1_g0_c3.gds",
+          "render_source_sha256": "99dacadbe203053aaac5f54dd1820f89cb872729153ef6e19784a3ea045efeba",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 5,
+      "case_id": "l1_g0_c4",
+      "level": 1,
+      "kind": "no_edit",
+      "source_group": "l1_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l1_g0_c4.gds",
+      "gds_sha256": "75d57ac6bab54b3551d7b62c7cd9ae571301790d86f39bfc8b56239249ca7bd5",
+      "metrics": {
+        "cell_definitions": 7,
+        "context_shapes": 10,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 0,
+        "hierarchy_depth": 2,
+        "instance_count": 11,
+        "protected_obstacle_count": 10,
+        "shape_count": 1256,
+        "target_markers": 1
+      },
+      "marker_counts": {
+        "M1.S.1": 1
+      },
+      "target_rules": [
+        "M1.S.1"
+      ],
+      "scope_um": [
+        8.072000000000001,
+        0.36,
+        8.218,
+        0.466
+      ],
+      "inspection_window_um": [
+        7.912000000000001,
+        0.19999999999999998,
+        8.378,
+        0.626
+      ],
+      "permitted_regions_um": [],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/05_l1_g0_c4_full.png",
+          "sha256": "965745554182e505dcb8049fc2dd9729d86e45edf407d05dc094651813da7e15",
+          "camera_um": [
+            -0.3646400000000005,
+            -2.48212,
+            9.480640000000001,
+            3.35212
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l1_g0_c4.gds",
+          "render_source_sha256": "75d57ac6bab54b3551d7b62c7cd9ae571301790d86f39bfc8b56239249ca7bd5",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 1,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/05_l1_g0_c4_context.png",
+          "sha256": "f76dc8322921fe1e9aad62532d45f0aea5591ab123f910de42a7a22682e493c8",
+          "camera_um": [
+            7.7568075,
+            0.18295999999999993,
+            8.5331925,
+            0.6430400000000001
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l1_g0_c4.gds",
+          "render_source_sha256": "6acd7f982d8f84d6386456384942410a61edbc01e829a032cc3d96b1c7f55487",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/05_l1_g0_c4_detail.png",
+          "sha256": "95e386bbd0660b7e17e362b7f33b30b429546ead29e1ae12181575459c98517c",
+          "camera_um": [
+            7.9983225,
+            0.32608,
+            8.2916775,
+            0.4999200000000001
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l1_g0_c4.gds",
+          "render_source_sha256": "6acd7f982d8f84d6386456384942410a61edbc01e829a032cc3d96b1c7f55487",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 6,
+      "case_id": "l1_g1_c0",
+      "level": 1,
+      "kind": "repair",
+      "source_group": "l1_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l1_g1_c0.gds",
+      "gds_sha256": "8bfb6a8dca4b8cbd04e8eae6541e7fd09ccdc7dbe52935fa1d7f9eded5cc6c34",
+      "metrics": {
+        "cell_definitions": 7,
+        "context_shapes": 7,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 1,
+        "hierarchy_depth": 2,
+        "instance_count": 16,
+        "protected_obstacle_count": 6,
+        "shape_count": 2128,
+        "target_markers": 1
+      },
+      "marker_counts": {
+        "M2.W.1": 1
+      },
+      "target_rules": [
+        "M2.W.1"
+      ],
+      "scope_um": [
+        0.07200000000000001,
+        0.37,
+        0.10200000000000001,
+        0.47600000000000003
+      ],
+      "inspection_window_um": [
+        -0.088,
+        0.21,
+        0.262,
+        0.636
+      ],
+      "permitted_regions_um": [
+        [
+          0.059000000000000004,
+          0.357,
+          0.115,
+          0.489
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/06_l1_g1_c0_full.png",
+          "sha256": "7553b9fcfeb5ac3509fa6f10554bea3eda9b1dcf97cd485540d8084d28d83aa0",
+          "camera_um": [
+            -0.36671999999999993,
+            -2.2172600000000005,
+            9.53472,
+            3.6502600000000003
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l1_g1_c0.gds",
+          "render_source_sha256": "8bfb6a8dca4b8cbd04e8eae6541e7fd09ccdc7dbe52935fa1d7f9eded5cc6c34",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 1,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/06_l1_g1_c0_context.png",
+          "sha256": "709b30d2af8fde667281fc335d2038eef9e569a13505bcf6ddcf22d3bae53abb",
+          "camera_um": [
+            -0.30119250000000003,
+            0.19295999999999994,
+            0.4751925000000001,
+            0.6530400000000001
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l1_g1_c0.gds",
+          "render_source_sha256": "bc42bc2afe82382f54999ce7b522b13e68bdb1c9a323fc236466ca524571be69",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/06_l1_g1_c0_detail.png",
+          "sha256": "e25f65f7cad91421c5d79b3f8716549fd44156299e70ee332947c57626cc9999",
+          "camera_um": [
+            -0.059677500000000064,
+            0.33608,
+            0.2336775000000001,
+            0.50992
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l1_g1_c0.gds",
+          "render_source_sha256": "bc42bc2afe82382f54999ce7b522b13e68bdb1c9a323fc236466ca524571be69",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 7,
+      "case_id": "l1_g1_c1",
+      "level": 1,
+      "kind": "repair",
+      "source_group": "l1_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l1_g1_c1.gds",
+      "gds_sha256": "0837b3ae68797bbda0a8e9a3520f11ac78dd1d9721d4e0683b12f28164a4ce0b",
+      "metrics": {
+        "cell_definitions": 7,
+        "context_shapes": 5,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 1,
+        "hierarchy_depth": 2,
+        "instance_count": 16,
+        "protected_obstacle_count": 4,
+        "shape_count": 2128,
+        "target_markers": 1
+      },
+      "marker_counts": {
+        "M1.A.1": 1
+      },
+      "target_rules": [
+        "M1.A.1"
+      ],
+      "scope_um": [
+        2.072,
+        0.37,
+        2.096,
+        0.40800000000000003
+      ],
+      "inspection_window_um": [
+        1.9120000000000001,
+        0.21,
+        2.2560000000000002,
+        0.5680000000000001
+      ],
+      "permitted_regions_um": [
+        [
+          2.059,
+          0.357,
+          2.109,
+          0.421
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/07_l1_g1_c1_full.png",
+          "sha256": "62a4be99df1a73686a0cbec2a1f8dbfb8694521293fe9da1c6e3eeb8c16a4559",
+          "camera_um": [
+            -0.36671999999999993,
+            -2.2172600000000005,
+            9.53472,
+            3.6502600000000003
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l1_g1_c1.gds",
+          "render_source_sha256": "0837b3ae68797bbda0a8e9a3520f11ac78dd1d9721d4e0683b12f28164a4ce0b",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 1,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/07_l1_g1_c1_context.png",
+          "sha256": "c8adae7fa969f08118db6471298e8e586c92e6e094928dc1212348e2ecbf9b68",
+          "camera_um": [
+            1.7577725,
+            0.19567999999999994,
+            2.4102275000000004,
+            0.5823200000000001
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l1_g1_c1.gds",
+          "render_source_sha256": "d00895826da78b116fb3ed587fae499b4b64b29651d78d6e23c00e4437fa88f1",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/07_l1_g1_c1_detail.png",
+          "sha256": "ebe08cab2913a421a6f634c6ac986e6c8ee33fa79a303a6101d887a22186f5b7",
+          "camera_um": [
+            2.0314175,
+            0.35784,
+            2.1365825000000003,
+            0.42016000000000003
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l1_g1_c1.gds",
+          "render_source_sha256": "d00895826da78b116fb3ed587fae499b4b64b29651d78d6e23c00e4437fa88f1",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.01,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 8,
+      "case_id": "l1_g1_c2",
+      "level": 1,
+      "kind": "repair",
+      "source_group": "l1_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l1_g1_c2.gds",
+      "gds_sha256": "5f5b5864c6b50cd2f31a1e687fc7f49d5c2103ef70cb851e01f78ba9a6ad609c",
+      "metrics": {
+        "cell_definitions": 7,
+        "context_shapes": 5,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 2,
+        "hierarchy_depth": 2,
+        "instance_count": 16,
+        "protected_obstacle_count": 3,
+        "shape_count": 2129,
+        "target_markers": 1
+      },
+      "marker_counts": {
+        "V1.M2.EN.2": 1
+      },
+      "target_rules": [
+        "V1.M2.EN.2"
+      ],
+      "scope_um": [
+        4.072,
+        0.363,
+        4.096,
+        0.401
+      ],
+      "inspection_window_um": [
+        3.912,
+        0.20299999999999999,
+        4.256,
+        0.561
+      ],
+      "permitted_regions_um": [
+        [
+          4.059,
+          0.35000000000000003,
+          4.109,
+          0.41400000000000003
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/08_l1_g1_c2_full.png",
+          "sha256": "b9906b5a2e463414a2fd96285812ad67ddcf236ba545f044f37b24b66b1878c9",
+          "camera_um": [
+            -0.36671999999999993,
+            -2.2172600000000005,
+            9.53472,
+            3.6502600000000003
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l1_g1_c2.gds",
+          "render_source_sha256": "5f5b5864c6b50cd2f31a1e687fc7f49d5c2103ef70cb851e01f78ba9a6ad609c",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 1,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/08_l1_g1_c2_context.png",
+          "sha256": "4668a5cd8e385a1eb62ec9a6437b5927f09cfdaabb357f598eba566052de8f3c",
+          "camera_um": [
+            3.7577724999999997,
+            0.18867999999999993,
+            4.4102274999999995,
+            0.57532
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l1_g1_c2.gds",
+          "render_source_sha256": "9a90843abea1da994546214ebe905ae671f05fb055b377a16c196a759766c923",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/08_l1_g1_c2_detail.png",
+          "sha256": "0f8dab359b7451a5f2361279dabf32a3969a605a5b992596b30d93cb0269b631",
+          "camera_um": [
+            4.0314175,
+            0.35084,
+            4.136582499999999,
+            0.41316
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l1_g1_c2.gds",
+          "render_source_sha256": "9a90843abea1da994546214ebe905ae671f05fb055b377a16c196a759766c923",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.01,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 9,
+      "case_id": "l1_g1_c3",
+      "level": 1,
+      "kind": "clean_control",
+      "source_group": "l1_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l1_g1_c3.gds",
+      "gds_sha256": "6d2a4e75c437f003ea0561a2ecb7dda01a0bcbd3ce74b1181b7c5d86d0df7e28",
+      "metrics": {
+        "cell_definitions": 7,
+        "context_shapes": 8,
+        "coupled_rules": 0,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 1,
+        "hierarchy_depth": 2,
+        "instance_count": 16,
+        "protected_obstacle_count": 7,
+        "shape_count": 2128,
+        "target_markers": 0
+      },
+      "marker_counts": {},
+      "target_rules": [
+        "M2.W.1"
+      ],
+      "scope_um": [
+        6.072,
+        0.37,
+        6.102,
+        0.47600000000000003
+      ],
+      "inspection_window_um": [
+        5.912,
+        0.21,
+        6.2620000000000005,
+        0.636
+      ],
+      "permitted_regions_um": [
+        [
+          6.059,
+          0.357,
+          6.115,
+          0.489
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/09_l1_g1_c3_full.png",
+          "sha256": "4bb3acd5055db957d8037cf7b4b19e034cf5c24f598e239a28d5b810dbe617ec",
+          "camera_um": [
+            -0.36671999999999993,
+            -2.2172600000000005,
+            9.53472,
+            3.6502600000000003
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l1_g1_c3.gds",
+          "render_source_sha256": "6d2a4e75c437f003ea0561a2ecb7dda01a0bcbd3ce74b1181b7c5d86d0df7e28",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 1,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/09_l1_g1_c3_context.png",
+          "sha256": "14fa96cc4a49abbcb4ad68d1d6292a45248ab047fdd92e40149a08ecc6ae1404",
+          "camera_um": [
+            5.6988075,
+            0.19295999999999994,
+            6.4751924999999995,
+            0.6530400000000001
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l1_g1_c3.gds",
+          "render_source_sha256": "9c4a67f0e4b42712d725334dd51152ceb48edbcccc50d3dd3d1a213d5c3f68b0",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/09_l1_g1_c3_detail.png",
+          "sha256": "fe59b4a9b0dd30c673a47e817d1da4d50b96ea330de8451ea3c880fb87fbc24d",
+          "camera_um": [
+            5.9403225,
+            0.33608,
+            6.2336775,
+            0.50992
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l1_g1_c3.gds",
+          "render_source_sha256": "9c4a67f0e4b42712d725334dd51152ceb48edbcccc50d3dd3d1a213d5c3f68b0",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 10,
+      "case_id": "l1_g1_c4",
+      "level": 1,
+      "kind": "no_edit",
+      "source_group": "l1_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l1_g1_c4.gds",
+      "gds_sha256": "3c6c40e539d954a5644f9c221db3fd0def7d8982afb303f0fc0e89360a347288",
+      "metrics": {
+        "cell_definitions": 7,
+        "context_shapes": 6,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 0,
+        "hierarchy_depth": 2,
+        "instance_count": 16,
+        "protected_obstacle_count": 6,
+        "shape_count": 2128,
+        "target_markers": 1
+      },
+      "marker_counts": {
+        "M1.A.1": 1
+      },
+      "target_rules": [
+        "M1.A.1"
+      ],
+      "scope_um": [
+        8.072000000000001,
+        0.37,
+        8.096,
+        0.40800000000000003
+      ],
+      "inspection_window_um": [
+        7.912000000000001,
+        0.21,
+        8.256,
+        0.5680000000000001
+      ],
+      "permitted_regions_um": [],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/10_l1_g1_c4_full.png",
+          "sha256": "36e3f7a941d2a6784c00053f34e86f120749bcd82fcdd557ff12079f4e474fb5",
+          "camera_um": [
+            -0.36671999999999993,
+            -2.2172600000000005,
+            9.53472,
+            3.6502600000000003
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l1_g1_c4.gds",
+          "render_source_sha256": "3c6c40e539d954a5644f9c221db3fd0def7d8982afb303f0fc0e89360a347288",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 1,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/10_l1_g1_c4_context.png",
+          "sha256": "441327bbe59439799926dbf549caeab2a76d7a1a48b1244277bf196263c561fb",
+          "camera_um": [
+            7.7577725,
+            0.19567999999999994,
+            8.4102275,
+            0.5823200000000001
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l1_g1_c4.gds",
+          "render_source_sha256": "743df612dd4bf9ec7bc3742aa2e09ccbb96eb5efafea39e7b52885f4b5f0448e",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/10_l1_g1_c4_detail.png",
+          "sha256": "c0bc11ac2dd664ee53b0c4dd00bef25989ad119c44993310da7865546c7dcb0e",
+          "camera_um": [
+            8.0314175,
+            0.35784,
+            8.1365825,
+            0.42016000000000003
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l1_g1_c4.gds",
+          "render_source_sha256": "743df612dd4bf9ec7bc3742aa2e09ccbb96eb5efafea39e7b52885f4b5f0448e",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.01,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 11,
+      "case_id": "l2_g0_c0",
+      "level": 2,
+      "kind": "repair",
+      "source_group": "l2_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l2_g0_c0.gds",
+      "gds_sha256": "17d6d374645cff0a6dbf7fe76f808fe126d8cefd19843434be985aa13cd6259e",
+      "metrics": {
+        "cell_definitions": 10,
+        "context_shapes": 6,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 2,
+        "hierarchy_depth": 4,
+        "instance_count": 103,
+        "protected_obstacle_count": 4,
+        "shape_count": 11288,
+        "target_markers": 2
+      },
+      "marker_counts": {
+        "M1.W.1": 1,
+        "M3.W.1": 1
+      },
+      "target_rules": [
+        "M1.W.1"
+      ],
+      "scope_um": [
+        0.07200000000000001,
+        0.36,
+        0.352,
+        0.466
+      ],
+      "inspection_window_um": [
+        -0.088,
+        0.19999999999999998,
+        0.512,
+        0.626
+      ],
+      "permitted_regions_um": [
+        [
+          0.059000000000000004,
+          0.34700000000000003,
+          0.365,
+          0.47900000000000004
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/11_l2_g0_c0_full.png",
+          "sha256": "eff029604ce2a443b875380e976bc55acf7e8e39553c0c42a30320822563e958",
+          "camera_um": [
+            -7.205040000000002,
+            -3.8123200000000015,
+            34.72704,
+            21.036320000000003
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l2_g0_c0.gds",
+          "render_source_sha256": "17d6d374645cff0a6dbf7fe76f808fe126d8cefd19843434be985aa13cd6259e",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/11_l2_g0_c0_context.png",
+          "sha256": "31f60ba7d13a2d0d8c72ad4f19ec54afcf067d84ba4e4c6950589523f978bbc0",
+          "camera_um": [
+            -0.17619250000000003,
+            0.18295999999999993,
+            0.6001925000000001,
+            0.6430400000000001
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l2_g0_c0.gds",
+          "render_source_sha256": "d16f5c55eccc436588f976024cc05764768aea714b28c0b6d98d618d946665f9",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/11_l2_g0_c0_detail.png",
+          "sha256": "7818aa79394cd80c0a48b4e8605a87f327cf393b2500a292901c6fbeb8031a0c",
+          "camera_um": [
+            -0.017600000000000005,
+            0.2769407407407408,
+            0.4416,
+            0.5490592592592592
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l2_g0_c0.gds",
+          "render_source_sha256": "d16f5c55eccc436588f976024cc05764768aea714b28c0b6d98d618d946665f9",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 12,
+      "case_id": "l2_g0_c1",
+      "level": 2,
+      "kind": "repair",
+      "source_group": "l2_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l2_g0_c1.gds",
+      "gds_sha256": "35fd9d4841e57c5f61bcfae3965a584287b6e1e7894089ea97ad494dd237f0e5",
+      "metrics": {
+        "cell_definitions": 10,
+        "context_shapes": 8,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 3,
+        "hierarchy_depth": 4,
+        "instance_count": 103,
+        "protected_obstacle_count": 5,
+        "shape_count": 11289,
+        "target_markers": 2
+      },
+      "marker_counts": {
+        "M1.S.1": 1,
+        "M3.W.1": 1
+      },
+      "target_rules": [
+        "M1.S.1"
+      ],
+      "scope_um": [
+        2.072,
+        0.36,
+        2.352,
+        0.466
+      ],
+      "inspection_window_um": [
+        1.9120000000000001,
+        0.19999999999999998,
+        2.512,
+        0.626
+      ],
+      "permitted_regions_um": [
+        [
+          2.059,
+          0.34700000000000003,
+          2.365,
+          0.47900000000000004
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/12_l2_g0_c1_full.png",
+          "sha256": "49a08b64ac92d6a44617239cebf557cdd55b47198be56486d8533b5efb64d37c",
+          "camera_um": [
+            -7.205040000000002,
+            -3.8123200000000015,
+            34.72704,
+            21.036320000000003
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l2_g0_c1.gds",
+          "render_source_sha256": "35fd9d4841e57c5f61bcfae3965a584287b6e1e7894089ea97ad494dd237f0e5",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/12_l2_g0_c1_context.png",
+          "sha256": "a304e303496ac99999de5a1f9d430e19efabcbe2f94eb6f7a0489a1b73431d7b",
+          "camera_um": [
+            1.8238075,
+            0.18295999999999993,
+            2.6001925000000004,
+            0.6430400000000001
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l2_g0_c1.gds",
+          "render_source_sha256": "5dc482188b7891a9beacef062ebd56b1dc5c7deffabcd8141788e39d8f734d28",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/12_l2_g0_c1_detail.png",
+          "sha256": "e54d95540223fd22863ea587b892cfb44d80db0472c6436ca1b2dc37ecee27ab",
+          "camera_um": [
+            1.9824,
+            0.2769407407407409,
+            2.4415999999999998,
+            0.5490592592592591
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l2_g0_c1.gds",
+          "render_source_sha256": "5dc482188b7891a9beacef062ebd56b1dc5c7deffabcd8141788e39d8f734d28",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 13,
+      "case_id": "l2_g0_c2",
+      "level": 2,
+      "kind": "repair",
+      "source_group": "l2_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l2_g0_c2.gds",
+      "gds_sha256": "db63b2fd3d587d16d11401b2dd2ca2b5e0c200d2eb03af4ff0b6bbcd415bb1ac",
+      "metrics": {
+        "cell_definitions": 10,
+        "context_shapes": 8,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 3,
+        "hierarchy_depth": 4,
+        "instance_count": 103,
+        "protected_obstacle_count": 5,
+        "shape_count": 11289,
+        "target_markers": 2
+      },
+      "marker_counts": {
+        "M3.W.1": 1,
+        "V1.W.1": 1
+      },
+      "target_rules": [
+        "V1.W.1"
+      ],
+      "scope_um": [
+        4.065,
+        0.353,
+        4.352,
+        0.466
+      ],
+      "inspection_window_um": [
+        3.9050000000000002,
+        0.19299999999999998,
+        4.5120000000000005,
+        0.626
+      ],
+      "permitted_regions_um": [
+        [
+          4.0520000000000005,
+          0.34,
+          4.365,
+          0.47900000000000004
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/13_l2_g0_c2_full.png",
+          "sha256": "1892ff0eabfa769d4e0c3f7f96e3d8ccfb7941c8f4b3ccc188fb574166cf99ca",
+          "camera_um": [
+            -7.205040000000002,
+            -3.8123200000000015,
+            34.72704,
+            21.036320000000003
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l2_g0_c2.gds",
+          "render_source_sha256": "db63b2fd3d587d16d11401b2dd2ca2b5e0c200d2eb03af4ff0b6bbcd415bb1ac",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/13_l2_g0_c2_context.png",
+          "sha256": "52a3f29005413764c21f5b8da5fde648669e7fa0630a264cee36b96c68e2439f",
+          "camera_um": [
+            3.8139287500000005,
+            0.17567999999999995,
+            4.603071250000001,
+            0.64332
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l2_g0_c2.gds",
+          "render_source_sha256": "e33e3a247f58bc317cf7be40dcd9caacf401e67c477b10d23a8bafece5b63581",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/13_l2_g0_c2_detail.png",
+          "sha256": "7d94a759816415c971db6348f2400e465ef245aae16c31fed9e1fb98d2f1bd4b",
+          "camera_um": [
+            3.973160000000001,
+            0.27003925925925926,
+            4.443840000000001,
+            0.5489607407407406
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l2_g0_c2.gds",
+          "render_source_sha256": "e33e3a247f58bc317cf7be40dcd9caacf401e67c477b10d23a8bafece5b63581",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 14,
+      "case_id": "l2_g0_c3",
+      "level": 2,
+      "kind": "clean_control",
+      "source_group": "l2_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l2_g0_c3.gds",
+      "gds_sha256": "56c848832a7d2aac915c9160b16aa30ac5257a47ae6ddbfa7713b8a0320fab00",
+      "metrics": {
+        "cell_definitions": 10,
+        "context_shapes": 8,
+        "coupled_rules": 0,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 2,
+        "hierarchy_depth": 4,
+        "instance_count": 103,
+        "protected_obstacle_count": 6,
+        "shape_count": 11288,
+        "target_markers": 0
+      },
+      "marker_counts": {},
+      "target_rules": [
+        "M1.W.1"
+      ],
+      "scope_um": [
+        6.072,
+        0.36,
+        6.352,
+        0.466
+      ],
+      "inspection_window_um": [
+        5.912,
+        0.19999999999999998,
+        6.5120000000000005,
+        0.626
+      ],
+      "permitted_regions_um": [
+        [
+          6.059,
+          0.34700000000000003,
+          6.365,
+          0.47900000000000004
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/14_l2_g0_c3_full.png",
+          "sha256": "6292d78f948e4454b50b59e0de062b965eea1557f892d15953ad91437a27ce2e",
+          "camera_um": [
+            -7.205040000000002,
+            -3.8123200000000015,
+            34.72704,
+            21.036320000000003
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l2_g0_c3.gds",
+          "render_source_sha256": "56c848832a7d2aac915c9160b16aa30ac5257a47ae6ddbfa7713b8a0320fab00",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/14_l2_g0_c3_context.png",
+          "sha256": "3e857f31a3fe4efc54668f4a5ada1f35238fffba25ebd609eefd3355b0288027",
+          "camera_um": [
+            5.8238075,
+            0.18295999999999993,
+            6.6001924999999995,
+            0.6430400000000001
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l2_g0_c3.gds",
+          "render_source_sha256": "8615ce23c303d12930199b2a65d47139494c3dc48000e4969652bcc122ed8801",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/14_l2_g0_c3_detail.png",
+          "sha256": "d3dd783ed1c41adec92761b82979291bc5afe2ac86a96fd81023ce324b41c4b0",
+          "camera_um": [
+            5.982399999999999,
+            0.27694074074074065,
+            6.4416,
+            0.5490592592592594
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l2_g0_c3.gds",
+          "render_source_sha256": "8615ce23c303d12930199b2a65d47139494c3dc48000e4969652bcc122ed8801",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 15,
+      "case_id": "l2_g0_c4",
+      "level": 2,
+      "kind": "no_edit",
+      "source_group": "l2_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l2_g0_c4.gds",
+      "gds_sha256": "1f43466306fd68568054d8af7cde787aa9a68203c116d33da8ad5d79d13c2810",
+      "metrics": {
+        "cell_definitions": 10,
+        "context_shapes": 13,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 0,
+        "hierarchy_depth": 4,
+        "instance_count": 103,
+        "protected_obstacle_count": 13,
+        "shape_count": 11289,
+        "target_markers": 2
+      },
+      "marker_counts": {
+        "M1.S.1": 1,
+        "M3.W.1": 1
+      },
+      "target_rules": [
+        "M1.S.1"
+      ],
+      "scope_um": [
+        8.072000000000001,
+        0.36,
+        8.352,
+        0.466
+      ],
+      "inspection_window_um": [
+        7.912000000000001,
+        0.19999999999999998,
+        8.512,
+        0.626
+      ],
+      "permitted_regions_um": [],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/15_l2_g0_c4_full.png",
+          "sha256": "448fed6deddae5792fec8c48c6f34624d0bab4baed886570687bbff5301e3726",
+          "camera_um": [
+            -7.205040000000002,
+            -3.8123200000000015,
+            34.72704,
+            21.036320000000003
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l2_g0_c4.gds",
+          "render_source_sha256": "1f43466306fd68568054d8af7cde787aa9a68203c116d33da8ad5d79d13c2810",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/15_l2_g0_c4_context.png",
+          "sha256": "d5b8f5d414b93b4ca2035723aa4f0b212d4a4d2c7da2e317deaa4a288a15e40c",
+          "camera_um": [
+            7.8238075,
+            0.18295999999999993,
+            8.6001925,
+            0.6430400000000001
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l2_g0_c4.gds",
+          "render_source_sha256": "f3be4a17ae3efa4446449bd379fd1a11692175bb03e8615fb1130078e97edbc6",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/15_l2_g0_c4_detail.png",
+          "sha256": "615b9527b726b2f2a68b4176221b2716c9ba7dc952f11c007e310b738fbdec99",
+          "camera_um": [
+            7.9824,
+            0.27694074074074104,
+            8.4416,
+            0.549059259259259
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l2_g0_c4.gds",
+          "render_source_sha256": "f3be4a17ae3efa4446449bd379fd1a11692175bb03e8615fb1130078e97edbc6",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 16,
+      "case_id": "l2_g1_c0",
+      "level": 2,
+      "kind": "repair",
+      "source_group": "l2_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l2_g1_c0.gds",
+      "gds_sha256": "74f65020af4aa95d536f43b485bf85efaaba2dcd8f80a5e0a463f89f37a0244e",
+      "metrics": {
+        "cell_definitions": 10,
+        "context_shapes": 8,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 2,
+        "hierarchy_depth": 4,
+        "instance_count": 148,
+        "protected_obstacle_count": 6,
+        "shape_count": 19145,
+        "target_markers": 2
+      },
+      "marker_counts": {
+        "M2.W.1": 1,
+        "M3.W.1": 1
+      },
+      "target_rules": [
+        "M2.W.1"
+      ],
+      "scope_um": [
+        -0.028,
+        0.37,
+        0.078,
+        0.65
+      ],
+      "inspection_window_um": [
+        -0.188,
+        0.21,
+        0.238,
+        0.81
+      ],
+      "permitted_regions_um": [
+        [
+          -0.041,
+          0.357,
+          0.091,
+          0.663
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/16_l2_g1_c0_full.png",
+          "sha256": "f9cb26b1d9f6831f6c1bbb22b85d223b5f8ca28a7c2fbf7895a2a9950600c02b",
+          "camera_um": [
+            -7.793175,
+            -4.4384000000000015,
+            35.327175000000004,
+            21.1144
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l2_g1_c0.gds",
+          "render_source_sha256": "74f65020af4aa95d536f43b485bf85efaaba2dcd8f80a5e0a463f89f37a0244e",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/16_l2_g1_c0_context.png",
+          "sha256": "b2b973ba6aecbc958307cedb962a8d514ac119e90084fe32df34cde333568f25",
+          "camera_um": [
+            -0.5217500000000002,
+            0.1859999999999999,
+            0.5717500000000002,
+            0.8340000000000001
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l2_g1_c0.gds",
+          "render_source_sha256": "4d438b500c47b3daac846eb54e08c686257e8e40f46d94b5998ea61fa0d87807",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/16_l2_g1_c0_detail.png",
+          "sha256": "707fbd67518d1a71b5afa87d04aa31fe4c3732ffdd6c3c145479a678c05f6caf",
+          "camera_um": [
+            -0.36245000000000005,
+            0.2804,
+            0.4124500000000001,
+            0.7396
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l2_g1_c0.gds",
+          "render_source_sha256": "4d438b500c47b3daac846eb54e08c686257e8e40f46d94b5998ea61fa0d87807",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 17,
+      "case_id": "l2_g1_c1",
+      "level": 2,
+      "kind": "repair",
+      "source_group": "l2_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l2_g1_c1.gds",
+      "gds_sha256": "a0bce046f0b6e464d0c88fd93f326e6afdb7334e886444e073dbe8b93cba19d3",
+      "metrics": {
+        "cell_definitions": 10,
+        "context_shapes": 10,
+        "coupled_rules": 3,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 2,
+        "hierarchy_depth": 4,
+        "instance_count": 148,
+        "protected_obstacle_count": 8,
+        "shape_count": 19145,
+        "target_markers": 3
+      },
+      "marker_counts": {
+        "M1.A.1": 1,
+        "M1.W.1": 1,
+        "M3.W.1": 1
+      },
+      "target_rules": [
+        "M1.A.1"
+      ],
+      "scope_um": [
+        1.972,
+        0.37,
+        2.078,
+        0.65
+      ],
+      "inspection_window_um": [
+        1.812,
+        0.21,
+        2.238,
+        0.81
+      ],
+      "permitted_regions_um": [
+        [
+          1.959,
+          0.357,
+          2.091,
+          0.663
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/17_l2_g1_c1_full.png",
+          "sha256": "2e90f1b92f1e9daa1e2a7866c8084121809ff67a9c07c9b2cb216463577c20f8",
+          "camera_um": [
+            -7.7806750000000005,
+            -4.4384000000000015,
+            35.339675,
+            21.1144
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l2_g1_c1.gds",
+          "render_source_sha256": "a0bce046f0b6e464d0c88fd93f326e6afdb7334e886444e073dbe8b93cba19d3",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/17_l2_g1_c1_context.png",
+          "sha256": "bbaa7d5ac0989c1ca74a7fa47d6da1d0487724c24484e453874a3e0c9d99c418",
+          "camera_um": [
+            1.4782499999999996,
+            0.1859999999999999,
+            2.57175,
+            0.8340000000000001
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l2_g1_c1.gds",
+          "render_source_sha256": "173fa43ffb0c758d7ce411decea4a1b3a8ba2b691dd92f55e62c75e718dd1afc",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/17_l2_g1_c1_detail.png",
+          "sha256": "87b352e78ead859f0c9433b641444c139defb922c649475555207b870731ddf7",
+          "camera_um": [
+            1.6375499999999998,
+            0.2804,
+            2.4124499999999998,
+            0.7396
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l2_g1_c1.gds",
+          "render_source_sha256": "173fa43ffb0c758d7ce411decea4a1b3a8ba2b691dd92f55e62c75e718dd1afc",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 18,
+      "case_id": "l2_g1_c2",
+      "level": 2,
+      "kind": "repair",
+      "source_group": "l2_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l2_g1_c2.gds",
+      "gds_sha256": "3805ce7a75501bd547b68087f509c0e2262f73ba7076aaea76d9bf9b2cd53c4c",
+      "metrics": {
+        "cell_definitions": 10,
+        "context_shapes": 12,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 3,
+        "hierarchy_depth": 4,
+        "instance_count": 148,
+        "protected_obstacle_count": 9,
+        "shape_count": 19146,
+        "target_markers": 2
+      },
+      "marker_counts": {
+        "M3.W.1": 1,
+        "V1.M2.EN.2": 1
+      },
+      "target_rules": [
+        "V1.M2.EN.2"
+      ],
+      "scope_um": [
+        3.972,
+        0.37,
+        4.085,
+        0.65
+      ],
+      "inspection_window_um": [
+        3.812,
+        0.21,
+        4.245,
+        0.81
+      ],
+      "permitted_regions_um": [
+        [
+          3.959,
+          0.357,
+          4.098,
+          0.663
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/18_l2_g1_c2_full.png",
+          "sha256": "e0b07a52aa8f0fe0aebcb852a51f54b8a29b5ee7d5894edcd6570444765432d6",
+          "camera_um": [
+            -7.7806750000000005,
+            -4.4384000000000015,
+            35.339675,
+            21.1144
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l2_g1_c2.gds",
+          "render_source_sha256": "3805ce7a75501bd547b68087f509c0e2262f73ba7076aaea76d9bf9b2cd53c4c",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/18_l2_g1_c2_context.png",
+          "sha256": "4a4a9bc9305ff2e4824a08c7126cc394945c1a3d7f9896a81d754da71d266574",
+          "camera_um": [
+            3.48175,
+            0.1859999999999999,
+            4.5752500000000005,
+            0.8340000000000001
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l2_g1_c2.gds",
+          "render_source_sha256": "7a772847fa0cbf7322cbbf298633f8311e6e6ed6afd60b932074b131e1edc040",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/18_l2_g1_c2_detail.png",
+          "sha256": "aec1608e2f0e3a809d69b84f00fa0955755ec9571e24442619c7eccdfcce5ca7",
+          "camera_um": [
+            3.64105,
+            0.2804,
+            4.4159500000000005,
+            0.7396
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l2_g1_c2.gds",
+          "render_source_sha256": "7a772847fa0cbf7322cbbf298633f8311e6e6ed6afd60b932074b131e1edc040",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 19,
+      "case_id": "l2_g1_c3",
+      "level": 2,
+      "kind": "clean_control",
+      "source_group": "l2_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l2_g1_c3.gds",
+      "gds_sha256": "3441cc400547385b95d425d3bd611b39ff4e8f02ac92159b8a9b6d278db307d5",
+      "metrics": {
+        "cell_definitions": 10,
+        "context_shapes": 11,
+        "coupled_rules": 0,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 2,
+        "hierarchy_depth": 4,
+        "instance_count": 148,
+        "protected_obstacle_count": 9,
+        "shape_count": 19145,
+        "target_markers": 0
+      },
+      "marker_counts": {},
+      "target_rules": [
+        "M2.W.1"
+      ],
+      "scope_um": [
+        5.972,
+        0.37,
+        6.078,
+        0.65
+      ],
+      "inspection_window_um": [
+        5.812,
+        0.21,
+        6.238,
+        0.81
+      ],
+      "permitted_regions_um": [
+        [
+          5.9590000000000005,
+          0.357,
+          6.091,
+          0.663
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/19_l2_g1_c3_full.png",
+          "sha256": "0eac6d22b88f1105a2a360df59429df235f687167b731b772769537648b1e230",
+          "camera_um": [
+            -7.7806750000000005,
+            -4.4384000000000015,
+            35.339675,
+            21.1144
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l2_g1_c3.gds",
+          "render_source_sha256": "3441cc400547385b95d425d3bd611b39ff4e8f02ac92159b8a9b6d278db307d5",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/19_l2_g1_c3_context.png",
+          "sha256": "c22c27eeab33050d2a5d0f71170ca119dead5bc304181d3a88d60e778e895e20",
+          "camera_um": [
+            5.47825,
+            0.1859999999999999,
+            6.571750000000001,
+            0.8340000000000001
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l2_g1_c3.gds",
+          "render_source_sha256": "8cc0fdf565e27793de15858331d6f0425ea97299f71cd7046e3bcbcef6eb9675",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/19_l2_g1_c3_detail.png",
+          "sha256": "514999ffe7d753769b8628f927fc4e6861813d1374059fcad7abe0a1d6436942",
+          "camera_um": [
+            5.63755,
+            0.2804,
+            6.412450000000001,
+            0.7396
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l2_g1_c3.gds",
+          "render_source_sha256": "8cc0fdf565e27793de15858331d6f0425ea97299f71cd7046e3bcbcef6eb9675",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 20,
+      "case_id": "l2_g1_c4",
+      "level": 2,
+      "kind": "no_edit",
+      "source_group": "l2_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l2_g1_c4.gds",
+      "gds_sha256": "11f4038787feb6f454e1741b08d19236839631468772a294d5d450c5292b0e4e",
+      "metrics": {
+        "cell_definitions": 10,
+        "context_shapes": 18,
+        "coupled_rules": 3,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 0,
+        "hierarchy_depth": 4,
+        "instance_count": 148,
+        "protected_obstacle_count": 18,
+        "shape_count": 19145,
+        "target_markers": 3
+      },
+      "marker_counts": {
+        "M1.A.1": 1,
+        "M1.W.1": 1,
+        "M3.W.1": 1
+      },
+      "target_rules": [
+        "M1.A.1"
+      ],
+      "scope_um": [
+        7.972,
+        0.37,
+        8.078,
+        0.65
+      ],
+      "inspection_window_um": [
+        7.812,
+        0.21,
+        8.238,
+        0.81
+      ],
+      "permitted_regions_um": [],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/20_l2_g1_c4_full.png",
+          "sha256": "749cc8761917d1918a570190179e421dc7e2975476f29b4c369de1783bf5583c",
+          "camera_um": [
+            -7.7806750000000005,
+            -4.4384000000000015,
+            35.339675,
+            21.1144
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l2_g1_c4.gds",
+          "render_source_sha256": "11f4038787feb6f454e1741b08d19236839631468772a294d5d450c5292b0e4e",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/20_l2_g1_c4_context.png",
+          "sha256": "48f043d7bf7b07ab7c65b97e7087d6262ac1e57bf6e5be0e2486437d18eb2cfd",
+          "camera_um": [
+            7.47825,
+            0.1859999999999999,
+            8.57175,
+            0.8340000000000001
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l2_g1_c4.gds",
+          "render_source_sha256": "7ca21da2d7305be598684c65522efcbecfa0eb0289dfae95a8dfceee6df15404",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/20_l2_g1_c4_detail.png",
+          "sha256": "3dbbe28d69fcf21b08d098acc57ee721d12a9a92507f61308557148f47f7cae4",
+          "camera_um": [
+            7.63755,
+            0.2804,
+            8.41245,
+            0.7396
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l2_g1_c4.gds",
+          "render_source_sha256": "7ca21da2d7305be598684c65522efcbecfa0eb0289dfae95a8dfceee6df15404",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.1,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 21,
+      "case_id": "l3_g0_c0",
+      "level": 3,
+      "kind": "repair",
+      "source_group": "l3_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l3_g0_c0.gds",
+      "gds_sha256": "76bd850723d47dec1dd3a269b06097b951c6a69f784921446d42351aa8226f95",
+      "metrics": {
+        "cell_definitions": 40,
+        "context_shapes": 43,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 10613,
+        "editable_shape_count": 7,
+        "hierarchy_depth": 2,
+        "instance_count": 721,
+        "local_route_polygons": 12,
+        "local_routing_occupancy": 0.1803013392857143,
+        "occupancy_box_um": [
+          2.1029999999999998,
+          2.968,
+          2.343,
+          3.192
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 36,
+        "route_segment_count": 2632,
+        "shape_count": 66103,
+        "target_markers": 1,
+        "via_count": 3870
+      },
+      "marker_counts": {
+        "M2.W.1": 1
+      },
+      "target_rules": [
+        "M2.W.1"
+      ],
+      "scope_um": [
+        2.183,
+        3.048,
+        2.263,
+        3.112
+      ],
+      "inspection_window_um": [
+        2.1029999999999998,
+        2.968,
+        2.343,
+        3.192
+      ],
+      "permitted_regions_um": [
+        [
+          2.183,
+          3.048,
+          2.263,
+          3.112
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/21_l3_g0_c0_full.png",
+          "sha256": "a03bebfcfc9433085f27979a278e3e9a843d8f879eff43b88b0cc30e94100a40",
+          "camera_um": [
+            -3.5828100000000003,
+            -0.34848000000000035,
+            12.29481,
+            9.06048
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l3_g0_c0.gds",
+          "render_source_sha256": "76bd850723d47dec1dd3a269b06097b951c6a69f784921446d42351aa8226f95",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 2,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/21_l3_g0_c0_context.png",
+          "sha256": "564bee0aa481a58d8b9c110d25ce4eee2ebff7ebaffb930de6fb410b1ca32d03",
+          "camera_um": [
+            2.01888,
+            2.95904,
+            2.42712,
+            3.2009600000000002
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l3_g0_c0.gds",
+          "render_source_sha256": "9710581a5e0457e25b69e9b54b9dca61bcb10c436fcd5c0411a81f285a114510",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/21_l3_g0_c0_detail.png",
+          "sha256": "9c6db766f4026b85aa782e28752168c58e64c542ee5201ce4692525eb395ab04",
+          "camera_um": [
+            2.1344399999999997,
+            3.02752,
+            2.31156,
+            3.13248
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l3_g0_c0.gds",
+          "render_source_sha256": "9710581a5e0457e25b69e9b54b9dca61bcb10c436fcd5c0411a81f285a114510",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 22,
+      "case_id": "l3_g0_c1",
+      "level": 3,
+      "kind": "repair",
+      "source_group": "l3_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l3_g0_c1.gds",
+      "gds_sha256": "a367fe80531325357c5997a3702048d3dd684cce90ab8fd40fafe0bfcf2d704a",
+      "metrics": {
+        "cell_definitions": 40,
+        "context_shapes": 37,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 10613,
+        "editable_shape_count": 1,
+        "hierarchy_depth": 2,
+        "instance_count": 721,
+        "local_route_polygons": 11,
+        "local_routing_occupancy": 0.2584821428571429,
+        "occupancy_box_um": [
+          2.194,
+          2.463,
+          2.418,
+          2.7030000000000003
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 36,
+        "route_segment_count": 2632,
+        "shape_count": 66103,
+        "target_markers": 1,
+        "via_count": 3870
+      },
+      "marker_counts": {
+        "M3.W.1": 1
+      },
+      "target_rules": [
+        "M3.W.1"
+      ],
+      "scope_um": [
+        2.274,
+        2.543,
+        2.338,
+        2.623
+      ],
+      "inspection_window_um": [
+        2.194,
+        2.463,
+        2.418,
+        2.7030000000000003
+      ],
+      "permitted_regions_um": [
+        [
+          2.274,
+          2.543,
+          2.338,
+          2.623
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/22_l3_g0_c1_full.png",
+          "sha256": "824b83c8be5524b1a3c7be9aef0b1e0ea963c4afbbbf4b702a2da24844580562",
+          "camera_um": [
+            -3.5828100000000003,
+            -0.34848000000000035,
+            12.29481,
+            9.06048
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l3_g0_c1.gds",
+          "render_source_sha256": "a367fe80531325357c5997a3702048d3dd684cce90ab8fd40fafe0bfcf2d704a",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 2,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/22_l3_g0_c1_context.png",
+          "sha256": "f76f660910a5b68a6e42e75468a4488be913243ab183a77afde6c55468be4ad6",
+          "camera_um": [
+            2.0873,
+            2.4534000000000002,
+            2.5247,
+            2.7126
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l3_g0_c1.gds",
+          "render_source_sha256": "f1903a8a3c13d7af1fb51c5da3c8e8557a25b026d00e23c566ee61545d0e3a6e",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/22_l3_g0_c1_detail.png",
+          "sha256": "93d7b99f845cbbc7e5448f36d6ccb77c00bd1cf83b0e21be261508b046f3a133",
+          "camera_um": [
+            2.1953,
+            2.5174000000000003,
+            2.4167,
+            2.6486
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l3_g0_c1.gds",
+          "render_source_sha256": "f1903a8a3c13d7af1fb51c5da3c8e8557a25b026d00e23c566ee61545d0e3a6e",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 23,
+      "case_id": "l3_g0_c2",
+      "level": 3,
+      "kind": "repair",
+      "source_group": "l3_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l3_g0_c2.gds",
+      "gds_sha256": "52f3fb6f216d601269b63eba875e17cf2a332306617a410d1e3a6cbe3a1617c5",
+      "metrics": {
+        "cell_definitions": 40,
+        "context_shapes": 32,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 10613,
+        "editable_shape_count": 3,
+        "hierarchy_depth": 2,
+        "instance_count": 721,
+        "local_route_polygons": 6,
+        "local_routing_occupancy": 0.13387229891956784,
+        "occupancy_box_um": [
+          2.208,
+          1.96,
+          2.432,
+          2.198
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 29,
+        "route_segment_count": 2632,
+        "shape_count": 66103,
+        "target_markers": 1,
+        "via_count": 3870
+      },
+      "marker_counts": {
+        "V2.W.1": 1
+      },
+      "target_rules": [
+        "V2.W.1"
+      ],
+      "scope_um": [
+        2.2880000000000003,
+        2.04,
+        2.352,
+        2.118
+      ],
+      "inspection_window_um": [
+        2.208,
+        1.96,
+        2.432,
+        2.198
+      ],
+      "permitted_regions_um": [
+        [
+          2.2880000000000003,
+          2.04,
+          2.352,
+          2.118
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/23_l3_g0_c2_full.png",
+          "sha256": "4a211dbcc9d72565262f17f3c01064a5420c558834a9a8b51a7b304f0983a979",
+          "camera_um": [
+            -3.5828100000000003,
+            -0.34848000000000035,
+            12.29481,
+            9.06048
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l3_g0_c2.gds",
+          "render_source_sha256": "52f3fb6f216d601269b63eba875e17cf2a332306617a410d1e3a6cbe3a1617c5",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 2,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/23_l3_g0_c2_context.png",
+          "sha256": "fb6871d2fb8c3196d8eba704916918a5775b763c824c04d3997dd45ec6799ba8",
+          "camera_um": [
+            2.1031225000000004,
+            1.9504799999999998,
+            2.5368775,
+            2.2075199999999997
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l3_g0_c2.gds",
+          "render_source_sha256": "09a374ad21bd2628e15191c533b6c5bade50048c86978c6ee3658e1e99c2e51b",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/23_l3_g0_c2_detail.png",
+          "sha256": "6a98c302d5d98cd8b84581776d6b1b18da1478d3fdc5c904d2cfc4748e4095c6",
+          "camera_um": [
+            2.2120675000000003,
+            2.01504,
+            2.4279325000000003,
+            2.1429599999999995
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l3_g0_c2.gds",
+          "render_source_sha256": "09a374ad21bd2628e15191c533b6c5bade50048c86978c6ee3658e1e99c2e51b",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 24,
+      "case_id": "l3_g0_c3",
+      "level": 3,
+      "kind": "clean_control",
+      "source_group": "l3_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l3_g0_c3.gds",
+      "gds_sha256": "0c2455faf7beeb705d9587bffd8c061a49c29025770f28416f37f3d78cf3940a",
+      "metrics": {
+        "cell_definitions": 40,
+        "context_shapes": 36,
+        "coupled_rules": 0,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 10613,
+        "editable_shape_count": 3,
+        "hierarchy_depth": 2,
+        "instance_count": 721,
+        "local_route_polygons": 8,
+        "local_routing_occupancy": 0.15600818452380952,
+        "occupancy_box_um": [
+          2.258,
+          1.96,
+          2.498,
+          2.184
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 33,
+        "route_segment_count": 2632,
+        "shape_count": 66103,
+        "target_markers": 0,
+        "via_count": 3870
+      },
+      "marker_counts": {},
+      "target_rules": [
+        "M2.W.1"
+      ],
+      "scope_um": [
+        2.338,
+        2.04,
+        2.418,
+        2.104
+      ],
+      "inspection_window_um": [
+        2.258,
+        1.96,
+        2.498,
+        2.184
+      ],
+      "permitted_regions_um": [
+        [
+          2.338,
+          2.04,
+          2.418,
+          2.104
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/24_l3_g0_c3_full.png",
+          "sha256": "1a59b997f814c15fd794349efe8534f01114cf563bf8160e6349d1a8d67d737f",
+          "camera_um": [
+            -3.5828100000000003,
+            -0.34848000000000035,
+            12.29481,
+            9.06048
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l3_g0_c3.gds",
+          "render_source_sha256": "0c2455faf7beeb705d9587bffd8c061a49c29025770f28416f37f3d78cf3940a",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 2,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/24_l3_g0_c3_context.png",
+          "sha256": "048d2311bdf1e5274ac1c0d01ae744384b2f378fc1fc483df157a949e1d3a86d",
+          "camera_um": [
+            2.17388,
+            1.9510399999999999,
+            2.58212,
+            2.1929600000000002
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l3_g0_c3.gds",
+          "render_source_sha256": "ca937f621eee344a033a99adda50429c10d117fefba569da4992d402941f227b",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/24_l3_g0_c3_detail.png",
+          "sha256": "d5a9da02c8a08e3a7235e028075bdcf185ed1ab14d8640cdd83f03702e9e194f",
+          "camera_um": [
+            2.28944,
+            2.01952,
+            2.4665600000000003,
+            2.12448
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l3_g0_c3.gds",
+          "render_source_sha256": "ca937f621eee344a033a99adda50429c10d117fefba569da4992d402941f227b",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 25,
+      "case_id": "l3_g0_c4",
+      "level": 3,
+      "kind": "no_edit",
+      "source_group": "l3_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l3_g0_c4.gds",
+      "gds_sha256": "c4c92f16d02fc9adfe93749c5de3823746afead539b8122b8283db8ee909633a",
+      "metrics": {
+        "cell_definitions": 40,
+        "context_shapes": 36,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 10613,
+        "editable_shape_count": 0,
+        "hierarchy_depth": 2,
+        "instance_count": 721,
+        "local_route_polygons": 11,
+        "local_routing_occupancy": 0.24345363145258103,
+        "occupancy_box_um": [
+          2.208,
+          2.932,
+          2.432,
+          3.17
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 36,
+        "route_segment_count": 2632,
+        "shape_count": 66103,
+        "target_markers": 1,
+        "via_count": 3870
+      },
+      "marker_counts": {
+        "V2.W.1": 1
+      },
+      "target_rules": [
+        "V2.W.1"
+      ],
+      "scope_um": [
+        2.2880000000000003,
+        3.012,
+        2.352,
+        3.09
+      ],
+      "inspection_window_um": [
+        2.208,
+        2.932,
+        2.432,
+        3.17
+      ],
+      "permitted_regions_um": [],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/25_l3_g0_c4_full.png",
+          "sha256": "b5892be28c77c90a0866bcc75dd4e5b0bc3ef7c2a1392fb1838fadc191d1bfe7",
+          "camera_um": [
+            -3.5828100000000003,
+            -0.34848000000000035,
+            12.29481,
+            9.06048
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l3_g0_c4.gds",
+          "render_source_sha256": "c4c92f16d02fc9adfe93749c5de3823746afead539b8122b8283db8ee909633a",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 2,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/25_l3_g0_c4_context.png",
+          "sha256": "736c1e7b9edcba54f55a6f9d458c32719a84d0beda9ba381f983b1c364036a5c",
+          "camera_um": [
+            2.1031225000000004,
+            2.92248,
+            2.5368775,
+            3.17952
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l3_g0_c4.gds",
+          "render_source_sha256": "fba73321b0ee45b4c1ccf594151151f627b0bac13ab7623904eebafe339c6d0f",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/25_l3_g0_c4_detail.png",
+          "sha256": "94ff9e5fdaf649330b7b4d49cf12d8601490651bb62f4ebe94f082604b9672e6",
+          "camera_um": [
+            2.2120675000000003,
+            2.9870400000000004,
+            2.4279325000000003,
+            3.11496
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l3_g0_c4.gds",
+          "render_source_sha256": "fba73321b0ee45b4c1ccf594151151f627b0bac13ab7623904eebafe339c6d0f",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 26,
+      "case_id": "l3_g1_c0",
+      "level": 3,
+      "kind": "repair",
+      "source_group": "l3_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l3_g1_c0.gds",
+      "gds_sha256": "5fd93e53f5293a658772959290f4477658ae711d25594c62f6ed1888823675d4",
+      "metrics": {
+        "cell_definitions": 45,
+        "context_shapes": 30,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 10455,
+        "editable_shape_count": 4,
+        "hierarchy_depth": 2,
+        "instance_count": 976,
+        "local_route_polygons": 8,
+        "local_routing_occupancy": 0.254296875,
+        "occupancy_box_um": [
+          2.121,
+          1.996,
+          2.361,
+          2.22
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 26,
+        "route_segment_count": 2567,
+        "shape_count": 80641,
+        "target_markers": 1,
+        "via_count": 3845
+      },
+      "marker_counts": {
+        "M2.W.1": 1
+      },
+      "target_rules": [
+        "M2.W.1"
+      ],
+      "scope_um": [
+        2.201,
+        2.076,
+        2.281,
+        2.14
+      ],
+      "inspection_window_um": [
+        2.121,
+        1.996,
+        2.361,
+        2.22
+      ],
+      "permitted_regions_um": [
+        [
+          2.201,
+          2.076,
+          2.281,
+          2.14
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/26_l3_g1_c0_full.png",
+          "sha256": "7c4e22015c5941856ed0bf65e7aff1e882549746111550f28d5084b49b41f378",
+          "camera_um": [
+            -4.027371250000001,
+            -0.3917200000000003,
+            13.82037125,
+            10.184720000000002
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l3_g1_c0.gds",
+          "render_source_sha256": "5fd93e53f5293a658772959290f4477658ae711d25594c62f6ed1888823675d4",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 2,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/26_l3_g1_c0_context.png",
+          "sha256": "9947a3ba43759b2cee049dc4f5324c22432c40be5a53ba39ade873ffb89d5579",
+          "camera_um": [
+            2.03688,
+            1.98704,
+            2.44512,
+            2.2289600000000003
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l3_g1_c0.gds",
+          "render_source_sha256": "deb2f406adebb6db0c94128004136ccd032cc0eab7c02af6e1d98ab93f1428ee",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/26_l3_g1_c0_detail.png",
+          "sha256": "0f6c4524376498766d12374eaf1429af7f2ccf0fea3071cb8feea3c7f9a84c81",
+          "camera_um": [
+            2.15244,
+            2.05552,
+            2.3295600000000003,
+            2.16048
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l3_g1_c0.gds",
+          "render_source_sha256": "deb2f406adebb6db0c94128004136ccd032cc0eab7c02af6e1d98ab93f1428ee",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 27,
+      "case_id": "l3_g1_c1",
+      "level": 3,
+      "kind": "repair",
+      "source_group": "l3_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l3_g1_c1.gds",
+      "gds_sha256": "fc0f1643dbdc747c033363fc96adfa517ed8bd91ca8849f89658f810fb7a2574",
+      "metrics": {
+        "cell_definitions": 45,
+        "context_shapes": 30,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 10455,
+        "editable_shape_count": 1,
+        "hierarchy_depth": 2,
+        "instance_count": 976,
+        "local_route_polygons": 7,
+        "local_routing_occupancy": 0.1958984375,
+        "occupancy_box_um": [
+          2.23,
+          2.265,
+          2.454,
+          2.5050000000000003
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 29,
+        "route_segment_count": 2567,
+        "shape_count": 80641,
+        "target_markers": 1,
+        "via_count": 3845
+      },
+      "marker_counts": {
+        "M3.W.1": 1
+      },
+      "target_rules": [
+        "M3.W.1"
+      ],
+      "scope_um": [
+        2.31,
+        2.345,
+        2.374,
+        2.4250000000000003
+      ],
+      "inspection_window_um": [
+        2.23,
+        2.265,
+        2.454,
+        2.5050000000000003
+      ],
+      "permitted_regions_um": [
+        [
+          2.31,
+          2.345,
+          2.374,
+          2.4250000000000003
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/27_l3_g1_c1_full.png",
+          "sha256": "3938692ffff2fbd8209e6cbc9d94ed41325ac08b4fd50798376b8968196a1873",
+          "camera_um": [
+            -4.027371250000001,
+            -0.3917200000000003,
+            13.82037125,
+            10.184720000000002
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l3_g1_c1.gds",
+          "render_source_sha256": "fc0f1643dbdc747c033363fc96adfa517ed8bd91ca8849f89658f810fb7a2574",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 2,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/27_l3_g1_c1_context.png",
+          "sha256": "451d026c63da3e4edbb71479e606c6ac9fdcfaa93606c3efce0f845d549333a7",
+          "camera_um": [
+            2.1233,
+            2.2554000000000003,
+            2.5607,
+            2.5146
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l3_g1_c1.gds",
+          "render_source_sha256": "110842cacbfe116d253a80d0aa3b1adf75747c51a865b87800198c1c35c978f8",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/27_l3_g1_c1_detail.png",
+          "sha256": "2efbf1c98618f4f9634a9b72ceb0349bce35efe25c322f2ebe0f27b7245fcef6",
+          "camera_um": [
+            2.2313,
+            2.3194000000000004,
+            2.4527,
+            2.4506
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l3_g1_c1.gds",
+          "render_source_sha256": "110842cacbfe116d253a80d0aa3b1adf75747c51a865b87800198c1c35c978f8",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 28,
+      "case_id": "l3_g1_c2",
+      "level": 3,
+      "kind": "repair",
+      "source_group": "l3_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l3_g1_c2.gds",
+      "gds_sha256": "325ee1266ac78538734500bfbc89ffb1e53927be00bacbe04d5c9baf41d2dde6",
+      "metrics": {
+        "cell_definitions": 45,
+        "context_shapes": 25,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 10455,
+        "editable_shape_count": 3,
+        "hierarchy_depth": 2,
+        "instance_count": 976,
+        "local_route_polygons": 6,
+        "local_routing_occupancy": 0.19616596638655462,
+        "occupancy_box_um": [
+          2.2439999999999998,
+          1.996,
+          2.468,
+          2.234
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 22,
+        "route_segment_count": 2567,
+        "shape_count": 80641,
+        "target_markers": 1,
+        "via_count": 3845
+      },
+      "marker_counts": {
+        "V2.W.1": 1
+      },
+      "target_rules": [
+        "V2.W.1"
+      ],
+      "scope_um": [
+        2.324,
+        2.076,
+        2.388,
+        2.154
+      ],
+      "inspection_window_um": [
+        2.2439999999999998,
+        1.996,
+        2.468,
+        2.234
+      ],
+      "permitted_regions_um": [
+        [
+          2.324,
+          2.076,
+          2.388,
+          2.154
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/28_l3_g1_c2_full.png",
+          "sha256": "e67d73866cecc45e255b0734543bfa84abf904ddbdfc70423596a9b95c248d63",
+          "camera_um": [
+            -4.027371250000001,
+            -0.3917200000000003,
+            13.82037125,
+            10.184720000000002
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l3_g1_c2.gds",
+          "render_source_sha256": "325ee1266ac78538734500bfbc89ffb1e53927be00bacbe04d5c9baf41d2dde6",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 2,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/28_l3_g1_c2_context.png",
+          "sha256": "39baa01bbe2f2ffb8b1b3c49eacc5ea555e4f50f9d15f775d9371059101d1721",
+          "camera_um": [
+            2.1391225,
+            1.9864800000000002,
+            2.5728774999999997,
+            2.24352
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l3_g1_c2.gds",
+          "render_source_sha256": "40a66077a1a4091139b823595e4955a91cecb39ad116e7fb5760d565206dae25",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/28_l3_g1_c2_detail.png",
+          "sha256": "22c2ddb93ec959e4bd525efda86f26ab103cd3c8b168e2897b5a616fbb6ca4d9",
+          "camera_um": [
+            2.2480675,
+            2.0510400000000004,
+            2.4639325,
+            2.17896
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l3_g1_c2.gds",
+          "render_source_sha256": "40a66077a1a4091139b823595e4955a91cecb39ad116e7fb5760d565206dae25",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 29,
+      "case_id": "l3_g1_c3",
+      "level": 3,
+      "kind": "clean_control",
+      "source_group": "l3_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l3_g1_c3.gds",
+      "gds_sha256": "f53266dc4fe0076df4228925adaae1a908ae3cd5050ac01296c25488f9203fbe",
+      "metrics": {
+        "cell_definitions": 45,
+        "context_shapes": 42,
+        "coupled_rules": 0,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 10455,
+        "editable_shape_count": 1,
+        "hierarchy_depth": 2,
+        "instance_count": 976,
+        "local_route_polygons": 9,
+        "local_routing_occupancy": 0.3053571428571429,
+        "occupancy_box_um": [
+          2.3729999999999998,
+          2.536,
+          2.613,
+          2.7600000000000002
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 41,
+        "route_segment_count": 2567,
+        "shape_count": 80641,
+        "target_markers": 0,
+        "via_count": 3845
+      },
+      "marker_counts": {},
+      "target_rules": [
+        "M2.W.1"
+      ],
+      "scope_um": [
+        2.453,
+        2.616,
+        2.533,
+        2.68
+      ],
+      "inspection_window_um": [
+        2.3729999999999998,
+        2.536,
+        2.613,
+        2.7600000000000002
+      ],
+      "permitted_regions_um": [
+        [
+          2.453,
+          2.616,
+          2.533,
+          2.68
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/29_l3_g1_c3_full.png",
+          "sha256": "a112f82d7b9275a592e7f14d22218860daa8a160e66c5a442bd0c11438e545c2",
+          "camera_um": [
+            -4.027371250000001,
+            -0.3917200000000003,
+            13.82037125,
+            10.184720000000002
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l3_g1_c3.gds",
+          "render_source_sha256": "f53266dc4fe0076df4228925adaae1a908ae3cd5050ac01296c25488f9203fbe",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 2,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/29_l3_g1_c3_context.png",
+          "sha256": "46e0b420dbac743fc2e1fd9e6cd350d81f51de627fee26b6a226c0e21997a5e4",
+          "camera_um": [
+            2.28888,
+            2.52704,
+            2.69712,
+            2.7689600000000003
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l3_g1_c3.gds",
+          "render_source_sha256": "ddadb0d443ca3675eea5825942c7326787212942924021bffebab7087d840270",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/29_l3_g1_c3_detail.png",
+          "sha256": "547c6614c12b25eeebbae109c9ce80b4d5372f085f730229c4d101a0ae27412f",
+          "camera_um": [
+            2.4044399999999997,
+            2.59552,
+            2.58156,
+            2.70048
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l3_g1_c3.gds",
+          "render_source_sha256": "ddadb0d443ca3675eea5825942c7326787212942924021bffebab7087d840270",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 30,
+      "case_id": "l3_g1_c4",
+      "level": 3,
+      "kind": "no_edit",
+      "source_group": "l3_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l3_g1_c4.gds",
+      "gds_sha256": "ce24019baf00208f7cd4c82e827d32181104ee46fac2c08eabd818c9361cc460",
+      "metrics": {
+        "cell_definitions": 45,
+        "context_shapes": 42,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 10455,
+        "editable_shape_count": 0,
+        "hierarchy_depth": 2,
+        "instance_count": 976,
+        "local_route_polygons": 10,
+        "local_routing_occupancy": 0.21573660714285714,
+        "occupancy_box_um": [
+          2.518,
+          2.598,
+          2.742,
+          2.838
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 42,
+        "route_segment_count": 2567,
+        "shape_count": 80641,
+        "target_markers": 1,
+        "via_count": 3845
+      },
+      "marker_counts": {
+        "M3.W.1": 1
+      },
+      "target_rules": [
+        "M3.W.1"
+      ],
+      "scope_um": [
+        2.598,
+        2.678,
+        2.662,
+        2.758
+      ],
+      "inspection_window_um": [
+        2.518,
+        2.598,
+        2.742,
+        2.838
+      ],
+      "permitted_regions_um": [],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/30_l3_g1_c4_full.png",
+          "sha256": "4f670aae2416d26c45aca393d5f9d5138be57e3e9acdb6d4a21c9ff32cbbf5d8",
+          "camera_um": [
+            -4.027371250000001,
+            -0.3917200000000003,
+            13.82037125,
+            10.184720000000002
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l3_g1_c4.gds",
+          "render_source_sha256": "ce24019baf00208f7cd4c82e827d32181104ee46fac2c08eabd818c9361cc460",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 2,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/30_l3_g1_c4_context.png",
+          "sha256": "09c222c77caa31e55f11384ab07c83bd257bf301b867b4d349bed90f85e063d7",
+          "camera_um": [
+            2.4112999999999998,
+            2.5884,
+            2.8487,
+            2.8476
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l3_g1_c4.gds",
+          "render_source_sha256": "730264fcdf8d0a9173dbc8dd32006cc6b80c72a379c153cf6026f7b61d78af70",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/30_l3_g1_c4_detail.png",
+          "sha256": "8a1e6d00dae4a5598501a013f0225a0059a398f471c38b838e3bb5731d19f763",
+          "camera_um": [
+            2.5193,
+            2.6524,
+            2.7407,
+            2.7836
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l3_g1_c4.gds",
+          "render_source_sha256": "730264fcdf8d0a9173dbc8dd32006cc6b80c72a379c153cf6026f7b61d78af70",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 31,
+      "case_id": "l4_g0_c0",
+      "level": 4,
+      "kind": "repair",
+      "source_group": "l4_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l4_g0_c0.gds",
+      "gds_sha256": "722fc4c90b5073770a3a39ce5d04b8269750dbc30cc1f5f9b282704f51b31fd9",
+      "metrics": {
+        "cell_definitions": 68,
+        "context_shapes": 50,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 19786,
+        "editable_shape_count": 10,
+        "hierarchy_depth": 2,
+        "instance_count": 1909,
+        "local_route_polygons": 16,
+        "local_routing_occupancy": 0.32109375,
+        "occupancy_box_um": [
+          6.981,
+          1.996,
+          7.221,
+          2.22
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 40,
+        "route_segment_count": 5077,
+        "shape_count": 192531,
+        "target_markers": 1,
+        "via_count": 7024
+      },
+      "marker_counts": {
+        "M2.W.1": 1
+      },
+      "target_rules": [
+        "M2.W.1"
+      ],
+      "scope_um": [
+        7.061,
+        2.076,
+        7.141,
+        2.14
+      ],
+      "inspection_window_um": [
+        6.981,
+        1.996,
+        7.221,
+        2.22
+      ],
+      "permitted_regions_um": [
+        [
+          7.061,
+          2.076,
+          7.141,
+          2.14
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/31_l4_g0_c0_full.png",
+          "sha256": "342c543281f5e8c950092c3cb71276776abae813c5de02a4b34e3ce6898df782",
+          "camera_um": [
+            -6.991250000000001,
+            -0.6800000000000015,
+            23.99125,
+            17.68
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l4_g0_c0.gds",
+          "render_source_sha256": "722fc4c90b5073770a3a39ce5d04b8269750dbc30cc1f5f9b282704f51b31fd9",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/31_l4_g0_c0_context.png",
+          "sha256": "2d04513fcaec8a65406f926ea84e2de6f65ee77d10191ce1a2956fc492e541a4",
+          "camera_um": [
+            6.8968799999999995,
+            1.98704,
+            7.3051200000000005,
+            2.2289600000000003
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l4_g0_c0.gds",
+          "render_source_sha256": "d535935bfd01fdbe07dd63c56d4f4f178e7f0f47ac83b42e6a0b34e0f721761f",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/31_l4_g0_c0_detail.png",
+          "sha256": "8cf9a1f2e5c5c0a5b38e0f679c9b1845462ba1dca741ca945d2e95185ee633f6",
+          "camera_um": [
+            7.01244,
+            2.05552,
+            7.18956,
+            2.16048
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l4_g0_c0.gds",
+          "render_source_sha256": "d535935bfd01fdbe07dd63c56d4f4f178e7f0f47ac83b42e6a0b34e0f721761f",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 32,
+      "case_id": "l4_g0_c1",
+      "level": 4,
+      "kind": "repair",
+      "source_group": "l4_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l4_g0_c1.gds",
+      "gds_sha256": "416355ecb0fc60b9d8a3d8cde04dabcfd7c411e08283de6ea86412208266ca2e",
+      "metrics": {
+        "cell_definitions": 68,
+        "context_shapes": 58,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 19786,
+        "editable_shape_count": 8,
+        "hierarchy_depth": 2,
+        "instance_count": 1909,
+        "local_route_polygons": 17,
+        "local_routing_occupancy": 0.23429129464285714,
+        "occupancy_box_um": [
+          6.874,
+          1.959,
+          7.098,
+          2.1990000000000003
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 50,
+        "route_segment_count": 5077,
+        "shape_count": 192531,
+        "target_markers": 1,
+        "via_count": 7024
+      },
+      "marker_counts": {
+        "M3.W.1": 1
+      },
+      "target_rules": [
+        "M3.W.1"
+      ],
+      "scope_um": [
+        6.954,
+        2.039,
+        7.018,
+        2.119
+      ],
+      "inspection_window_um": [
+        6.874,
+        1.959,
+        7.098,
+        2.1990000000000003
+      ],
+      "permitted_regions_um": [
+        [
+          6.954,
+          2.039,
+          7.018,
+          2.119
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/32_l4_g0_c1_full.png",
+          "sha256": "6193233acd3197c32a52fdf3c6f0ee29f8fde5aaa2bd0a8a634d39659cb6f32c",
+          "camera_um": [
+            -6.991250000000001,
+            -0.6800000000000015,
+            23.99125,
+            17.68
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l4_g0_c1.gds",
+          "render_source_sha256": "416355ecb0fc60b9d8a3d8cde04dabcfd7c411e08283de6ea86412208266ca2e",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/32_l4_g0_c1_context.png",
+          "sha256": "1d13049458c73c48708beff4a0dea94738d59eee1b31752020575b09c538c150",
+          "camera_um": [
+            6.7673,
+            1.9494,
+            7.2047,
+            2.2086
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l4_g0_c1.gds",
+          "render_source_sha256": "6ce5b026347c28129418ce7de7e474b0c78b873288de0cd1e221b80fcaa6f3b7",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/32_l4_g0_c1_detail.png",
+          "sha256": "b64e76f383787847f6969a6b11f2ed8dc4015dc52ac543e7f7c926b4673b1923",
+          "camera_um": [
+            6.875299999999999,
+            2.0134000000000003,
+            7.0967,
+            2.1446
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l4_g0_c1.gds",
+          "render_source_sha256": "6ce5b026347c28129418ce7de7e474b0c78b873288de0cd1e221b80fcaa6f3b7",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 33,
+      "case_id": "l4_g0_c2",
+      "level": 4,
+      "kind": "repair",
+      "source_group": "l4_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l4_g0_c2.gds",
+      "gds_sha256": "97fc0e46dfab77dab5ac71e51c7330045351439ece1571bd826915129a6d5151",
+      "metrics": {
+        "cell_definitions": 68,
+        "context_shapes": 54,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 19786,
+        "editable_shape_count": 4,
+        "hierarchy_depth": 2,
+        "instance_count": 1909,
+        "local_route_polygons": 14,
+        "local_routing_occupancy": 0.21141581632653061,
+        "occupancy_box_um": [
+          6.78,
+          1.996,
+          7.0040000000000004,
+          2.234
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 50,
+        "route_segment_count": 5077,
+        "shape_count": 192531,
+        "target_markers": 1,
+        "via_count": 7024
+      },
+      "marker_counts": {
+        "V2.W.1": 1
+      },
+      "target_rules": [
+        "V2.W.1"
+      ],
+      "scope_um": [
+        6.86,
+        2.076,
+        6.924,
+        2.154
+      ],
+      "inspection_window_um": [
+        6.78,
+        1.996,
+        7.0040000000000004,
+        2.234
+      ],
+      "permitted_regions_um": [
+        [
+          6.86,
+          2.076,
+          6.924,
+          2.154
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/33_l4_g0_c2_full.png",
+          "sha256": "d9c3d02d7df7d1e59683012ff6cdee3f72bb2d23c72e04166382d94c107ba791",
+          "camera_um": [
+            -6.991250000000001,
+            -0.6800000000000015,
+            23.99125,
+            17.68
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l4_g0_c2.gds",
+          "render_source_sha256": "97fc0e46dfab77dab5ac71e51c7330045351439ece1571bd826915129a6d5151",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/33_l4_g0_c2_context.png",
+          "sha256": "3dcfdbe08d624af850f7a848ffcedebc83fea6ce0daea8392629699bffc8d5aa",
+          "camera_um": [
+            6.6751225000000005,
+            1.9864800000000002,
+            7.1088775,
+            2.24352
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l4_g0_c2.gds",
+          "render_source_sha256": "1388dbd2768a756ab4b4b6ef910e946574365edd621dfaab3d8c8c6a78510114",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/33_l4_g0_c2_detail.png",
+          "sha256": "18e4aecc14930f2650523175cae433179f20c655e90b24f6aa0a2b327f5ab098",
+          "camera_um": [
+            6.784067500000001,
+            2.0510400000000004,
+            6.9999325,
+            2.17896
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l4_g0_c2.gds",
+          "render_source_sha256": "1388dbd2768a756ab4b4b6ef910e946574365edd621dfaab3d8c8c6a78510114",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 34,
+      "case_id": "l4_g0_c3",
+      "level": 4,
+      "kind": "clean_control",
+      "source_group": "l4_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l4_g0_c3.gds",
+      "gds_sha256": "0c5b447e574f58a9fd5601b8d143f5956ffa8f8f59432b371774a9d9ac0f04ea",
+      "metrics": {
+        "cell_definitions": 68,
+        "context_shapes": 53,
+        "coupled_rules": 0,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 19786,
+        "editable_shape_count": 7,
+        "hierarchy_depth": 2,
+        "instance_count": 1909,
+        "local_route_polygons": 14,
+        "local_routing_occupancy": 0.2333705357142857,
+        "occupancy_box_um": [
+          10.33,
+          7.17,
+          10.554,
+          7.41
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 46,
+        "route_segment_count": 5077,
+        "shape_count": 192531,
+        "target_markers": 0,
+        "via_count": 7024
+      },
+      "marker_counts": {},
+      "target_rules": [
+        "M3.W.1"
+      ],
+      "scope_um": [
+        10.41,
+        7.25,
+        10.474,
+        7.33
+      ],
+      "inspection_window_um": [
+        10.33,
+        7.17,
+        10.554,
+        7.41
+      ],
+      "permitted_regions_um": [
+        [
+          10.41,
+          7.25,
+          10.474,
+          7.33
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/34_l4_g0_c3_full.png",
+          "sha256": "22367428b1a5c294c60f851225f0d80142129b42eada461e977b944219a4b87b",
+          "camera_um": [
+            -6.991250000000001,
+            -0.6800000000000015,
+            23.99125,
+            17.68
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l4_g0_c3.gds",
+          "render_source_sha256": "0c5b447e574f58a9fd5601b8d143f5956ffa8f8f59432b371774a9d9ac0f04ea",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/34_l4_g0_c3_context.png",
+          "sha256": "9eb3770834bcd2906473439a75cd9efa9c25c12f06a69d2c674935513e392a24",
+          "camera_um": [
+            10.2233,
+            7.1604,
+            10.6607,
+            7.4196
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l4_g0_c3.gds",
+          "render_source_sha256": "88a32be4419228a47c7be81c0219092e376420ad8645ef4bee27477b7622d5ed",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/34_l4_g0_c3_detail.png",
+          "sha256": "bc795f84713f4ff37d69ddeb036ec55bf3092aa1d5b989f0fc8346f6cc5e8637",
+          "camera_um": [
+            10.3313,
+            7.2244,
+            10.5527,
+            7.3556
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l4_g0_c3.gds",
+          "render_source_sha256": "88a32be4419228a47c7be81c0219092e376420ad8645ef4bee27477b7622d5ed",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 35,
+      "case_id": "l4_g0_c4",
+      "level": 4,
+      "kind": "no_edit",
+      "source_group": "l4_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l4_g0_c4.gds",
+      "gds_sha256": "7fca998728ee1d38a2d00e02152b54d959b29f2a730d66340630916c028d1cdd",
+      "metrics": {
+        "cell_definitions": 68,
+        "context_shapes": 55,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 19786,
+        "editable_shape_count": 0,
+        "hierarchy_depth": 2,
+        "instance_count": 1909,
+        "local_route_polygons": 16,
+        "local_routing_occupancy": 0.3086547118847539,
+        "occupancy_box_um": [
+          10.236,
+          6.586,
+          10.46,
+          6.824
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 55,
+        "route_segment_count": 5077,
+        "shape_count": 192531,
+        "target_markers": 1,
+        "via_count": 7024
+      },
+      "marker_counts": {
+        "V2.W.1": 1
+      },
+      "target_rules": [
+        "V2.W.1"
+      ],
+      "scope_um": [
+        10.316,
+        6.666,
+        10.38,
+        6.744
+      ],
+      "inspection_window_um": [
+        10.236,
+        6.586,
+        10.46,
+        6.824
+      ],
+      "permitted_regions_um": [],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/35_l4_g0_c4_full.png",
+          "sha256": "fc70274825012819388abf1a0ce3f973c6533893ebc67cb8339441e00fac2d22",
+          "camera_um": [
+            -6.991250000000001,
+            -0.6800000000000015,
+            23.99125,
+            17.68
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l4_g0_c4.gds",
+          "render_source_sha256": "7fca998728ee1d38a2d00e02152b54d959b29f2a730d66340630916c028d1cdd",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/35_l4_g0_c4_context.png",
+          "sha256": "f94bc9ffe22a87b9d2f6d100d5d73c52e244121a4ec7b223b8598a56d83d8aaf",
+          "camera_um": [
+            10.131122500000002,
+            6.57648,
+            10.5648775,
+            6.83352
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l4_g0_c4.gds",
+          "render_source_sha256": "ae9498fbbefb4df42c11ba5cbc1523584fbad1b645c64d825c17121229a67705",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/35_l4_g0_c4_detail.png",
+          "sha256": "c67b77842449db0dd9fa9a327953fb33e8bbe77928b14daec13ed5fe2b287899",
+          "camera_um": [
+            10.240067500000002,
+            6.64104,
+            10.4559325,
+            6.76896
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l4_g0_c4.gds",
+          "render_source_sha256": "ae9498fbbefb4df42c11ba5cbc1523584fbad1b645c64d825c17121229a67705",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 36,
+      "case_id": "l4_g1_c0",
+      "level": 4,
+      "kind": "repair",
+      "source_group": "l4_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l4_g1_c0.gds",
+      "gds_sha256": "20d5bb9a5eca73bc61fceb681ea8cd414e3276793faab4293776f83a3bfe8a7a",
+      "metrics": {
+        "cell_definitions": 66,
+        "context_shapes": 55,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 21564,
+        "editable_shape_count": 8,
+        "hierarchy_depth": 2,
+        "instance_count": 1978,
+        "local_route_polygons": 15,
+        "local_routing_occupancy": 0.24719122023809523,
+        "occupancy_box_um": [
+          12.525,
+          12.346,
+          12.765,
+          12.57
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 47,
+        "route_segment_count": 5524,
+        "shape_count": 199263,
+        "target_markers": 1,
+        "via_count": 7869
+      },
+      "marker_counts": {
+        "M2.W.1": 1
+      },
+      "target_rules": [
+        "M2.W.1"
+      ],
+      "scope_um": [
+        12.605,
+        12.426,
+        12.685,
+        12.49
+      ],
+      "inspection_window_um": [
+        12.525,
+        12.346,
+        12.765,
+        12.57
+      ],
+      "permitted_regions_um": [
+        [
+          12.605,
+          12.426,
+          12.685,
+          12.49
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/36_l4_g1_c0_full.png",
+          "sha256": "de62913fbf56d5a2878b1e97733f654b891c0857c0744f06fcc3fffa3f885673",
+          "camera_um": [
+            -6.991250000000001,
+            -0.6800000000000015,
+            23.99125,
+            17.68
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l4_g1_c0.gds",
+          "render_source_sha256": "20d5bb9a5eca73bc61fceb681ea8cd414e3276793faab4293776f83a3bfe8a7a",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/36_l4_g1_c0_context.png",
+          "sha256": "fd74a4e17aead6c7d3a0cd62c353b11e9d787b474f206e5ca1507a818517ebef",
+          "camera_um": [
+            12.44088,
+            12.33704,
+            12.84912,
+            12.57896
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l4_g1_c0.gds",
+          "render_source_sha256": "c5e14856fb504a9c38ea2d6629c24c14dc1da79d2e7b4e4616eb734632da484b",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/36_l4_g1_c0_detail.png",
+          "sha256": "c8c56800f9aba4e83bd92e5e459371a808b3cfdbc73f03f8219a535e82a11937",
+          "camera_um": [
+            12.55644,
+            12.405520000000001,
+            12.733559999999999,
+            12.51048
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l4_g1_c0.gds",
+          "render_source_sha256": "c5e14856fb504a9c38ea2d6629c24c14dc1da79d2e7b4e4616eb734632da484b",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 37,
+      "case_id": "l4_g1_c1",
+      "level": 4,
+      "kind": "repair",
+      "source_group": "l4_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l4_g1_c1.gds",
+      "gds_sha256": "9c7f7ef59f8097d581bbc862fac87efcea05fae2becdae6905f2d3c910242fc7",
+      "metrics": {
+        "cell_definitions": 66,
+        "context_shapes": 56,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 21564,
+        "editable_shape_count": 6,
+        "hierarchy_depth": 2,
+        "instance_count": 1978,
+        "local_route_polygons": 15,
+        "local_routing_occupancy": 0.2269717261904762,
+        "occupancy_box_um": [
+          12.346,
+          8.748,
+          12.57,
+          8.988
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 50,
+        "route_segment_count": 5524,
+        "shape_count": 199263,
+        "target_markers": 1,
+        "via_count": 7869
+      },
+      "marker_counts": {
+        "M3.W.1": 1
+      },
+      "target_rules": [
+        "M3.W.1"
+      ],
+      "scope_um": [
+        12.426,
+        8.828,
+        12.49,
+        8.908
+      ],
+      "inspection_window_um": [
+        12.346,
+        8.748,
+        12.57,
+        8.988
+      ],
+      "permitted_regions_um": [
+        [
+          12.426,
+          8.828,
+          12.49,
+          8.908
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/37_l4_g1_c1_full.png",
+          "sha256": "77db3cc0fd12579021d8651578931485b7ec75332d436c8f46d27e0bb09712a0",
+          "camera_um": [
+            -6.991250000000001,
+            -0.6800000000000015,
+            23.99125,
+            17.68
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l4_g1_c1.gds",
+          "render_source_sha256": "9c7f7ef59f8097d581bbc862fac87efcea05fae2becdae6905f2d3c910242fc7",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/37_l4_g1_c1_context.png",
+          "sha256": "ac6da9e2d78489fc648824a3b8ddbc753262da438b91646303c2bfcd985039cd",
+          "camera_um": [
+            12.2393,
+            8.738399999999999,
+            12.6767,
+            8.997599999999998
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l4_g1_c1.gds",
+          "render_source_sha256": "bd2d00caae30864195ec078e274f8ab9ab2cd1cd9451d17e9e91745499915fff",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/37_l4_g1_c1_detail.png",
+          "sha256": "0c616c09cf7bb97bb966ec66a3fec33f5c4a52aed7340db8489a72964607852e",
+          "camera_um": [
+            12.3473,
+            8.802399999999999,
+            12.5687,
+            8.933599999999998
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l4_g1_c1.gds",
+          "render_source_sha256": "bd2d00caae30864195ec078e274f8ab9ab2cd1cd9451d17e9e91745499915fff",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 38,
+      "case_id": "l4_g1_c2",
+      "level": 4,
+      "kind": "repair",
+      "source_group": "l4_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l4_g1_c2.gds",
+      "gds_sha256": "f1e576c4fa7fcfc5369dbbbfb523254b8f3a59ed8e887bdac82aba5824692eb4",
+      "metrics": {
+        "cell_definitions": 66,
+        "context_shapes": 55,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 21564,
+        "editable_shape_count": 4,
+        "hierarchy_depth": 2,
+        "instance_count": 1978,
+        "local_route_polygons": 15,
+        "local_routing_occupancy": 0.24705507202881152,
+        "occupancy_box_um": [
+          9.588000000000001,
+          4.516,
+          9.812,
+          4.7540000000000004
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 51,
+        "route_segment_count": 5524,
+        "shape_count": 199263,
+        "target_markers": 1,
+        "via_count": 7869
+      },
+      "marker_counts": {
+        "V2.W.1": 1
+      },
+      "target_rules": [
+        "V2.W.1"
+      ],
+      "scope_um": [
+        9.668000000000001,
+        4.596,
+        9.732,
+        4.674
+      ],
+      "inspection_window_um": [
+        9.588000000000001,
+        4.516,
+        9.812,
+        4.7540000000000004
+      ],
+      "permitted_regions_um": [
+        [
+          9.668000000000001,
+          4.596,
+          9.732,
+          4.674
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/38_l4_g1_c2_full.png",
+          "sha256": "9d81d78d92bd22f5ca300e14bdd9096e489151f1a0564640118ddb8ec999a77f",
+          "camera_um": [
+            -6.991250000000001,
+            -0.6800000000000015,
+            23.99125,
+            17.68
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l4_g1_c2.gds",
+          "render_source_sha256": "f1e576c4fa7fcfc5369dbbbfb523254b8f3a59ed8e887bdac82aba5824692eb4",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/38_l4_g1_c2_context.png",
+          "sha256": "daba378f13cea0cb850590a9c4429f5e1bb2c6559f066339c80251cb6a93cfec",
+          "camera_um": [
+            9.483122499999999,
+            4.50648,
+            9.9168775,
+            4.76352
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l4_g1_c2.gds",
+          "render_source_sha256": "4b7ad078ce76878375509d7ef55b0c376176fed97c4bf01709826b406a9aabed",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/38_l4_g1_c2_detail.png",
+          "sha256": "37433bfd0e65ec2a494f38fed372aa42f44363bc6c2ecfa5ef671b027ee2583f",
+          "camera_um": [
+            9.592067499999999,
+            4.57104,
+            9.8079325,
+            4.69896
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l4_g1_c2.gds",
+          "render_source_sha256": "4b7ad078ce76878375509d7ef55b0c376176fed97c4bf01709826b406a9aabed",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 39,
+      "case_id": "l4_g1_c3",
+      "level": 4,
+      "kind": "clean_control",
+      "source_group": "l4_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l4_g1_c3.gds",
+      "gds_sha256": "09e77a1f5bd96ebaace4cd6e7b4947a82753685f310a990acb6136b62e5008f6",
+      "metrics": {
+        "cell_definitions": 66,
+        "context_shapes": 51,
+        "coupled_rules": 0,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 21564,
+        "editable_shape_count": 6,
+        "hierarchy_depth": 2,
+        "instance_count": 1978,
+        "local_route_polygons": 16,
+        "local_routing_occupancy": 0.22873883928571428,
+        "occupancy_box_um": [
+          9.502,
+          4.524,
+          9.726,
+          4.764
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 45,
+        "route_segment_count": 5524,
+        "shape_count": 199263,
+        "target_markers": 0,
+        "via_count": 7869
+      },
+      "marker_counts": {},
+      "target_rules": [
+        "M3.W.1"
+      ],
+      "scope_um": [
+        9.582,
+        4.604,
+        9.646,
+        4.684
+      ],
+      "inspection_window_um": [
+        9.502,
+        4.524,
+        9.726,
+        4.764
+      ],
+      "permitted_regions_um": [
+        [
+          9.582,
+          4.604,
+          9.646,
+          4.684
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/39_l4_g1_c3_full.png",
+          "sha256": "a6591cab733ed67aba1dd9112a00d0f57d7bfaa3d9942f16b19ad50c834bf7ec",
+          "camera_um": [
+            -6.991250000000001,
+            -0.6800000000000015,
+            23.99125,
+            17.68
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l4_g1_c3.gds",
+          "render_source_sha256": "09e77a1f5bd96ebaace4cd6e7b4947a82753685f310a990acb6136b62e5008f6",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/39_l4_g1_c3_context.png",
+          "sha256": "48bba7813e6a2c16199062e68ef3c3c5eda2e38d43e60e94d644965864302629",
+          "camera_um": [
+            9.3953,
+            4.5144,
+            9.8327,
+            4.7736
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l4_g1_c3.gds",
+          "render_source_sha256": "794891c016b2aa88ca29af59586a2181eb2da21d8f75c75b7eec382877e9aba4",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/39_l4_g1_c3_detail.png",
+          "sha256": "908b4422ef05a304f6d31eb643deede3c0dea9207af2db5e8032b1ba97157114",
+          "camera_um": [
+            9.503300000000001,
+            4.5784,
+            9.7247,
+            4.7096
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l4_g1_c3.gds",
+          "render_source_sha256": "794891c016b2aa88ca29af59586a2181eb2da21d8f75c75b7eec382877e9aba4",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 40,
+      "case_id": "l4_g1_c4",
+      "level": 4,
+      "kind": "no_edit",
+      "source_group": "l4_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l4_g1_c4.gds",
+      "gds_sha256": "2b11a7593601573de6e92921dcf642682c544a16eab6429f24e543e3d87586ae",
+      "metrics": {
+        "cell_definitions": 66,
+        "context_shapes": 52,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 21564,
+        "editable_shape_count": 0,
+        "hierarchy_depth": 2,
+        "instance_count": 1978,
+        "local_route_polygons": 14,
+        "local_routing_occupancy": 0.31833358343337337,
+        "occupancy_box_um": [
+          12.612,
+          12.526,
+          12.836,
+          12.764000000000001
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 52,
+        "route_segment_count": 5524,
+        "shape_count": 199263,
+        "target_markers": 1,
+        "via_count": 7869
+      },
+      "marker_counts": {
+        "V2.W.1": 1
+      },
+      "target_rules": [
+        "V2.W.1"
+      ],
+      "scope_um": [
+        12.692,
+        12.606,
+        12.756,
+        12.684000000000001
+      ],
+      "inspection_window_um": [
+        12.612,
+        12.526,
+        12.836,
+        12.764000000000001
+      ],
+      "permitted_regions_um": [],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/40_l4_g1_c4_full.png",
+          "sha256": "a93b68d63b25f6181493bc1900adf01b6b232c036211d8bc8078a57eb8580389",
+          "camera_um": [
+            -6.991250000000001,
+            -0.6800000000000015,
+            23.99125,
+            17.68
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l4_g1_c4.gds",
+          "render_source_sha256": "2b11a7593601573de6e92921dcf642682c544a16eab6429f24e543e3d87586ae",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/40_l4_g1_c4_context.png",
+          "sha256": "17a28e70541aa5a587d97f9710b45f710d0a2726f41d394dbf634f09ba3818a5",
+          "camera_um": [
+            12.5071225,
+            12.51648,
+            12.940877500000001,
+            12.77352
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l4_g1_c4.gds",
+          "render_source_sha256": "eaea16c23d15a9c3e8ec2c4b222dc3685a0e0cde5faf69321f757f29afeb16bf",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/40_l4_g1_c4_detail.png",
+          "sha256": "c6ea5954cf24b3bae0f1c0256060bf0399bc562e306260d2c99181c96cab4918",
+          "camera_um": [
+            12.616067499999998,
+            12.581039999999998,
+            12.831932500000002,
+            12.708960000000001
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l4_g1_c4.gds",
+          "render_source_sha256": "eaea16c23d15a9c3e8ec2c4b222dc3685a0e0cde5faf69321f757f29afeb16bf",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 41,
+      "case_id": "l5_g0_c0",
+      "level": 5,
+      "kind": "repair",
+      "source_group": "l5_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l5_g0_c0.gds",
+      "gds_sha256": "4b6b2089a1a88b2b79143ba1616eebd8172f95209bf2ef29b100a0530fcd6b62",
+      "metrics": {
+        "cell_definitions": 69,
+        "context_shapes": 38,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 19232,
+        "editable_shape_count": 3,
+        "hierarchy_depth": 2,
+        "instance_count": 1852,
+        "local_route_polygons": 10,
+        "local_routing_occupancy": 0.22259267631103075,
+        "matched_l4_occupancy": 0.081958257986739,
+        "occupancy_box_um": [
+          4.445,
+          3.851,
+          4.6690000000000005,
+          4.088
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 35,
+        "route_segment_count": 4962,
+        "shape_count": 190426,
+        "target_markers": 2,
+        "via_count": 6876
+      },
+      "marker_counts": {
+        "M2.W.1": 1,
+        "V2.M2.EN.1": 1
+      },
+      "target_rules": [
+        "M2.W.1",
+        "V2.M2.EN.1"
+      ],
+      "scope_um": [
+        4.525,
+        3.931,
+        4.589,
+        4.008
+      ],
+      "inspection_window_um": [
+        4.445,
+        3.851,
+        4.6690000000000005,
+        4.088
+      ],
+      "permitted_regions_um": [
+        [
+          4.525,
+          3.931,
+          4.589,
+          4.008
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/41_l5_g0_c0_full.png",
+          "sha256": "118d4857f17939037a0184f4100eabca35899018aeecfa9a88194e89d1d693af",
+          "camera_um": [
+            -6.991250000000001,
+            -0.6800000000000015,
+            23.99125,
+            17.68
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l5_g0_c0.gds",
+          "render_source_sha256": "4b6b2089a1a88b2b79143ba1616eebd8172f95209bf2ef29b100a0530fcd6b62",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/41_l5_g0_c0_context.png",
+          "sha256": "29433f1ac60a5882c347440cf51e7d92615bb33e986f446ee3854c4d9499459d",
+          "camera_um": [
+            4.34103375,
+            3.84152,
+            4.7729662500000005,
+            4.09748
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l5_g0_c0.gds",
+          "render_source_sha256": "7a72b0c08125166ae9c3e732a66e9fe82e2b44f37905789a3c2b9198c3bceab9",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/41_l5_g0_c0_detail.png",
+          "sha256": "be5d0d888814345eb09d8a1011f356fb42cb82260552a7b1fe07746df6f50388",
+          "camera_um": [
+            4.45045125,
+            3.9063600000000003,
+            4.66354875,
+            4.03264
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l5_g0_c0.gds",
+          "render_source_sha256": "7a72b0c08125166ae9c3e732a66e9fe82e2b44f37905789a3c2b9198c3bceab9",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 42,
+      "case_id": "l5_g0_c1",
+      "level": 5,
+      "kind": "repair",
+      "source_group": "l5_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l5_g0_c1.gds",
+      "gds_sha256": "653c135bb9fcc2de8ac71bbb9e6329c79225240c62d81862ec91612059f663ab",
+      "metrics": {
+        "cell_definitions": 69,
+        "context_shapes": 37,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 19232,
+        "editable_shape_count": 3,
+        "hierarchy_depth": 2,
+        "instance_count": 1852,
+        "local_route_polygons": 10,
+        "local_routing_occupancy": 0.22327079566003616,
+        "matched_l4_occupancy": 0.0956336648583484,
+        "occupancy_box_um": [
+          4.421,
+          3.851,
+          4.6450000000000005,
+          4.088
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 34,
+        "route_segment_count": 4962,
+        "shape_count": 190426,
+        "target_markers": 2,
+        "via_count": 6876
+      },
+      "marker_counts": {
+        "M2.W.1": 1,
+        "V2.M2.EN.1": 1
+      },
+      "target_rules": [
+        "M2.W.1",
+        "V2.M2.EN.1"
+      ],
+      "scope_um": [
+        4.501,
+        3.931,
+        4.565,
+        4.008
+      ],
+      "inspection_window_um": [
+        4.421,
+        3.851,
+        4.6450000000000005,
+        4.088
+      ],
+      "permitted_regions_um": [
+        [
+          4.501,
+          3.931,
+          4.565,
+          4.008
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/42_l5_g0_c1_full.png",
+          "sha256": "901e09c6ff1655f256e9bcf579ef7d7f79bc4bb073a35b325439905c68a1d22a",
+          "camera_um": [
+            -6.991250000000001,
+            -0.6800000000000015,
+            23.99125,
+            17.68
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l5_g0_c1.gds",
+          "render_source_sha256": "653c135bb9fcc2de8ac71bbb9e6329c79225240c62d81862ec91612059f663ab",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/42_l5_g0_c1_context.png",
+          "sha256": "1e6cf49b13dba3b2d1a5c6434cb4455e61432fb36cd68ad7a59e48815a1a6858",
+          "camera_um": [
+            4.31703375,
+            3.84152,
+            4.7489662500000005,
+            4.09748
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l5_g0_c1.gds",
+          "render_source_sha256": "761813679d9eeb7f867f4a6030d0a6c339a84057636c787f6778184fe3d00527",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/42_l5_g0_c1_detail.png",
+          "sha256": "e5243ea81572de71c16e47282d5de1dd00b53fe9973804b4318f94a13f0e9e90",
+          "camera_um": [
+            4.42645125,
+            3.9063600000000003,
+            4.63954875,
+            4.03264
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l5_g0_c1.gds",
+          "render_source_sha256": "761813679d9eeb7f867f4a6030d0a6c339a84057636c787f6778184fe3d00527",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 43,
+      "case_id": "l5_g0_c2",
+      "level": 5,
+      "kind": "repair",
+      "source_group": "l5_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l5_g0_c2.gds",
+      "gds_sha256": "abd92fb579e39d634cc0b20d587e64f3cda54631e5c8afe23fcdb2695e2dcb5d",
+      "metrics": {
+        "cell_definitions": 69,
+        "context_shapes": 29,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 19232,
+        "editable_shape_count": 4,
+        "hierarchy_depth": 2,
+        "instance_count": 1852,
+        "local_route_polygons": 5,
+        "local_routing_occupancy": 0.11748417721518987,
+        "matched_l4_occupancy": 0.06747287522603979,
+        "occupancy_box_um": [
+          5.309,
+          3.851,
+          5.533,
+          4.088
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 25,
+        "route_segment_count": 4962,
+        "shape_count": 190426,
+        "target_markers": 2,
+        "via_count": 6876
+      },
+      "marker_counts": {
+        "M2.W.1": 1,
+        "V2.M2.EN.1": 1
+      },
+      "target_rules": [
+        "M2.W.1",
+        "V2.M2.EN.1"
+      ],
+      "scope_um": [
+        5.389,
+        3.931,
+        5.453,
+        4.008
+      ],
+      "inspection_window_um": [
+        5.309,
+        3.851,
+        5.533,
+        4.088
+      ],
+      "permitted_regions_um": [
+        [
+          5.389,
+          3.931,
+          5.453,
+          4.008
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/43_l5_g0_c2_full.png",
+          "sha256": "461add1d2346064a469f80e1c90792bb59a47d8ba82bd8d83fa2deb9b87e31d0",
+          "camera_um": [
+            -6.991250000000001,
+            -0.6800000000000015,
+            23.99125,
+            17.68
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l5_g0_c2.gds",
+          "render_source_sha256": "abd92fb579e39d634cc0b20d587e64f3cda54631e5c8afe23fcdb2695e2dcb5d",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/43_l5_g0_c2_context.png",
+          "sha256": "367c6c2bf7fd208899ae96f1fc2061f597b01bae65c087b1a1234aa90f72d779",
+          "camera_um": [
+            5.20503375,
+            3.84152,
+            5.63696625,
+            4.09748
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l5_g0_c2.gds",
+          "render_source_sha256": "8f1891201cfd9d385346e080f6e025e3161d7c93e7c7a556e8d495bfbc444562",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/43_l5_g0_c2_detail.png",
+          "sha256": "61b28bff5358b4d2009b018f912dad97f89d3569ff5e65642f50c8693c85ad6c",
+          "camera_um": [
+            5.31445125,
+            3.9063600000000003,
+            5.52754875,
+            4.03264
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l5_g0_c2.gds",
+          "render_source_sha256": "8f1891201cfd9d385346e080f6e025e3161d7c93e7c7a556e8d495bfbc444562",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 44,
+      "case_id": "l5_g0_c3",
+      "level": 5,
+      "kind": "clean_control",
+      "source_group": "l5_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l5_g0_c3.gds",
+      "gds_sha256": "befc956f59db066b8775185c3cf30c04e052920810d420d4c55b4fb4ee574320",
+      "metrics": {
+        "cell_definitions": 69,
+        "context_shapes": 28,
+        "coupled_rules": 0,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 19232,
+        "editable_shape_count": 4,
+        "hierarchy_depth": 2,
+        "instance_count": 1852,
+        "local_route_polygons": 5,
+        "local_routing_occupancy": 0.11748417721518987,
+        "matched_l4_occupancy": 0.06340415913200724,
+        "occupancy_box_um": [
+          5.285,
+          3.851,
+          5.509,
+          4.088
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 24,
+        "route_segment_count": 4962,
+        "shape_count": 190426,
+        "target_markers": 0,
+        "via_count": 6876
+      },
+      "marker_counts": {},
+      "target_rules": [
+        "M2.W.1",
+        "V2.M2.EN.1"
+      ],
+      "scope_um": [
+        5.365,
+        3.931,
+        5.429,
+        4.008
+      ],
+      "inspection_window_um": [
+        5.285,
+        3.851,
+        5.509,
+        4.088
+      ],
+      "permitted_regions_um": [
+        [
+          5.365,
+          3.931,
+          5.429,
+          4.008
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/44_l5_g0_c3_full.png",
+          "sha256": "65ac8321e5dcb4fd6f79d113982c7899b1321d39fddc0b4b9d0128cec167101b",
+          "camera_um": [
+            -6.991250000000001,
+            -0.6800000000000015,
+            23.99125,
+            17.68
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l5_g0_c3.gds",
+          "render_source_sha256": "befc956f59db066b8775185c3cf30c04e052920810d420d4c55b4fb4ee574320",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/44_l5_g0_c3_context.png",
+          "sha256": "98a0b2f17a77eaf6e7c849c439c500af53e1c16656ae854dd286870a81252cbd",
+          "camera_um": [
+            5.18103375,
+            3.84152,
+            5.61296625,
+            4.09748
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l5_g0_c3.gds",
+          "render_source_sha256": "087eec129d5e06e4f5df707444149f0357453fe3ba2787517b2940a9bcb82be5",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/44_l5_g0_c3_detail.png",
+          "sha256": "f4f4d1defff48215b0916506314e6dde6e3c78f7b26b242fac7aad456c1015fa",
+          "camera_um": [
+            5.29045125,
+            3.9063600000000003,
+            5.50354875,
+            4.03264
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l5_g0_c3.gds",
+          "render_source_sha256": "087eec129d5e06e4f5df707444149f0357453fe3ba2787517b2940a9bcb82be5",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 45,
+      "case_id": "l5_g0_c4",
+      "level": 5,
+      "kind": "no_edit",
+      "source_group": "l5_source_0",
+      "full_gds": "test_data/benchmark_c2c3/cases/l5_g0_c4.gds",
+      "gds_sha256": "2a27b42fb7c76542e6793f476092cd8429dda8fc592b3e9edbf1879719db58f6",
+      "metrics": {
+        "cell_definitions": 69,
+        "context_shapes": 29,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 19232,
+        "editable_shape_count": 0,
+        "hierarchy_depth": 2,
+        "instance_count": 1852,
+        "local_route_polygons": 6,
+        "local_routing_occupancy": 0.13264767932489452,
+        "matched_l4_occupancy": 0.0970464135021097,
+        "occupancy_box_um": [
+          5.609,
+          4.319,
+          5.833,
+          4.556
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 29,
+        "route_segment_count": 4962,
+        "shape_count": 190426,
+        "target_markers": 2,
+        "via_count": 6876
+      },
+      "marker_counts": {
+        "M2.W.1": 1,
+        "V2.M2.EN.1": 1
+      },
+      "target_rules": [
+        "M2.W.1",
+        "V2.M2.EN.1"
+      ],
+      "scope_um": [
+        5.689,
+        4.399,
+        5.753,
+        4.476
+      ],
+      "inspection_window_um": [
+        5.609,
+        4.319,
+        5.833,
+        4.556
+      ],
+      "permitted_regions_um": [],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/45_l5_g0_c4_full.png",
+          "sha256": "df8cf497a0b5c5944fa1700753db5c5a74ca07fc78ed7060ec1227deb04e8c3f",
+          "camera_um": [
+            -6.991250000000001,
+            -0.6800000000000015,
+            23.99125,
+            17.68
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l5_g0_c4.gds",
+          "render_source_sha256": "2a27b42fb7c76542e6793f476092cd8429dda8fc592b3e9edbf1879719db58f6",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 5,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/45_l5_g0_c4_context.png",
+          "sha256": "85ad5044aa5bf12b277e1a1113886b5da9e67ae6ce6fdd3e09683197333266ce",
+          "camera_um": [
+            5.50503375,
+            4.30952,
+            5.93696625,
+            4.56548
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l5_g0_c4.gds",
+          "render_source_sha256": "852e2cec25955af0a4d92091398b246b457b20118a47e5abc1e0e866b7819025",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/45_l5_g0_c4_detail.png",
+          "sha256": "a8c0c7a1ee004b959cd159b323f89a82f5be51ff50774b7742039a2f6c2a2b7a",
+          "camera_um": [
+            5.61445125,
+            4.37436,
+            5.82754875,
+            4.50064
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l5_g0_c4.gds",
+          "render_source_sha256": "852e2cec25955af0a4d92091398b246b457b20118a47e5abc1e0e866b7819025",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 46,
+      "case_id": "l5_g1_c0",
+      "level": 5,
+      "kind": "repair",
+      "source_group": "l5_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l5_g1_c0.gds",
+      "gds_sha256": "c45cf9d0affae16a7e7738c75bede7af7da707ae026c4d96d4aa00ce9927c3d9",
+      "metrics": {
+        "cell_definitions": 66,
+        "context_shapes": 33,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 21374,
+        "editable_shape_count": 6,
+        "hierarchy_depth": 2,
+        "instance_count": 1782,
+        "local_route_polygons": 7,
+        "local_routing_occupancy": 0.11276559674502712,
+        "matched_l4_occupancy": 0.0773150241109102,
+        "occupancy_box_um": [
+          5.345,
+          8.873,
+          5.569,
+          9.11
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 27,
+        "route_segment_count": 5500,
+        "shape_count": 170400,
+        "target_markers": 2,
+        "via_count": 7677
+      },
+      "marker_counts": {
+        "M2.W.1": 1,
+        "V2.M2.EN.1": 1
+      },
+      "target_rules": [
+        "M2.W.1",
+        "V2.M2.EN.1"
+      ],
+      "scope_um": [
+        5.425,
+        8.953,
+        5.489,
+        9.03
+      ],
+      "inspection_window_um": [
+        5.345,
+        8.873,
+        5.569,
+        9.11
+      ],
+      "permitted_regions_um": [
+        [
+          5.425,
+          8.953,
+          5.489,
+          9.03
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/46_l5_g1_c0_full.png",
+          "sha256": "9b03f6106c25db9e50071372b338b847e367ed4a243d8d5487d4109df7f41c27",
+          "camera_um": [
+            -6.377665000000001,
+            -0.6203200000000004,
+            21.885665000000003,
+            16.128320000000002
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l5_g1_c0.gds",
+          "render_source_sha256": "c45cf9d0affae16a7e7738c75bede7af7da707ae026c4d96d4aa00ce9927c3d9",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 2,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/46_l5_g1_c0_context.png",
+          "sha256": "4a240277f1a67f70d50b04dd58a889e27fffe0d917500e10bbd29240d369d745",
+          "camera_um": [
+            5.24103375,
+            8.863519999999998,
+            5.67296625,
+            9.11948
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l5_g1_c0.gds",
+          "render_source_sha256": "52f64da227820ae48e1618a130800b6f81d4d01b7eb041c1812756e06e3e3d9f",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/46_l5_g1_c0_detail.png",
+          "sha256": "beef3fefaeefd33a3ed2bab42060f255331adb52c232fc66d4b73ba0b5ae36cf",
+          "camera_um": [
+            5.35045125,
+            8.928359999999998,
+            5.56354875,
+            9.05464
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l5_g1_c0.gds",
+          "render_source_sha256": "52f64da227820ae48e1618a130800b6f81d4d01b7eb041c1812756e06e3e3d9f",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 47,
+      "case_id": "l5_g1_c1",
+      "level": 5,
+      "kind": "repair",
+      "source_group": "l5_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l5_g1_c1.gds",
+      "gds_sha256": "8983f28ee48ac87b378216e386b2e6410c49c11868c6d03ec08c51f79ba786c1",
+      "metrics": {
+        "cell_definitions": 66,
+        "context_shapes": 30,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 21374,
+        "editable_shape_count": 6,
+        "hierarchy_depth": 2,
+        "instance_count": 1782,
+        "local_route_polygons": 6,
+        "local_routing_occupancy": 0.09796940928270043,
+        "matched_l4_occupancy": 0.07390559071729957,
+        "occupancy_box_um": [
+          5.345,
+          8.945,
+          5.569,
+          9.182
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 24,
+        "route_segment_count": 5500,
+        "shape_count": 170400,
+        "target_markers": 2,
+        "via_count": 7677
+      },
+      "marker_counts": {
+        "M2.W.1": 1,
+        "V2.M2.EN.1": 1
+      },
+      "target_rules": [
+        "M2.W.1",
+        "V2.M2.EN.1"
+      ],
+      "scope_um": [
+        5.425,
+        9.025,
+        5.489,
+        9.102
+      ],
+      "inspection_window_um": [
+        5.345,
+        8.945,
+        5.569,
+        9.182
+      ],
+      "permitted_regions_um": [
+        [
+          5.425,
+          9.025,
+          5.489,
+          9.102
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/47_l5_g1_c1_full.png",
+          "sha256": "a1fb97a97780534bb731a2d44b9eac65ae40c4a14531116e5639db83c30f2c72",
+          "camera_um": [
+            -6.377665000000001,
+            -0.6203200000000004,
+            21.885665000000003,
+            16.128320000000002
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l5_g1_c1.gds",
+          "render_source_sha256": "8983f28ee48ac87b378216e386b2e6410c49c11868c6d03ec08c51f79ba786c1",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 2,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/47_l5_g1_c1_context.png",
+          "sha256": "35cb9299110bf96a2c72f1c4dd061a9cc63ab0a1742372a4bd9b97d1b00337f5",
+          "camera_um": [
+            5.24103375,
+            8.93552,
+            5.67296625,
+            9.191480000000002
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l5_g1_c1.gds",
+          "render_source_sha256": "432365c581751570d1bcec403630f7a4930471472717272fae84106dee47bca9",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/47_l5_g1_c1_detail.png",
+          "sha256": "6b8bec148949fe1d3607b7ce679c2417fed45a2302b6b65ede801160d5d4bad6",
+          "camera_um": [
+            5.35045125,
+            9.00036,
+            5.56354875,
+            9.126640000000002
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l5_g1_c1.gds",
+          "render_source_sha256": "432365c581751570d1bcec403630f7a4930471472717272fae84106dee47bca9",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 48,
+      "case_id": "l5_g1_c2",
+      "level": 5,
+      "kind": "repair",
+      "source_group": "l5_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l5_g1_c2.gds",
+      "gds_sha256": "ca1c56e74f555b00dd6170f4e7ced8cda350bd19fcf139e111d4113c8fc06ce7",
+      "metrics": {
+        "cell_definitions": 66,
+        "context_shapes": 26,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 21374,
+        "editable_shape_count": 4,
+        "hierarchy_depth": 2,
+        "instance_count": 1782,
+        "local_route_polygons": 4,
+        "local_routing_occupancy": 0.13308092224231466,
+        "matched_l4_occupancy": 0.09629294755877034,
+        "occupancy_box_um": [
+          5.345,
+          9.143,
+          5.569,
+          9.38
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 22,
+        "route_segment_count": 5500,
+        "shape_count": 170400,
+        "target_markers": 2,
+        "via_count": 7677
+      },
+      "marker_counts": {
+        "M2.W.1": 1,
+        "V2.M2.EN.1": 1
+      },
+      "target_rules": [
+        "M2.W.1",
+        "V2.M2.EN.1"
+      ],
+      "scope_um": [
+        5.425,
+        9.223,
+        5.489,
+        9.3
+      ],
+      "inspection_window_um": [
+        5.345,
+        9.143,
+        5.569,
+        9.38
+      ],
+      "permitted_regions_um": [
+        [
+          5.425,
+          9.223,
+          5.489,
+          9.3
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/48_l5_g1_c2_full.png",
+          "sha256": "21aa8a4013aa7ae22641f6bcd8eade35c0ad4661f35a0265dc51b3644ded8529",
+          "camera_um": [
+            -6.377665000000001,
+            -0.6203200000000004,
+            21.885665000000003,
+            16.128320000000002
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l5_g1_c2.gds",
+          "render_source_sha256": "ca1c56e74f555b00dd6170f4e7ced8cda350bd19fcf139e111d4113c8fc06ce7",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 2,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/48_l5_g1_c2_context.png",
+          "sha256": "eec3e090f873dc0bead53f6d4a528f9d41362e3019dfc2e7e7a0a73bc6c0cb3f",
+          "camera_um": [
+            5.24103375,
+            9.13352,
+            5.67296625,
+            9.389480000000002
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l5_g1_c2.gds",
+          "render_source_sha256": "9c0f0890493e48a01715c73df1529faec7748fc04c19699f264bd3de0d9c87ae",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/48_l5_g1_c2_detail.png",
+          "sha256": "b1e4ac14380dc5f4cb631423605357240fa5d64f7c15c8e24ac922cdac87cac3",
+          "camera_um": [
+            5.35045125,
+            9.198360000000001,
+            5.56354875,
+            9.324640000000002
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l5_g1_c2.gds",
+          "render_source_sha256": "9c0f0890493e48a01715c73df1529faec7748fc04c19699f264bd3de0d9c87ae",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 49,
+      "case_id": "l5_g1_c3",
+      "level": 5,
+      "kind": "clean_control",
+      "source_group": "l5_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l5_g1_c3.gds",
+      "gds_sha256": "39f6852815493f23f96cf074f4f202cd04611beb6b9983d2e1fa982589cb1e00",
+      "metrics": {
+        "cell_definitions": 66,
+        "context_shapes": 24,
+        "coupled_rules": 0,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 21374,
+        "editable_shape_count": 4,
+        "hierarchy_depth": 2,
+        "instance_count": 1782,
+        "local_route_polygons": 4,
+        "local_routing_occupancy": 0.13308092224231466,
+        "matched_l4_occupancy": 0.1003616636528029,
+        "occupancy_box_um": [
+          5.321,
+          9.143,
+          5.545,
+          9.38
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 20,
+        "route_segment_count": 5500,
+        "shape_count": 170400,
+        "target_markers": 0,
+        "via_count": 7677
+      },
+      "marker_counts": {},
+      "target_rules": [
+        "M2.W.1",
+        "V2.M2.EN.1"
+      ],
+      "scope_um": [
+        5.401,
+        9.223,
+        5.465,
+        9.3
+      ],
+      "inspection_window_um": [
+        5.321,
+        9.143,
+        5.545,
+        9.38
+      ],
+      "permitted_regions_um": [
+        [
+          5.401,
+          9.223,
+          5.465,
+          9.3
+        ]
+      ],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/49_l5_g1_c3_full.png",
+          "sha256": "0ee42c58da1a59edcece2fc16120a95330ff0e8bca20600d7f10bf3d8227c274",
+          "camera_um": [
+            -6.377665000000001,
+            -0.6203200000000004,
+            21.885665000000003,
+            16.128320000000002
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l5_g1_c3.gds",
+          "render_source_sha256": "39f6852815493f23f96cf074f4f202cd04611beb6b9983d2e1fa982589cb1e00",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 2,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/49_l5_g1_c3_context.png",
+          "sha256": "13e8ed78d0a46cc9baee322371fe7e773c33c59ce1b5c7b89dbb21be21940853",
+          "camera_um": [
+            5.21703375,
+            9.13352,
+            5.64896625,
+            9.389480000000002
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l5_g1_c3.gds",
+          "render_source_sha256": "c8406a50427a8968a3d846e38e5d1bb65d2e8f8e79dd5ab151b73bca6e18592b",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/49_l5_g1_c3_detail.png",
+          "sha256": "187359e32f4ff0f904b157de1dba913391233130c5c76e8b4bd347c337a95997",
+          "camera_um": [
+            5.32645125,
+            9.198360000000001,
+            5.53954875,
+            9.324640000000002
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l5_g1_c3.gds",
+          "render_source_sha256": "c8406a50427a8968a3d846e38e5d1bb65d2e8f8e79dd5ab151b73bca6e18592b",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    },
+    {
+      "number": 50,
+      "case_id": "l5_g1_c4",
+      "level": 5,
+      "kind": "no_edit",
+      "source_group": "l5_source_1",
+      "full_gds": "test_data/benchmark_c2c3/cases/l5_g1_c4.gds",
+      "gds_sha256": "e9dc9d671b25ea44232b243ef63d6ea10dbdc3dc6346392c10db9606baf38efc",
+      "metrics": {
+        "cell_definitions": 66,
+        "context_shapes": 28,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 21374,
+        "editable_shape_count": 0,
+        "hierarchy_depth": 2,
+        "instance_count": 1782,
+        "local_route_polygons": 6,
+        "local_routing_occupancy": 0.10876280892103676,
+        "matched_l4_occupancy": 0.08527350813743219,
+        "occupancy_box_um": [
+          5.345,
+          9.413,
+          5.569,
+          9.65
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 28,
+        "route_segment_count": 5500,
+        "shape_count": 170400,
+        "target_markers": 2,
+        "via_count": 7677
+      },
+      "marker_counts": {
+        "M2.W.1": 1,
+        "V2.M2.EN.1": 1
+      },
+      "target_rules": [
+        "M2.W.1",
+        "V2.M2.EN.1"
+      ],
+      "scope_um": [
+        5.425,
+        9.493,
+        5.489,
+        9.57
+      ],
+      "inspection_window_um": [
+        5.345,
+        9.413,
+        5.569,
+        9.65
+      ],
+      "permitted_regions_um": [],
+      "images": {
+        "full": {
+          "image": "docs/reports/c2_c3_snapshots/50_l5_g1_c4_full.png",
+          "sha256": "c58feea8f5770e274889d8a56e666e49ebbac1829cde49726c9e92e673b64eb7",
+          "camera_um": [
+            -6.377665000000001,
+            -0.6203200000000004,
+            21.885665000000003,
+            16.128320000000002
+          ],
+          "render_source": "test_data/benchmark_c2c3/cases/l5_g1_c4.gds",
+          "render_source_sha256": "e9dc9d671b25ea44232b243ef63d6ea10dbdc3dc6346392c10db9606baf38efc",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 2,
+          "marker_overlay": false
+        },
+        "context": {
+          "image": "docs/reports/c2_c3_snapshots/50_l5_g1_c4_context.png",
+          "sha256": "40c8a25a46181126593ef09e730b65f156df483cf63d24db0fca9e52437d1a8c",
+          "camera_um": [
+            5.24103375,
+            9.40352,
+            5.67296625,
+            9.659480000000002
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l5_g1_c4.gds",
+          "render_source_sha256": "2079c5ce27fae7fbbf8f073c7b72e7ea3b24f7be0cc539cf733b321832b50bcc",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.05,
+          "marker_overlay": true
+        },
+        "detail": {
+          "image": "docs/reports/c2_c3_snapshots/50_l5_g1_c4_detail.png",
+          "sha256": "88121ad212a24acb05da8ca0b6a968cf3cda82f9b27e4747a74a23d6177a976e",
+          "camera_um": [
+            5.35045125,
+            9.46836,
+            5.56354875,
+            9.594640000000002
+          ],
+          "render_source": "test_data/benchmark_c2c3/windows/l5_g1_c4.gds",
+          "render_source_sha256": "2079c5ce27fae7fbbf8f073c7b72e7ea3b24f7be0cc539cf733b321832b50bcc",
+          "native_pixels": [
+            1080,
+            640
+          ],
+          "scale_bar_um": 0.02,
+          "marker_overlay": true
+        }
+      }
+    }
+  ],
+  "pdfs": [
+    {
+      "path": "output/pdf/c2_c3_gds_snapshot_atlas.pdf",
+      "sha256": "24cc65e0b50686db724caf5eb7ae089253aae8dd41cf28db2c5e594b4c1c1c2b",
+      "pages": 25
+    },
+    {
+      "path": "output/pdf/c2_c3_l1_gds_snapshots.pdf",
+      "sha256": "3a3b682bdbcef691fead39e9fefa10e4564201a3e19e9d092e819fd0d85614a4",
+      "pages": 5
+    },
+    {
+      "path": "output/pdf/c2_c3_l2_gds_snapshots.pdf",
+      "sha256": "263f6593695a1a123f9c7e3ab094b201a814faf71de6db822bb7b07f4a236429",
+      "pages": 5
+    },
+    {
+      "path": "output/pdf/c2_c3_l3_gds_snapshots.pdf",
+      "sha256": "2406ca0501ead390e92f9718b3f8cd7977918fc79f5991b54ebf01221d7615a9",
+      "pages": 5
+    },
+    {
+      "path": "output/pdf/c2_c3_l4_gds_snapshots.pdf",
+      "sha256": "a93980fee1ec50740a345e97b8ca00e0d58484fb4fedb9b3683ffada9598ca5a",
+      "pages": 5
+    },
+    {
+      "path": "output/pdf/c2_c3_l5_gds_snapshots.pdf",
+      "sha256": "1355523a0f7ed02def0d66462d879b278badaeb6cf75b92ad68a18c8b2663865",
+      "pages": 5
+    }
+  ]
+}

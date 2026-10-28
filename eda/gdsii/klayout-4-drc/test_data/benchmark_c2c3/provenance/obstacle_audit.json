@@ -1,0 +1,81 @@
+{
+  "cases": [
+    {
+      "bbox_selected_protected_shapes": 36,
+      "case_id": "l3_g0_c0",
+      "level": 3,
+      "protected_geometry_intersections": 36
+    },
+    {
+      "bbox_selected_protected_shapes": 36,
+      "case_id": "l3_g0_c1",
+      "level": 3,
+      "protected_geometry_intersections": 36
+    },
+    {
+      "bbox_selected_protected_shapes": 29,
+      "case_id": "l3_g0_c2",
+      "level": 3,
+      "protected_geometry_intersections": 28
+    },
+    {
+      "bbox_selected_protected_shapes": 26,
+      "case_id": "l3_g1_c0",
+      "level": 3,
+      "protected_geometry_intersections": 26
+    },
+    {
+      "bbox_selected_protected_shapes": 29,
+      "case_id": "l3_g1_c1",
+      "level": 3,
+      "protected_geometry_intersections": 29
+    },
+    {
+      "bbox_selected_protected_shapes": 22,
+      "case_id": "l3_g1_c2",
+      "level": 3,
+      "protected_geometry_intersections": 21
+    },
+    {
+      "bbox_selected_protected_shapes": 40,
+      "case_id": "l4_g0_c0",
+      "level": 4,
+      "protected_geometry_intersections": 39
+    },
+    {
+      "bbox_selected_protected_shapes": 50,
+      "case_id": "l4_g0_c1",
+      "level": 4,
+      "protected_geometry_intersections": 50
+    },
+    {
+      "bbox_selected_protected_shapes": 50,
+      "case_id": "l4_g0_c2",
+      "level": 4,
+      "protected_geometry_intersections": 50
+    },
+    {
+      "bbox_selected_protected_shapes": 47,
+      "case_id": "l4_g1_c0",
+      "level": 4,
+      "protected_geometry_intersections": 47
+    },
+    {
+      "bbox_selected_protected_shapes": 50,
+      "case_id": "l4_g1_c1",
+      "level": 4,
+      "protected_geometry_intersections": 50
+    },
+    {
+      "bbox_selected_protected_shapes": 51,
+      "case_id": "l4_g1_c2",
+      "level": 4,
+      "protected_geometry_intersections": 51
+    }
+  ],
+  "l3_median": 28.5,
+  "l4_median": 50.0,
+  "manifest_sha256": "4a566ed1fe78e7deea54831a4d674dd526bd402b9796ec110cd97d8c9205d1fd",
+  "method": "Count protected polygons with nonempty area intersection with the public inspection windows; exclude bbox-only matches.",
+  "passed": true
+}

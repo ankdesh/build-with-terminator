@@ -1,0 +1,52 @@
+[
+  {
+    "candidate": 4,
+    "case_id": "l5_g0_c4",
+    "reason": "L5 local occupancy is not 25% above the matched L4 source"
+  },
+  {
+    "candidate": 5,
+    "case_id": "l5_g0_c4",
+    "reason": "L5 local occupancy is not 25% above the matched L4 source"
+  },
+  {
+    "candidate": 6,
+    "case_id": "l5_g0_c4",
+    "reason": "L5 local occupancy is not 25% above the matched L4 source"
+  },
+  {
+    "candidate": 1,
+    "case_id": "l5_g1_c1",
+    "reason": "L5 local occupancy is not 25% above the matched L4 source"
+  },
+  {
+    "candidate": 1,
+    "case_id": "l5_g1_c2",
+    "reason": "L5 local occupancy is not 25% above the matched L4 source"
+  },
+  {
+    "candidate": 3,
+    "case_id": "l5_g1_c2",
+    "reason": "L5 local occupancy is not 25% above the matched L4 source"
+  },
+  {
+    "candidate": 1,
+    "case_id": "l5_g1_c3",
+    "reason": "L5 local occupancy is not 25% above the matched L4 source"
+  },
+  {
+    "candidate": 3,
+    "case_id": "l5_g1_c3",
+    "reason": "L5 local occupancy is not 25% above the matched L4 source"
+  },
+  {
+    "candidate": 1,
+    "case_id": "l5_g1_c4",
+    "reason": "L5 local occupancy is not 25% above the matched L4 source"
+  },
+  {
+    "candidate": 3,
+    "case_id": "l5_g1_c4",
+    "reason": "L5 local occupancy is not 25% above the matched L4 source"
+  }
+]

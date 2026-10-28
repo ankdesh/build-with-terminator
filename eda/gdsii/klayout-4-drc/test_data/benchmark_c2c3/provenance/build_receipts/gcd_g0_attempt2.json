@@ -1,0 +1,25 @@
+{
+  "artifacts": {
+    "build.log": "ffedfde27f051e714cde7bd5d06f555e9c7bc198fbe9f4abaa476509c7cb01d4",
+    "config.mk": "4ca8a1eb3c80d458f9feea5a11b29c93c6a0c563ad85afa9f18766556bb0935d",
+    "logs/asap7/gcd/c2c3_gcd_g0/1_1_yosys_canonicalize.log": "d6af73623f6844716f3a4e6067072f93d863b8398dc3f3e6a4d7ca9e20c8ab1d",
+    "logs/asap7/gcd/c2c3_gcd_g0/1_2_yosys.log": "c059f9d6df08e1b8618e0ab40371c512d2730a8cf79e086bce76a4bb09c0ff4b",
+    "objects/asap7/gcd/c2c3_gcd_g0/abc.constr": "30d7a22cf67892758afdb17908e26af0c3d1792f7c342d8cad91c9d7e8358866",
+    "results/asap7/gcd/c2c3_gcd_g0/1_1_yosys_canonicalize.rtlil": "10a0ebcdead6dd07b2696d00f0f8c54acf94fa09b8a3cd74b89033575341c1f5",
+    "results/asap7/gcd/c2c3_gcd_g0/mem.json": "8181222e46c0cc64523794695a13bb24f7649d0e457c5721fc67052026a1d4c5"
+  },
+  "config_sha256": "4ca8a1eb3c80d458f9feea5a11b29c93c6a0c563ad85afa9f18766556bb0935d",
+  "density": 0.35,
+  "design": "gcd",
+  "exit_code": 2,
+  "factor": 1.0,
+  "final": {},
+  "group": 0,
+  "identity": "gcd_g0",
+  "image": "openroad/orfs@sha256:b7f5b6fd722bd87862d89718f2af670f0f5b1e3f3336afc39b56e074234f235f",
+  "memory_limit_bytes": 2272071680,
+  "orfs_commit": "64939f3717ad7c694199ba04cb98924b98022868",
+  "status": "failed",
+  "threads": 2,
+  "wall_seconds": 3.095797707908787
+}

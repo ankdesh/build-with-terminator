@@ -1,0 +1,19 @@
+{
+  "bedrock_requests": 50,
+  "clean_controls": 10,
+  "credential_matches": 0,
+  "inspection_windows": 50,
+  "manifest_sha256": "4a566ed1fe78e7deea54831a4d674dd526bd402b9796ec110cd97d8c9205d1fd",
+  "no_edit_controls": 10,
+  "original_40_outcomes_preserved": true,
+  "parsed_responses": 49,
+  "public_audit_is_acceptance_gate": false,
+  "public_audit_profile": "asap7_public_full",
+  "qualified_cases": 50,
+  "repair_cases": 30,
+  "report": "docs/reports/c2_c3_benchmark_report.md",
+  "report_sha256": "e9a5a0d9afdda842cdf08a967916d827f1ecbb5dc255d0a87fd4d8f8528a6c17",
+  "reproduction_passed": true,
+  "request_retries": 0,
+  "scored_profile": "asap7_c2c3_v1"
+}

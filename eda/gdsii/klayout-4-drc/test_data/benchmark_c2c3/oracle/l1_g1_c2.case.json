@@ -1,0 +1,204 @@
+{
+  "case_id": "l1_g1_c2",
+  "edit_policy": {
+    "context_layers": [
+      [
+        19,
+        0
+      ],
+      [
+        20,
+        0
+      ],
+      [
+        21,
+        0
+      ],
+      [
+        25,
+        0
+      ],
+      [
+        30,
+        0
+      ]
+    ],
+    "editable_cells": {
+      "SIGNAL_ROUTE": {
+        "anchors": [],
+        "box_dbu": [
+          -64,
+          -92,
+          136,
+          164
+        ],
+        "layers": [
+          [
+            19,
+            0
+          ],
+          [
+            20,
+            0
+          ],
+          [
+            21,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ]
+      }
+    },
+    "grid_dbu": 4,
+    "max_context_shapes": 1024,
+    "schema_version": 1,
+    "windows_um": [
+      [
+        3.912,
+        0.20299999999999999,
+        4.256,
+        0.561
+      ]
+    ]
+  },
+  "evidence": {
+    "canonical_geometry_sha256": "b12d745022ae849c122e642165e29088f4e12215237b9c0af690f716d857a239",
+    "deck_sha256": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "input_markers": [
+      {
+        "boxes": [
+          [
+            4.075,
+            0.373,
+            4.093,
+            0.391
+          ]
+        ],
+        "cell": "BENCHMARK_TOP",
+        "geometry": [
+          [
+            "polygon",
+            [
+              [
+                4.075,
+                0.373
+              ],
+              [
+                4.075,
+                0.391
+              ],
+              [
+                4.093,
+                0.391
+              ],
+              [
+                4.093,
+                0.373
+              ]
+            ],
+            ""
+          ]
+        ],
+        "rule": "V1.M2.EN.2"
+      }
+    ],
+    "input_report": "oracle/l1_g1_c2.lyrdb",
+    "input_report_sha256": "5379be7c89ef3c170df122bdc53ec6573febb3e0d533d513e2e510c8c492c89b",
+    "mutation": {
+      "constructor": "V1.M2.EN.2",
+      "coupled": false,
+      "slot": 2
+    },
+    "native_markers": [],
+    "recipe_hashes": {
+      "edit_policy.py": "a5a56cdfd45481ef0e4efe83b937fa49612e967bf696ef6d9ed77ca438992d2e",
+      "generator.py": "ccd58d9f2f62e818015f1286f18eab84e0dcdd0db3f6c89b1874925914803e4e",
+      "routed_generator.py": "751f8a56a0a284e5c099b13f30685de9318112618ac16d273957ce9c6b9793aa",
+      "routes.py": "6696208961fb18d21fdeb17e78f5441c6920255a59f94688cd42defc575f49d1"
+    },
+    "reference_gds": "oracle/l1_g1_c2.reference.gds",
+    "reference_policy_errors": [],
+    "reference_report": "oracle/l1_g1_c2.reference.lyrdb",
+    "reference_report_sha256": "51a018f0815761552793de970aba89b55ad5fbf2b19cd22782ddbcaa272084a1",
+    "reference_sha256": "308e003ebac654517f12a343333077b4665c42d8299a302128a45e3c5d29805c",
+    "target_markers": [
+      {
+        "boxes": [
+          [
+            4.075,
+            0.373,
+            4.093,
+            0.391
+          ]
+        ],
+        "cell": "BENCHMARK_TOP",
+        "geometry": [
+          [
+            "polygon",
+            [
+              [
+                4.075,
+                0.373
+              ],
+              [
+                4.075,
+                0.391
+              ],
+              [
+                4.093,
+                0.391
+              ],
+              [
+                4.093,
+                0.373
+              ]
+            ],
+            ""
+          ]
+        ],
+        "rule": "V1.M2.EN.2"
+      }
+    ],
+    "target_scope_rules": [
+      "V1.M2.EN.2"
+    ]
+  },
+  "gds": "cases/l1_g1_c2.gds",
+  "gds_sha256": "5f5b5864c6b50cd2f31a1e687fc7f49d5c2103ef70cb851e01f78ba9a6ad609c",
+  "kind": "repair",
+  "level": 1,
+  "metrics": {
+    "cell_definitions": 7,
+    "context_shapes": 5,
+    "coupled_rules": 1,
+    "dbu_um": 0.00025,
+    "editable_shape_count": 2,
+    "hierarchy_depth": 2,
+    "instance_count": 16,
+    "protected_obstacle_count": 3,
+    "shape_count": 2129,
+    "target_markers": 1
+  },
+  "scope_box_um": [
+    4.072,
+    0.363,
+    4.096,
+    0.401
+  ],
+  "source": {
+    "families": [
+      "INV",
+      "BUF",
+      "NAND",
+      "NOR",
+      "DFF"
+    ],
+    "kind": "real_asap7_cells",
+    "library_sha256": "f43d5b33df635cf9e66cbca66b6bdd05364f824d8040cd21528b9e12808b9263",
+    "units_verified": true
+  },
+  "source_group": "l1_source_1"
+}

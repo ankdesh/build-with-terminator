@@ -68,6 +68,13 @@ def execute_benchmark_verify(benchmark_dir: Path) -> dict:
     manifest_path = benchmark_dir / "manifest.json"
     manifest = BenchmarkManifestManager.load(manifest_path)
     integrity = BenchmarkManifestManager.verify_integrity(manifest, benchmark_dir)
+    from .benchmark.acceptance import verify_case
+    profile = DRCProfileManager().get_profile("asap7_curated")
+    for case in manifest.cases:
+        try:
+            verify_case(case, benchmark_dir, profile)
+        except (ValueError, OSError, DRCError):
+            integrity[case.case_id] = False
 
     failed = [case_id for case_id, ok in integrity.items() if not ok]
     all_ok = len(failed) == 0
@@ -206,10 +213,13 @@ def execute_run_drc(
     }
 
 
-def execute_violation_context(report_db: Path, text_report_path: Path | None = None) -> dict:
+def execute_violation_context(report_db: Path, text_report_path: Path | None = None, edit_policy: Path | None = None) -> dict:
     """Parse .lyrdb database and format formatted textual violations."""
     parser = DRCParser()
     data = parser.parse(report_db)
+    if edit_policy:
+        from .edit_policy import policy_report
+        data = policy_report(data, edit_policy)
     reporter = DRCReporter(data)
     text_report = reporter.generate_textual_report()
 
@@ -227,15 +237,26 @@ def execute_violation_context(report_db: Path, text_report_path: Path | None = N
     }
 
 
-def execute_drc_context(drc_script: Path, report_db: Path) -> dict:
+def execute_drc_context(drc_script: Path, report_db: Path, edit_policy: Path | None = None,
+                        profile_name: str | None = None) -> dict:
     """Extract DRC rule definitions matching violated categories found in .lyrdb."""
     parser = DRCParser()
     data = parser.parse(report_db)
+    if edit_policy:
+        from .edit_policy import policy_report
+        data = policy_report(data, edit_policy)
     reporter = DRCReporter(data)
     violated_rules = list(reporter.get_summary().keys())
 
     proc = DRCContextProcessor(drc_script)
     rules_text = proc.format_as_text(violated_rules)
+    if profile_name == 'asap7_c2c3_v1':
+        rules_text += ('\nC2+C3 checker qualification: DBU is 0.25 nm; the manufacturing grid is 1 nm. '
+                       'The pinned V1.M2.EN.2 expression has a fine-DBU transition at 5.25 nm. '
+                       'For its rectangular end-cap fixtures, a 6 nm cap is legal on the manufacturing grid; '
+                       'a 5 nm cap is checker-illegal. Use this verified checker behavior rather than '
+                       'the nominal 5 nm description. V2.M3.EN.2 passes with a 5 nm cap on this grid. '
+                       'V2.M2.EN.1 requires at least two opposite sides enclosed by 5 nm.\n')
 
     return {
         "status": "success",
@@ -245,13 +266,17 @@ def execute_drc_context(drc_script: Path, report_db: Path) -> dict:
     }
 
 
-def execute_gds_context(gds_path: Path, report_db: Path, halo_um: float) -> dict:
+def execute_gds_context(gds_path: Path, report_db: Path, halo_um: float, edit_policy: Path | None = None) -> dict:
     """Extract local layout windows around violation coordinates."""
     parser = DRCParser()
     data = parser.parse(report_db)
 
     proc = GDSContextProcessor(gds_path=gds_path, halo_um=halo_um)
-    sections_text = proc.format_as_text(data)
+    if edit_policy:
+        from .edit_policy import policy_context
+        sections_text = json.dumps(policy_context(gds_path, json.loads(edit_policy.read_text())), sort_keys=True)
+    else:
+        sections_text = proc.format_as_text(data)
 
     return {
         "status": "success",
@@ -261,9 +286,9 @@ def execute_gds_context(gds_path: Path, report_db: Path, halo_um: float) -> dict
     }
 
 
-def execute_load_knowledge(knowledge_dir: Path) -> dict:
+def execute_load_knowledge(knowledge_dir: Path, profile_name: str = "legacy_mini") -> dict:
     """Load and concatenate all markdown files from the knowledge directory."""
-    loader = KnowledgeLoader(knowledge_dir)
+    loader = KnowledgeLoader(knowledge_dir, profile_name)
     knowledge_text = loader.format_as_text()
 
     return {
@@ -467,9 +492,12 @@ def main() -> int:
         help="Destination directory for benchmark evaluation results and summaries",
     )
 
+    parser.add_argument("--edit-policy", type=Path, help="Public case edit policy JSON")
     args = parser.parse_args()
 
     try:
+        if args.profile and args.deck == DEFAULT_DRC_SCRIPT_PATH and not any(a in sys.argv for a in ("--deck", "-d")):
+            args.deck = DRCProfileManager().get_profile(args.profile).deck_path
         # Benchmark mode dispatches
         if args.mode == "benchmark-list":
             rules = [r.strip() for r in args.benchmark_rules.split(",")] if args.benchmark_rules else None
@@ -511,13 +539,13 @@ def main() -> int:
         elif args.mode == "run-drc":
             results = execute_run_drc(args.gds, args.deck, args.report_db, profile_name=args.profile)
         elif args.mode == "violation-ctx":
-            results = execute_violation_context(args.report_db, args.text_report)
+            results = execute_violation_context(args.report_db, args.text_report, args.edit_policy)
         elif args.mode == "drc-ctx":
-            results = execute_drc_context(args.deck, args.report_db)
+            results = execute_drc_context(args.deck, args.report_db, args.edit_policy, args.profile)
         elif args.mode == "gds-ctx":
-            results = execute_gds_context(args.gds, args.report_db, args.halo_um)
+            results = execute_gds_context(args.gds, args.report_db, args.halo_um, args.edit_policy)
         elif args.mode == "load-knowledge":
-            results = execute_load_knowledge(args.knowledge_dir)
+            results = execute_load_knowledge(args.knowledge_dir, args.profile or "legacy_mini")
         elif args.mode == "save-script":
             if not args.script_content:
                 # Read from stdin if not passed via argument
@@ -557,11 +585,15 @@ def main() -> int:
             else:
                 print(json.dumps(results, indent=2))
 
-        return 0
+        return 0 if results.get("status") == "success" else 1
 
     except DRCError as exc:
+        from .api_reference import APIReferenceError
+        detail = {"status": "error", "message": str(exc)}
+        if isinstance(exc, APIReferenceError):
+            detail['stage'] = 'api_reference'
         if args.json:
-            print(json.dumps({"status": "error", "message": str(exc)}), file=sys.stderr)
+            print(json.dumps(detail), file=sys.stderr)
         else:
             print(f"Error: {exc}", file=sys.stderr)
         return 1

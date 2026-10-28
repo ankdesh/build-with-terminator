@@ -6,6 +6,8 @@ DRC re-check, and truthful audit reporting.
 """
 
 import json
+import os
+from dataclasses import replace
 from pathlib import Path
 import shutil
 import subprocess
@@ -13,10 +15,12 @@ import sys
 from typing import Any
 
 from .config import DRCJobConfig, DRCConfigurationError
+from .api_reference import APIReferenceError, verify_api_reference
 from .parser import DRCParser
 from .profile import DRCProfileManager, DRCProfile
 from .runner import DRCRunner
-from .repair_executor import RepairExecutor, ExecutionResult
+from .repair_executor import RepairExecutor, ExecutionResult, sandbox_availability
+from .marker_comparison import marker_records, compare_markers
 from .validator import LayoutValidator, ValidationResult
 from .layout_diff import LayoutDiffCalculator, LayoutDiffReport
 from .run_manifest import RunManifestManager, RunSpec, RunPaths
@@ -40,8 +44,12 @@ class SingleShotOrchestrator:
         self.profile_manager = profile_manager or DRCProfileManager()
         self.profile: DRCProfile = self.profile_manager.get_profile(spec.profile_name)
 
+        if spec.drc_script.resolve() != self.profile.deck_path.resolve():
+            raise DRCConfigurationError("Run deck conflicts with selected profile")
         self.manifest_manager = RunManifestManager(spec)
         self.paths: RunPaths = self.manifest_manager.setup_run()
+        snapshot = self.paths.run_dir / ("deck" + self.spec.drc_script.suffix)
+        self.profile = replace(self.profile, deck_path=snapshot)
         self.reporter = RunReporter(
             run_id=self.manifest_manager.run_id,
             case_name=self.spec.case_name,
@@ -189,7 +197,14 @@ if __name__ == "__main__":
                 "--deck", str(self.profile.deck_path),
                 "--report-db", str(self.paths.before_lyrdb),
                 "--output-script", str(self.paths.candidate_script),
+                "--profile", self.spec.profile_name,
+                "--reuse-report", "--artifact-dir", str(self.paths.run_dir),
+                "--text-report", str(self.paths.run_dir / "violations.txt"),
             ]
+            if self.spec.edit_policy is not None:
+                policy_path = self.paths.run_dir / 'edit_policy.json'
+                policy_path.write_text(json.dumps(self.spec.edit_policy, indent=2))
+                cmd += ['--edit-policy', str(policy_path)]
             try:
                 res = subprocess.run(
                     cmd,
@@ -197,7 +212,10 @@ if __name__ == "__main__":
                     text=True,
                     timeout=120,
                     check=False,
+                    env={**os.environ, "KLAYOUT_DRC_PYTHON": sys.executable},
                 )
+                (self.paths.run_dir / "generation_stdout.log").write_text(res.stdout)
+                (self.paths.run_dir / "generation_stderr.log").write_text(res.stderr)
                 if res.returncode != 0:
                     return f"Agent synthesis failed with code {res.returncode}: {res.stderr.strip() or res.stdout.strip()}"
                 if not self.paths.candidate_script.exists():
@@ -209,7 +227,24 @@ if __name__ == "__main__":
         return f"Unknown candidate mode: {mode}"
 
     def run(self) -> EvaluationSummary:
+        try:
+            return self._run()
+        except Exception as exc:
+            execution = ExecutionResult("nonzero_exit", None, 0., "", str(exc), None, str(exc))
+            summary = self.reporter.evaluate(execution, getattr(self, "_before", None),
+                                             sum(self._before.values()) if getattr(self, "_before", None) is not None else None)
+            self._write_artifacts(summary)
+            return summary
+
+    def _run(self) -> EvaluationSummary:
         """Execute the full single-shot evaluation pipeline."""
+        # A pinned deck selects the unique layout top. Reject unsupported ambiguity.
+        import klayout.db as db
+        layout = db.Layout(); layout.read(str(self.paths.input_gds))
+        tops = list(layout.top_cells())
+        if len(tops) != 1 or (self.spec.top_cell and tops[0].name != self.spec.top_cell):
+            raise DRCConfigurationError("Require one top cell matching the requested top cell")
+        self.manifest_manager.update_manifest({"resolved_top_cell": tops[0].name})
         # 1. Preflight baseline DRC
         try:
             viols_before, total_before = self._run_drc(self.paths.input_gds, self.paths.before_lyrdb)
@@ -226,18 +261,57 @@ if __name__ == "__main__":
             )
             summary = self.reporter.evaluate(
                 execution=dummy_exec,
-                violations_before={},
-                total_before=0,
+                violations_before=None,
+                total_before=None,
                 drc_error=str(exc),
             )
             self._write_artifacts(summary)
             return summary
 
+        self._before = viols_before
+        if self.spec.edit_policy is not None:
+            from .edit_policy import policy_context, ContextIncomplete
+            try:
+                context = policy_context(self.paths.input_gds, self.spec.edit_policy)
+                (self.paths.run_dir/'policy_context.json').write_text(json.dumps(context, indent=2))
+            except ContextIncomplete as exc:
+                execution = ExecutionResult('blocked', None, 0., '', str(exc), None, str(exc))
+                summary = self.reporter.evaluate(execution, viols_before, total_before)
+                self._write_artifacts(summary)
+                return summary
+        if self.spec.expected_counts is not None and viols_before != self.spec.expected_counts:
+            execution = ExecutionResult("oracle_mismatch", None, 0., "", "Baseline counts differ from accepted oracle", None,
+                                        "Baseline counts differ from accepted oracle")
+            summary = self.reporter.evaluate(execution, viols_before, total_before)
+            self._write_artifacts(summary)
+            return summary
+        if self.spec.expected_markers is not None:
+            observed = json.loads(json.dumps(marker_records(DRCParser().parse(self.paths.before_lyrdb))))
+            if observed != self.spec.expected_markers:
+                execution = ExecutionResult("oracle_mismatch", None, 0., "", "Baseline markers differ from accepted oracle", None,
+                                            "Baseline markers differ from accepted oracle")
+                summary = self.reporter.evaluate(execution, viols_before, total_before)
+                self._write_artifacts(summary)
+                return summary
+        blocked = sandbox_availability()
+        if not blocked and self.spec.candidate_mode == 'agent':
+            try:
+                reference = verify_api_reference()
+                (self.paths.run_dir/'api_reference_check.json').write_text(json.dumps(reference, indent=2))
+            except APIReferenceError as exc:
+                blocked = str(exc)
+        if blocked:
+            execution = ExecutionResult("blocked", None, 0., "", blocked, None, blocked)
+            summary = self.reporter.evaluate(execution, viols_before, total_before)
+            self._write_artifacts(summary)
+            return summary
         # 2. Acquire candidate repair script
         gen_error = self._acquire_candidate_script()
         if gen_error:
+            error_path = self.paths.run_dir/'generation_error.json'
+            reference_failed = error_path.exists() and json.loads(error_path.read_text()).get('stage') == 'api_reference'
             dummy_exec = ExecutionResult(
-                status="model_error",
+                status="blocked" if reference_failed else "model_error",
                 exit_code=1,
                 duration_seconds=0.0,
                 stdout="",
@@ -277,14 +351,31 @@ if __name__ == "__main__":
             self._write_artifacts(summary)
             return summary
 
+        manifest = json.loads(self.paths.run_manifest_json.read_text())
+        immutable = {self.paths.input_gds: manifest["hashes"]["input_gds_sha256"],
+                     self.profile.deck_path: manifest["hashes"]["drc_script_sha256"],
+                     self.spec.input_gds: manifest["hashes"]["input_gds_sha256"],
+                     self.spec.drc_script: manifest["hashes"]["drc_script_sha256"]}
+        if any(RunManifestManager.compute_sha256(path) != digest for path, digest in immutable.items()):
+            raise RuntimeError("Immutable input or deck hash changed")
         # 4. Validate layout integrity
         protected_set = set(self.profile.protected_cells) if self.profile.protected_cells else None
+        if self.spec.edit_policy is not None:
+            protected_set = {c.name for c in layout.each_cell()} - set(self.spec.edit_policy['editable_cells'])
         validator = LayoutValidator(
             self.paths.patched_gds,
             reference_gds=self.paths.input_gds,
             protected_cells=protected_set,
+            preservation=self.spec.preservation,
+            top_cell=self.spec.top_cell,
         )
         val_res = validator.validate()
+        if self.spec.edit_policy is not None and val_res.is_valid:
+            from .edit_policy import validate_edit_policy
+            candidate_layout = db.Layout(); candidate_layout.read(str(self.paths.patched_gds))
+            errors = validate_edit_policy(layout, candidate_layout, self.spec.edit_policy)
+            if errors:
+                val_res = replace(val_res, is_valid=False, violations=val_res.violations + errors)
 
         if not val_res.is_valid:
             summary = self.reporter.evaluate(
@@ -353,6 +444,7 @@ if __name__ == "__main__":
             validation=val_res,
             diff_report=diff_rep,
             drc_error=drc_err,
+            marker_comparison=compare_markers(DRCParser().parse(self.paths.before_lyrdb), DRCParser().parse(self.paths.after_lyrdb), self.profile.manufacturing_grid_um) if drc_err is None else None,
         )
         self._write_artifacts(summary)
         return summary
@@ -361,7 +453,10 @@ if __name__ == "__main__":
         """Write results.json and report.md, and update run manifest."""
         self.reporter.write_results_json(summary, self.paths.results_json)
         self.reporter.write_report_md(summary, self.paths.report_md)
+        artifacts = {p.name: RunManifestManager.compute_sha256(p)
+                     for p in self.paths.run_dir.iterdir() if p.is_file() and p != self.paths.run_manifest_json}
         self.manifest_manager.update_manifest({
+            "artifact_hashes": artifacts,
             "verdict": summary.verdict,
             "validation_level": summary.validation_level,
             "total_before": summary.total_before,

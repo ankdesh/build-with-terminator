@@ -81,8 +81,11 @@ def test_single_shot_heuristic_baseline(tmp_path: Path) -> None:
     assert summary.validation_result.is_valid is True
 
 
-def test_single_shot_agent_live_or_blocked(tmp_path: Path) -> None:
+def test_single_shot_agent_live_or_blocked(tmp_path: Path, monkeypatch) -> None:
     """Test A1.3: Real LLM agent execution via DSH (or truthful model_error if no key)."""
+    if not os.environ.get("KLAYOUT_DRC_RUN_LIVE_TESTS"):
+        monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+        monkeypatch.delenv("OPENAI_MODEL", raising=False)
     spec = RunSpec(
         case_name="test_a1_3_agent",
         input_gds=SAMPLE_GDS,

@@ -1,0 +1,189 @@
+{
+  "case_id": "l3_g0_c3",
+  "edit_policy": {
+    "context_layers": [
+      [
+        19,
+        0
+      ],
+      [
+        20,
+        0
+      ],
+      [
+        21,
+        0
+      ],
+      [
+        25,
+        0
+      ],
+      [
+        30,
+        0
+      ]
+    ],
+    "editable_cells": {
+      "EDIT_ROUTE_3": {
+        "anchors": [
+          {
+            "box_dbu": [
+              9196,
+              8280,
+              9204,
+              8352
+            ],
+            "layer": [
+              20,
+              0
+            ]
+          }
+        ],
+        "box_dbu": [
+          9352,
+          8160,
+          9672,
+          8416
+        ],
+        "layers": [
+          [
+            20,
+            0
+          ],
+          [
+            21,
+            0
+          ],
+          [
+            25,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "net_owner": "_000_"
+      }
+    },
+    "grid_dbu": 4,
+    "max_context_shapes": 1024,
+    "schema_version": 1,
+    "windows_um": [
+      [
+        2.258,
+        1.96,
+        2.498,
+        2.184
+      ]
+    ]
+  },
+  "evidence": {
+    "canonical_geometry_sha256": "f7af424260db0540c521697ab8ae2a445c1dded297326cbf5fe7e53816b1c219",
+    "deck_sha256": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "input_markers": [],
+    "input_report": "oracle/l3_g0_c3.lyrdb",
+    "input_report_sha256": "b5f69a21035ba437ce3b243e221389f446a20782d294a224a326c5b4c74eb894",
+    "mutation": {
+      "candidate_index": 1,
+      "cuts_dbu": [
+        "(9472,8280;9552,8296)"
+      ],
+      "net": "_000_",
+      "target_rules": [
+        "M2.W.1"
+      ]
+    },
+    "native_markers": [],
+    "recipe_hashes": {
+      "edit_policy.py": "a5a56cdfd45481ef0e4efe83b937fa49612e967bf696ef6d9ed77ca438992d2e",
+      "generator.py": "ccd58d9f2f62e818015f1286f18eab84e0dcdd0db3f6c89b1874925914803e4e",
+      "routed_generator.py": "751f8a56a0a284e5c099b13f30685de9318112618ac16d273957ce9c6b9793aa",
+      "routes.py": "6696208961fb18d21fdeb17e78f5441c6920255a59f94688cd42defc575f49d1"
+    },
+    "reference_gds": "oracle/l3_g0_c3.reference.gds",
+    "reference_policy_errors": [],
+    "reference_report": "oracle/l3_g0_c3.reference.lyrdb",
+    "reference_report_sha256": "b5f69a21035ba437ce3b243e221389f446a20782d294a224a326c5b4c74eb894",
+    "reference_sha256": "96a6a933e210a7111434956c1a0c3c53cb08dadfe15c0918e2c5a6cae77bb5eb",
+    "target_markers": [],
+    "target_scope_rules": [
+      "M2.W.1"
+    ]
+  },
+  "gds": "cases/l3_g0_c3.gds",
+  "gds_sha256": "0c2455faf7beeb705d9587bffd8c061a49c29025770f28416f37f3d78cf3940a",
+  "kind": "clean_control",
+  "level": 3,
+  "metrics": {
+    "cell_definitions": 40,
+    "context_shapes": 36,
+    "coupled_rules": 0,
+    "dbu_um": 0.00025,
+    "decoded_route_primitive_count": 10613,
+    "editable_shape_count": 3,
+    "hierarchy_depth": 2,
+    "instance_count": 721,
+    "local_route_polygons": 8,
+    "local_routing_occupancy": 0.15600818452380952,
+    "occupancy_box_um": [
+      2.258,
+      1.96,
+      2.498,
+      2.184
+    ],
+    "occupancy_layers": [
+      [
+        20,
+        0
+      ],
+      [
+        30,
+        0
+      ]
+    ],
+    "protected_obstacle_count": 33,
+    "route_segment_count": 2632,
+    "shape_count": 66103,
+    "target_markers": 0,
+    "via_count": 3870
+  },
+  "scope_box_um": [
+    2.338,
+    2.04,
+    2.418,
+    2.104
+  ],
+  "source": {
+    "build_sha256": "73cf3bb8a4f482a9cf3d78761c482a8b4a135dcd3a50c483c89b1acab59ffdea",
+    "clock_protection_verified": true,
+    "design": "gcd",
+    "image": "openroad/orfs@sha256:6810dbf0e03dddbc89ed8c0a1e13cad09ce4c98d40c4ac0ab99fdc04b0676347",
+    "kind": "routed_asap7",
+    "native_public_audit": {
+      "acceptance_gate": false,
+      "counts": {
+        "  ": 5,
+        "GATE.ACTIVE.S.4": 1,
+        "LIG.S.4-5": 2,
+        "M1.S.6": 7,
+        "M4.S.5": 20,
+        "V1.S.4": 2,
+        "V2.M3.AUX.2": 1,
+        "V4.M5.AUX.2": 2,
+        "V5.M6.AUX.2": 3
+      },
+      "deck_sha256": "dc78ccd8b2b30498f25ef885c2c28a9c2a565c38cb30a87460282c8a36c7765d",
+      "frame": "original routed hierarchy; diagnostic only",
+      "profile": "asap7_public_full",
+      "report": "oracle/l3_g0.native_public.lyrdb",
+      "report_sha256": "946d239ed0bf0c6ed08ae51d8353e8b77f94c1272060189ffe8b6a9f9c0d20a2"
+    },
+    "net_catalog_sha256": "85c6d12080dac408ea836547710bf10f37db31d193a40ef4785acea8e117aafe",
+    "net_owner_source": "DEF properties checked against ODB catalog",
+    "orfs_commit": "64939f3717ad7c694199ba04cb98924b98022868",
+    "source_gds_sha256": "605199f76786b6382575f8432196339e09b1ec4d490a239ccd12373aab2411bf",
+    "units_verified": true
+  },
+  "source_group": "l3_source_0"
+}

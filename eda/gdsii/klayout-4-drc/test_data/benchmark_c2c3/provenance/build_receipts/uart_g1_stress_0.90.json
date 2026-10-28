@@ -1,0 +1,15 @@
+{
+  "artifacts": {},
+  "config_sha256": "e8d18c73dabefb8eaea1db906ec076b903607e1a0a7f0fb17c2bc84129499576",
+  "density": 0.75,
+  "design": "uart",
+  "factor": 0.9,
+  "group": 1,
+  "identity": "uart_g1_stress_0.90",
+  "image": "openroad/orfs@sha256:6810dbf0e03dddbc89ed8c0a1e13cad09ce4c98d40c4ac0ab99fdc04b0676347",
+  "memory_limit_bytes": 2347139072,
+  "orfs_commit": "64939f3717ad7c694199ba04cb98924b98022868",
+  "reason": "Stopped duplicate-source recipe before changing UART group 1 to DATA_WIDTH=12",
+  "status": "interrupted",
+  "threads": 2
+}

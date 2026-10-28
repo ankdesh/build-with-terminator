@@ -1,0 +1,282 @@
+{
+  "case_id": "l2_g0_c1",
+  "edit_policy": {
+    "context_layers": [
+      [
+        19,
+        0
+      ],
+      [
+        20,
+        0
+      ],
+      [
+        21,
+        0
+      ],
+      [
+        25,
+        0
+      ],
+      [
+        30,
+        0
+      ]
+    ],
+    "editable_cells": {
+      "SIGNAL_ROUTE": {
+        "anchors": [],
+        "box_dbu": [
+          -64,
+          -64,
+          1160,
+          464
+        ],
+        "layers": [
+          [
+            19,
+            0
+          ],
+          [
+            20,
+            0
+          ],
+          [
+            21,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ]
+      }
+    },
+    "grid_dbu": 4,
+    "max_context_shapes": 1024,
+    "schema_version": 1,
+    "windows_um": [
+      [
+        1.9120000000000001,
+        0.19999999999999998,
+        2.512,
+        0.626
+      ]
+    ]
+  },
+  "evidence": {
+    "canonical_geometry_sha256": "65fb5372de774eaf64d9ac8325203385ca9186080b5cc2fbe095e6c8f2bd41d2",
+    "deck_sha256": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "input_markers": [
+      {
+        "boxes": [
+          [
+            2.135,
+            0.363,
+            2.147,
+            0.463
+          ]
+        ],
+        "cell": "BENCHMARK_TOP",
+        "geometry": [
+          [
+            "polygon",
+            [
+              [
+                2.135,
+                0.363
+              ],
+              [
+                2.135,
+                0.463
+              ],
+              [
+                2.147,
+                0.463
+              ],
+              [
+                2.147,
+                0.363
+              ]
+            ],
+            ""
+          ]
+        ],
+        "rule": "M1.S.1"
+      },
+      {
+        "boxes": [
+          [
+            2.325,
+            0.363,
+            2.337,
+            0.463
+          ]
+        ],
+        "cell": "BENCHMARK_TOP",
+        "geometry": [
+          [
+            "edge_pair",
+            [
+              [
+                [
+                  2.325,
+                  0.363
+                ],
+                [
+                  2.325,
+                  0.463
+                ]
+              ],
+              [
+                [
+                  2.337,
+                  0.363
+                ],
+                [
+                  2.337,
+                  0.463
+                ]
+              ]
+            ]
+          ]
+        ],
+        "rule": "M3.W.1"
+      }
+    ],
+    "input_report": "oracle/l2_g0_c1.lyrdb",
+    "input_report_sha256": "8925a697098558b01510d36aab87665f328e9f496921bae009211608ea44b2cc",
+    "mutation": {
+      "constructor": "M1.S.1",
+      "coupled": true,
+      "slot": 1
+    },
+    "native_markers": [],
+    "recipe_hashes": {
+      "edit_policy.py": "a5a56cdfd45481ef0e4efe83b937fa49612e967bf696ef6d9ed77ca438992d2e",
+      "generator.py": "ccd58d9f2f62e818015f1286f18eab84e0dcdd0db3f6c89b1874925914803e4e",
+      "routed_generator.py": "751f8a56a0a284e5c099b13f30685de9318112618ac16d273957ce9c6b9793aa",
+      "routes.py": "6696208961fb18d21fdeb17e78f5441c6920255a59f94688cd42defc575f49d1"
+    },
+    "reference_gds": "oracle/l2_g0_c1.reference.gds",
+    "reference_policy_errors": [],
+    "reference_report": "oracle/l2_g0_c1.reference.lyrdb",
+    "reference_report_sha256": "51a018f0815761552793de970aba89b55ad5fbf2b19cd22782ddbcaa272084a1",
+    "reference_sha256": "ca325a1144ba79cb29c54f8cc376bd2fd2059527908273241a375ed74ec56cbc",
+    "target_markers": [
+      {
+        "boxes": [
+          [
+            2.135,
+            0.363,
+            2.147,
+            0.463
+          ]
+        ],
+        "cell": "BENCHMARK_TOP",
+        "geometry": [
+          [
+            "polygon",
+            [
+              [
+                2.135,
+                0.363
+              ],
+              [
+                2.135,
+                0.463
+              ],
+              [
+                2.147,
+                0.463
+              ],
+              [
+                2.147,
+                0.363
+              ]
+            ],
+            ""
+          ]
+        ],
+        "rule": "M1.S.1"
+      },
+      {
+        "boxes": [
+          [
+            2.325,
+            0.363,
+            2.337,
+            0.463
+          ]
+        ],
+        "cell": "BENCHMARK_TOP",
+        "geometry": [
+          [
+            "edge_pair",
+            [
+              [
+                [
+                  2.325,
+                  0.363
+                ],
+                [
+                  2.325,
+                  0.463
+                ]
+              ],
+              [
+                [
+                  2.337,
+                  0.363
+                ],
+                [
+                  2.337,
+                  0.463
+                ]
+              ]
+            ]
+          ]
+        ],
+        "rule": "M3.W.1"
+      }
+    ],
+    "target_scope_rules": [
+      "M1.S.1"
+    ]
+  },
+  "gds": "cases/l2_g0_c1.gds",
+  "gds_sha256": "35fd9d4841e57c5f61bcfae3965a584287b6e1e7894089ea97ad494dd237f0e5",
+  "kind": "repair",
+  "level": 2,
+  "metrics": {
+    "cell_definitions": 10,
+    "context_shapes": 8,
+    "coupled_rules": 2,
+    "dbu_um": 0.00025,
+    "editable_shape_count": 3,
+    "hierarchy_depth": 4,
+    "instance_count": 103,
+    "protected_obstacle_count": 5,
+    "shape_count": 11289,
+    "target_markers": 2
+  },
+  "scope_box_um": [
+    2.072,
+    0.36,
+    2.352,
+    0.466
+  ],
+  "source": {
+    "families": [
+      "INV",
+      "BUF",
+      "NAND",
+      "NOR",
+      "DFF"
+    ],
+    "kind": "real_asap7_cells",
+    "library_sha256": "f43d5b33df635cf9e66cbca66b6bdd05364f824d8040cd21528b9e12808b9263",
+    "units_verified": true
+  },
+  "source_group": "l2_source_0"
+}

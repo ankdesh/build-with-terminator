@@ -52,6 +52,12 @@ def test_benchmark_generator_generates_100_cases(tmp_path: Path):
     assert manifest_on_disk.exists()
     loaded_manifest = BenchmarkManifestManager.load(manifest_on_disk)
     assert loaded_manifest.case_count == 100
+    # The checked-in accepted release is the first generation; this fresh directory
+    # is an independent repeat. Only the publication timestamp may differ.
+    reference = BenchmarkManifestManager.load(BENCHMARK_DIR / "manifest.json").to_dict()
+    repeated = loaded_manifest.to_dict()
+    reference.pop("created_at"); repeated.pop("created_at")
+    assert repeated == reference
 
 
 def test_benchmark_v1_manifest_and_sha256_integrity():

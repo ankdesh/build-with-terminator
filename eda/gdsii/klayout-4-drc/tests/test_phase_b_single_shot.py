@@ -61,6 +61,8 @@ def test_phase_b_single_shot_agent_live_or_blocked(tmp_path: Path):
     """Run live agent evaluation on ASAP7 boundary fixture if OPENAI_API_KEY is available."""
     api_key = os.environ.get("OPENAI_API_KEY")
     model = os.environ.get("OPENAI_MODEL", "gpt-6-luna")
+    if not os.environ.get("KLAYOUT_DRC_RUN_LIVE_TESTS"):
+        pytest.skip("Live tests require KLAYOUT_DRC_RUN_LIVE_TESTS=1")
     if not api_key:
         pytest.skip("OPENAI_API_KEY not configured; skipping live agent call.")
 
@@ -76,13 +78,8 @@ def test_phase_b_single_shot_agent_live_or_blocked(tmp_path: Path):
     orchestrator = SingleShotOrchestrator(spec)
     summary = orchestrator.run()
 
-    # The agent run must produce a valid typed status, never crash or silently fallback
-    assert summary.verdict in [
-        VERDICT_SUCCESS_GEOMETRY_ONLY,
-        "partial",
-        "invalid_patch",
-        "model_error",
-        "no_change",
-    ]
+    assert summary.execution_result.status not in ("model_error", "blocked")
+    assert (orchestrator.paths.run_dir / "model_response.json").exists()
+    assert (orchestrator.paths.run_dir / "generation_manifest.json").exists()
     assert orchestrator.paths.results_json.exists()
     assert orchestrator.paths.report_md.exists()

@@ -53,7 +53,7 @@ class BenchmarkManifestManager:
             return BenchmarkManifest.from_dict(raw_data)
         except json.JSONDecodeError as exc:
             raise DRCConfigurationError(f"Failed to parse benchmark manifest JSON from {manifest_path}: {exc}") from exc
-        except KeyError as exc:
+        except (KeyError, ValueError, TypeError) as exc:
             raise DRCConfigurationError(f"Missing required field in benchmark manifest {manifest_path}: {exc}") from exc
 
     @classmethod
@@ -97,7 +97,9 @@ class BenchmarkManifestManager:
             tier_set = set(tiers)
             filtered = [c for c in filtered if c.tier in tier_set]
 
-        if limit is not None and limit > 0:
+        if limit is not None and limit < 0:
+            raise DRCConfigurationError("Limit must be nonnegative")
+        if limit is not None:
             filtered = filtered[:limit]
 
         return filtered

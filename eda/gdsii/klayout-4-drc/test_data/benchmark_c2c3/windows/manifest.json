@@ -1,0 +1,1857 @@
+{
+  "case_count": 50,
+  "coordinate_frame": "Original top-cell coordinates and DBU; routing layers only; flattened",
+  "purpose": "Inspection only; never substitute these clips for full scored inputs",
+  "windows": [
+    {
+      "case_id": "l1_g0_c0",
+      "full_gds": "cases/l1_g0_c0.gds",
+      "full_gds_sha256": "8fe3cbd55986edd4ffb0d950d315267b1f2a102252b657bd16629616a5efdbbb",
+      "inspection_gds": "windows/l1_g0_c0.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "bb6aa07c68e3a831b872facfa9bc45b80f76c08e8fc05c2a2d67bc0611969261",
+      "windows_um": [
+        [
+          -0.088,
+          0.19999999999999998,
+          0.262,
+          0.626
+        ]
+      ]
+    },
+    {
+      "case_id": "l1_g0_c1",
+      "full_gds": "cases/l1_g0_c1.gds",
+      "full_gds_sha256": "afbef0037ef834f68270025cfc3a8b26882b68bf3bc2983ff3bad02998eb2c7c",
+      "inspection_gds": "windows/l1_g0_c1.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "233cf06c1e9b1f75b218cdf25af32122cbdb7cd95f5b049ce0e7630f79361381",
+      "windows_um": [
+        [
+          1.9120000000000001,
+          0.19999999999999998,
+          2.378,
+          0.626
+        ]
+      ]
+    },
+    {
+      "case_id": "l1_g0_c2",
+      "full_gds": "cases/l1_g0_c2.gds",
+      "full_gds_sha256": "a564c7f669f0068a0ee1bd59b24c716a05c00f718f79ed24cbbe12f2a2a3b186",
+      "inspection_gds": "windows/l1_g0_c2.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "f1f6a3485787d155ede3ee076884d4b5ee91c7ab78e90c9abed8e28912fb69a1",
+      "windows_um": [
+        [
+          3.9050000000000002,
+          0.19299999999999998,
+          4.263,
+          0.551
+        ]
+      ]
+    },
+    {
+      "case_id": "l1_g0_c3",
+      "full_gds": "cases/l1_g0_c3.gds",
+      "full_gds_sha256": "cb6844ad2cfae8f41b0e05b1dcf73bf74d82db58e387ce9d7ac32152bcab2df8",
+      "inspection_gds": "windows/l1_g0_c3.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "99dacadbe203053aaac5f54dd1820f89cb872729153ef6e19784a3ea045efeba",
+      "windows_um": [
+        [
+          5.912,
+          0.19999999999999998,
+          6.2620000000000005,
+          0.626
+        ]
+      ]
+    },
+    {
+      "case_id": "l1_g0_c4",
+      "full_gds": "cases/l1_g0_c4.gds",
+      "full_gds_sha256": "75d57ac6bab54b3551d7b62c7cd9ae571301790d86f39bfc8b56239249ca7bd5",
+      "inspection_gds": "windows/l1_g0_c4.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "6acd7f982d8f84d6386456384942410a61edbc01e829a032cc3d96b1c7f55487",
+      "windows_um": [
+        [
+          7.912000000000001,
+          0.19999999999999998,
+          8.378,
+          0.626
+        ]
+      ]
+    },
+    {
+      "case_id": "l1_g1_c0",
+      "full_gds": "cases/l1_g1_c0.gds",
+      "full_gds_sha256": "8bfb6a8dca4b8cbd04e8eae6541e7fd09ccdc7dbe52935fa1d7f9eded5cc6c34",
+      "inspection_gds": "windows/l1_g1_c0.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "bc42bc2afe82382f54999ce7b522b13e68bdb1c9a323fc236466ca524571be69",
+      "windows_um": [
+        [
+          -0.088,
+          0.21,
+          0.262,
+          0.636
+        ]
+      ]
+    },
+    {
+      "case_id": "l1_g1_c1",
+      "full_gds": "cases/l1_g1_c1.gds",
+      "full_gds_sha256": "0837b3ae68797bbda0a8e9a3520f11ac78dd1d9721d4e0683b12f28164a4ce0b",
+      "inspection_gds": "windows/l1_g1_c1.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "d00895826da78b116fb3ed587fae499b4b64b29651d78d6e23c00e4437fa88f1",
+      "windows_um": [
+        [
+          1.9120000000000001,
+          0.21,
+          2.2560000000000002,
+          0.5680000000000001
+        ]
+      ]
+    },
+    {
+      "case_id": "l1_g1_c2",
+      "full_gds": "cases/l1_g1_c2.gds",
+      "full_gds_sha256": "5f5b5864c6b50cd2f31a1e687fc7f49d5c2103ef70cb851e01f78ba9a6ad609c",
+      "inspection_gds": "windows/l1_g1_c2.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "9a90843abea1da994546214ebe905ae671f05fb055b377a16c196a759766c923",
+      "windows_um": [
+        [
+          3.912,
+          0.20299999999999999,
+          4.256,
+          0.561
+        ]
+      ]
+    },
+    {
+      "case_id": "l1_g1_c3",
+      "full_gds": "cases/l1_g1_c3.gds",
+      "full_gds_sha256": "6d2a4e75c437f003ea0561a2ecb7dda01a0bcbd3ce74b1181b7c5d86d0df7e28",
+      "inspection_gds": "windows/l1_g1_c3.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "9c4a67f0e4b42712d725334dd51152ceb48edbcccc50d3dd3d1a213d5c3f68b0",
+      "windows_um": [
+        [
+          5.912,
+          0.21,
+          6.2620000000000005,
+          0.636
+        ]
+      ]
+    },
+    {
+      "case_id": "l1_g1_c4",
+      "full_gds": "cases/l1_g1_c4.gds",
+      "full_gds_sha256": "3c6c40e539d954a5644f9c221db3fd0def7d8982afb303f0fc0e89360a347288",
+      "inspection_gds": "windows/l1_g1_c4.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "743df612dd4bf9ec7bc3742aa2e09ccbb96eb5efafea39e7b52885f4b5f0448e",
+      "windows_um": [
+        [
+          7.912000000000001,
+          0.21,
+          8.256,
+          0.5680000000000001
+        ]
+      ]
+    },
+    {
+      "case_id": "l2_g0_c0",
+      "full_gds": "cases/l2_g0_c0.gds",
+      "full_gds_sha256": "17d6d374645cff0a6dbf7fe76f808fe126d8cefd19843434be985aa13cd6259e",
+      "inspection_gds": "windows/l2_g0_c0.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "d16f5c55eccc436588f976024cc05764768aea714b28c0b6d98d618d946665f9",
+      "windows_um": [
+        [
+          -0.088,
+          0.19999999999999998,
+          0.512,
+          0.626
+        ]
+      ]
+    },
+    {
+      "case_id": "l2_g0_c1",
+      "full_gds": "cases/l2_g0_c1.gds",
+      "full_gds_sha256": "35fd9d4841e57c5f61bcfae3965a584287b6e1e7894089ea97ad494dd237f0e5",
+      "inspection_gds": "windows/l2_g0_c1.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "5dc482188b7891a9beacef062ebd56b1dc5c7deffabcd8141788e39d8f734d28",
+      "windows_um": [
+        [
+          1.9120000000000001,
+          0.19999999999999998,
+          2.512,
+          0.626
+        ]
+      ]
+    },
+    {
+      "case_id": "l2_g0_c2",
+      "full_gds": "cases/l2_g0_c2.gds",
+      "full_gds_sha256": "db63b2fd3d587d16d11401b2dd2ca2b5e0c200d2eb03af4ff0b6bbcd415bb1ac",
+      "inspection_gds": "windows/l2_g0_c2.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "e33e3a247f58bc317cf7be40dcd9caacf401e67c477b10d23a8bafece5b63581",
+      "windows_um": [
+        [
+          3.9050000000000002,
+          0.19299999999999998,
+          4.5120000000000005,
+          0.626
+        ]
+      ]
+    },
+    {
+      "case_id": "l2_g0_c3",
+      "full_gds": "cases/l2_g0_c3.gds",
+      "full_gds_sha256": "56c848832a7d2aac915c9160b16aa30ac5257a47ae6ddbfa7713b8a0320fab00",
+      "inspection_gds": "windows/l2_g0_c3.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "8615ce23c303d12930199b2a65d47139494c3dc48000e4969652bcc122ed8801",
+      "windows_um": [
+        [
+          5.912,
+          0.19999999999999998,
+          6.5120000000000005,
+          0.626
+        ]
+      ]
+    },
+    {
+      "case_id": "l2_g0_c4",
+      "full_gds": "cases/l2_g0_c4.gds",
+      "full_gds_sha256": "1f43466306fd68568054d8af7cde787aa9a68203c116d33da8ad5d79d13c2810",
+      "inspection_gds": "windows/l2_g0_c4.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "f3be4a17ae3efa4446449bd379fd1a11692175bb03e8615fb1130078e97edbc6",
+      "windows_um": [
+        [
+          7.912000000000001,
+          0.19999999999999998,
+          8.512,
+          0.626
+        ]
+      ]
+    },
+    {
+      "case_id": "l2_g1_c0",
+      "full_gds": "cases/l2_g1_c0.gds",
+      "full_gds_sha256": "74f65020af4aa95d536f43b485bf85efaaba2dcd8f80a5e0a463f89f37a0244e",
+      "inspection_gds": "windows/l2_g1_c0.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "4d438b500c47b3daac846eb54e08c686257e8e40f46d94b5998ea61fa0d87807",
+      "windows_um": [
+        [
+          -0.188,
+          0.21,
+          0.238,
+          0.81
+        ]
+      ]
+    },
+    {
+      "case_id": "l2_g1_c1",
+      "full_gds": "cases/l2_g1_c1.gds",
+      "full_gds_sha256": "a0bce046f0b6e464d0c88fd93f326e6afdb7334e886444e073dbe8b93cba19d3",
+      "inspection_gds": "windows/l2_g1_c1.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "173fa43ffb0c758d7ce411decea4a1b3a8ba2b691dd92f55e62c75e718dd1afc",
+      "windows_um": [
+        [
+          1.812,
+          0.21,
+          2.238,
+          0.81
+        ]
+      ]
+    },
+    {
+      "case_id": "l2_g1_c2",
+      "full_gds": "cases/l2_g1_c2.gds",
+      "full_gds_sha256": "3805ce7a75501bd547b68087f509c0e2262f73ba7076aaea76d9bf9b2cd53c4c",
+      "inspection_gds": "windows/l2_g1_c2.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "7a772847fa0cbf7322cbbf298633f8311e6e6ed6afd60b932074b131e1edc040",
+      "windows_um": [
+        [
+          3.812,
+          0.21,
+          4.245,
+          0.81
+        ]
+      ]
+    },
+    {
+      "case_id": "l2_g1_c3",
+      "full_gds": "cases/l2_g1_c3.gds",
+      "full_gds_sha256": "3441cc400547385b95d425d3bd611b39ff4e8f02ac92159b8a9b6d278db307d5",
+      "inspection_gds": "windows/l2_g1_c3.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "8cc0fdf565e27793de15858331d6f0425ea97299f71cd7046e3bcbcef6eb9675",
+      "windows_um": [
+        [
+          5.812,
+          0.21,
+          6.238,
+          0.81
+        ]
+      ]
+    },
+    {
+      "case_id": "l2_g1_c4",
+      "full_gds": "cases/l2_g1_c4.gds",
+      "full_gds_sha256": "11f4038787feb6f454e1741b08d19236839631468772a294d5d450c5292b0e4e",
+      "inspection_gds": "windows/l2_g1_c4.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "7ca21da2d7305be598684c65522efcbecfa0eb0289dfae95a8dfceee6df15404",
+      "windows_um": [
+        [
+          7.812,
+          0.21,
+          8.238,
+          0.81
+        ]
+      ]
+    },
+    {
+      "case_id": "l3_g0_c0",
+      "full_gds": "cases/l3_g0_c0.gds",
+      "full_gds_sha256": "76bd850723d47dec1dd3a269b06097b951c6a69f784921446d42351aa8226f95",
+      "inspection_gds": "windows/l3_g0_c0.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "9710581a5e0457e25b69e9b54b9dca61bcb10c436fcd5c0411a81f285a114510",
+      "windows_um": [
+        [
+          2.1029999999999998,
+          2.968,
+          2.343,
+          3.192
+        ]
+      ]
+    },
+    {
+      "case_id": "l3_g0_c1",
+      "full_gds": "cases/l3_g0_c1.gds",
+      "full_gds_sha256": "a367fe80531325357c5997a3702048d3dd684cce90ab8fd40fafe0bfcf2d704a",
+      "inspection_gds": "windows/l3_g0_c1.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "f1903a8a3c13d7af1fb51c5da3c8e8557a25b026d00e23c566ee61545d0e3a6e",
+      "windows_um": [
+        [
+          2.194,
+          2.463,
+          2.418,
+          2.7030000000000003
+        ]
+      ]
+    },
+    {
+      "case_id": "l3_g0_c2",
+      "full_gds": "cases/l3_g0_c2.gds",
+      "full_gds_sha256": "52f3fb6f216d601269b63eba875e17cf2a332306617a410d1e3a6cbe3a1617c5",
+      "inspection_gds": "windows/l3_g0_c2.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "09a374ad21bd2628e15191c533b6c5bade50048c86978c6ee3658e1e99c2e51b",
+      "windows_um": [
+        [
+          2.208,
+          1.96,
+          2.432,
+          2.198
+        ]
+      ]
+    },
+    {
+      "case_id": "l3_g0_c3",
+      "full_gds": "cases/l3_g0_c3.gds",
+      "full_gds_sha256": "0c2455faf7beeb705d9587bffd8c061a49c29025770f28416f37f3d78cf3940a",
+      "inspection_gds": "windows/l3_g0_c3.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "ca937f621eee344a033a99adda50429c10d117fefba569da4992d402941f227b",
+      "windows_um": [
+        [
+          2.258,
+          1.96,
+          2.498,
+          2.184
+        ]
+      ]
+    },
+    {
+      "case_id": "l3_g0_c4",
+      "full_gds": "cases/l3_g0_c4.gds",
+      "full_gds_sha256": "c4c92f16d02fc9adfe93749c5de3823746afead539b8122b8283db8ee909633a",
+      "inspection_gds": "windows/l3_g0_c4.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "fba73321b0ee45b4c1ccf594151151f627b0bac13ab7623904eebafe339c6d0f",
+      "windows_um": [
+        [
+          2.208,
+          2.932,
+          2.432,
+          3.17
+        ]
+      ]
+    },
+    {
+      "case_id": "l3_g1_c0",
+      "full_gds": "cases/l3_g1_c0.gds",
+      "full_gds_sha256": "5fd93e53f5293a658772959290f4477658ae711d25594c62f6ed1888823675d4",
+      "inspection_gds": "windows/l3_g1_c0.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "deb2f406adebb6db0c94128004136ccd032cc0eab7c02af6e1d98ab93f1428ee",
+      "windows_um": [
+        [
+          2.121,
+          1.996,
+          2.361,
+          2.22
+        ]
+      ]
+    },
+    {
+      "case_id": "l3_g1_c1",
+      "full_gds": "cases/l3_g1_c1.gds",
+      "full_gds_sha256": "fc0f1643dbdc747c033363fc96adfa517ed8bd91ca8849f89658f810fb7a2574",
+      "inspection_gds": "windows/l3_g1_c1.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "110842cacbfe116d253a80d0aa3b1adf75747c51a865b87800198c1c35c978f8",
+      "windows_um": [
+        [
+          2.23,
+          2.265,
+          2.454,
+          2.5050000000000003
+        ]
+      ]
+    },
+    {
+      "case_id": "l3_g1_c2",
+      "full_gds": "cases/l3_g1_c2.gds",
+      "full_gds_sha256": "325ee1266ac78538734500bfbc89ffb1e53927be00bacbe04d5c9baf41d2dde6",
+      "inspection_gds": "windows/l3_g1_c2.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "40a66077a1a4091139b823595e4955a91cecb39ad116e7fb5760d565206dae25",
+      "windows_um": [
+        [
+          2.2439999999999998,
+          1.996,
+          2.468,
+          2.234
+        ]
+      ]
+    },
+    {
+      "case_id": "l3_g1_c3",
+      "full_gds": "cases/l3_g1_c3.gds",
+      "full_gds_sha256": "f53266dc4fe0076df4228925adaae1a908ae3cd5050ac01296c25488f9203fbe",
+      "inspection_gds": "windows/l3_g1_c3.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "ddadb0d443ca3675eea5825942c7326787212942924021bffebab7087d840270",
+      "windows_um": [
+        [
+          2.3729999999999998,
+          2.536,
+          2.613,
+          2.7600000000000002
+        ]
+      ]
+    },
+    {
+      "case_id": "l3_g1_c4",
+      "full_gds": "cases/l3_g1_c4.gds",
+      "full_gds_sha256": "ce24019baf00208f7cd4c82e827d32181104ee46fac2c08eabd818c9361cc460",
+      "inspection_gds": "windows/l3_g1_c4.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "730264fcdf8d0a9173dbc8dd32006cc6b80c72a379c153cf6026f7b61d78af70",
+      "windows_um": [
+        [
+          2.518,
+          2.598,
+          2.742,
+          2.838
+        ]
+      ]
+    },
+    {
+      "case_id": "l4_g0_c0",
+      "full_gds": "cases/l4_g0_c0.gds",
+      "full_gds_sha256": "722fc4c90b5073770a3a39ce5d04b8269750dbc30cc1f5f9b282704f51b31fd9",
+      "inspection_gds": "windows/l4_g0_c0.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "d535935bfd01fdbe07dd63c56d4f4f178e7f0f47ac83b42e6a0b34e0f721761f",
+      "windows_um": [
+        [
+          6.981,
+          1.996,
+          7.221,
+          2.22
+        ]
+      ]
+    },
+    {
+      "case_id": "l4_g0_c1",
+      "full_gds": "cases/l4_g0_c1.gds",
+      "full_gds_sha256": "416355ecb0fc60b9d8a3d8cde04dabcfd7c411e08283de6ea86412208266ca2e",
+      "inspection_gds": "windows/l4_g0_c1.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "6ce5b026347c28129418ce7de7e474b0c78b873288de0cd1e221b80fcaa6f3b7",
+      "windows_um": [
+        [
+          6.874,
+          1.959,
+          7.098,
+          2.1990000000000003
+        ]
+      ]
+    },
+    {
+      "case_id": "l4_g0_c2",
+      "full_gds": "cases/l4_g0_c2.gds",
+      "full_gds_sha256": "97fc0e46dfab77dab5ac71e51c7330045351439ece1571bd826915129a6d5151",
+      "inspection_gds": "windows/l4_g0_c2.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "1388dbd2768a756ab4b4b6ef910e946574365edd621dfaab3d8c8c6a78510114",
+      "windows_um": [
+        [
+          6.78,
+          1.996,
+          7.0040000000000004,
+          2.234
+        ]
+      ]
+    },
+    {
+      "case_id": "l4_g0_c3",
+      "full_gds": "cases/l4_g0_c3.gds",
+      "full_gds_sha256": "0c5b447e574f58a9fd5601b8d143f5956ffa8f8f59432b371774a9d9ac0f04ea",
+      "inspection_gds": "windows/l4_g0_c3.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "88a32be4419228a47c7be81c0219092e376420ad8645ef4bee27477b7622d5ed",
+      "windows_um": [
+        [
+          10.33,
+          7.17,
+          10.554,
+          7.41
+        ]
+      ]
+    },
+    {
+      "case_id": "l4_g0_c4",
+      "full_gds": "cases/l4_g0_c4.gds",
+      "full_gds_sha256": "7fca998728ee1d38a2d00e02152b54d959b29f2a730d66340630916c028d1cdd",
+      "inspection_gds": "windows/l4_g0_c4.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "ae9498fbbefb4df42c11ba5cbc1523584fbad1b645c64d825c17121229a67705",
+      "windows_um": [
+        [
+          10.236,
+          6.586,
+          10.46,
+          6.824
+        ]
+      ]
+    },
+    {
+      "case_id": "l4_g1_c0",
+      "full_gds": "cases/l4_g1_c0.gds",
+      "full_gds_sha256": "20d5bb9a5eca73bc61fceb681ea8cd414e3276793faab4293776f83a3bfe8a7a",
+      "inspection_gds": "windows/l4_g1_c0.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "c5e14856fb504a9c38ea2d6629c24c14dc1da79d2e7b4e4616eb734632da484b",
+      "windows_um": [
+        [
+          12.525,
+          12.346,
+          12.765,
+          12.57
+        ]
+      ]
+    },
+    {
+      "case_id": "l4_g1_c1",
+      "full_gds": "cases/l4_g1_c1.gds",
+      "full_gds_sha256": "9c7f7ef59f8097d581bbc862fac87efcea05fae2becdae6905f2d3c910242fc7",
+      "inspection_gds": "windows/l4_g1_c1.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "bd2d00caae30864195ec078e274f8ab9ab2cd1cd9451d17e9e91745499915fff",
+      "windows_um": [
+        [
+          12.346,
+          8.748,
+          12.57,
+          8.988
+        ]
+      ]
+    },
+    {
+      "case_id": "l4_g1_c2",
+      "full_gds": "cases/l4_g1_c2.gds",
+      "full_gds_sha256": "f1e576c4fa7fcfc5369dbbbfb523254b8f3a59ed8e887bdac82aba5824692eb4",
+      "inspection_gds": "windows/l4_g1_c2.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "4b7ad078ce76878375509d7ef55b0c376176fed97c4bf01709826b406a9aabed",
+      "windows_um": [
+        [
+          9.588000000000001,
+          4.516,
+          9.812,
+          4.7540000000000004
+        ]
+      ]
+    },
+    {
+      "case_id": "l4_g1_c3",
+      "full_gds": "cases/l4_g1_c3.gds",
+      "full_gds_sha256": "09e77a1f5bd96ebaace4cd6e7b4947a82753685f310a990acb6136b62e5008f6",
+      "inspection_gds": "windows/l4_g1_c3.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "794891c016b2aa88ca29af59586a2181eb2da21d8f75c75b7eec382877e9aba4",
+      "windows_um": [
+        [
+          9.502,
+          4.524,
+          9.726,
+          4.764
+        ]
+      ]
+    },
+    {
+      "case_id": "l4_g1_c4",
+      "full_gds": "cases/l4_g1_c4.gds",
+      "full_gds_sha256": "2b11a7593601573de6e92921dcf642682c544a16eab6429f24e543e3d87586ae",
+      "inspection_gds": "windows/l4_g1_c4.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "eaea16c23d15a9c3e8ec2c4b222dc3685a0e0cde5faf69321f757f29afeb16bf",
+      "windows_um": [
+        [
+          12.612,
+          12.526,
+          12.836,
+          12.764000000000001
+        ]
+      ]
+    },
+    {
+      "case_id": "l5_g0_c0",
+      "full_gds": "cases/l5_g0_c0.gds",
+      "full_gds_sha256": "4b6b2089a1a88b2b79143ba1616eebd8172f95209bf2ef29b100a0530fcd6b62",
+      "inspection_gds": "windows/l5_g0_c0.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "7a72b0c08125166ae9c3e732a66e9fe82e2b44f37905789a3c2b9198c3bceab9",
+      "windows_um": [
+        [
+          4.445,
+          3.851,
+          4.6690000000000005,
+          4.088
+        ]
+      ]
+    },
+    {
+      "case_id": "l5_g0_c1",
+      "full_gds": "cases/l5_g0_c1.gds",
+      "full_gds_sha256": "653c135bb9fcc2de8ac71bbb9e6329c79225240c62d81862ec91612059f663ab",
+      "inspection_gds": "windows/l5_g0_c1.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "761813679d9eeb7f867f4a6030d0a6c339a84057636c787f6778184fe3d00527",
+      "windows_um": [
+        [
+          4.421,
+          3.851,
+          4.6450000000000005,
+          4.088
+        ]
+      ]
+    },
+    {
+      "case_id": "l5_g0_c2",
+      "full_gds": "cases/l5_g0_c2.gds",
+      "full_gds_sha256": "abd92fb579e39d634cc0b20d587e64f3cda54631e5c8afe23fcdb2695e2dcb5d",
+      "inspection_gds": "windows/l5_g0_c2.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "8f1891201cfd9d385346e080f6e025e3161d7c93e7c7a556e8d495bfbc444562",
+      "windows_um": [
+        [
+          5.309,
+          3.851,
+          5.533,
+          4.088
+        ]
+      ]
+    },
+    {
+      "case_id": "l5_g0_c3",
+      "full_gds": "cases/l5_g0_c3.gds",
+      "full_gds_sha256": "befc956f59db066b8775185c3cf30c04e052920810d420d4c55b4fb4ee574320",
+      "inspection_gds": "windows/l5_g0_c3.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "087eec129d5e06e4f5df707444149f0357453fe3ba2787517b2940a9bcb82be5",
+      "windows_um": [
+        [
+          5.285,
+          3.851,
+          5.509,
+          4.088
+        ]
+      ]
+    },
+    {
+      "case_id": "l5_g0_c4",
+      "full_gds": "cases/l5_g0_c4.gds",
+      "full_gds_sha256": "2a27b42fb7c76542e6793f476092cd8429dda8fc592b3e9edbf1879719db58f6",
+      "inspection_gds": "windows/l5_g0_c4.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "852e2cec25955af0a4d92091398b246b457b20118a47e5abc1e0e866b7819025",
+      "windows_um": [
+        [
+          5.609,
+          4.319,
+          5.833,
+          4.556
+        ]
+      ]
+    },
+    {
+      "case_id": "l5_g1_c0",
+      "full_gds": "cases/l5_g1_c0.gds",
+      "full_gds_sha256": "c45cf9d0affae16a7e7738c75bede7af7da707ae026c4d96d4aa00ce9927c3d9",
+      "inspection_gds": "windows/l5_g1_c0.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "52f64da227820ae48e1618a130800b6f81d4d01b7eb041c1812756e06e3e3d9f",
+      "windows_um": [
+        [
+          5.345,
+          8.873,
+          5.569,
+          9.11
+        ]
+      ]
+    },
+    {
+      "case_id": "l5_g1_c1",
+      "full_gds": "cases/l5_g1_c1.gds",
+      "full_gds_sha256": "8983f28ee48ac87b378216e386b2e6410c49c11868c6d03ec08c51f79ba786c1",
+      "inspection_gds": "windows/l5_g1_c1.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "432365c581751570d1bcec403630f7a4930471472717272fae84106dee47bca9",
+      "windows_um": [
+        [
+          5.345,
+          8.945,
+          5.569,
+          9.182
+        ]
+      ]
+    },
+    {
+      "case_id": "l5_g1_c2",
+      "full_gds": "cases/l5_g1_c2.gds",
+      "full_gds_sha256": "ca1c56e74f555b00dd6170f4e7ced8cda350bd19fcf139e111d4113c8fc06ce7",
+      "inspection_gds": "windows/l5_g1_c2.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "9c0f0890493e48a01715c73df1529faec7748fc04c19699f264bd3de0d9c87ae",
+      "windows_um": [
+        [
+          5.345,
+          9.143,
+          5.569,
+          9.38
+        ]
+      ]
+    },
+    {
+      "case_id": "l5_g1_c3",
+      "full_gds": "cases/l5_g1_c3.gds",
+      "full_gds_sha256": "39f6852815493f23f96cf074f4f202cd04611beb6b9983d2e1fa982589cb1e00",
+      "inspection_gds": "windows/l5_g1_c3.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "c8406a50427a8968a3d846e38e5d1bb65d2e8f8e79dd5ab151b73bca6e18592b",
+      "windows_um": [
+        [
+          5.321,
+          9.143,
+          5.545,
+          9.38
+        ]
+      ]
+    },
+    {
+      "case_id": "l5_g1_c4",
+      "full_gds": "cases/l5_g1_c4.gds",
+      "full_gds_sha256": "e9dc9d671b25ea44232b243ef63d6ea10dbdc3dc6346392c10db9606baf38efc",
+      "inspection_gds": "windows/l5_g1_c4.gds",
+      "layers": [
+        [
+          19,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          21,
+          0
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "sha256": "2079c5ce27fae7fbbf8f073c7b72e7ea3b24f7be0cc539cf733b321832b50bcc",
+      "windows_um": [
+        [
+          5.345,
+          9.413,
+          5.569,
+          9.65
+        ]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,151 @@
+mode,case_id,level,kind,verdict,failure_type,passed,area_added_um2,area_removed_um2,diagnostic,scored_profile,public_audit_profile
+agent,l1_g0_c0,1,repair,invalid_patch,edit_policy,False,0.0,0.0,Protected master cell 'BENCHMARK_TOP' contents changed.,asap7_c2c3_v1,asap7_public_full
+agent,l1_g0_c1,1,repair,model_error,response_format,False,,,Agent synthesis failed with code 1: Model response must contain nonempty python_script and string rationale,asap7_c2c3_v1,asap7_public_full
+agent,l1_g0_c2,1,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l1_g0_c3,1,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l1_g0_c4,1,no_edit,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l1_g1_c0,1,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l1_g1_c1,1,repair,invalid_patch,edit_policy,False,7.2e-05,0.0,Protected master cell 'BENCHMARK_TOP' contents changed.,asap7_c2c3_v1,asap7_public_full
+agent,l1_g1_c2,1,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l1_g1_c3,1,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l1_g1_c4,1,no_edit,invalid_patch,python_execution,False,,,AttributeError: 'PolygonWithProperties' object has no attribute 'resize'. Did you mean: 'size'?,asap7_c2c3_v1,asap7_public_full
+agent,l2_g0_c0,2,repair,invalid_patch,python_execution,False,,,AttributeError: 'Box' object has no attribute 'sized',asap7_c2c3_v1,asap7_public_full
+agent,l2_g0_c1,2,repair,invalid_patch,python_execution,False,,,AttributeError: 'Layout' object has no attribute 'layout_io',asap7_c2c3_v1,asap7_public_full
+agent,l2_g0_c2,2,repair,invalid_patch,python_execution,False,,,ValueError: Required layers not defined in layout,asap7_c2c3_v1,asap7_public_full
+agent,l2_g0_c3,2,clean_control,invalid_patch,python_execution,False,,,AttributeError: 'Layout' object has no attribute 'layer_info'. Did you mean: 'layer_infos'?,asap7_c2c3_v1,asap7_public_full
+agent,l2_g0_c4,2,no_edit,invalid_patch,python_execution,False,,,"IndentationError: unexpected indent (candidate_fix.py, line 12)",asap7_c2c3_v1,asap7_public_full
+agent,l2_g1_c0,2,repair,invalid_patch,edit_policy,False,0.000708,0.0,Protected master cell 'BENCHMARK_TOP' contents changed.,asap7_c2c3_v1,asap7_public_full
+agent,l2_g1_c1,2,repair,invalid_patch,edit_policy,False,0.00912,0.0,Protected master cell 'BENCHMARK_TOP' contents changed.,asap7_c2c3_v1,asap7_public_full
+agent,l2_g1_c2,2,repair,invalid_patch,python_execution,False,,,AttributeError: 'Layout' object has no attribute 'begin_shapes_rec'. Did you mean: 'begin_shapes'?,asap7_c2c3_v1,asap7_public_full
+agent,l2_g1_c3,2,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l2_g1_c4,2,no_edit,invalid_patch,python_execution,False,,,AttributeError: 'PolygonWithProperties' object has no attribute 'width_check',asap7_c2c3_v1,asap7_public_full
+agent,l3_g0_c0,3,repair,invalid_patch,edit_policy,False,0.0,0.0,Protected master cell 'gcd' contents changed.,asap7_c2c3_v1,asap7_public_full
+agent,l3_g0_c1,3,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l3_g0_c2,3,repair,invalid_patch,edit_policy,False,659.633548,0.0,Protected master cell 'gcd' contents changed.,asap7_c2c3_v1,asap7_public_full
+agent,l3_g0_c3,3,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l3_g0_c4,3,no_edit,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l3_g1_c0,3,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l3_g1_c1,3,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l3_g1_c2,3,repair,invalid_patch,python_execution,False,,,AttributeError: 'float' object has no attribute 'to_integral_value',asap7_c2c3_v1,asap7_public_full
+agent,l3_g1_c3,3,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l3_g1_c4,3,no_edit,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l4_g0_c0,4,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l4_g0_c1,4,repair,model_error,response_format,False,,,Agent synthesis failed with code 1: Model response must contain nonempty python_script and string rationale,asap7_c2c3_v1,asap7_public_full
+agent,l4_g0_c2,4,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l4_g0_c3,4,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l4_g0_c4,4,no_edit,invalid_patch,python_execution,False,,,AttributeError: 'PolygonWithProperties' object has no attribute 'value',asap7_c2c3_v1,asap7_public_full
+agent,l4_g1_c0,4,repair,model_error,response_format,False,,,Agent synthesis failed with code 1: Model response must contain nonempty python_script and string rationale,asap7_c2c3_v1,asap7_public_full
+agent,l4_g1_c1,4,repair,invalid_patch,python_execution,False,,,AttributeError: module 'klayout.db' has no attribute 'Edge_pair'. Did you mean: 'EdgePair'?,asap7_c2c3_v1,asap7_public_full
+agent,l4_g1_c2,4,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l4_g1_c3,4,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l4_g1_c4,4,no_edit,model_error,api_or_transport,False,,,Agent synthesis failed with code 1: The operation was aborted due to timeout,asap7_c2c3_v1,asap7_public_full
+agent,l5_g0_c0,5,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l5_g0_c1,5,repair,model_error,response_format,False,,,Agent synthesis failed with code 1: Model response must contain nonempty python_script and string rationale,asap7_c2c3_v1,asap7_public_full
+agent,l5_g0_c2,5,repair,model_error,response_format,False,,,Agent synthesis failed with code 1: Model response must contain nonempty python_script and string rationale,asap7_c2c3_v1,asap7_public_full
+agent,l5_g0_c3,5,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l5_g0_c4,5,no_edit,model_error,response_format,False,,,Agent synthesis failed with code 1: Model response must contain nonempty python_script and string rationale,asap7_c2c3_v1,asap7_public_full
+agent,l5_g1_c0,5,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l5_g1_c1,5,repair,invalid_patch,python_execution,False,,,AttributeError: 'Region' object has no attribute 'enclosed',asap7_c2c3_v1,asap7_public_full
+agent,l5_g1_c2,5,repair,model_error,response_format,False,,,Agent synthesis failed with code 1: Model response must contain nonempty python_script and string rationale,asap7_c2c3_v1,asap7_public_full
+agent,l5_g1_c3,5,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+agent,l5_g1_c4,5,no_edit,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+heuristic,l1_g0_c0,1,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+heuristic,l1_g0_c1,1,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+heuristic,l1_g0_c2,1,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+heuristic,l1_g0_c3,1,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+heuristic,l1_g0_c4,1,no_edit,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+heuristic,l1_g1_c0,1,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+heuristic,l1_g1_c1,1,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+heuristic,l1_g1_c2,1,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+heuristic,l1_g1_c3,1,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+heuristic,l1_g1_c4,1,no_edit,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+heuristic,l2_g0_c0,2,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+heuristic,l2_g0_c1,2,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+heuristic,l2_g0_c2,2,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+heuristic,l2_g0_c3,2,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+heuristic,l2_g0_c4,2,no_edit,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+heuristic,l2_g1_c0,2,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+heuristic,l2_g1_c1,2,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+heuristic,l2_g1_c2,2,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+heuristic,l2_g1_c3,2,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+heuristic,l2_g1_c4,2,no_edit,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+heuristic,l3_g0_c0,3,repair,invalid_patch,edit_policy,False,8.475309,0.0,Protected master cell 'gcd' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l3_g0_c1,3,repair,invalid_patch,edit_policy,False,8.475309,0.0,Protected master cell 'gcd' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l3_g0_c2,3,repair,invalid_patch,edit_policy,False,8.475309,0.0,Protected master cell 'gcd' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l3_g0_c3,3,clean_control,invalid_patch,edit_policy,False,8.475309,0.0,Protected master cell 'gcd' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l3_g0_c4,3,no_edit,invalid_patch,edit_policy,False,8.475309,0.0,Protected master cell 'gcd' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l3_g1_c0,3,repair,invalid_patch,edit_policy,False,10.473218,0.0,Protected master cell 'gcd' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l3_g1_c1,3,repair,invalid_patch,edit_policy,False,10.473218,0.0,Protected master cell 'gcd' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l3_g1_c2,3,repair,invalid_patch,edit_policy,False,10.473218,0.0,Protected master cell 'gcd' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l3_g1_c3,3,clean_control,invalid_patch,edit_policy,False,10.473218,0.0,Protected master cell 'gcd' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l3_g1_c4,3,no_edit,invalid_patch,edit_policy,False,10.473218,0.0,Protected master cell 'gcd' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l4_g0_c0,4,repair,invalid_patch,edit_policy,False,28.407691999999997,0.0,Protected master cell 'uart' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l4_g0_c1,4,repair,invalid_patch,edit_policy,False,28.407691999999997,0.0,Protected master cell 'uart' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l4_g0_c2,4,repair,invalid_patch,edit_policy,False,28.410601,0.0,Protected master cell 'uart' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l4_g0_c3,4,clean_control,invalid_patch,edit_policy,False,28.409882,0.0,Protected master cell 'uart' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l4_g0_c4,4,no_edit,invalid_patch,edit_policy,False,28.408345999999998,0.0,Protected master cell 'uart' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l4_g1_c0,4,repair,invalid_patch,edit_policy,False,28.709902999999997,0.0,Protected master cell 'uart' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l4_g1_c1,4,repair,invalid_patch,edit_policy,False,28.708145,0.0,Protected master cell 'uart' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l4_g1_c2,4,repair,invalid_patch,edit_policy,False,28.701027999999997,0.0,Protected master cell 'uart' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l4_g1_c3,4,clean_control,invalid_patch,edit_policy,False,28.711948999999997,0.0,Protected master cell 'uart' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l4_g1_c4,4,no_edit,invalid_patch,edit_policy,False,28.709003,0.0,Protected master cell 'uart' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l5_g0_c0,5,repair,invalid_patch,edit_policy,False,28.387324999999997,0.0,Protected master cell 'uart' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l5_g0_c1,5,repair,invalid_patch,edit_policy,False,28.387324999999997,0.0,Protected master cell 'uart' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l5_g0_c2,5,repair,invalid_patch,edit_policy,False,28.387324999999997,0.0,Protected master cell 'uart' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l5_g0_c3,5,clean_control,invalid_patch,edit_policy,False,28.387324999999997,0.0,Protected master cell 'uart' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l5_g0_c4,5,no_edit,invalid_patch,edit_policy,False,28.387324999999997,0.0,Protected master cell 'uart' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l5_g1_c0,5,repair,invalid_patch,edit_policy,False,23.733985,0.0,Protected master cell 'uart' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l5_g1_c1,5,repair,invalid_patch,edit_policy,False,23.733985,0.0,Protected master cell 'uart' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l5_g1_c2,5,repair,invalid_patch,edit_policy,False,23.733985,0.0,Protected master cell 'uart' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l5_g1_c3,5,clean_control,invalid_patch,edit_policy,False,23.733985,0.0,Protected master cell 'uart' contents changed.,asap7_c2c3_v1,asap7_public_full
+heuristic,l5_g1_c4,5,no_edit,invalid_patch,edit_policy,False,23.733985,0.0,Protected master cell 'uart' contents changed.,asap7_c2c3_v1,asap7_public_full
+no_change,l1_g0_c0,1,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l1_g0_c1,1,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l1_g0_c2,1,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l1_g0_c3,1,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l1_g0_c4,1,no_edit,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l1_g1_c0,1,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l1_g1_c1,1,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l1_g1_c2,1,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l1_g1_c3,1,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l1_g1_c4,1,no_edit,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l2_g0_c0,2,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l2_g0_c1,2,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l2_g0_c2,2,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l2_g0_c3,2,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l2_g0_c4,2,no_edit,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l2_g1_c0,2,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l2_g1_c1,2,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l2_g1_c2,2,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l2_g1_c3,2,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l2_g1_c4,2,no_edit,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l3_g0_c0,3,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l3_g0_c1,3,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l3_g0_c2,3,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l3_g0_c3,3,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l3_g0_c4,3,no_edit,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l3_g1_c0,3,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l3_g1_c1,3,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l3_g1_c2,3,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l3_g1_c3,3,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l3_g1_c4,3,no_edit,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l4_g0_c0,4,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l4_g0_c1,4,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l4_g0_c2,4,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l4_g0_c3,4,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l4_g0_c4,4,no_edit,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l4_g1_c0,4,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l4_g1_c1,4,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l4_g1_c2,4,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l4_g1_c3,4,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l4_g1_c4,4,no_edit,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l5_g0_c0,5,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l5_g0_c1,5,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l5_g0_c2,5,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l5_g0_c3,5,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l5_g0_c4,5,no_edit,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l5_g1_c0,5,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l5_g1_c1,5,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l5_g1_c2,5,repair,unresolved,unresolved_unchanged,False,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l5_g1_c3,5,clean_control,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full
+no_change,l5_g1_c4,5,no_edit,unchanged_control,passed,True,0.0,0.0,,asap7_c2c3_v1,asap7_public_full

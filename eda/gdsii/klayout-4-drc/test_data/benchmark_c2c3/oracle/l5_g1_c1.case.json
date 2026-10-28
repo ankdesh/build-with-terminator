@@ -1,0 +1,351 @@
+{
+  "case_id": "l5_g1_c1",
+  "edit_policy": {
+    "context_layers": [
+      [
+        19,
+        0
+      ],
+      [
+        20,
+        0
+      ],
+      [
+        21,
+        0
+      ],
+      [
+        25,
+        0
+      ],
+      [
+        30,
+        0
+      ]
+    ],
+    "editable_cells": {
+      "EDIT_ROUTE_1": {
+        "anchors": [
+          {
+            "box_dbu": [
+              21744,
+              36216,
+              21752,
+              36288
+            ],
+            "layer": [
+              20,
+              0
+            ]
+          }
+        ],
+        "box_dbu": [
+          21700,
+          36100,
+          21956,
+          36408
+        ],
+        "layers": [
+          [
+            20,
+            0
+          ],
+          [
+            21,
+            0
+          ],
+          [
+            25,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "net_owner": "_0000_"
+      }
+    },
+    "grid_dbu": 4,
+    "max_context_shapes": 1024,
+    "schema_version": 1,
+    "windows_um": [
+      [
+        5.345,
+        8.945,
+        5.569,
+        9.182
+      ]
+    ]
+  },
+  "evidence": {
+    "canonical_geometry_sha256": "b2522fa1dc5d290f150a575825dc033393bcf3d87a4e92dc2c010267e6ec8593",
+    "deck_sha256": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "input_markers": [
+      {
+        "boxes": [
+          [
+            5.437,
+            9.054,
+            5.477,
+            9.055
+          ]
+        ],
+        "cell": "uart",
+        "geometry": [
+          [
+            "edge_pair",
+            [
+              [
+                [
+                  5.437,
+                  9.054
+                ],
+                [
+                  5.477,
+                  9.054
+                ]
+              ],
+              [
+                [
+                  5.455,
+                  9.055
+                ],
+                [
+                  5.459,
+                  9.055
+                ]
+              ]
+            ]
+          ]
+        ],
+        "rule": "M2.W.1"
+      },
+      {
+        "boxes": [
+          [
+            5.454,
+            9.055,
+            5.455,
+            9.072
+          ]
+        ],
+        "cell": "uart",
+        "geometry": [
+          [
+            "edge_pair",
+            [
+              [
+                [
+                  5.454,
+                  9.055
+                ],
+                [
+                  5.454,
+                  9.072
+                ]
+              ],
+              [
+                [
+                  5.455,
+                  9.055
+                ],
+                [
+                  5.455,
+                  9.072
+                ]
+              ]
+            ]
+          ]
+        ],
+        "rule": "V2.M2.EN.1"
+      }
+    ],
+    "input_report": "oracle/l5_g1_c1.lyrdb",
+    "input_report_sha256": "163ce75d4d5ca1acfd76677f7ec130f58680ca540cb7d413f134115d263db470",
+    "mutation": {
+      "candidate_index": 2,
+      "cuts_dbu": [
+        "(21820,36220;21836,36288)"
+      ],
+      "net": "_0000_",
+      "target_rules": [
+        "M2.W.1",
+        "V2.M2.EN.1"
+      ]
+    },
+    "native_markers": [],
+    "recipe_hashes": {
+      "edit_policy.py": "a5a56cdfd45481ef0e4efe83b937fa49612e967bf696ef6d9ed77ca438992d2e",
+      "generator.py": "ccd58d9f2f62e818015f1286f18eab84e0dcdd0db3f6c89b1874925914803e4e",
+      "routed_generator.py": "751f8a56a0a284e5c099b13f30685de9318112618ac16d273957ce9c6b9793aa",
+      "routes.py": "6696208961fb18d21fdeb17e78f5441c6920255a59f94688cd42defc575f49d1"
+    },
+    "reference_gds": "oracle/l5_g1_c1.reference.gds",
+    "reference_policy_errors": [],
+    "reference_report": "oracle/l5_g1_c1.reference.lyrdb",
+    "reference_report_sha256": "cd5d2a750cc7cb5d25cdf5a7e4204d038754fe6a7d3aff739deaf462ea86ce65",
+    "reference_sha256": "e3ad9428ba8d77d6fb25c837fad122bfd91e287212d389c39ddb587990c8dd3d",
+    "target_markers": [
+      {
+        "boxes": [
+          [
+            5.437,
+            9.054,
+            5.477,
+            9.055
+          ]
+        ],
+        "cell": "uart",
+        "geometry": [
+          [
+            "edge_pair",
+            [
+              [
+                [
+                  5.437,
+                  9.054
+                ],
+                [
+                  5.477,
+                  9.054
+                ]
+              ],
+              [
+                [
+                  5.455,
+                  9.055
+                ],
+                [
+                  5.459,
+                  9.055
+                ]
+              ]
+            ]
+          ]
+        ],
+        "rule": "M2.W.1"
+      },
+      {
+        "boxes": [
+          [
+            5.454,
+            9.055,
+            5.455,
+            9.072
+          ]
+        ],
+        "cell": "uart",
+        "geometry": [
+          [
+            "edge_pair",
+            [
+              [
+                [
+                  5.454,
+                  9.055
+                ],
+                [
+                  5.454,
+                  9.072
+                ]
+              ],
+              [
+                [
+                  5.455,
+                  9.055
+                ],
+                [
+                  5.455,
+                  9.072
+                ]
+              ]
+            ]
+          ]
+        ],
+        "rule": "V2.M2.EN.1"
+      }
+    ],
+    "target_scope_rules": [
+      "M2.W.1",
+      "V2.M2.EN.1"
+    ]
+  },
+  "gds": "cases/l5_g1_c1.gds",
+  "gds_sha256": "8983f28ee48ac87b378216e386b2e6410c49c11868c6d03ec08c51f79ba786c1",
+  "kind": "repair",
+  "level": 5,
+  "metrics": {
+    "cell_definitions": 66,
+    "context_shapes": 30,
+    "coupled_rules": 2,
+    "dbu_um": 0.00025,
+    "decoded_route_primitive_count": 21374,
+    "editable_shape_count": 6,
+    "hierarchy_depth": 2,
+    "instance_count": 1782,
+    "local_route_polygons": 6,
+    "local_routing_occupancy": 0.09796940928270043,
+    "matched_l4_occupancy": 0.07390559071729957,
+    "occupancy_box_um": [
+      5.345,
+      8.945,
+      5.569,
+      9.182
+    ],
+    "occupancy_layers": [
+      [
+        20,
+        0
+      ],
+      [
+        30,
+        0
+      ]
+    ],
+    "protected_obstacle_count": 24,
+    "route_segment_count": 5500,
+    "shape_count": 170400,
+    "target_markers": 2,
+    "via_count": 7677
+  },
+  "scope_box_um": [
+    5.425,
+    9.025,
+    5.489,
+    9.102
+  ],
+  "source": {
+    "build_sha256": "ce168027f10b1e2ca530da69d7f38fd861b21ae39fa68cd27ada12e388086b8a",
+    "clock_protection_verified": true,
+    "design": "uart",
+    "image": "openroad/orfs@sha256:6810dbf0e03dddbc89ed8c0a1e13cad09ce4c98d40c4ac0ab99fdc04b0676347",
+    "kind": "routed_asap7",
+    "native_public_audit": {
+      "acceptance_gate": false,
+      "counts": {
+        "  ": 14,
+        "GATE.ACTIVE.S.4": 1,
+        "LIG.S.4-5": 2,
+        "M1.S.6": 2,
+        "M4.S.5": 36,
+        "M5.S.5": 10,
+        "V1.S.4": 3,
+        "V2.M3.AUX.2": 1,
+        "V4.M5.AUX.2": 2,
+        "V5.M6.AUX.2": 3
+      },
+      "deck_sha256": "dc78ccd8b2b30498f25ef885c2c28a9c2a565c38cb30a87460282c8a36c7765d",
+      "frame": "original routed hierarchy; diagnostic only",
+      "profile": "asap7_public_full",
+      "report": "oracle/l5_g1.native_public.lyrdb",
+      "report_sha256": "89c501c7a1e588a00d04750ca43ff7c7a07dfb944fbaa19c8d8be779fbef11e1"
+    },
+    "net_catalog_sha256": "a6b1a657d0a68be074b5673841bae5869ac8b0088d1cbeaa2a4c10771012570c",
+    "net_owner_source": "DEF properties checked against ODB catalog",
+    "orfs_commit": "64939f3717ad7c694199ba04cb98924b98022868",
+    "source_gds_sha256": "2867cc8e73c834ed5e92b7d4758012bb9749435474e28f928568e53052f3e009",
+    "units_verified": true
+  },
+  "source_group": "l5_source_1"
+}

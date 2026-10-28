@@ -7,6 +7,8 @@ and isolated run directory creation under reports/runs/<run_id>/.
 from dataclasses import dataclass, field
 import hashlib
 import json
+import re
+import klayout.db as db
 from pathlib import Path
 import shutil
 import subprocess
@@ -35,8 +37,17 @@ class RunSpec:
     run_id: str | None = None
     output_root: Path = DEFAULT_RUNS_DIR
 
+    expected_counts: dict[str, int] | None = None
+    expected_markers: list | None = None
+    preservation: dict = field(default_factory=dict)
+    edit_policy: dict | None = None
+
     def validate(self) -> None:
         """Validate input paths and options."""
+        if self.run_id and not re.fullmatch(r"[A-Za-z0-9_-]+", self.run_id):
+            raise DRCConfigurationError("Run ID must be a single safe name")
+        if self.candidate_mode not in ("agent", "heuristic", "script_file"):
+            raise DRCConfigurationError("Unknown candidate mode")
         if not self.input_gds.exists():
             raise DRCConfigurationError(f"Input GDS does not exist: {self.input_gds}")
         if not self.drc_script.exists():
@@ -130,13 +141,21 @@ class RunManifestManager:
 
     def setup_run(self) -> RunPaths:
         """Create the run directory, snapshot immutable inputs, and write initial manifest."""
-        self.run_dir.mkdir(parents=True, exist_ok=True)
+        self.run_dir.mkdir(parents=True, exist_ok=False)
 
         # Snapshot immutable input GDS
         shutil.copy2(self.spec.input_gds, self.paths.input_gds)
 
+        deck_snapshot = self.run_dir / ("deck" + self.spec.drc_script.suffix)
+        shutil.copy2(self.spec.drc_script, deck_snapshot)
+
         input_gds_hash = self.compute_sha256(self.paths.input_gds)
         drc_script_hash = self.compute_sha256(self.spec.drc_script)
+
+        model_config = None
+        if self.spec.candidate_mode == 'agent':
+            script = Path(__file__).resolve().parents[2]/'harness/scripts/model-config.mjs'
+            model_config = json.loads(subprocess.check_output(['node', str(script)], text=True, timeout=10))
 
         manifest_data: dict[str, Any] = {
             "run_id": self.run_id,
@@ -144,6 +163,12 @@ class RunManifestManager:
             "created_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             "environment": {
                 "python_version": sys.version,
+                "klayout_version": db.__version__,
+                "node_version": self._command_version(["node", "--version"]),
+                "checker_cli_version": self._command_version(["klayout", "-b", "-v"]),
+                "harness_packages": self._harness_versions(),
+                "model_requested": model_config['model'] if model_config else None,
+                "model_config": model_config,
                 "git_commit": self._get_git_commit(),
             },
             "spec": {
@@ -152,7 +177,12 @@ class RunManifestManager:
                 "profile_name": self.spec.profile_name,
                 "candidate_mode": self.spec.candidate_mode,
                 "top_cell": self.spec.top_cell,
+                "edit_policy": self.spec.edit_policy,
             },
+            "schema_version": 2,
+            "deck_snapshot": str(deck_snapshot),
+            "source_hashes": self._source_hashes(),
+            "limits": {"wall_seconds": 120, "cpu_seconds": 120, "memory_bytes": 2147483648, "processes": 64, "output_bytes": 67108864, "log_bytes": 1048576},
             "hashes": {
                 "input_gds_sha256": input_gds_hash,
                 "drc_script_sha256": drc_script_hash,
@@ -172,3 +202,31 @@ class RunManifestManager:
             data = {}
         data.update(updates)
         manifest_file.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+    @staticmethod
+    def _command_version(command):
+        try:
+            return subprocess.run(command, capture_output=True, text=True, timeout=10).stdout.strip()
+        except (OSError, subprocess.TimeoutExpired):
+            return None
+
+    def _source_hashes(self):
+        root = Path(__file__).resolve().parents[2]
+        paths = list((root / "src").rglob("*.py"))
+        for directory, pattern in (("harness/lib", "*.js"), ("harness/src", "*.ts"), ("harness/scripts", "*.mjs"),
+                                   ("harness/profile", "*"), ("knowledge", "*.md")):
+            paths.extend(p for p in (root / directory).rglob(pattern) if p.is_file())
+        paths.extend(root / p for p in ("pyproject.toml", "uv.lock", "harness/package.json", "harness/tsconfig.json") if (root/p).exists())
+        return {str(p.relative_to(root)): self.compute_sha256(p) for p in sorted(paths)}
+
+    @staticmethod
+    def _harness_versions():
+        modules = Path(__file__).resolve().parents[2]/"harness/node_modules/@deepseek-ai"
+        versions = {}
+        if modules.exists():
+            for package in sorted(modules.iterdir()):
+                path = package/"package.json"
+                if path.is_file():
+                    data = json.loads(path.read_text())
+                    versions[data["name"]] = data.get("version")
+        return versions

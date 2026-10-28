@@ -1,30 +1,57 @@
-"""Out-of-process execution engine for layout repair candidate scripts.
-
-Runs candidate Python scripts in a separate subprocess, captures stdout/stderr logs,
-enforces timeouts, and verifies output layout generation.
-"""
-
+"""Execute a candidate in a bounded, credential-free Bubblewrap worker."""
 import ast
 from dataclasses import dataclass
+from functools import lru_cache
+import os
 from pathlib import Path
+import resource
+import shutil
+import signal
+import stat
 import subprocess
 import sys
+import tempfile
 import time
-from typing import Final
-
 from .config import DEFAULT_TIMEOUT_SECONDS
 
-EXEC_STATUS_SUCCESS: Final[str] = "success"
-EXEC_STATUS_SYNTAX_ERROR: Final[str] = "syntax_error"
-EXEC_STATUS_NONZERO_EXIT: Final[str] = "nonzero_exit"
-EXEC_STATUS_TIMEOUT: Final[str] = "timeout"
-EXEC_STATUS_MISSING_OUTPUT: Final[str] = "missing_output"
+EXEC_STATUS_SUCCESS = "success"
+EXEC_STATUS_SYNTAX_ERROR = "syntax_error"
+EXEC_STATUS_NONZERO_EXIT = "nonzero_exit"
+EXEC_STATUS_TIMEOUT = "timeout"
+EXEC_STATUS_MISSING_OUTPUT = "missing_output"
+WORKER_ENV = {"PATH": "/usr/bin:/bin", "LANG": "C.UTF-8", "HOME": "/tmp",
+              "PYTHONNOUSERSITE": "1", "PYTHONDONTWRITEBYTECODE": "1"}
+
+
+@lru_cache(maxsize=1)
+def sandbox_availability() -> str | None:
+    executable = shutil.which("bwrap")
+    if not executable:
+        return "Bubblewrap is not installed. Candidate execution is blocked."
+    try:
+        command = [executable, "--unshare-all", "--unshare-user", "--disable-userns", "--die-with-parent",
+                   "--ro-bind", "/usr", "/usr", "--ro-bind", "/lib", "/lib",
+                   "--ro-bind", "/lib64", "/lib64", "--proc", "/proc", "--dev", "/dev",
+                   "--size", "16777216", "--tmpfs", "/tmp",
+                   "--ro-bind", str(Path(__file__).with_name("worker_policy.py")), "/worker_policy.py"]
+        runtime = Path(sys.prefix)
+        if (runtime / "pyvenv.cfg").exists():
+            command += ["--ro-bind", str(runtime), "/runtime"]
+            python = "/runtime/bin/python"
+        else:
+            python = sys.executable
+        command += ["--", python, "-I", "-c",
+                    "import runpy; runpy.run_path('/worker_policy.py')['install'](); import klayout.db"]
+        probe = subprocess.run(command, env=WORKER_ENV, capture_output=True, text=True, timeout=10)
+        if probe.returncode:
+            return f"Bubblewrap isolation unavailable: {probe.stderr.strip()}"
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return f"Bubblewrap isolation unavailable: {exc}"
+    return None
 
 
 @dataclass(frozen=True)
 class ExecutionResult:
-    """Outcome of executing a candidate repair script."""
-
     status: str
     exit_code: int | None
     duration_seconds: float
@@ -32,143 +59,167 @@ class ExecutionResult:
     stderr: str
     output_gds: Path | None
     error_message: str | None = None
+    peak_rss_bytes: int | None = None
 
 
 class RepairExecutor:
-    """Executes layout repair scripts out-of-process and records execution diagnostics."""
-
-    def __init__(
-        self,
-        candidate_script: Path,
-        input_gds: Path,
-        output_gds: Path,
-        timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
-        python_bin: str = sys.executable,
-    ) -> None:
-        """Initialize repair executor with target paths.
-
-        Args:
-            candidate_script: Path to Python repair script.
-            input_gds: Path to immutable input GDS.
-            output_gds: Destination path for patched GDS.
-            timeout_seconds: Maximum wall-clock runtime before killing subprocess.
-            python_bin: Python executable to run the script.
-        """
+    def __init__(self, candidate_script, input_gds, output_gds,
+                 timeout_seconds=DEFAULT_TIMEOUT_SECONDS, python_bin=sys.executable,
+                 memory_bytes=2*1024**3, max_output_bytes=64*1024**2, max_log_bytes=1024**2):
         self.candidate_script = Path(candidate_script).resolve()
         self.input_gds = Path(input_gds).resolve()
-        self.output_gds = Path(output_gds).resolve()
+        self.output_gds = Path(output_gds).absolute()
         self.timeout_seconds = timeout_seconds
-        self.python_bin = python_bin
+        self.python_bin = Path(python_bin).absolute()
+        self.memory_bytes = memory_bytes
+        self.max_output_bytes = max_output_bytes
+        self.max_log_bytes = max_log_bytes
 
-    def _check_syntax(self) -> str | None:
-        """Perform static Python syntax check on candidate script before execution.
-
-        Returns:
-            str | None: Error message if syntax is invalid, None otherwise.
-        """
+    def _check_syntax(self):
         try:
-            source = self.candidate_script.read_text(encoding="utf-8")
-            ast.parse(source, filename=str(self.candidate_script))
-            return None
-        except SyntaxError as exc:
-            return f"SyntaxError in {self.candidate_script.name} at line {exc.lineno}: {exc.msg}"
-        except Exception as exc:
-            return f"Failed to read/parse script: {exc}"
+            ast.parse(self.candidate_script.read_text(), filename=str(self.candidate_script))
+        except (SyntaxError, OSError) as exc:
+            return f"{type(exc).__name__}: {exc}"
+        return None
 
-    def execute(self) -> ExecutionResult:
-        """Execute candidate script out-of-process and return ExecutionResult."""
-        # Check syntax first
-        syntax_err = self._check_syntax()
-        if syntax_err:
-            return ExecutionResult(
-                status=EXEC_STATUS_SYNTAX_ERROR,
-                exit_code=1,
-                duration_seconds=0.0,
-                stdout="",
-                stderr=syntax_err,
-                output_gds=None,
-                error_message=syntax_err,
-            )
-
-        # Remove prior output file if present
-        if self.output_gds.exists():
-            self.output_gds.unlink()
-
-        # Build runner command: pass in_gds and out_gds as sys.argv
-        # If candidate does not handle sys.argv directly, an inline adapter calls fix_layout if present
-        adapter_code = (
-            "import sys, runpy\n"
-            "in_gds, out_gds = sys.argv[1], sys.argv[2]\n"
-            f"mod = runpy.run_path({repr(str(self.candidate_script))}, run_name='__main__')\n"
-            "if 'fix_layout' in mod and not sys.argv[0].endswith('patched.gds'):\n"
-            "    # If script defines fix_layout but didn't execute it, invoke it\n"
-            f"    from pathlib import Path\n"
-            "    if not Path(out_gds).exists() or Path(out_gds).stat().st_size == 0:\n"
-            "        mod['fix_layout'](in_gds, out_gds)\n"
+    def _sandbox_command(self, output_dir):
+        command = [shutil.which('bwrap'), '--unshare-all', '--unshare-user', '--die-with-parent', '--new-session',
+                   '--cap-drop', 'ALL', '--disable-userns', '--proc', '/proc', '--dev', '/dev', '--size', '16777216', '--tmpfs', '/tmp']
+        for directory in ('/usr', '/lib', '/lib64'):
+            if Path(directory).exists():
+                command += ['--ro-bind', directory, directory]
+        if Path('/etc/ld.so.cache').exists():
+            command += ['--ro-bind', '/etc/ld.so.cache', '/etc/ld.so.cache']
+        runtime = self.python_bin.parent.parent
+        if (runtime / 'pyvenv.cfg').exists():
+            command += ['--ro-bind', str(runtime), '/runtime']
+            python = '/runtime/bin/python'
+        else:
+            python = str(self.python_bin.resolve())
+            if not python.startswith('/usr/'):
+                raise ValueError('Worker Python must be a venv or a system /usr runtime')
+        command += ['--ro-bind', str(self.input_gds), '/input.gds',
+                    '--ro-bind', str(self.candidate_script), '/candidate.py',
+                    '--ro-bind', str(Path(__file__).with_name('worker_policy.py')), '/worker_policy.py',
+                    '--bind', str(output_dir), '/output', '--chdir', '/output']
+        # Set limits inside the new user/PID namespace, before loading candidate code.
+        adapter = (
+            "import resource,runpy,sys\n"
+            f"resource.setrlimit(resource.RLIMIT_AS, ({self.memory_bytes}, {self.memory_bytes}))\n"
+            f"resource.setrlimit(resource.RLIMIT_CPU, ({max(1,int(self.timeout_seconds))}, {max(1,int(self.timeout_seconds))}))\n"
+            f"resource.setrlimit(resource.RLIMIT_FSIZE, ({self.max_output_bytes}, {self.max_output_bytes}))\n"
+            "resource.setrlimit(resource.RLIMIT_NPROC, (64,64))\n"
+            "resource.setrlimit(resource.RLIMIT_NOFILE, (64,64))\n"
+            "runpy.run_path('/worker_policy.py')['install']()\n"
+            "sys.argv=['/candidate.py','/input.gds','/output/patched.gds']\n"
+            "mod=runpy.run_path('/candidate.py',run_name='__main__')\n"
+            "from pathlib import Path\n"
+            "if not Path('/output/patched.gds').exists() and callable(mod.get('fix_layout')):\n"
+            "    mod['fix_layout']('/input.gds','/output/patched.gds')\n"
         )
+        return command + ['--', python, '-I', '-c', adapter]
 
-        cmd = [
-            self.python_bin,
-            "-c",
-            adapter_code,
-            str(self.input_gds),
-            str(self.output_gds),
-        ]
+    def execute(self):
+        syntax = self._check_syntax()
+        if syntax:
+            return ExecutionResult('syntax_error', 1, 0., '', syntax, None, syntax)
+        blocked = sandbox_availability()
+        if blocked:
+            return ExecutionResult('blocked', None, 0., '', blocked, None, blocked)
+        if self.output_gds.resolve() in (self.input_gds, self.candidate_script):
+            return ExecutionResult('nonzero_exit', None, 0., '', '', None, 'Output aliases an immutable input')
+        start = time.monotonic()
+        with tempfile.TemporaryDirectory(prefix='drc-worker-') as tmp:
+            scratch = Path(tmp)
+            output = scratch / 'output'; output.mkdir()
+            stdout_path, stderr_path = scratch/'stdout', scratch/'stderr'
+            reason, status = None, None
+            peak_rss = None
+            proc = None
+            try:
+                with stdout_path.open('wb') as stdout, stderr_path.open('wb') as stderr:
+                    proc = subprocess.Popen(self._sandbox_command(output), env=WORKER_ENV,
+                                            stdout=stdout, stderr=stderr, start_new_session=True)
+                    while proc.poll() is None:
+                        measured = self._process_tree_rss(proc.pid)
+                        if measured is not None:
+                            peak_rss = max(peak_rss or 0, measured)
+                        if time.monotonic()-start > self.timeout_seconds:
+                            reason, status = 'Candidate timeout: exceeded wall-time limit', 'timeout'
+                        elif stdout_path.stat().st_size + stderr_path.stat().st_size > self.max_log_bytes:
+                            reason, status = 'Candidate exceeded log limit', 'nonzero_exit'
+                        elif self._output_usage(output) > self.max_output_bytes:
+                            reason, status = 'Candidate exceeded output limit', 'nonzero_exit'
+                        if reason:
+                            os.killpg(proc.pid, signal.SIGKILL); break
+                        time.sleep(.02)
+                    proc.wait()
+                    # bwrap --die-with-parent owns its PID namespace. Kill remaining host group too.
+                    try:
+                        os.killpg(proc.pid, signal.SIGKILL)
+                    except ProcessLookupError:
+                        pass
+                out = stdout_path.read_bytes()[:self.max_log_bytes].decode(errors='replace')
+                err = stderr_path.read_bytes()[:self.max_log_bytes].decode(errors='replace')
+                candidate = output/'patched.gds'
+                if reason:
+                    pass
+                elif proc.returncode:
+                    status = 'blocked' if err.startswith('bwrap:') else 'nonzero_exit'
+                    reason = f'Worker exited with code {proc.returncode}: {err.strip()}'
+                elif candidate.is_symlink() or not candidate.is_file() or not candidate.stat().st_size:
+                    status, reason = 'missing_output', 'Worker did not produce a regular, nonempty patched.gds'
+                elif self._output_usage(output) > self.max_output_bytes or stdout_path.stat().st_size + stderr_path.stat().st_size > self.max_log_bytes:
+                    status, reason = 'nonzero_exit', 'Candidate exceeded output/log limit'
+                else:
+                    self.output_gds.parent.mkdir(parents=True, exist_ok=True)
+                    if self.output_gds.exists() or self.output_gds.is_symlink():
+                        self.output_gds.unlink()
+                    shutil.copyfile(candidate, self.output_gds)
+                    status = 'success'
+                return ExecutionResult(status, proc.returncode, time.monotonic()-start, out, err,
+                                       self.output_gds if status == 'success' else None, reason, peak_rss)
+            except (OSError, ValueError) as exc:
+                return ExecutionResult('blocked' if proc is None else 'nonzero_exit', None,
+                                       time.monotonic()-start, '', str(exc), None, str(exc))
+            finally:
+                if proc is not None and proc.poll() is None:
+                    try:
+                        os.killpg(proc.pid, signal.SIGKILL)
+                    except ProcessLookupError:
+                        pass
+                    proc.wait()
 
-        start_time = time.perf_counter()
-        try:
-            res = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=self.timeout_seconds,
-                cwd=str(self.candidate_script.parent),
-            )
-            duration = time.perf_counter() - start_time
+    def _output_usage(self, directory):
+        total = 0
+        for count, path in enumerate(directory.rglob('*')):
+            if count >= 1024:
+                return self.max_output_bytes + 1
+            try:
+                info = path.lstat()
+            except FileNotFoundError:
+                continue
+            if stat.S_ISREG(info.st_mode):
+                total += info.st_size
+        return total
 
-            if res.returncode != 0:
-                return ExecutionResult(
-                    status=EXEC_STATUS_NONZERO_EXIT,
-                    exit_code=res.returncode,
-                    duration_seconds=duration,
-                    stdout=res.stdout,
-                    stderr=res.stderr,
-                    output_gds=None,
-                    error_message=f"Process exited with code {res.returncode}: {res.stderr.strip()}",
-                )
-
-            # Check if output GDS was materialized and is non-empty
-            if not self.output_gds.exists() or self.output_gds.stat().st_size == 0:
-                return ExecutionResult(
-                    status=EXEC_STATUS_MISSING_OUTPUT,
-                    exit_code=res.returncode,
-                    duration_seconds=duration,
-                    stdout=res.stdout,
-                    stderr=res.stderr,
-                    output_gds=None,
-                    error_message=f"Script completed with code 0 but '{self.output_gds}' was not created or is 0 bytes.",
-                )
-
-            return ExecutionResult(
-                status=EXEC_STATUS_SUCCESS,
-                exit_code=0,
-                duration_seconds=duration,
-                stdout=res.stdout,
-                stderr=res.stderr,
-                output_gds=self.output_gds,
-                error_message=None,
-            )
-
-        except subprocess.TimeoutExpired as exc:
-            duration = time.perf_counter() - start_time
-            stdout = exc.stdout if isinstance(exc.stdout, str) else ""
-            stderr = exc.stderr if isinstance(exc.stderr, str) else ""
-            return ExecutionResult(
-                status=EXEC_STATUS_TIMEOUT,
-                exit_code=None,
-                duration_seconds=duration,
-                stdout=stdout,
-                stderr=f"Execution timed out after {self.timeout_seconds}s.\n{stderr}",
-                output_gds=None,
-                error_message=f"Process exceeded timeout limit of {self.timeout_seconds}s.",
-            )
+    @staticmethod
+    def _process_tree_rss(pid):
+        """Sample host-visible worker RSS. The maximum is a sampled lower bound."""
+        pending, seen, total = [pid], set(), 0
+        measured = False
+        while pending:
+            current = pending.pop()
+            if current in seen:
+                continue
+            seen.add(current)
+            try:
+                status = Path(f'/proc/{current}/status').read_text()
+                line = next((line for line in status.splitlines() if line.startswith('VmRSS:')), None)
+                if line:
+                    total += int(line.split()[1])*1024; measured = True
+                children = Path(f'/proc/{current}/task/{current}/children').read_text()
+                pending.extend(map(int, children.split()))
+            except (OSError, ValueError):
+                pass
+        return total if measured else None

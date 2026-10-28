@@ -1,0 +1,17 @@
+{
+  "cases": 10,
+  "pages": 10,
+  "all_pages_A3_landscape": true,
+  "all_10_pages_rendered": true,
+  "one_unique_case_per_page": true,
+  "selected_cases_per_level": 2,
+  "reference_policy_passes": 10,
+  "reference_saved_scored_reports_zero_markers": 10,
+  "matched_before_after_cameras": true,
+  "accepted_agent_repairs_in_selection": 0,
+  "accepted_heuristic_repairs_in_selection": 0,
+  "source_hashes_verified": 429,
+  "pdf_sha256": "45e5a9b28a990b6273a54ac0c5f4d166d542c6aa345c7c302c8b77fdb095ccca",
+  "no_new_model_checker_or_repair_runs": true,
+  "visual_review": "All-page contact sheet and full-size samples checked for clipping, overlap and output attribution."
+}

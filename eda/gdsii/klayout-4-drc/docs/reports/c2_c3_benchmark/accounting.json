@@ -1,0 +1,41 @@
+{
+  "continuation_requests": 10,
+  "cost": null,
+  "failure_counts": {
+    "agent": {
+      "api_or_transport": 1,
+      "edit_policy": 6,
+      "passed": 13,
+      "python_execution": 12,
+      "response_format": 7,
+      "unresolved_unchanged": 11
+    },
+    "heuristic": {
+      "edit_policy": 30,
+      "passed": 8,
+      "unresolved_unchanged": 12
+    },
+    "no_change": {
+      "passed": 20,
+      "unresolved_unchanged": 30
+    }
+  },
+  "identical_instruction_hash": "df99cce1461485573133e63e8a95bdb59138207ce971cf4ec53d35daff8d49c7",
+  "parsed_responses": 49,
+  "prior_attempts_preserved": 40,
+  "public_audit_is_acceptance_gate": false,
+  "public_audit_profile": "asap7_public_full",
+  "request_attempts": 50,
+  "retries": 0,
+  "returned_models": {
+    "qwen.qwen3-coder-next": 49
+  },
+  "scored_profile": "asap7_c2c3_v1",
+  "usage": {
+    "completion_tokens": 61537,
+    "prompt_tokens": 595428,
+    "total_tokens": 656965
+  },
+  "usage_known_for_responses": 49,
+  "usage_unknown_for_attempts": 1
+}

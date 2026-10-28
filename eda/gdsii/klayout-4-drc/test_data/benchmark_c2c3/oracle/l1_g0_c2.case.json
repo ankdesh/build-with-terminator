@@ -1,0 +1,210 @@
+{
+  "case_id": "l1_g0_c2",
+  "edit_policy": {
+    "context_layers": [
+      [
+        19,
+        0
+      ],
+      [
+        20,
+        0
+      ],
+      [
+        21,
+        0
+      ],
+      [
+        25,
+        0
+      ],
+      [
+        30,
+        0
+      ]
+    ],
+    "editable_cells": {
+      "SIGNAL_ROUTE": {
+        "anchors": [],
+        "box_dbu": [
+          -92,
+          -92,
+          164,
+          164
+        ],
+        "layers": [
+          [
+            19,
+            0
+          ],
+          [
+            20,
+            0
+          ],
+          [
+            21,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ]
+      }
+    },
+    "grid_dbu": 4,
+    "max_context_shapes": 1024,
+    "schema_version": 1,
+    "windows_um": [
+      [
+        3.9050000000000002,
+        0.19299999999999998,
+        4.263,
+        0.551
+      ]
+    ]
+  },
+  "evidence": {
+    "canonical_geometry_sha256": "e3bd9c28fe1b50dcb3a863365a211306221bd1a85121f3f4d2e4617a77035893",
+    "deck_sha256": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+    "input_markers": [
+      {
+        "boxes": [
+          [
+            4.075,
+            0.363,
+            4.087,
+            0.381
+          ]
+        ],
+        "cell": "BENCHMARK_TOP",
+        "geometry": [
+          [
+            "edge_pair",
+            [
+              [
+                [
+                  4.075,
+                  0.363
+                ],
+                [
+                  4.075,
+                  0.381
+                ]
+              ],
+              [
+                [
+                  4.087,
+                  0.363
+                ],
+                [
+                  4.087,
+                  0.381
+                ]
+              ]
+            ]
+          ]
+        ],
+        "rule": "V1.W.1"
+      }
+    ],
+    "input_report": "oracle/l1_g0_c2.lyrdb",
+    "input_report_sha256": "f24cdf02f19eac2425551df05793ededbf9179a2ebf1f9c9496a5d6188da7d16",
+    "mutation": {
+      "constructor": "V1.W.1",
+      "coupled": false,
+      "slot": 2
+    },
+    "native_markers": [],
+    "recipe_hashes": {
+      "edit_policy.py": "a5a56cdfd45481ef0e4efe83b937fa49612e967bf696ef6d9ed77ca438992d2e",
+      "generator.py": "ccd58d9f2f62e818015f1286f18eab84e0dcdd0db3f6c89b1874925914803e4e",
+      "routed_generator.py": "751f8a56a0a284e5c099b13f30685de9318112618ac16d273957ce9c6b9793aa",
+      "routes.py": "6696208961fb18d21fdeb17e78f5441c6920255a59f94688cd42defc575f49d1"
+    },
+    "reference_gds": "oracle/l1_g0_c2.reference.gds",
+    "reference_policy_errors": [],
+    "reference_report": "oracle/l1_g0_c2.reference.lyrdb",
+    "reference_report_sha256": "51a018f0815761552793de970aba89b55ad5fbf2b19cd22782ddbcaa272084a1",
+    "reference_sha256": "849fb0918f2c0adbe5a115d2c1ee33e516199310c7c3c340f9281907b42897c5",
+    "target_markers": [
+      {
+        "boxes": [
+          [
+            4.075,
+            0.363,
+            4.087,
+            0.381
+          ]
+        ],
+        "cell": "BENCHMARK_TOP",
+        "geometry": [
+          [
+            "edge_pair",
+            [
+              [
+                [
+                  4.075,
+                  0.363
+                ],
+                [
+                  4.075,
+                  0.381
+                ]
+              ],
+              [
+                [
+                  4.087,
+                  0.363
+                ],
+                [
+                  4.087,
+                  0.381
+                ]
+              ]
+            ]
+          ]
+        ],
+        "rule": "V1.W.1"
+      }
+    ],
+    "target_scope_rules": [
+      "V1.W.1"
+    ]
+  },
+  "gds": "cases/l1_g0_c2.gds",
+  "gds_sha256": "a564c7f669f0068a0ee1bd59b24c716a05c00f718f79ed24cbbe12f2a2a3b186",
+  "kind": "repair",
+  "level": 1,
+  "metrics": {
+    "cell_definitions": 7,
+    "context_shapes": 6,
+    "coupled_rules": 1,
+    "dbu_um": 0.00025,
+    "editable_shape_count": 2,
+    "hierarchy_depth": 2,
+    "instance_count": 11,
+    "protected_obstacle_count": 4,
+    "shape_count": 1256,
+    "target_markers": 1
+  },
+  "scope_box_um": [
+    4.065,
+    0.353,
+    4.103,
+    0.391
+  ],
+  "source": {
+    "families": [
+      "INV",
+      "BUF",
+      "NAND",
+      "NOR",
+      "DFF"
+    ],
+    "kind": "real_asap7_cells",
+    "library_sha256": "f43d5b33df635cf9e66cbca66b6bdd05364f824d8040cd21528b9e12808b9263",
+    "units_verified": true
+  },
+  "source_group": "l1_source_0"
+}

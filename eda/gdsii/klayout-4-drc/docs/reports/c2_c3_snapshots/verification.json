@@ -1,0 +1,19 @@
+{
+  "case_count": 50,
+  "snapshot_count": 150,
+  "pdf_count": 6,
+  "atlas_pages": 25,
+  "per_level_pages": 5,
+  "source_hashes_verified": 152,
+  "marker_counts_match_saved_reports": true,
+  "unique_case_heading_per_case": true,
+  "all_pages_A3_landscape": true,
+  "all_25_pages_rendered": true,
+  "visual_review": "All-page contact sheet and full-page samples across all five levels; no clipping or text overlap observed.",
+  "per_level_page_contents_match_atlas": true,
+  "snapshot_hashes_verified": true,
+  "contact_sheet": "docs/reports/c2_c3_snapshots/contact_sheet.jpg",
+  "contact_sheet_sha256": "b6d36b84c2c259b0580c2ce7569020cfd8797774636bbecae3ed8b39648e734b",
+  "image_manifest_sha256": "6bf69bf4ac2cd79273d896fc6dca830032b077f392238258e2fd5cb8eea12159",
+  "model_requests": 0
+}

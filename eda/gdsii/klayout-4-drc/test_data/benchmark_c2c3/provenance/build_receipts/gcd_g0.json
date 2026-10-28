@@ -1,0 +1,20 @@
+{
+  "artifacts": {
+    "build.log": "25199a9c1b4dd963a7e01ee2528747c487d70f783d0df89ea1b75da5de393414",
+    "config.mk": "4ca8a1eb3c80d458f9feea5a11b29c93c6a0c563ad85afa9f18766556bb0935d"
+  },
+  "config_sha256": "4ca8a1eb3c80d458f9feea5a11b29c93c6a0c563ad85afa9f18766556bb0935d",
+  "density": 0.35,
+  "design": "gcd",
+  "exit_code": 2,
+  "factor": 1.0,
+  "final": {},
+  "group": 0,
+  "identity": "gcd_g0",
+  "image": "openroad/orfs@sha256:b7f5b6fd722bd87862d89718f2af670f0f5b1e3f3336afc39b56e074234f235f",
+  "memory_limit_bytes": 2210824192,
+  "orfs_commit": "64939f3717ad7c694199ba04cb98924b98022868",
+  "status": "failed",
+  "threads": 2,
+  "wall_seconds": 0.9017606240231544
+}

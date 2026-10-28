@@ -1,0 +1,29 @@
+{
+  "case_ids": [
+    "l5_g0_c0",
+    "l5_g0_c1",
+    "l5_g0_c2",
+    "l5_g0_c3",
+    "l5_g0_c4",
+    "l5_g1_c0",
+    "l5_g1_c1",
+    "l5_g1_c2",
+    "l5_g1_c3",
+    "l5_g1_c4"
+  ],
+  "dispatcher_sha256": "55811312a7fe8f2a596a70d408a67c331b93d95c34ba0fd29ed3f1a5b7fb36b6",
+  "manifest_sha256": "4a566ed1fe78e7deea54831a4d674dd526bd402b9796ec110cd97d8c9205d1fd",
+  "model_config": {
+    "endpoint": "https://bedrock-runtime.ap-southeast-2.amazonaws.com/openai/v1/chat/completions",
+    "model": "qwen.qwen3-coder-next",
+    "provider": "bedrock",
+    "region": "ap-southeast-2",
+    "temperature": null
+  },
+  "policy": "One attempt per unrequested case. Preserve every earlier attempt. No retries or patch feedback.",
+  "prior_requests": 40,
+  "reason": "The original dispatcher stopped after one 90-second service timeout.",
+  "remaining_request_budget": 10,
+  "source_sha256": "7e8c1515695e0b9ff221128447c5bc074e8cbf9d33949c09ba0759181b6764e1",
+  "started_unix": 1793152620.4166298
+}

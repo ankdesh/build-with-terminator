@@ -1,0 +1,51 @@
+{
+  "profile": "asap7_c2c3_v1",
+  "upstream_commit": "d3c27c104e9c4c492a853cb75ae2c03ecd151e45",
+  "source_sha256": "dc78ccd8b2b30498f25ef885c2c28a9c2a565c38cb30a87460282c8a36c7765d",
+  "deck_sha256": "662f9fad71be1ec963e78f35132776c455755aa702e92f638648f9833123b634",
+  "core_rules": [
+    "M1.W.1",
+    "M2.W.1",
+    "M1.A.1",
+    "M1.S.1",
+    "V1.W.1"
+  ],
+  "new_rules": {
+    "M2.S.1": {
+      "source_line": 289,
+      "public_expression": "m2.space(18.nm).polygons.not_interacting(m2.edges.with_length(0..36.nm)).output(\"M2.S.1\", \"M2.S.1 : Min. spacing between two M2' edges, when both edges are > 36 nm : 18nm\")",
+      "scored_expression": "m2.space(18.nm).polygons.not_interacting(m2.edges.with_length(0..36.nm)).output(\"M2.S.1\", \"M2.S.1 : Min. spacing between two M2' edges, when both edges are > 36 nm : 18nm\")",
+      "correction": null
+    },
+    "M3.W.1": {
+      "source_line": 299,
+      "public_expression": "m3.width(18.nm).output(\"M3.W.1\", \"M3.W.1 : Min. width of M3 : 18nm\")",
+      "scored_expression": "m3.width(18.nm).output(\"M3.W.1\", \"M3.W.1 : Min. width of M3 : 18nm\")",
+      "correction": null
+    },
+    "V2.W.1": {
+      "source_line": 332,
+      "public_expression": "v2.width(18.nm).output(\"V2.W.1\", \"V2.W.1 : Min. width of V2 : 18nm\")",
+      "scored_expression": "v2.width(18.nm).output(\"V2.W.1\", \"V2.W.1 : Min. width of V2 : 18nm\")",
+      "correction": null
+    },
+    "V1.M2.EN.2": {
+      "source_line": 324,
+      "public_expression": "v1.not_interacting(m2ovlp5v1.sized(2.dbu)).output(\"V1.M2.EN.2\", \"V1.M2.EN.2 : enclosure of V1 by M2 on one side : 5nm\")",
+      "scored_expression": "v1.not_interacting(m2ovlp5v1.sized(2.dbu)).output(\"V1.M2.EN.2\", \"V1.M2.EN.2 : enclosure of V1 by M2 on one side : 5nm\")",
+      "correction": null
+    },
+    "V2.M2.EN.1": {
+      "source_line": 340,
+      "public_expression": "v2.interacting(m2.enclosing(v2, 5.nm, projection, two_connected_sides_allowed).edges - m2.enclosing(v2, 5.nm, projection, one_side_allowed).edges).output(\"V2.M2.EN.1\", \"V2.M2.EN.1 : Min. enclosure of V2 by M2 on at least two opposite sides  : 5nm\")",
+      "scored_expression": "v2.enclosed(m2, 5.nm, projection, one_side_allowed, two_opposite_sides_allowed).output(\"V2.M2.EN.1\", \"C2+C3 corrected: V2 enclosure by M2 on two opposite sides: 5nm\")",
+      "correction": "Report edge-pair errors directly; permit errors only on one side or two opposite sides"
+    },
+    "V2.M3.EN.2": {
+      "source_line": 341,
+      "public_expression": "v2.not_interacting(m3ovlp5v2.sized(2.dbu)).output(\"V2.M3.EN.2\", \"V2.M3.EN.2 : enclosure of V2 by M3 on one side : 5nm\")",
+      "scored_expression": "v2.not_interacting(m3ovlp5v2.sized(2.dbu)).output(\"V2.M3.EN.2\", \"V2.M3.EN.2 : enclosure of V2 by M3 on one side : 5nm\")",
+      "correction": null
+    }
+  }
+}

@@ -1,3 +1,11 @@
+> **Acceptance correction — 2026-10-22:** This is a historical implementation
+> report. Its completion claims are superseded by the C1 evaluation audit and
+> corrected acceptance checks. The audit found false benchmark successes,
+> incorrect mode selection for negative cases, legacy facts in model context,
+> incomplete preservation checks, and missing model provenance. See
+> [C1 evaluation corrections](../C1_EVALUATION_CORRECTIONS.md). The saved agent
+> demo is a single geometry-only smoke result, not a dataset-wide evaluation.
+
 # Phase B Evaluation Report: Real ASAP7 Single-Shot Agent Repair
 
 **Document Version:** 1.0.0  

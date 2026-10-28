@@ -1,0 +1,152 @@
+[
+  {
+    "group": 0,
+    "selected": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/output/c2c3/toolchain/builds/uart_g0_stress_1.00",
+    "trials": [
+      {
+        "bin_dbu": [
+          12000,
+          36000,
+          16000,
+          40000
+        ],
+        "bin_um": 1.0,
+        "build_sha256": "6f1e14e748a83bca86ab9456be013ca08d8f9d67d330fa225fa11261074a1c76",
+        "factor": 1.0,
+        "layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "maximum_bin_occupancy": 0.230079,
+        "status": "complete"
+      },
+      {
+        "bin_dbu": [
+          24000,
+          28000,
+          28000,
+          32000
+        ],
+        "bin_um": 1.0,
+        "build_sha256": "18b22d1d114f34d3871376be669b1e41cfdf10e94b2f7bb9200e50445510b46b",
+        "factor": 0.9,
+        "layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "maximum_bin_occupancy": 0.193095,
+        "status": "complete"
+      },
+      {
+        "bin_dbu": [
+          20000,
+          24000,
+          24000,
+          28000
+        ],
+        "bin_um": 1.0,
+        "build_sha256": "9404104c933bb0d2eb8387ecb7cc6f517c0474e18d2d542088f1831e71d19ef4",
+        "factor": 0.8,
+        "layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "maximum_bin_occupancy": 0.209007,
+        "status": "complete"
+      }
+    ]
+  },
+  {
+    "group": 1,
+    "selected": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/output/c2c3/toolchain/builds/uart_g1_stress_0.90_attempt2",
+    "trials": [
+      {
+        "bin_dbu": [
+          48000,
+          36000,
+          52000,
+          40000
+        ],
+        "bin_um": 1.0,
+        "build_sha256": "9ff508239db9c7ea82b60699ab0082e1b02c22120cdf0110020dd92b54fe8bb1",
+        "factor": 1.0,
+        "layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "maximum_bin_occupancy": 0.21071,
+        "status": "complete"
+      },
+      {
+        "bin_dbu": [
+          44000,
+          28000,
+          48000,
+          32000
+        ],
+        "bin_um": 1.0,
+        "build_sha256": "ce168027f10b1e2ca530da69d7f38fd861b21ae39fa68cd27ada12e388086b8a",
+        "factor": 0.9,
+        "layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "maximum_bin_occupancy": 0.242673,
+        "status": "complete"
+      },
+      {
+        "bin_dbu": [
+          28000,
+          24000,
+          32000,
+          28000
+        ],
+        "bin_um": 1.0,
+        "build_sha256": "73e8a64efde703a934675f661f2703471f82b7726021c837882977fc472deab1",
+        "factor": 0.8,
+        "layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "maximum_bin_occupancy": 0.214357,
+        "status": "complete"
+      }
+    ]
+  }
+]

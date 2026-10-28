@@ -1,0 +1,6384 @@
+{
+  "clean_control": {
+    "blocked": 0,
+    "observed": 10,
+    "outcomes": {
+      "unchanged_control": 10
+    },
+    "passed": 10,
+    "planned": 10,
+    "rate_observed": 1.0
+  },
+  "dataset_complete": true,
+  "failures": {
+    "geometry_reasoning": 30
+  },
+  "levels": {
+    "1": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 2,
+        "outcomes": {
+          "unchanged_control": 2
+        },
+        "passed": 2,
+        "planned": 2,
+        "rate_observed": 1.0
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 2,
+        "outcomes": {
+          "unchanged_control": 2
+        },
+        "passed": 2,
+        "planned": 2,
+        "rate_observed": 1.0
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 6,
+        "outcomes": {
+          "unresolved": 6
+        },
+        "passed": 0,
+        "planned": 6,
+        "rate_observed": 0.0
+      }
+    },
+    "2": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 2,
+        "outcomes": {
+          "unchanged_control": 2
+        },
+        "passed": 2,
+        "planned": 2,
+        "rate_observed": 1.0
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 2,
+        "outcomes": {
+          "unchanged_control": 2
+        },
+        "passed": 2,
+        "planned": 2,
+        "rate_observed": 1.0
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 6,
+        "outcomes": {
+          "unresolved": 6
+        },
+        "passed": 0,
+        "planned": 6,
+        "rate_observed": 0.0
+      }
+    },
+    "3": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 2,
+        "outcomes": {
+          "unchanged_control": 2
+        },
+        "passed": 2,
+        "planned": 2,
+        "rate_observed": 1.0
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 2,
+        "outcomes": {
+          "unchanged_control": 2
+        },
+        "passed": 2,
+        "planned": 2,
+        "rate_observed": 1.0
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 6,
+        "outcomes": {
+          "unresolved": 6
+        },
+        "passed": 0,
+        "planned": 6,
+        "rate_observed": 0.0
+      }
+    },
+    "4": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 2,
+        "outcomes": {
+          "unchanged_control": 2
+        },
+        "passed": 2,
+        "planned": 2,
+        "rate_observed": 1.0
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 2,
+        "outcomes": {
+          "unchanged_control": 2
+        },
+        "passed": 2,
+        "planned": 2,
+        "rate_observed": 1.0
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 6,
+        "outcomes": {
+          "unresolved": 6
+        },
+        "passed": 0,
+        "planned": 6,
+        "rate_observed": 0.0
+      }
+    },
+    "5": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 2,
+        "outcomes": {
+          "unchanged_control": 2
+        },
+        "passed": 2,
+        "planned": 2,
+        "rate_observed": 1.0
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 2,
+        "outcomes": {
+          "unchanged_control": 2
+        },
+        "passed": 2,
+        "planned": 2,
+        "rate_observed": 1.0
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 6,
+        "outcomes": {
+          "unresolved": 6
+        },
+        "passed": 0,
+        "planned": 6,
+        "rate_observed": 0.0
+      }
+    }
+  },
+  "limits": [
+    "One model attempt per case; no consistency estimate.",
+    "Connectivity and timing are unverified.",
+    "Few source designs; no broad generalization claim."
+  ],
+  "mode": "no_change",
+  "model_requests": 0,
+  "model_responses": 0,
+  "no_edit": {
+    "blocked": 0,
+    "observed": 10,
+    "outcomes": {
+      "unchanged_control": 10
+    },
+    "passed": 10,
+    "planned": 10,
+    "rate_observed": 1.0
+  },
+  "outcomes": {
+    "unchanged_control": 20,
+    "unresolved": 30
+  },
+  "public_audits": {
+    "complete": 50
+  },
+  "repair": {
+    "blocked": 0,
+    "observed": 30,
+    "outcomes": {
+      "unresolved": 30
+    },
+    "passed": 0,
+    "planned": 30,
+    "rate_observed": 0.0
+  },
+  "results": [
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 1,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 79450112,
+      "case_id": "l1_g0_c0",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "repair",
+      "level": 1,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 7,
+        "context_shapes": 5,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 1,
+        "hierarchy_depth": 2,
+        "instance_count": 11,
+        "protected_obstacle_count": 4,
+        "shape_count": 1255,
+        "target_markers": 1
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "ACTIVE.LUP.1": 2,
+          "LIG.S.4-5": 1,
+          "M1.W.1": 1,
+          "V1.S.4": 1
+        },
+        "sha256": "c463f92cbb7dec01f3f693c6df99412c109615add1f5868a0ea0119f7a8a0daa",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              0.081,
+              0.388,
+              0.093,
+              0.438
+            ]
+          ],
+          "cell": "BENCHMARK_TOP",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    0.081,
+                    0.388
+                  ],
+                  [
+                    0.081,
+                    0.438
+                  ]
+                ],
+                [
+                  [
+                    0.093,
+                    0.388
+                  ],
+                  [
+                    0.093,
+                    0.438
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M1.W.1"
+        }
+      ],
+      "rule_ids": [
+        "M1.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l1_g0_c0_20261028_064635_29a28b",
+      "source_group": "l1_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 6.468675473006442
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 1,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 79507456,
+      "case_id": "l1_g0_c1",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "repair",
+      "level": 1,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 7,
+        "context_shapes": 7,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 2,
+        "hierarchy_depth": 2,
+        "instance_count": 11,
+        "protected_obstacle_count": 5,
+        "shape_count": 1256,
+        "target_markers": 1
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "ACTIVE.LUP.1": 2,
+          "LIG.S.4-5": 1,
+          "M1.S.1": 1,
+          "V1.S.4": 1
+        },
+        "sha256": "fc00e3107b3767d0e2d115b8beb95c8c613a31a74254475c092799c8045a568f",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              2.135,
+              0.363,
+              2.147,
+              0.463
+            ]
+          ],
+          "cell": "BENCHMARK_TOP",
+          "geometry": [
+            [
+              "polygon",
+              [
+                [
+                  2.135,
+                  0.363
+                ],
+                [
+                  2.135,
+                  0.463
+                ],
+                [
+                  2.147,
+                  0.463
+                ],
+                [
+                  2.147,
+                  0.363
+                ]
+              ],
+              ""
+            ]
+          ],
+          "rule": "M1.S.1"
+        }
+      ],
+      "rule_ids": [
+        "M1.S.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l1_g0_c1_20261028_064648_097e9f",
+      "source_group": "l1_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 4.51499590696767
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 1,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 79523840,
+      "case_id": "l1_g0_c2",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "repair",
+      "level": 1,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 7,
+        "context_shapes": 6,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 2,
+        "hierarchy_depth": 2,
+        "instance_count": 11,
+        "protected_obstacle_count": 4,
+        "shape_count": 1256,
+        "target_markers": 1
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "ACTIVE.LUP.1": 2,
+          "LIG.S.4-5": 1,
+          "V1.AUX.1V1.AUX.1 : V1 must be inside M1 and M2": 1,
+          "V1.M2.AUX.2": 1,
+          "V1.S.4": 1,
+          "V1.W.1": 1
+        },
+        "sha256": "8f361714f5e058f7817c6f7b3a64e14f21cb712ec3b49822018b75fdbea8d3cf",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              4.075,
+              0.363,
+              4.087,
+              0.381
+            ]
+          ],
+          "cell": "BENCHMARK_TOP",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    4.075,
+                    0.363
+                  ],
+                  [
+                    4.075,
+                    0.381
+                  ]
+                ],
+                [
+                  [
+                    4.087,
+                    0.363
+                  ],
+                  [
+                    4.087,
+                    0.381
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "V1.W.1"
+        }
+      ],
+      "rule_ids": [
+        "V1.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l1_g0_c2_20261028_064658_7a45a5",
+      "source_group": "l1_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 4.668136402033269
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "candidate_peak_rss_bytes": 79601664,
+      "case_id": "l1_g0_c3",
+      "cost": null,
+      "failure_stage": null,
+      "final_total": 0,
+      "initial_total": 0,
+      "kind": "clean_control",
+      "level": 1,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 7,
+        "context_shapes": 7,
+        "coupled_rules": 0,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 1,
+        "hierarchy_depth": 2,
+        "instance_count": 11,
+        "protected_obstacle_count": 6,
+        "shape_count": 1255,
+        "target_markers": 0
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": true,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "ACTIVE.LUP.1": 2,
+          "LIG.S.4-5": 1,
+          "V1.S.4": 1
+        },
+        "sha256": "61f79d38e18fb2b00b1640d08663e3b367f6652830f33757b3c10993a2fdad38",
+        "status": "complete"
+      },
+      "rule_ids": [
+        "M1.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l1_g0_c3_20261028_064708_51faa3",
+      "source_group": "l1_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unchanged_control",
+      "wall_seconds": 4.44298243697267
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "candidate_peak_rss_bytes": 79585280,
+      "case_id": "l1_g0_c4",
+      "cost": null,
+      "failure_stage": null,
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "no_edit",
+      "level": 1,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 7,
+        "context_shapes": 10,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 0,
+        "hierarchy_depth": 2,
+        "instance_count": 11,
+        "protected_obstacle_count": 10,
+        "shape_count": 1256,
+        "target_markers": 1
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": true,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "ACTIVE.LUP.1": 2,
+          "LIG.S.4-5": 1,
+          "M1.S.1": 1,
+          "V1.S.4": 1
+        },
+        "sha256": "7c9b08b57ee1fdfa3a4248f9d3f7ead7e29f0b472d153b2db6d19e5511bf1649",
+        "status": "complete"
+      },
+      "rule_ids": [
+        "M1.S.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l1_g0_c4_20261028_064719_b6f3fa",
+      "source_group": "l1_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unchanged_control",
+      "wall_seconds": 4.8229387229075655
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 1,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 79605760,
+      "case_id": "l1_g1_c0",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "repair",
+      "level": 1,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 7,
+        "context_shapes": 7,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 1,
+        "hierarchy_depth": 2,
+        "instance_count": 16,
+        "protected_obstacle_count": 6,
+        "shape_count": 2128,
+        "target_markers": 1
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "ACTIVE.LUP.1": 2,
+          "LIG.S.4-5": 1,
+          "M2.W.1": 1,
+          "V1.S.4": 1
+        },
+        "sha256": "93006ecba897e1ada56c433cd3b78bfc2918588e22901e28386d7862931d0dd4",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              0.081,
+              0.398,
+              0.093,
+              0.448
+            ]
+          ],
+          "cell": "BENCHMARK_TOP",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    0.081,
+                    0.398
+                  ],
+                  [
+                    0.081,
+                    0.448
+                  ]
+                ],
+                [
+                  [
+                    0.093,
+                    0.398
+                  ],
+                  [
+                    0.093,
+                    0.448
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M2.W.1"
+        }
+      ],
+      "rule_ids": [
+        "M2.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l1_g1_c0_20261028_064731_9ead22",
+      "source_group": "l1_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 4.845799754024483
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 1,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 79581184,
+      "case_id": "l1_g1_c1",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "repair",
+      "level": 1,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 7,
+        "context_shapes": 5,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 1,
+        "hierarchy_depth": 2,
+        "instance_count": 16,
+        "protected_obstacle_count": 4,
+        "shape_count": 2128,
+        "target_markers": 1
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "ACTIVE.LUP.1": 2,
+          "LIG.S.4-5": 1,
+          "M1.A.1": 1,
+          "V1.S.4": 1
+        },
+        "sha256": "d4c2f5e7c1774d04d9ee9e2fb8d0af92f79fa5e38bbe3b734f9bc186218e0309",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              2.075,
+              0.373,
+              2.093,
+              0.397
+            ]
+          ],
+          "cell": "BENCHMARK_TOP",
+          "geometry": [
+            [
+              "polygon",
+              [
+                [
+                  2.075,
+                  0.373
+                ],
+                [
+                  2.075,
+                  0.397
+                ],
+                [
+                  2.093,
+                  0.397
+                ],
+                [
+                  2.093,
+                  0.373
+                ]
+              ],
+              ""
+            ]
+          ],
+          "rule": "M1.A.1"
+        }
+      ],
+      "rule_ids": [
+        "M1.A.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l1_g1_c1_20261028_064743_b8709a",
+      "source_group": "l1_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 5.8206155019579455
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 1,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 79519744,
+      "case_id": "l1_g1_c2",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "repair",
+      "level": 1,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 7,
+        "context_shapes": 5,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 2,
+        "hierarchy_depth": 2,
+        "instance_count": 16,
+        "protected_obstacle_count": 3,
+        "shape_count": 2129,
+        "target_markers": 1
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "ACTIVE.LUP.1": 2,
+          "LIG.S.4-5": 1,
+          "M2.A.1": 1,
+          "V1.AUX.1V1.AUX.1 : V1 must be inside M1 and M2": 1,
+          "V1.M2.EN.2": 1,
+          "V1.S.4": 1
+        },
+        "sha256": "7361034e1c927df42ae27934c8d510f347e98c320be25e2b69e002aebbfc704f",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              4.075,
+              0.373,
+              4.093,
+              0.391
+            ]
+          ],
+          "cell": "BENCHMARK_TOP",
+          "geometry": [
+            [
+              "polygon",
+              [
+                [
+                  4.075,
+                  0.373
+                ],
+                [
+                  4.075,
+                  0.391
+                ],
+                [
+                  4.093,
+                  0.391
+                ],
+                [
+                  4.093,
+                  0.373
+                ]
+              ],
+              ""
+            ]
+          ],
+          "rule": "V1.M2.EN.2"
+        }
+      ],
+      "rule_ids": [
+        "V1.M2.EN.2"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l1_g1_c2_20261028_064755_c63742",
+      "source_group": "l1_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 4.768196554039605
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "candidate_peak_rss_bytes": 79507456,
+      "case_id": "l1_g1_c3",
+      "cost": null,
+      "failure_stage": null,
+      "final_total": 0,
+      "initial_total": 0,
+      "kind": "clean_control",
+      "level": 1,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 7,
+        "context_shapes": 8,
+        "coupled_rules": 0,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 1,
+        "hierarchy_depth": 2,
+        "instance_count": 16,
+        "protected_obstacle_count": 7,
+        "shape_count": 2128,
+        "target_markers": 0
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": true,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "ACTIVE.LUP.1": 2,
+          "LIG.S.4-5": 1,
+          "V1.S.4": 1
+        },
+        "sha256": "b38d7f3892df97e8c8142551d74ab3eb51c6ee4ecc57d6d3bd428e12ddb9da1d",
+        "status": "complete"
+      },
+      "rule_ids": [
+        "M2.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l1_g1_c3_20261028_064807_ab1eab",
+      "source_group": "l1_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unchanged_control",
+      "wall_seconds": 4.567885672906414
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "candidate_peak_rss_bytes": 79454208,
+      "case_id": "l1_g1_c4",
+      "cost": null,
+      "failure_stage": null,
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "no_edit",
+      "level": 1,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 7,
+        "context_shapes": 6,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 0,
+        "hierarchy_depth": 2,
+        "instance_count": 16,
+        "protected_obstacle_count": 6,
+        "shape_count": 2128,
+        "target_markers": 1
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": true,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "ACTIVE.LUP.1": 2,
+          "LIG.S.4-5": 1,
+          "M1.A.1": 1,
+          "V1.S.4": 1
+        },
+        "sha256": "436e83c8f28674c911d752fe5493528d8668010a9b89c2f10016b9cbc2bbaf03",
+        "status": "complete"
+      },
+      "rule_ids": [
+        "M1.A.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l1_g1_c4_20261028_064819_699e93",
+      "source_group": "l1_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unchanged_control",
+      "wall_seconds": 6.069762781029567
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 2,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 79339520,
+      "case_id": "l2_g0_c0",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 2,
+      "initial_total": 2,
+      "kind": "repair",
+      "level": 2,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 10,
+        "context_shapes": 6,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 2,
+        "hierarchy_depth": 4,
+        "instance_count": 103,
+        "protected_obstacle_count": 4,
+        "shape_count": 11288,
+        "target_markers": 2
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "ACTIVE.LUP.1": 2,
+          "ACTIVE.S.2A": 14,
+          "ACTIVE.W.2": 18,
+          "FIN.S.1": 45,
+          "FIN.W.1": 50,
+          "FIN.W.1a": 100,
+          "FIN.W.2": 50,
+          "GATE.AUX.3": 164,
+          "GATE.S.1": 594,
+          "GATE.W.2": 59,
+          "GCUT.AUX.2": 146,
+          "GCUT.GATE.EX.1": 13,
+          "LIG.GATE.AUX.1": 208,
+          "LIG.GCUT.S.11LIG.GCUT.S.11 : Min. vertical spacing between LIG and GCUT : 5nm": 3,
+          "LIG.LISD.S.9BLIG.LISD.S.9B : Min. horizontal spacing between LIG and GATE (not cut using GCUT) : 17nm": 118,
+          "LIG.S.4-5": 3,
+          "M1.W.1": 1,
+          "M3.W.1": 1,
+          "NSELECT.ACTIVE.EN.1": 16,
+          "PSELECT.ACTIVE.EN.1": 15,
+          "SDT.W.2": 97,
+          "SDT.W.3": 97,
+          "V1.S.4": 3
+        },
+        "sha256": "e9a14ab5604082958bb194b7a9fad70f34cfd50df3ea81bd035e3f6dbe13fa56",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              0.081,
+              0.388,
+              0.093,
+              0.438
+            ]
+          ],
+          "cell": "BENCHMARK_TOP",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    0.081,
+                    0.388
+                  ],
+                  [
+                    0.081,
+                    0.438
+                  ]
+                ],
+                [
+                  [
+                    0.093,
+                    0.388
+                  ],
+                  [
+                    0.093,
+                    0.438
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M1.W.1"
+        },
+        {
+          "boxes": [
+            [
+              0.325,
+              0.363,
+              0.337,
+              0.463
+            ]
+          ],
+          "cell": "BENCHMARK_TOP",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    0.325,
+                    0.363
+                  ],
+                  [
+                    0.325,
+                    0.463
+                  ]
+                ],
+                [
+                  [
+                    0.337,
+                    0.363
+                  ],
+                  [
+                    0.337,
+                    0.463
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M3.W.1"
+        }
+      ],
+      "rule_ids": [
+        "M1.W.1",
+        "M3.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l2_g0_c0_20261028_064832_cddbd0",
+      "source_group": "l2_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 5.568085961043835
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 2,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 79462400,
+      "case_id": "l2_g0_c1",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 2,
+      "initial_total": 2,
+      "kind": "repair",
+      "level": 2,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 10,
+        "context_shapes": 8,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 3,
+        "hierarchy_depth": 4,
+        "instance_count": 103,
+        "protected_obstacle_count": 5,
+        "shape_count": 11289,
+        "target_markers": 2
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "ACTIVE.LUP.1": 2,
+          "ACTIVE.S.2A": 14,
+          "ACTIVE.W.2": 18,
+          "FIN.S.1": 45,
+          "FIN.W.1": 50,
+          "FIN.W.1a": 100,
+          "FIN.W.2": 50,
+          "GATE.AUX.3": 164,
+          "GATE.S.1": 594,
+          "GATE.W.2": 59,
+          "GCUT.AUX.2": 146,
+          "GCUT.GATE.EX.1": 13,
+          "LIG.GATE.AUX.1": 208,
+          "LIG.GCUT.S.11LIG.GCUT.S.11 : Min. vertical spacing between LIG and GCUT : 5nm": 3,
+          "LIG.LISD.S.9BLIG.LISD.S.9B : Min. horizontal spacing between LIG and GATE (not cut using GCUT) : 17nm": 118,
+          "LIG.S.4-5": 3,
+          "M1.S.1": 1,
+          "M3.W.1": 1,
+          "NSELECT.ACTIVE.EN.1": 16,
+          "PSELECT.ACTIVE.EN.1": 15,
+          "SDT.W.2": 97,
+          "SDT.W.3": 97,
+          "V1.S.4": 3
+        },
+        "sha256": "2928fb70e2f4e7346776c54357010169d4241aba4be2b7b1f30096546b9eb8fb",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              2.135,
+              0.363,
+              2.147,
+              0.463
+            ]
+          ],
+          "cell": "BENCHMARK_TOP",
+          "geometry": [
+            [
+              "polygon",
+              [
+                [
+                  2.135,
+                  0.363
+                ],
+                [
+                  2.135,
+                  0.463
+                ],
+                [
+                  2.147,
+                  0.463
+                ],
+                [
+                  2.147,
+                  0.363
+                ]
+              ],
+              ""
+            ]
+          ],
+          "rule": "M1.S.1"
+        },
+        {
+          "boxes": [
+            [
+              2.325,
+              0.363,
+              2.337,
+              0.463
+            ]
+          ],
+          "cell": "BENCHMARK_TOP",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    2.325,
+                    0.363
+                  ],
+                  [
+                    2.325,
+                    0.463
+                  ]
+                ],
+                [
+                  [
+                    2.337,
+                    0.363
+                  ],
+                  [
+                    2.337,
+                    0.463
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M3.W.1"
+        }
+      ],
+      "rule_ids": [
+        "M1.S.1",
+        "M3.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l2_g0_c1_20261028_064847_e327ff",
+      "source_group": "l2_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 6.350845764973201
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 2,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 79327232,
+      "case_id": "l2_g0_c2",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 2,
+      "initial_total": 2,
+      "kind": "repair",
+      "level": 2,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 10,
+        "context_shapes": 8,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 3,
+        "hierarchy_depth": 4,
+        "instance_count": 103,
+        "protected_obstacle_count": 5,
+        "shape_count": 11289,
+        "target_markers": 2
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "ACTIVE.LUP.1": 2,
+          "ACTIVE.S.2A": 14,
+          "ACTIVE.W.2": 18,
+          "FIN.S.1": 45,
+          "FIN.W.1": 50,
+          "FIN.W.1a": 100,
+          "FIN.W.2": 50,
+          "GATE.AUX.3": 164,
+          "GATE.S.1": 594,
+          "GATE.W.2": 59,
+          "GCUT.AUX.2": 146,
+          "GCUT.GATE.EX.1": 13,
+          "LIG.GATE.AUX.1": 208,
+          "LIG.GCUT.S.11LIG.GCUT.S.11 : Min. vertical spacing between LIG and GCUT : 5nm": 3,
+          "LIG.LISD.S.9BLIG.LISD.S.9B : Min. horizontal spacing between LIG and GATE (not cut using GCUT) : 17nm": 118,
+          "LIG.S.4-5": 3,
+          "M3.W.1": 1,
+          "NSELECT.ACTIVE.EN.1": 16,
+          "PSELECT.ACTIVE.EN.1": 15,
+          "SDT.W.2": 97,
+          "SDT.W.3": 97,
+          "V1.AUX.1V1.AUX.1 : V1 must be inside M1 and M2": 1,
+          "V1.M2.AUX.2": 1,
+          "V1.S.4": 3,
+          "V1.W.1": 1
+        },
+        "sha256": "b6ed3b6f570e3dcd9c766c2c9c7ed5fc96bd86737d9037f334dd571245c121ac",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              4.325,
+              0.363,
+              4.337,
+              0.463
+            ]
+          ],
+          "cell": "BENCHMARK_TOP",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    4.325,
+                    0.363
+                  ],
+                  [
+                    4.325,
+                    0.463
+                  ]
+                ],
+                [
+                  [
+                    4.337,
+                    0.363
+                  ],
+                  [
+                    4.337,
+                    0.463
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M3.W.1"
+        },
+        {
+          "boxes": [
+            [
+              4.075,
+              0.363,
+              4.087,
+              0.381
+            ]
+          ],
+          "cell": "BENCHMARK_TOP",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    4.075,
+                    0.363
+                  ],
+                  [
+                    4.075,
+                    0.381
+                  ]
+                ],
+                [
+                  [
+                    4.087,
+                    0.363
+                  ],
+                  [
+                    4.087,
+                    0.381
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "V1.W.1"
+        }
+      ],
+      "rule_ids": [
+        "M3.W.1",
+        "V1.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l2_g0_c2_20261028_064901_79b165",
+      "source_group": "l2_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 5.846192060038447
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "candidate_peak_rss_bytes": 79417344,
+      "case_id": "l2_g0_c3",
+      "cost": null,
+      "failure_stage": null,
+      "final_total": 0,
+      "initial_total": 0,
+      "kind": "clean_control",
+      "level": 2,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 10,
+        "context_shapes": 8,
+        "coupled_rules": 0,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 2,
+        "hierarchy_depth": 4,
+        "instance_count": 103,
+        "protected_obstacle_count": 6,
+        "shape_count": 11288,
+        "target_markers": 0
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": true,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "ACTIVE.LUP.1": 2,
+          "ACTIVE.S.2A": 14,
+          "ACTIVE.W.2": 18,
+          "FIN.S.1": 45,
+          "FIN.W.1": 50,
+          "FIN.W.1a": 100,
+          "FIN.W.2": 50,
+          "GATE.AUX.3": 164,
+          "GATE.S.1": 594,
+          "GATE.W.2": 59,
+          "GCUT.AUX.2": 146,
+          "GCUT.GATE.EX.1": 13,
+          "LIG.GATE.AUX.1": 208,
+          "LIG.GCUT.S.11LIG.GCUT.S.11 : Min. vertical spacing between LIG and GCUT : 5nm": 3,
+          "LIG.LISD.S.9BLIG.LISD.S.9B : Min. horizontal spacing between LIG and GATE (not cut using GCUT) : 17nm": 118,
+          "LIG.S.4-5": 3,
+          "NSELECT.ACTIVE.EN.1": 16,
+          "PSELECT.ACTIVE.EN.1": 15,
+          "SDT.W.2": 97,
+          "SDT.W.3": 97,
+          "V1.S.4": 3
+        },
+        "sha256": "7a5ac748c86ab02ecd557a0f0b48ac7e277686775361fb0e179e10b55c265a25",
+        "status": "complete"
+      },
+      "rule_ids": [
+        "M1.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l2_g0_c3_20261028_064916_359412",
+      "source_group": "l2_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unchanged_control",
+      "wall_seconds": 6.42923907097429
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "candidate_peak_rss_bytes": 79540224,
+      "case_id": "l2_g0_c4",
+      "cost": null,
+      "failure_stage": null,
+      "final_total": 2,
+      "initial_total": 2,
+      "kind": "no_edit",
+      "level": 2,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 10,
+        "context_shapes": 13,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 0,
+        "hierarchy_depth": 4,
+        "instance_count": 103,
+        "protected_obstacle_count": 13,
+        "shape_count": 11289,
+        "target_markers": 2
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": true,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "ACTIVE.LUP.1": 2,
+          "ACTIVE.S.2A": 14,
+          "ACTIVE.W.2": 18,
+          "FIN.S.1": 45,
+          "FIN.W.1": 50,
+          "FIN.W.1a": 100,
+          "FIN.W.2": 50,
+          "GATE.AUX.3": 164,
+          "GATE.S.1": 594,
+          "GATE.W.2": 59,
+          "GCUT.AUX.2": 146,
+          "GCUT.GATE.EX.1": 13,
+          "LIG.GATE.AUX.1": 208,
+          "LIG.GCUT.S.11LIG.GCUT.S.11 : Min. vertical spacing between LIG and GCUT : 5nm": 3,
+          "LIG.LISD.S.9BLIG.LISD.S.9B : Min. horizontal spacing between LIG and GATE (not cut using GCUT) : 17nm": 118,
+          "LIG.S.4-5": 3,
+          "M1.S.1": 1,
+          "M3.W.1": 1,
+          "NSELECT.ACTIVE.EN.1": 16,
+          "PSELECT.ACTIVE.EN.1": 15,
+          "SDT.W.2": 97,
+          "SDT.W.3": 97,
+          "V1.S.4": 3
+        },
+        "sha256": "455a6fa958e2f437c444455a9c429286257a60d2dc6949888e595461a0783508",
+        "status": "complete"
+      },
+      "rule_ids": [
+        "M1.S.1",
+        "M3.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l2_g0_c4_20261028_064933_ee4a97",
+      "source_group": "l2_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unchanged_control",
+      "wall_seconds": 8.692681852960959
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 2,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 79609856,
+      "case_id": "l2_g1_c0",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 2,
+      "initial_total": 2,
+      "kind": "repair",
+      "level": 2,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 10,
+        "context_shapes": 8,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 2,
+        "hierarchy_depth": 4,
+        "instance_count": 148,
+        "protected_obstacle_count": 6,
+        "shape_count": 19145,
+        "target_markers": 2
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "ACTIVE.AUX.3": 2,
+          "ACTIVE.LUP.1": 2,
+          "ACTIVE.S.2A": 18,
+          "ACTIVE.W.2": 18,
+          "FIN.S.1": 45,
+          "FIN.W.1": 50,
+          "FIN.W.1a": 100,
+          "FIN.W.2": 50,
+          "GATE.AUX.3": 200,
+          "GATE.S.1": 693,
+          "GATE.W.2": 68,
+          "GCUT.AUX.2": 164,
+          "GCUT.GATE.EX.1": 31,
+          "LIG.GATE.AUX.1": 244,
+          "LIG.GCUT.S.11LIG.GCUT.S.11 : Min. vertical spacing between LIG and GCUT : 5nm": 4,
+          "LIG.LISD.S.9BLIG.LISD.S.9B : Min. horizontal spacing between LIG and GATE (not cut using GCUT) : 17nm": 136,
+          "LIG.S.4-5": 3,
+          "M2.W.1": 1,
+          "M3.W.1": 1,
+          "NSELECT.ACTIVE.EN.1": 17,
+          "PSELECT.ACTIVE.EN.1": 16,
+          "SDT.W.2": 115,
+          "SDT.W.3": 115,
+          "V1.S.4": 3
+        },
+        "sha256": "82d5a303d0c9c16882308da0ca92636e0a0469429be41e4b3e34c4cc3498325d",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              0.0,
+              0.379,
+              0.05,
+              0.391
+            ]
+          ],
+          "cell": "BENCHMARK_TOP",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    0.0,
+                    0.379
+                  ],
+                  [
+                    0.05,
+                    0.379
+                  ]
+                ],
+                [
+                  [
+                    0.0,
+                    0.391
+                  ],
+                  [
+                    0.05,
+                    0.391
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M2.W.1"
+        },
+        {
+          "boxes": [
+            [
+              -0.025,
+              0.623,
+              0.075,
+              0.635
+            ]
+          ],
+          "cell": "BENCHMARK_TOP",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    -0.025,
+                    0.623
+                  ],
+                  [
+                    0.075,
+                    0.623
+                  ]
+                ],
+                [
+                  [
+                    -0.025,
+                    0.635
+                  ],
+                  [
+                    0.075,
+                    0.635
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M3.W.1"
+        }
+      ],
+      "rule_ids": [
+        "M2.W.1",
+        "M3.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l2_g1_c0_20261028_064950_8089ac",
+      "source_group": "l2_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 4.980233697919175
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 3,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 79618048,
+      "case_id": "l2_g1_c1",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 3,
+      "initial_total": 3,
+      "kind": "repair",
+      "level": 2,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 10,
+        "context_shapes": 10,
+        "coupled_rules": 3,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 2,
+        "hierarchy_depth": 4,
+        "instance_count": 148,
+        "protected_obstacle_count": 8,
+        "shape_count": 19145,
+        "target_markers": 3
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "ACTIVE.AUX.3": 2,
+          "ACTIVE.LUP.1": 2,
+          "ACTIVE.S.2A": 18,
+          "ACTIVE.W.2": 18,
+          "FIN.S.1": 45,
+          "FIN.W.1": 50,
+          "FIN.W.1a": 100,
+          "FIN.W.2": 50,
+          "GATE.AUX.3": 200,
+          "GATE.S.1": 693,
+          "GATE.W.2": 68,
+          "GCUT.AUX.2": 164,
+          "GCUT.GATE.EX.1": 31,
+          "LIG.GATE.AUX.1": 244,
+          "LIG.GCUT.S.11LIG.GCUT.S.11 : Min. vertical spacing between LIG and GCUT : 5nm": 4,
+          "LIG.LISD.S.9BLIG.LISD.S.9B : Min. horizontal spacing between LIG and GATE (not cut using GCUT) : 17nm": 136,
+          "LIG.S.4-5": 3,
+          "M1.A.1": 1,
+          "M1.W.1": 1,
+          "M3.W.1": 1,
+          "NSELECT.ACTIVE.EN.1": 17,
+          "PSELECT.ACTIVE.EN.1": 16,
+          "SDT.W.2": 115,
+          "SDT.W.3": 115,
+          "V1.S.4": 3
+        },
+        "sha256": "54f1f8fe8a7af986a58c81e4cfcc1224a198a6bda2a4bcb7d2b68286e134d565",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              2.051,
+              0.373,
+              2.075,
+              0.385
+            ]
+          ],
+          "cell": "BENCHMARK_TOP",
+          "geometry": [
+            [
+              "polygon",
+              [
+                [
+                  2.051,
+                  0.373
+                ],
+                [
+                  2.051,
+                  0.385
+                ],
+                [
+                  2.075,
+                  0.385
+                ],
+                [
+                  2.075,
+                  0.373
+                ]
+              ],
+              ""
+            ]
+          ],
+          "rule": "M1.A.1"
+        },
+        {
+          "boxes": [
+            [
+              2.051,
+              0.373,
+              2.075,
+              0.385
+            ]
+          ],
+          "cell": "BENCHMARK_TOP",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    2.051,
+                    0.373
+                  ],
+                  [
+                    2.075,
+                    0.373
+                  ]
+                ],
+                [
+                  [
+                    2.051,
+                    0.385
+                  ],
+                  [
+                    2.075,
+                    0.385
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M1.W.1"
+        },
+        {
+          "boxes": [
+            [
+              1.975,
+              0.623,
+              2.075,
+              0.635
+            ]
+          ],
+          "cell": "BENCHMARK_TOP",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    1.975,
+                    0.623
+                  ],
+                  [
+                    2.075,
+                    0.623
+                  ]
+                ],
+                [
+                  [
+                    1.975,
+                    0.635
+                  ],
+                  [
+                    2.075,
+                    0.635
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M3.W.1"
+        }
+      ],
+      "rule_ids": [
+        "M1.A.1",
+        "M1.W.1",
+        "M3.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l2_g1_c1_20261028_065003_c957bd",
+      "source_group": "l2_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 6.207540104049258
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 2,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 79564800,
+      "case_id": "l2_g1_c2",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 2,
+      "initial_total": 2,
+      "kind": "repair",
+      "level": 2,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 10,
+        "context_shapes": 12,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 3,
+        "hierarchy_depth": 4,
+        "instance_count": 148,
+        "protected_obstacle_count": 9,
+        "shape_count": 19146,
+        "target_markers": 2
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "ACTIVE.AUX.3": 2,
+          "ACTIVE.LUP.1": 2,
+          "ACTIVE.S.2A": 18,
+          "ACTIVE.W.2": 18,
+          "FIN.S.1": 45,
+          "FIN.W.1": 50,
+          "FIN.W.1a": 100,
+          "FIN.W.2": 50,
+          "GATE.AUX.3": 200,
+          "GATE.S.1": 693,
+          "GATE.W.2": 68,
+          "GCUT.AUX.2": 164,
+          "GCUT.GATE.EX.1": 31,
+          "LIG.GATE.AUX.1": 244,
+          "LIG.GCUT.S.11LIG.GCUT.S.11 : Min. vertical spacing between LIG and GCUT : 5nm": 4,
+          "LIG.LISD.S.9BLIG.LISD.S.9B : Min. horizontal spacing between LIG and GATE (not cut using GCUT) : 17nm": 136,
+          "LIG.S.4-5": 3,
+          "M2.A.1": 1,
+          "M3.W.1": 1,
+          "NSELECT.ACTIVE.EN.1": 17,
+          "PSELECT.ACTIVE.EN.1": 16,
+          "SDT.W.2": 115,
+          "SDT.W.3": 115,
+          "V1.AUX.1V1.AUX.1 : V1 must be inside M1 and M2": 1,
+          "V1.M2.EN.2": 1,
+          "V1.S.4": 3
+        },
+        "sha256": "e68bf77c5e3a9372d0b67bf55a1d084fb0fb89d7254fac4fe9df7bc49e623d13",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              3.975,
+              0.623,
+              4.075,
+              0.635
+            ]
+          ],
+          "cell": "BENCHMARK_TOP",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    3.975,
+                    0.623
+                  ],
+                  [
+                    4.075,
+                    0.623
+                  ]
+                ],
+                [
+                  [
+                    3.975,
+                    0.635
+                  ],
+                  [
+                    4.075,
+                    0.635
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M3.W.1"
+        },
+        {
+          "boxes": [
+            [
+              4.057,
+              0.373,
+              4.075,
+              0.391
+            ]
+          ],
+          "cell": "BENCHMARK_TOP",
+          "geometry": [
+            [
+              "polygon",
+              [
+                [
+                  4.057,
+                  0.373
+                ],
+                [
+                  4.057,
+                  0.391
+                ],
+                [
+                  4.075,
+                  0.391
+                ],
+                [
+                  4.075,
+                  0.373
+                ]
+              ],
+              ""
+            ]
+          ],
+          "rule": "V1.M2.EN.2"
+        }
+      ],
+      "rule_ids": [
+        "M3.W.1",
+        "V1.M2.EN.2"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l2_g1_c2_20261028_065017_2b524b",
+      "source_group": "l2_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 6.760545921046287
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "candidate_peak_rss_bytes": 79212544,
+      "case_id": "l2_g1_c3",
+      "cost": null,
+      "failure_stage": null,
+      "final_total": 0,
+      "initial_total": 0,
+      "kind": "clean_control",
+      "level": 2,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 10,
+        "context_shapes": 11,
+        "coupled_rules": 0,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 2,
+        "hierarchy_depth": 4,
+        "instance_count": 148,
+        "protected_obstacle_count": 9,
+        "shape_count": 19145,
+        "target_markers": 0
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": true,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "ACTIVE.AUX.3": 2,
+          "ACTIVE.LUP.1": 2,
+          "ACTIVE.S.2A": 18,
+          "ACTIVE.W.2": 18,
+          "FIN.S.1": 45,
+          "FIN.W.1": 50,
+          "FIN.W.1a": 100,
+          "FIN.W.2": 50,
+          "GATE.AUX.3": 200,
+          "GATE.S.1": 693,
+          "GATE.W.2": 68,
+          "GCUT.AUX.2": 164,
+          "GCUT.GATE.EX.1": 31,
+          "LIG.GATE.AUX.1": 244,
+          "LIG.GCUT.S.11LIG.GCUT.S.11 : Min. vertical spacing between LIG and GCUT : 5nm": 4,
+          "LIG.LISD.S.9BLIG.LISD.S.9B : Min. horizontal spacing between LIG and GATE (not cut using GCUT) : 17nm": 136,
+          "LIG.S.4-5": 3,
+          "NSELECT.ACTIVE.EN.1": 17,
+          "PSELECT.ACTIVE.EN.1": 16,
+          "SDT.W.2": 115,
+          "SDT.W.3": 115,
+          "V1.S.4": 3
+        },
+        "sha256": "e0c8e715f3f2da8c398f456e58b6125e6aebb2f97ffd9769675d0aedb8352996",
+        "status": "complete"
+      },
+      "rule_ids": [
+        "M2.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l2_g1_c3_20261028_065033_4f6867",
+      "source_group": "l2_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unchanged_control",
+      "wall_seconds": 5.227286720066331
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "candidate_peak_rss_bytes": 79380480,
+      "case_id": "l2_g1_c4",
+      "cost": null,
+      "failure_stage": null,
+      "final_total": 3,
+      "initial_total": 3,
+      "kind": "no_edit",
+      "level": 2,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 10,
+        "context_shapes": 18,
+        "coupled_rules": 3,
+        "dbu_um": 0.00025,
+        "editable_shape_count": 0,
+        "hierarchy_depth": 4,
+        "instance_count": 148,
+        "protected_obstacle_count": 18,
+        "shape_count": 19145,
+        "target_markers": 3
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": true,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "ACTIVE.AUX.3": 2,
+          "ACTIVE.LUP.1": 2,
+          "ACTIVE.S.2A": 18,
+          "ACTIVE.W.2": 18,
+          "FIN.S.1": 45,
+          "FIN.W.1": 50,
+          "FIN.W.1a": 100,
+          "FIN.W.2": 50,
+          "GATE.AUX.3": 200,
+          "GATE.S.1": 693,
+          "GATE.W.2": 68,
+          "GCUT.AUX.2": 164,
+          "GCUT.GATE.EX.1": 31,
+          "LIG.GATE.AUX.1": 244,
+          "LIG.GCUT.S.11LIG.GCUT.S.11 : Min. vertical spacing between LIG and GCUT : 5nm": 4,
+          "LIG.LISD.S.9BLIG.LISD.S.9B : Min. horizontal spacing between LIG and GATE (not cut using GCUT) : 17nm": 136,
+          "LIG.S.4-5": 3,
+          "M1.A.1": 1,
+          "M1.W.1": 1,
+          "M3.W.1": 1,
+          "NSELECT.ACTIVE.EN.1": 17,
+          "PSELECT.ACTIVE.EN.1": 16,
+          "SDT.W.2": 115,
+          "SDT.W.3": 115,
+          "V1.S.4": 3
+        },
+        "sha256": "106cbce153005e6eaaa734107a08523418ca1da2677419da05eeb965baf8ee80",
+        "status": "complete"
+      },
+      "rule_ids": [
+        "M1.A.1",
+        "M1.W.1",
+        "M3.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l2_g1_c4_20261028_065048_2e5aed",
+      "source_group": "l2_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unchanged_control",
+      "wall_seconds": 6.425548522965983
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 1,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 80945152,
+      "case_id": "l3_g0_c0",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "repair",
+      "level": 3,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 40,
+        "context_shapes": 43,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 10613,
+        "editable_shape_count": 7,
+        "hierarchy_depth": 2,
+        "instance_count": 721,
+        "local_route_polygons": 12,
+        "local_routing_occupancy": 0.1803013392857143,
+        "occupancy_box_um": [
+          2.1029999999999998,
+          2.968,
+          2.343,
+          3.192
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 36,
+        "route_segment_count": 2632,
+        "shape_count": 66103,
+        "target_markers": 1,
+        "via_count": 3870
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 5,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 7,
+          "M2.W.1": 1,
+          "M4.S.5": 20,
+          "V1.S.4": 2,
+          "V2.M3.AUX.2": 58,
+          "V4.M5.AUX.2": 116,
+          "V5.M6.AUX.2": 124
+        },
+        "sha256": "74d8744d8ace527f9a59822585a91d8909076d1606e08d34715046bd6126a41a",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              2.20175,
+              3.082,
+              2.24425,
+              3.096
+            ]
+          ],
+          "cell": "gcd",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    2.20175,
+                    3.096
+                  ],
+                  [
+                    2.24425,
+                    3.096
+                  ]
+                ],
+                [
+                  [
+                    2.213,
+                    3.082
+                  ],
+                  [
+                    2.233,
+                    3.082
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M2.W.1"
+        }
+      ],
+      "rule_ids": [
+        "M2.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l3_g0_c0_20261028_065102_3c6c2d",
+      "source_group": "l3_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 10.274649807950482
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 1,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 81268736,
+      "case_id": "l3_g0_c1",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "repair",
+      "level": 3,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 40,
+        "context_shapes": 37,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 10613,
+        "editable_shape_count": 1,
+        "hierarchy_depth": 2,
+        "instance_count": 721,
+        "local_route_polygons": 11,
+        "local_routing_occupancy": 0.2584821428571429,
+        "occupancy_box_um": [
+          2.194,
+          2.463,
+          2.418,
+          2.7030000000000003
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 36,
+        "route_segment_count": 2632,
+        "shape_count": 66103,
+        "target_markers": 1,
+        "via_count": 3870
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 5,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 7,
+          "M3.W.1": 1,
+          "M4.S.5": 20,
+          "V1.S.4": 2,
+          "V2.M3.AUX.2": 58,
+          "V4.M5.AUX.2": 116,
+          "V5.M6.AUX.2": 124
+        },
+        "sha256": "95d12fe568da928f01e0af9f3b9ffe798ffa9a87fc83c9bd09ec646d1ae28182",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              2.308,
+              2.56175,
+              2.322,
+              2.60425
+            ]
+          ],
+          "cell": "gcd",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    2.308,
+                    2.573
+                  ],
+                  [
+                    2.308,
+                    2.593
+                  ]
+                ],
+                [
+                  [
+                    2.322,
+                    2.56175
+                  ],
+                  [
+                    2.322,
+                    2.60425
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M3.W.1"
+        }
+      ],
+      "rule_ids": [
+        "M3.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l3_g0_c1_20261028_065153_8665b1",
+      "source_group": "l3_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 12.090163682005368
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 1,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 81215488,
+      "case_id": "l3_g0_c2",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "repair",
+      "level": 3,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 40,
+        "context_shapes": 32,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 10613,
+        "editable_shape_count": 3,
+        "hierarchy_depth": 2,
+        "instance_count": 721,
+        "local_route_polygons": 6,
+        "local_routing_occupancy": 0.13387229891956784,
+        "occupancy_box_um": [
+          2.208,
+          1.96,
+          2.432,
+          2.198
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 29,
+        "route_segment_count": 2632,
+        "shape_count": 66103,
+        "target_markers": 1,
+        "via_count": 3870
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 5,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 7,
+          "M4.S.5": 20,
+          "V1.S.4": 2,
+          "V2.M3.AUX.2": 58,
+          "V2.W.1": 1,
+          "V4.M5.AUX.2": 116,
+          "V5.M6.AUX.2": 124
+        },
+        "sha256": "6a7ddada2fe87260d47b26021e129a5066b3cf78c5a92fec2a510c1f2eff8918",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              2.304,
+              2.07,
+              2.318,
+              2.088
+            ]
+          ],
+          "cell": "gcd",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    2.304,
+                    2.07
+                  ],
+                  [
+                    2.304,
+                    2.088
+                  ]
+                ],
+                [
+                  [
+                    2.318,
+                    2.07
+                  ],
+                  [
+                    2.318,
+                    2.088
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "V2.W.1"
+        }
+      ],
+      "rule_ids": [
+        "V2.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l3_g0_c2_20261028_065245_466a47",
+      "source_group": "l3_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 9.737004070077091
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "candidate_peak_rss_bytes": 81125376,
+      "case_id": "l3_g0_c3",
+      "cost": null,
+      "failure_stage": null,
+      "final_total": 0,
+      "initial_total": 0,
+      "kind": "clean_control",
+      "level": 3,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 40,
+        "context_shapes": 36,
+        "coupled_rules": 0,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 10613,
+        "editable_shape_count": 3,
+        "hierarchy_depth": 2,
+        "instance_count": 721,
+        "local_route_polygons": 8,
+        "local_routing_occupancy": 0.15600818452380952,
+        "occupancy_box_um": [
+          2.258,
+          1.96,
+          2.498,
+          2.184
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 33,
+        "route_segment_count": 2632,
+        "shape_count": 66103,
+        "target_markers": 0,
+        "via_count": 3870
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": true,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 5,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 7,
+          "M4.S.5": 20,
+          "V1.S.4": 2,
+          "V2.M3.AUX.2": 58,
+          "V4.M5.AUX.2": 116,
+          "V5.M6.AUX.2": 124
+        },
+        "sha256": "9220f08ac5027abc5eddce392f3a784f465ae87ed31f6df2ffa8fa07176436d5",
+        "status": "complete"
+      },
+      "rule_ids": [
+        "M2.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l3_g0_c3_20261028_065335_34b29b",
+      "source_group": "l3_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unchanged_control",
+      "wall_seconds": 11.490191427990794
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "candidate_peak_rss_bytes": 81166336,
+      "case_id": "l3_g0_c4",
+      "cost": null,
+      "failure_stage": null,
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "no_edit",
+      "level": 3,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 40,
+        "context_shapes": 36,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 10613,
+        "editable_shape_count": 0,
+        "hierarchy_depth": 2,
+        "instance_count": 721,
+        "local_route_polygons": 11,
+        "local_routing_occupancy": 0.24345363145258103,
+        "occupancy_box_um": [
+          2.208,
+          2.932,
+          2.432,
+          3.17
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 36,
+        "route_segment_count": 2632,
+        "shape_count": 66103,
+        "target_markers": 1,
+        "via_count": 3870
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": true,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 5,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 7,
+          "M4.S.5": 20,
+          "V1.S.4": 2,
+          "V2.M3.AUX.2": 58,
+          "V2.S.2": 1,
+          "V2.W.1": 1,
+          "V4.M5.AUX.2": 116,
+          "V5.M6.AUX.2": 124
+        },
+        "sha256": "0c5ca757d9aa4231f52e13eb44d35652d34759239f8bcf94b5c0686bed8e25c7",
+        "status": "complete"
+      },
+      "rule_ids": [
+        "V2.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l3_g0_c4_20261028_065427_281ef6",
+      "source_group": "l3_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unchanged_control",
+      "wall_seconds": 9.986763634951785
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 1,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 81465344,
+      "case_id": "l3_g1_c0",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "repair",
+      "level": 3,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 45,
+        "context_shapes": 30,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 10455,
+        "editable_shape_count": 4,
+        "hierarchy_depth": 2,
+        "instance_count": 976,
+        "local_route_polygons": 8,
+        "local_routing_occupancy": 0.254296875,
+        "occupancy_box_um": [
+          2.121,
+          1.996,
+          2.361,
+          2.22
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 26,
+        "route_segment_count": 2567,
+        "shape_count": 80641,
+        "target_markers": 1,
+        "via_count": 3845
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 7,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 7,
+          "M2.W.1": 1,
+          "M4.S.5": 4,
+          "M5.S.5": 4,
+          "V1.S.4": 5,
+          "V2.M3.AUX.2": 66,
+          "V4.M5.AUX.2": 132,
+          "V5.M6.AUX.2": 142
+        },
+        "sha256": "0b264123e2c40241302ee85b598aea5908a91de1c0d3313106f94c56e473c915",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              2.21975,
+              2.11,
+              2.26225,
+              2.124
+            ]
+          ],
+          "cell": "gcd",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    2.21975,
+                    2.124
+                  ],
+                  [
+                    2.26225,
+                    2.124
+                  ]
+                ],
+                [
+                  [
+                    2.231,
+                    2.11
+                  ],
+                  [
+                    2.251,
+                    2.11
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M2.W.1"
+        }
+      ],
+      "rule_ids": [
+        "M2.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l3_g1_c0_20261028_065514_932c99",
+      "source_group": "l3_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 11.924095400958322
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 1,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 81027072,
+      "case_id": "l3_g1_c1",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "repair",
+      "level": 3,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 45,
+        "context_shapes": 30,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 10455,
+        "editable_shape_count": 1,
+        "hierarchy_depth": 2,
+        "instance_count": 976,
+        "local_route_polygons": 7,
+        "local_routing_occupancy": 0.1958984375,
+        "occupancy_box_um": [
+          2.23,
+          2.265,
+          2.454,
+          2.5050000000000003
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 29,
+        "route_segment_count": 2567,
+        "shape_count": 80641,
+        "target_markers": 1,
+        "via_count": 3845
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 7,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 7,
+          "M3.W.1": 1,
+          "M4.S.5": 4,
+          "M5.S.5": 4,
+          "V1.S.4": 5,
+          "V2.M3.AUX.2": 66,
+          "V4.M5.AUX.2": 132,
+          "V5.M6.AUX.2": 142
+        },
+        "sha256": "1761bc3145dfcf46133b9d5e937453ced52528af8731b81f72e94703cbee6ce5",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              2.344,
+              2.36375,
+              2.358,
+              2.40625
+            ]
+          ],
+          "cell": "gcd",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    2.344,
+                    2.375
+                  ],
+                  [
+                    2.344,
+                    2.395
+                  ]
+                ],
+                [
+                  [
+                    2.358,
+                    2.36375
+                  ],
+                  [
+                    2.358,
+                    2.40625
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M3.W.1"
+        }
+      ],
+      "rule_ids": [
+        "M3.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l3_g1_c1_20261028_065606_d0539c",
+      "source_group": "l3_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 10.741881848894991
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 1,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 81420288,
+      "case_id": "l3_g1_c2",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "repair",
+      "level": 3,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 45,
+        "context_shapes": 25,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 10455,
+        "editable_shape_count": 3,
+        "hierarchy_depth": 2,
+        "instance_count": 976,
+        "local_route_polygons": 6,
+        "local_routing_occupancy": 0.19616596638655462,
+        "occupancy_box_um": [
+          2.2439999999999998,
+          1.996,
+          2.468,
+          2.234
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 22,
+        "route_segment_count": 2567,
+        "shape_count": 80641,
+        "target_markers": 1,
+        "via_count": 3845
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 7,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 7,
+          "M4.S.5": 4,
+          "M5.S.5": 4,
+          "V1.S.4": 5,
+          "V2.M3.AUX.2": 66,
+          "V2.W.1": 1,
+          "V4.M5.AUX.2": 132,
+          "V5.M6.AUX.2": 142
+        },
+        "sha256": "6711fdf68b074c462ade1e3711a0b329a7d7597e2debddacbfda55a0eb9a68ef",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              2.34,
+              2.106,
+              2.354,
+              2.124
+            ]
+          ],
+          "cell": "gcd",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    2.34,
+                    2.106
+                  ],
+                  [
+                    2.34,
+                    2.124
+                  ]
+                ],
+                [
+                  [
+                    2.354,
+                    2.106
+                  ],
+                  [
+                    2.354,
+                    2.124
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "V2.W.1"
+        }
+      ],
+      "rule_ids": [
+        "V2.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l3_g1_c2_20261028_065701_cf6804",
+      "source_group": "l3_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 9.623207979951985
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "candidate_peak_rss_bytes": 81264640,
+      "case_id": "l3_g1_c3",
+      "cost": null,
+      "failure_stage": null,
+      "final_total": 0,
+      "initial_total": 0,
+      "kind": "clean_control",
+      "level": 3,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 45,
+        "context_shapes": 42,
+        "coupled_rules": 0,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 10455,
+        "editable_shape_count": 1,
+        "hierarchy_depth": 2,
+        "instance_count": 976,
+        "local_route_polygons": 9,
+        "local_routing_occupancy": 0.3053571428571429,
+        "occupancy_box_um": [
+          2.3729999999999998,
+          2.536,
+          2.613,
+          2.7600000000000002
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 41,
+        "route_segment_count": 2567,
+        "shape_count": 80641,
+        "target_markers": 0,
+        "via_count": 3845
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": true,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 7,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 7,
+          "M4.S.5": 4,
+          "M5.S.5": 4,
+          "V1.S.4": 5,
+          "V2.M3.AUX.2": 66,
+          "V4.M5.AUX.2": 132,
+          "V5.M6.AUX.2": 142
+        },
+        "sha256": "903abc346134bb72b449d84548848db52a09df9c5f365c877eea6c03d3b2c9f8",
+        "status": "complete"
+      },
+      "rule_ids": [
+        "M2.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l3_g1_c3_20261028_065801_011882",
+      "source_group": "l3_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unchanged_control",
+      "wall_seconds": 11.343026824994013
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "candidate_peak_rss_bytes": 81379328,
+      "case_id": "l3_g1_c4",
+      "cost": null,
+      "failure_stage": null,
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "no_edit",
+      "level": 3,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 45,
+        "context_shapes": 42,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 10455,
+        "editable_shape_count": 0,
+        "hierarchy_depth": 2,
+        "instance_count": 976,
+        "local_route_polygons": 10,
+        "local_routing_occupancy": 0.21573660714285714,
+        "occupancy_box_um": [
+          2.518,
+          2.598,
+          2.742,
+          2.838
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 42,
+        "route_segment_count": 2567,
+        "shape_count": 80641,
+        "target_markers": 1,
+        "via_count": 3845
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": true,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 7,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 7,
+          "M3.W.1": 1,
+          "M4.S.5": 4,
+          "M5.S.5": 4,
+          "V1.S.4": 5,
+          "V2.M3.AUX.2": 66,
+          "V4.M5.AUX.2": 132,
+          "V5.M6.AUX.2": 142
+        },
+        "sha256": "21d29657534f2e44a88aad7f17ea0249aed76c9546a043f262c85f51b7d29033",
+        "status": "complete"
+      },
+      "rule_ids": [
+        "M3.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l3_g1_c4_20261028_065900_f49218",
+      "source_group": "l3_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unchanged_control",
+      "wall_seconds": 10.959924850030802
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 1,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 82915328,
+      "case_id": "l4_g0_c0",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "repair",
+      "level": 4,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 68,
+        "context_shapes": 50,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 19786,
+        "editable_shape_count": 10,
+        "hierarchy_depth": 2,
+        "instance_count": 1909,
+        "local_route_polygons": 16,
+        "local_routing_occupancy": 0.32109375,
+        "occupancy_box_um": [
+          6.981,
+          1.996,
+          7.221,
+          2.22
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 40,
+        "route_segment_count": 5077,
+        "shape_count": 192531,
+        "target_markers": 1,
+        "via_count": 7024
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 8,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 1,
+          "M2.W.1": 1,
+          "M4.S.3": 2,
+          "M4.S.5": 26,
+          "M5.S.5": 10,
+          "V1.S.4": 2,
+          "V2.M3.AUX.2": 168,
+          "V4.M5.AUX.2": 336,
+          "V5.M6.AUX.2": 279
+        },
+        "sha256": "59a231b5c72c190d6d4d116629cee73683faa478e6e04d6057de176e6fa1b6ba",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              7.07975,
+              2.11,
+              7.12225,
+              2.124
+            ]
+          ],
+          "cell": "uart",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    7.07975,
+                    2.124
+                  ],
+                  [
+                    7.12225,
+                    2.124
+                  ]
+                ],
+                [
+                  [
+                    7.091,
+                    2.11
+                  ],
+                  [
+                    7.111,
+                    2.11
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M2.W.1"
+        }
+      ],
+      "rule_ids": [
+        "M2.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l4_g0_c0_20261028_065954_c2acf2",
+      "source_group": "l4_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 19.852263550041243
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 1,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 82698240,
+      "case_id": "l4_g0_c1",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "repair",
+      "level": 4,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 68,
+        "context_shapes": 58,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 19786,
+        "editable_shape_count": 8,
+        "hierarchy_depth": 2,
+        "instance_count": 1909,
+        "local_route_polygons": 17,
+        "local_routing_occupancy": 0.23429129464285714,
+        "occupancy_box_um": [
+          6.874,
+          1.959,
+          7.098,
+          2.1990000000000003
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 50,
+        "route_segment_count": 5077,
+        "shape_count": 192531,
+        "target_markers": 1,
+        "via_count": 7024
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 8,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 1,
+          "M3.W.1": 1,
+          "M4.S.3": 2,
+          "M4.S.5": 26,
+          "M5.S.5": 10,
+          "V1.S.4": 2,
+          "V2.M3.AUX.2": 168,
+          "V4.M5.AUX.2": 336,
+          "V5.M6.AUX.2": 279
+        },
+        "sha256": "33ff9c4532f2bf34bbacd334fb55a1bdd7d35f4ef52f44c742b113567402c2ef",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              6.988,
+              2.05775,
+              7.002,
+              2.10025
+            ]
+          ],
+          "cell": "uart",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    6.988,
+                    2.069
+                  ],
+                  [
+                    6.988,
+                    2.089
+                  ]
+                ],
+                [
+                  [
+                    7.002,
+                    2.05775
+                  ],
+                  [
+                    7.002,
+                    2.10025
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M3.W.1"
+        }
+      ],
+      "rule_ids": [
+        "M3.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l4_g0_c1_20261028_070217_b25b94",
+      "source_group": "l4_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 24.344481901964173
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 1,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 82853888,
+      "case_id": "l4_g0_c2",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "repair",
+      "level": 4,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 68,
+        "context_shapes": 54,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 19786,
+        "editable_shape_count": 4,
+        "hierarchy_depth": 2,
+        "instance_count": 1909,
+        "local_route_polygons": 14,
+        "local_routing_occupancy": 0.21141581632653061,
+        "occupancy_box_um": [
+          6.78,
+          1.996,
+          7.0040000000000004,
+          2.234
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 50,
+        "route_segment_count": 5077,
+        "shape_count": 192531,
+        "target_markers": 1,
+        "via_count": 7024
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 8,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 1,
+          "M4.S.3": 2,
+          "M4.S.5": 26,
+          "M5.S.5": 10,
+          "V1.S.4": 2,
+          "V2.M3.AUX.2": 168,
+          "V2.W.1": 1,
+          "V4.M5.AUX.2": 336,
+          "V5.M6.AUX.2": 279
+        },
+        "sha256": "e7101cc355cb6c6859a06be12d39f4a9268cbbe1771e25852eb9c9b3dc36afbf",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              6.876,
+              2.106,
+              6.89,
+              2.124
+            ]
+          ],
+          "cell": "uart",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    6.876,
+                    2.106
+                  ],
+                  [
+                    6.876,
+                    2.124
+                  ]
+                ],
+                [
+                  [
+                    6.89,
+                    2.106
+                  ],
+                  [
+                    6.89,
+                    2.124
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "V2.W.1"
+        }
+      ],
+      "rule_ids": [
+        "V2.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l4_g0_c2_20261028_070445_e81666",
+      "source_group": "l4_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 24.408517015050165
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "candidate_peak_rss_bytes": 82747392,
+      "case_id": "l4_g0_c3",
+      "cost": null,
+      "failure_stage": null,
+      "final_total": 0,
+      "initial_total": 0,
+      "kind": "clean_control",
+      "level": 4,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 68,
+        "context_shapes": 53,
+        "coupled_rules": 0,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 19786,
+        "editable_shape_count": 7,
+        "hierarchy_depth": 2,
+        "instance_count": 1909,
+        "local_route_polygons": 14,
+        "local_routing_occupancy": 0.2333705357142857,
+        "occupancy_box_um": [
+          10.33,
+          7.17,
+          10.554,
+          7.41
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 46,
+        "route_segment_count": 5077,
+        "shape_count": 192531,
+        "target_markers": 0,
+        "via_count": 7024
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": true,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 8,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 1,
+          "M4.S.3": 2,
+          "M4.S.5": 26,
+          "M5.S.5": 10,
+          "V1.S.4": 2,
+          "V2.M3.AUX.2": 168,
+          "V4.M5.AUX.2": 336,
+          "V5.M6.AUX.2": 279
+        },
+        "sha256": "1c1a129e9f48bfdf4295c8ecf2698af3bee79c45ce747a8c2844c56c2b8f5870",
+        "status": "complete"
+      },
+      "rule_ids": [
+        "M3.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l4_g0_c3_20261028_070711_cb3b19",
+      "source_group": "l4_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unchanged_control",
+      "wall_seconds": 19.59787725901697
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "candidate_peak_rss_bytes": 82612224,
+      "case_id": "l4_g0_c4",
+      "cost": null,
+      "failure_stage": null,
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "no_edit",
+      "level": 4,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 68,
+        "context_shapes": 55,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 19786,
+        "editable_shape_count": 0,
+        "hierarchy_depth": 2,
+        "instance_count": 1909,
+        "local_route_polygons": 16,
+        "local_routing_occupancy": 0.3086547118847539,
+        "occupancy_box_um": [
+          10.236,
+          6.586,
+          10.46,
+          6.824
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 55,
+        "route_segment_count": 5077,
+        "shape_count": 192531,
+        "target_markers": 1,
+        "via_count": 7024
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": true,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 8,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 1,
+          "M4.S.3": 2,
+          "M4.S.5": 26,
+          "M5.S.5": 10,
+          "V1.S.4": 2,
+          "V2.M3.AUX.2": 168,
+          "V2.W.1": 1,
+          "V4.M5.AUX.2": 336,
+          "V5.M6.AUX.2": 279
+        },
+        "sha256": "c5d908c4f0b4482933aa5787bbf12eb6d25ceccbefde6ed7c90586d265ec9b6b",
+        "status": "complete"
+      },
+      "rule_ids": [
+        "V2.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l4_g0_c4_20261028_070938_b3c51e",
+      "source_group": "l4_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unchanged_control",
+      "wall_seconds": 20.068593206931837
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 1,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 82796544,
+      "case_id": "l4_g1_c0",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "repair",
+      "level": 4,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 66,
+        "context_shapes": 55,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 21564,
+        "editable_shape_count": 8,
+        "hierarchy_depth": 2,
+        "instance_count": 1978,
+        "local_route_polygons": 15,
+        "local_routing_occupancy": 0.24719122023809523,
+        "occupancy_box_um": [
+          12.525,
+          12.346,
+          12.765,
+          12.57
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 47,
+        "route_segment_count": 5524,
+        "shape_count": 199263,
+        "target_markers": 1,
+        "via_count": 7869
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 15,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 6,
+          "M2.W.1": 1,
+          "M4.S.5": 32,
+          "M5.S.5": 12,
+          "V1.S.4": 4,
+          "V2.M3.AUX.2": 168,
+          "V4.M5.AUX.2": 336,
+          "V5.M6.AUX.2": 316
+        },
+        "sha256": "2c3102ba358abf6634bff7ae9624f7a676ee220dcc6b184dd1bfe84ba3238b3b",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              12.62375,
+              12.46,
+              12.66625,
+              12.474
+            ]
+          ],
+          "cell": "uart",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    12.62375,
+                    12.474
+                  ],
+                  [
+                    12.66625,
+                    12.474
+                  ]
+                ],
+                [
+                  [
+                    12.635,
+                    12.46
+                  ],
+                  [
+                    12.655,
+                    12.46
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M2.W.1"
+        }
+      ],
+      "rule_ids": [
+        "M2.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l4_g1_c0_20261028_071208_3d00ed",
+      "source_group": "l4_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 16.543601218960248
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 1,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 82980864,
+      "case_id": "l4_g1_c1",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "repair",
+      "level": 4,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 66,
+        "context_shapes": 56,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 21564,
+        "editable_shape_count": 6,
+        "hierarchy_depth": 2,
+        "instance_count": 1978,
+        "local_route_polygons": 15,
+        "local_routing_occupancy": 0.2269717261904762,
+        "occupancy_box_um": [
+          12.346,
+          8.748,
+          12.57,
+          8.988
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 50,
+        "route_segment_count": 5524,
+        "shape_count": 199263,
+        "target_markers": 1,
+        "via_count": 7869
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 15,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 6,
+          "M3.W.1": 1,
+          "M4.S.5": 32,
+          "M5.S.5": 12,
+          "V1.S.4": 4,
+          "V2.M3.AUX.2": 168,
+          "V4.M5.AUX.2": 336,
+          "V5.M6.AUX.2": 316
+        },
+        "sha256": "934bba3720c38e103a71960cb58f2ad28c2ceb72eac1c98ff82bf16def5436c7",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              12.46,
+              8.84675,
+              12.474,
+              8.88925
+            ]
+          ],
+          "cell": "uart",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    12.46,
+                    8.858
+                  ],
+                  [
+                    12.46,
+                    8.878
+                  ]
+                ],
+                [
+                  [
+                    12.474,
+                    8.84675
+                  ],
+                  [
+                    12.474,
+                    8.88925
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M3.W.1"
+        }
+      ],
+      "rule_ids": [
+        "M3.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l4_g1_c1_20261028_071436_0ed939",
+      "source_group": "l4_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 15.966661450103857
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 1,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 82751488,
+      "case_id": "l4_g1_c2",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "repair",
+      "level": 4,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 66,
+        "context_shapes": 55,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 21564,
+        "editable_shape_count": 4,
+        "hierarchy_depth": 2,
+        "instance_count": 1978,
+        "local_route_polygons": 15,
+        "local_routing_occupancy": 0.24705507202881152,
+        "occupancy_box_um": [
+          9.588000000000001,
+          4.516,
+          9.812,
+          4.7540000000000004
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 51,
+        "route_segment_count": 5524,
+        "shape_count": 199263,
+        "target_markers": 1,
+        "via_count": 7869
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 15,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 6,
+          "M4.S.5": 32,
+          "M5.S.5": 12,
+          "V1.S.4": 4,
+          "V2.M3.AUX.2": 168,
+          "V2.W.1": 1,
+          "V4.M5.AUX.2": 336,
+          "V5.M6.AUX.2": 316
+        },
+        "sha256": "2c5693487cae1172206adb5487becef02271b40829f926a032c2b9f8c2be3627",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              9.684,
+              4.626,
+              9.698,
+              4.644
+            ]
+          ],
+          "cell": "uart",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    9.684,
+                    4.626
+                  ],
+                  [
+                    9.684,
+                    4.644
+                  ]
+                ],
+                [
+                  [
+                    9.698,
+                    4.626
+                  ],
+                  [
+                    9.698,
+                    4.644
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "V2.W.1"
+        }
+      ],
+      "rule_ids": [
+        "V2.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l4_g1_c2_20261028_071705_7b4e82",
+      "source_group": "l4_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 19.41707247099839
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "candidate_peak_rss_bytes": 82997248,
+      "case_id": "l4_g1_c3",
+      "cost": null,
+      "failure_stage": null,
+      "final_total": 0,
+      "initial_total": 0,
+      "kind": "clean_control",
+      "level": 4,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 66,
+        "context_shapes": 51,
+        "coupled_rules": 0,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 21564,
+        "editable_shape_count": 6,
+        "hierarchy_depth": 2,
+        "instance_count": 1978,
+        "local_route_polygons": 16,
+        "local_routing_occupancy": 0.22873883928571428,
+        "occupancy_box_um": [
+          9.502,
+          4.524,
+          9.726,
+          4.764
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 45,
+        "route_segment_count": 5524,
+        "shape_count": 199263,
+        "target_markers": 0,
+        "via_count": 7869
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": true,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 15,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 6,
+          "M4.S.5": 32,
+          "M5.S.5": 12,
+          "V1.S.4": 4,
+          "V2.M3.AUX.2": 168,
+          "V4.M5.AUX.2": 336,
+          "V5.M6.AUX.2": 316
+        },
+        "sha256": "f1e5bed78962465ef78d450fb619ed5c0d10bad022968a67fea2d737dc093cbc",
+        "status": "complete"
+      },
+      "rule_ids": [
+        "M3.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l4_g1_c3_20261028_071925_7a51ca",
+      "source_group": "l4_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unchanged_control",
+      "wall_seconds": 14.726343939895742
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "candidate_peak_rss_bytes": 82866176,
+      "case_id": "l4_g1_c4",
+      "cost": null,
+      "failure_stage": null,
+      "final_total": 1,
+      "initial_total": 1,
+      "kind": "no_edit",
+      "level": 4,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 66,
+        "context_shapes": 52,
+        "coupled_rules": 1,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 21564,
+        "editable_shape_count": 0,
+        "hierarchy_depth": 2,
+        "instance_count": 1978,
+        "local_route_polygons": 14,
+        "local_routing_occupancy": 0.31833358343337337,
+        "occupancy_box_um": [
+          12.612,
+          12.526,
+          12.836,
+          12.764000000000001
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 52,
+        "route_segment_count": 5524,
+        "shape_count": 199263,
+        "target_markers": 1,
+        "via_count": 7869
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": true,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 15,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 6,
+          "M4.S.5": 32,
+          "M5.S.5": 12,
+          "V1.S.4": 4,
+          "V2.M3.AUX.2": 168,
+          "V2.W.1": 1,
+          "V4.M5.AUX.2": 336,
+          "V5.M6.AUX.2": 316
+        },
+        "sha256": "373b5e74cfc6b61f3c039e3a7e388dbc3af58978165ff7e2459f1adf4111cb25",
+        "status": "complete"
+      },
+      "rule_ids": [
+        "V2.W.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l4_g1_c4_20261028_072125_6e62f1",
+      "source_group": "l4_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unchanged_control",
+      "wall_seconds": 14.605504677980207
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 2,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 82673664,
+      "case_id": "l5_g0_c0",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 2,
+      "initial_total": 2,
+      "kind": "repair",
+      "level": 5,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 69,
+        "context_shapes": 38,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 19232,
+        "editable_shape_count": 3,
+        "hierarchy_depth": 2,
+        "instance_count": 1852,
+        "local_route_polygons": 10,
+        "local_routing_occupancy": 0.22259267631103075,
+        "matched_l4_occupancy": 0.081958257986739,
+        "occupancy_box_um": [
+          4.445,
+          3.851,
+          4.6690000000000005,
+          4.088
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 35,
+        "route_segment_count": 4962,
+        "shape_count": 190426,
+        "target_markers": 2,
+        "via_count": 6876
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 8,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 3,
+          "M1.S.6": 3,
+          "M2.W.1": 1,
+          "M4.S.3": 1,
+          "M4.S.4": 1,
+          "M4.S.5": 26,
+          "M5.S.5": 16,
+          "V1.S.4": 3,
+          "V2.M3.AUX.2": 168,
+          "V4.M5.AUX.2": 336,
+          "V5.M6.AUX.2": 260
+        },
+        "sha256": "41bb2b269f6928a9ef2c5bb2a0bb3ddd4767c62968b50115730dc23fb3205485",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              4.537,
+              3.96,
+              4.577,
+              3.961
+            ]
+          ],
+          "cell": "uart",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    4.537,
+                    3.96
+                  ],
+                  [
+                    4.577,
+                    3.96
+                  ]
+                ],
+                [
+                  [
+                    4.555,
+                    3.961
+                  ],
+                  [
+                    4.559,
+                    3.961
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M2.W.1"
+        },
+        {
+          "boxes": [
+            [
+              4.554,
+              3.961,
+              4.555,
+              3.978
+            ]
+          ],
+          "cell": "uart",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    4.554,
+                    3.961
+                  ],
+                  [
+                    4.554,
+                    3.978
+                  ]
+                ],
+                [
+                  [
+                    4.555,
+                    3.961
+                  ],
+                  [
+                    4.555,
+                    3.978
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "V2.M2.EN.1"
+        }
+      ],
+      "rule_ids": [
+        "M2.W.1",
+        "V2.M2.EN.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l5_g0_c0_20261028_072322_d8b9b3",
+      "source_group": "l5_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 14.412576352944598
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 2,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 82685952,
+      "case_id": "l5_g0_c1",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 2,
+      "initial_total": 2,
+      "kind": "repair",
+      "level": 5,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 69,
+        "context_shapes": 37,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 19232,
+        "editable_shape_count": 3,
+        "hierarchy_depth": 2,
+        "instance_count": 1852,
+        "local_route_polygons": 10,
+        "local_routing_occupancy": 0.22327079566003616,
+        "matched_l4_occupancy": 0.0956336648583484,
+        "occupancy_box_um": [
+          4.421,
+          3.851,
+          4.6450000000000005,
+          4.088
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 34,
+        "route_segment_count": 4962,
+        "shape_count": 190426,
+        "target_markers": 2,
+        "via_count": 6876
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 8,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 3,
+          "M1.S.6": 3,
+          "M2.W.1": 1,
+          "M4.S.3": 1,
+          "M4.S.4": 1,
+          "M4.S.5": 26,
+          "M5.S.5": 16,
+          "V1.S.4": 3,
+          "V2.M3.AUX.2": 168,
+          "V4.M5.AUX.2": 336,
+          "V5.M6.AUX.2": 260
+        },
+        "sha256": "a1afd00290d160591c87806576220869beb7b69fc37cbaa6b27ca52de75a3afb",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              4.531,
+              3.96,
+              4.553,
+              3.961
+            ]
+          ],
+          "cell": "uart",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    4.531,
+                    3.96
+                  ],
+                  [
+                    4.553,
+                    3.96
+                  ]
+                ],
+                [
+                  [
+                    4.531,
+                    3.961
+                  ],
+                  [
+                    4.535,
+                    3.961
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M2.W.1"
+        },
+        {
+          "boxes": [
+            [
+              4.535,
+              3.961,
+              4.536,
+              3.978
+            ]
+          ],
+          "cell": "uart",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    4.535,
+                    3.961
+                  ],
+                  [
+                    4.535,
+                    3.978
+                  ]
+                ],
+                [
+                  [
+                    4.536,
+                    3.961
+                  ],
+                  [
+                    4.536,
+                    3.978
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "V2.M2.EN.1"
+        }
+      ],
+      "rule_ids": [
+        "M2.W.1",
+        "V2.M2.EN.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l5_g0_c1_20261028_072512_543fc3",
+      "source_group": "l5_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 14.289500187034719
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 2,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 82661376,
+      "case_id": "l5_g0_c2",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 2,
+      "initial_total": 2,
+      "kind": "repair",
+      "level": 5,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 69,
+        "context_shapes": 29,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 19232,
+        "editable_shape_count": 4,
+        "hierarchy_depth": 2,
+        "instance_count": 1852,
+        "local_route_polygons": 5,
+        "local_routing_occupancy": 0.11748417721518987,
+        "matched_l4_occupancy": 0.06747287522603979,
+        "occupancy_box_um": [
+          5.309,
+          3.851,
+          5.533,
+          4.088
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 25,
+        "route_segment_count": 4962,
+        "shape_count": 190426,
+        "target_markers": 2,
+        "via_count": 6876
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 8,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 3,
+          "M1.S.6": 3,
+          "M2.W.1": 1,
+          "M4.S.3": 1,
+          "M4.S.4": 1,
+          "M4.S.5": 26,
+          "M5.S.5": 16,
+          "V1.S.4": 3,
+          "V2.M3.AUX.2": 168,
+          "V4.M5.AUX.2": 336,
+          "V5.M6.AUX.2": 260
+        },
+        "sha256": "6aec8b28f0b6e9c1012ec61a82954c90232ea1707bb15130cf9552c6e30a522d",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              5.401,
+              3.96,
+              5.423,
+              3.961
+            ]
+          ],
+          "cell": "uart",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    5.401,
+                    3.96
+                  ],
+                  [
+                    5.423,
+                    3.96
+                  ]
+                ],
+                [
+                  [
+                    5.419,
+                    3.961
+                  ],
+                  [
+                    5.423,
+                    3.961
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M2.W.1"
+        },
+        {
+          "boxes": [
+            [
+              5.418,
+              3.961,
+              5.419,
+              3.978
+            ]
+          ],
+          "cell": "uart",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    5.418,
+                    3.961
+                  ],
+                  [
+                    5.418,
+                    3.978
+                  ]
+                ],
+                [
+                  [
+                    5.419,
+                    3.961
+                  ],
+                  [
+                    5.419,
+                    3.978
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "V2.M2.EN.1"
+        }
+      ],
+      "rule_ids": [
+        "M2.W.1",
+        "V2.M2.EN.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l5_g0_c2_20261028_072655_9a6e1b",
+      "source_group": "l5_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 15.576484806952067
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "candidate_peak_rss_bytes": 82501632,
+      "case_id": "l5_g0_c3",
+      "cost": null,
+      "failure_stage": null,
+      "final_total": 0,
+      "initial_total": 0,
+      "kind": "clean_control",
+      "level": 5,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 69,
+        "context_shapes": 28,
+        "coupled_rules": 0,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 19232,
+        "editable_shape_count": 4,
+        "hierarchy_depth": 2,
+        "instance_count": 1852,
+        "local_route_polygons": 5,
+        "local_routing_occupancy": 0.11748417721518987,
+        "matched_l4_occupancy": 0.06340415913200724,
+        "occupancy_box_um": [
+          5.285,
+          3.851,
+          5.509,
+          4.088
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 24,
+        "route_segment_count": 4962,
+        "shape_count": 190426,
+        "target_markers": 0,
+        "via_count": 6876
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": true,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 8,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 3,
+          "M1.S.6": 3,
+          "M4.S.3": 1,
+          "M4.S.4": 1,
+          "M4.S.5": 26,
+          "M5.S.5": 16,
+          "V1.S.4": 3,
+          "V2.M3.AUX.2": 168,
+          "V4.M5.AUX.2": 336,
+          "V5.M6.AUX.2": 260
+        },
+        "sha256": "39d9a5a3052e1b68d809f1a18cd983b05cb0851666048e963d276a07947672aa",
+        "status": "complete"
+      },
+      "rule_ids": [
+        "M2.W.1",
+        "V2.M2.EN.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l5_g0_c3_20261028_072854_d4cc7f",
+      "source_group": "l5_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unchanged_control",
+      "wall_seconds": 15.735764969955198
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "candidate_peak_rss_bytes": 82354176,
+      "case_id": "l5_g0_c4",
+      "cost": null,
+      "failure_stage": null,
+      "final_total": 2,
+      "initial_total": 2,
+      "kind": "no_edit",
+      "level": 5,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 69,
+        "context_shapes": 29,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 19232,
+        "editable_shape_count": 0,
+        "hierarchy_depth": 2,
+        "instance_count": 1852,
+        "local_route_polygons": 6,
+        "local_routing_occupancy": 0.13264767932489452,
+        "matched_l4_occupancy": 0.0970464135021097,
+        "occupancy_box_um": [
+          5.609,
+          4.319,
+          5.833,
+          4.556
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 29,
+        "route_segment_count": 4962,
+        "shape_count": 190426,
+        "target_markers": 2,
+        "via_count": 6876
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": true,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 8,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 3,
+          "M1.S.6": 3,
+          "M2.W.1": 1,
+          "M4.S.3": 1,
+          "M4.S.4": 1,
+          "M4.S.5": 26,
+          "M5.S.5": 16,
+          "V1.S.4": 3,
+          "V2.M3.AUX.2": 168,
+          "V4.M5.AUX.2": 336,
+          "V5.M6.AUX.2": 260
+        },
+        "sha256": "3a51dc7babde0ae373ddaded9239f477e14569400a45189cbfe43c334f6f9194",
+        "status": "complete"
+      },
+      "rule_ids": [
+        "M2.W.1",
+        "V2.M2.EN.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l5_g0_c4_20261028_073045_a519b8",
+      "source_group": "l5_source_0",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unchanged_control",
+      "wall_seconds": 17.366227795952
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 2,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 82620416,
+      "case_id": "l5_g1_c0",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 2,
+      "initial_total": 2,
+      "kind": "repair",
+      "level": 5,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 66,
+        "context_shapes": 33,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 21374,
+        "editable_shape_count": 6,
+        "hierarchy_depth": 2,
+        "instance_count": 1782,
+        "local_route_polygons": 7,
+        "local_routing_occupancy": 0.11276559674502712,
+        "matched_l4_occupancy": 0.0773150241109102,
+        "occupancy_box_um": [
+          5.345,
+          8.873,
+          5.569,
+          9.11
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 27,
+        "route_segment_count": 5500,
+        "shape_count": 170400,
+        "target_markers": 2,
+        "via_count": 7677
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 14,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 2,
+          "M2.W.1": 1,
+          "M4.S.5": 36,
+          "M5.S.5": 10,
+          "V1.S.4": 3,
+          "V2.M3.AUX.2": 150,
+          "V4.M5.AUX.2": 300,
+          "V5.M6.AUX.2": 294
+        },
+        "sha256": "880eec93eece7faabafded7eaed9f7901c06fab5d8dccf5d6ef4b48f33b68149",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              5.437,
+              8.982,
+              5.459,
+              8.983
+            ]
+          ],
+          "cell": "uart",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    5.437,
+                    8.982
+                  ],
+                  [
+                    5.459,
+                    8.982
+                  ]
+                ],
+                [
+                  [
+                    5.455,
+                    8.983
+                  ],
+                  [
+                    5.459,
+                    8.983
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M2.W.1"
+        },
+        {
+          "boxes": [
+            [
+              5.454,
+              8.983,
+              5.455,
+              9.0
+            ]
+          ],
+          "cell": "uart",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    5.454,
+                    8.983
+                  ],
+                  [
+                    5.454,
+                    9.0
+                  ]
+                ],
+                [
+                  [
+                    5.455,
+                    8.983
+                  ],
+                  [
+                    5.455,
+                    9.0
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "V2.M2.EN.1"
+        }
+      ],
+      "rule_ids": [
+        "M2.W.1",
+        "V2.M2.EN.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l5_g1_c0_20261028_073244_ef07c5",
+      "source_group": "l5_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 13.79668054904323
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 2,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 82583552,
+      "case_id": "l5_g1_c1",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 2,
+      "initial_total": 2,
+      "kind": "repair",
+      "level": 5,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 66,
+        "context_shapes": 30,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 21374,
+        "editable_shape_count": 6,
+        "hierarchy_depth": 2,
+        "instance_count": 1782,
+        "local_route_polygons": 6,
+        "local_routing_occupancy": 0.09796940928270043,
+        "matched_l4_occupancy": 0.07390559071729957,
+        "occupancy_box_um": [
+          5.345,
+          8.945,
+          5.569,
+          9.182
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 24,
+        "route_segment_count": 5500,
+        "shape_count": 170400,
+        "target_markers": 2,
+        "via_count": 7677
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 14,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 2,
+          "M2.W.1": 1,
+          "M4.S.5": 36,
+          "M5.S.5": 10,
+          "V1.S.4": 3,
+          "V2.M3.AUX.2": 150,
+          "V4.M5.AUX.2": 300,
+          "V5.M6.AUX.2": 294
+        },
+        "sha256": "cf9ac9004938aff1e07b56080eda53fa67dce493c8a8f8ddcbc55347fbc27a80",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              5.437,
+              9.054,
+              5.477,
+              9.055
+            ]
+          ],
+          "cell": "uart",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    5.437,
+                    9.054
+                  ],
+                  [
+                    5.477,
+                    9.054
+                  ]
+                ],
+                [
+                  [
+                    5.455,
+                    9.055
+                  ],
+                  [
+                    5.459,
+                    9.055
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M2.W.1"
+        },
+        {
+          "boxes": [
+            [
+              5.454,
+              9.055,
+              5.455,
+              9.072
+            ]
+          ],
+          "cell": "uart",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    5.454,
+                    9.055
+                  ],
+                  [
+                    5.454,
+                    9.072
+                  ]
+                ],
+                [
+                  [
+                    5.455,
+                    9.055
+                  ],
+                  [
+                    5.455,
+                    9.072
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "V2.M2.EN.1"
+        }
+      ],
+      "rule_ids": [
+        "M2.W.1",
+        "V2.M2.EN.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l5_g1_c1_20261028_073428_92c708",
+      "source_group": "l5_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 14.169101234991103
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "baseline_relative": {
+        "ambiguous": 0,
+        "frame": "checker_cell",
+        "introduced": 2,
+        "method": "exact_then_mutual_unique_bbox",
+        "persisted": 0,
+        "resolved": 0,
+        "tolerance_um": 0.00025
+      },
+      "candidate_peak_rss_bytes": 82722816,
+      "case_id": "l5_g1_c2",
+      "cost": null,
+      "failure_stage": "geometry_reasoning",
+      "final_total": 2,
+      "initial_total": 2,
+      "kind": "repair",
+      "level": 5,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 66,
+        "context_shapes": 26,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 21374,
+        "editable_shape_count": 4,
+        "hierarchy_depth": 2,
+        "instance_count": 1782,
+        "local_route_polygons": 4,
+        "local_routing_occupancy": 0.13308092224231466,
+        "matched_l4_occupancy": 0.09629294755877034,
+        "occupancy_box_um": [
+          5.345,
+          9.143,
+          5.569,
+          9.38
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 22,
+        "route_segment_count": 5500,
+        "shape_count": 170400,
+        "target_markers": 2,
+        "via_count": 7677
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": false,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 14,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 2,
+          "M2.W.1": 1,
+          "M4.S.5": 36,
+          "M5.S.5": 10,
+          "V1.S.4": 3,
+          "V2.M3.AUX.2": 150,
+          "V4.M5.AUX.2": 300,
+          "V5.M6.AUX.2": 294
+        },
+        "sha256": "a2d33325f2de0977e61d8f7cd11ca6d858034c0a249cc190b324e2af57ba3388",
+        "status": "complete"
+      },
+      "remaining_local_markers": [
+        {
+          "boxes": [
+            [
+              5.437,
+              9.252,
+              5.459,
+              9.253
+            ]
+          ],
+          "cell": "uart",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    5.437,
+                    9.252
+                  ],
+                  [
+                    5.459,
+                    9.252
+                  ]
+                ],
+                [
+                  [
+                    5.455,
+                    9.253
+                  ],
+                  [
+                    5.459,
+                    9.253
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "M2.W.1"
+        },
+        {
+          "boxes": [
+            [
+              5.454,
+              9.253,
+              5.455,
+              9.27
+            ]
+          ],
+          "cell": "uart",
+          "geometry": [
+            [
+              "edge_pair",
+              [
+                [
+                  [
+                    5.454,
+                    9.253
+                  ],
+                  [
+                    5.454,
+                    9.27
+                  ]
+                ],
+                [
+                  [
+                    5.455,
+                    9.253
+                  ],
+                  [
+                    5.455,
+                    9.27
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "rule": "V2.M2.EN.1"
+        }
+      ],
+      "rule_ids": [
+        "M2.W.1",
+        "V2.M2.EN.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l5_g1_c2_20261028_073602_3e8b59",
+      "source_group": "l5_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unresolved",
+      "wall_seconds": 17.34094239398837
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "candidate_peak_rss_bytes": 82714624,
+      "case_id": "l5_g1_c3",
+      "cost": null,
+      "failure_stage": null,
+      "final_total": 0,
+      "initial_total": 0,
+      "kind": "clean_control",
+      "level": 5,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 66,
+        "context_shapes": 24,
+        "coupled_rules": 0,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 21374,
+        "editable_shape_count": 4,
+        "hierarchy_depth": 2,
+        "instance_count": 1782,
+        "local_route_polygons": 4,
+        "local_routing_occupancy": 0.13308092224231466,
+        "matched_l4_occupancy": 0.1003616636528029,
+        "occupancy_box_um": [
+          5.321,
+          9.143,
+          5.545,
+          9.38
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 20,
+        "route_segment_count": 5500,
+        "shape_count": 170400,
+        "target_markers": 0,
+        "via_count": 7677
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": true,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 14,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 2,
+          "M4.S.5": 36,
+          "M5.S.5": 10,
+          "V1.S.4": 3,
+          "V2.M3.AUX.2": 150,
+          "V4.M5.AUX.2": 300,
+          "V5.M6.AUX.2": 294
+        },
+        "sha256": "633b865235ff58eb842363f3964ad9812bf6a18fcd4b3c6f3e1f55a05bb262e6",
+        "status": "complete"
+      },
+      "rule_ids": [
+        "M2.W.1",
+        "V2.M2.EN.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l5_g1_c3_20261028_073747_7b14c3",
+      "source_group": "l5_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unchanged_control",
+      "wall_seconds": 13.353793835965917
+    },
+    {
+      "area_added_um2": 0.0,
+      "area_removed_um2": 0.0,
+      "candidate_peak_rss_bytes": 82579456,
+      "case_id": "l5_g1_c4",
+      "cost": null,
+      "failure_stage": null,
+      "final_total": 2,
+      "initial_total": 2,
+      "kind": "no_edit",
+      "level": 5,
+      "memory_measurement": "sampled process-tree RSS lower bound",
+      "metrics": {
+        "cell_definitions": 66,
+        "context_shapes": 28,
+        "coupled_rules": 2,
+        "dbu_um": 0.00025,
+        "decoded_route_primitive_count": 21374,
+        "editable_shape_count": 0,
+        "hierarchy_depth": 2,
+        "instance_count": 1782,
+        "local_route_polygons": 6,
+        "local_routing_occupancy": 0.10876280892103676,
+        "matched_l4_occupancy": 0.08527350813743219,
+        "occupancy_box_um": [
+          5.345,
+          9.413,
+          5.569,
+          9.65
+        ],
+        "occupancy_layers": [
+          [
+            20,
+            0
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "protected_obstacle_count": 28,
+        "route_segment_count": 5500,
+        "shape_count": 170400,
+        "target_markers": 2,
+        "via_count": 7677
+      },
+      "model_request_attempted": false,
+      "model_request_bytes": null,
+      "model_response_received": false,
+      "passed": true,
+      "public_audit": {
+        "acceptance_gate": false,
+        "counts": {
+          "  ": 14,
+          "GATE.ACTIVE.S.4": 1,
+          "LIG.S.4-5": 2,
+          "M1.S.6": 2,
+          "M2.W.1": 1,
+          "M4.S.5": 36,
+          "M5.S.5": 10,
+          "V1.S.4": 3,
+          "V2.M3.AUX.2": 150,
+          "V4.M5.AUX.2": 300,
+          "V5.M6.AUX.2": 294
+        },
+        "sha256": "c2103246af7863d477bbb725f1efbae38dfcf1e1e3d7568873f2b8e892c2e509",
+        "status": "complete"
+      },
+      "rule_ids": [
+        "M2.W.1",
+        "V2.M2.EN.1"
+      ],
+      "run_dir": "/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/reports/runs/c2c3_v1_no_change/runs/l5_g1_c4_20261028_073931_005122",
+      "source_group": "l5_source_1",
+      "unchanged": true,
+      "usage": null,
+      "validation_level": "geometry_only",
+      "verdict": "unchanged_control",
+      "wall_seconds": 15.143286364967935
+    }
+  ],
+  "rules": {
+    "M1.A.1": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 0,
+        "outcomes": {},
+        "passed": 0,
+        "planned": 0,
+        "rate_observed": null
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 2,
+        "outcomes": {
+          "unchanged_control": 2
+        },
+        "passed": 2,
+        "planned": 2,
+        "rate_observed": 1.0
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 2,
+        "outcomes": {
+          "unresolved": 2
+        },
+        "passed": 0,
+        "planned": 2,
+        "rate_observed": 0.0
+      }
+    },
+    "M1.S.1": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 0,
+        "outcomes": {},
+        "passed": 0,
+        "planned": 0,
+        "rate_observed": null
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 2,
+        "outcomes": {
+          "unchanged_control": 2
+        },
+        "passed": 2,
+        "planned": 2,
+        "rate_observed": 1.0
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 2,
+        "outcomes": {
+          "unresolved": 2
+        },
+        "passed": 0,
+        "planned": 2,
+        "rate_observed": 0.0
+      }
+    },
+    "M1.W.1": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 2,
+        "outcomes": {
+          "unchanged_control": 2
+        },
+        "passed": 2,
+        "planned": 2,
+        "rate_observed": 1.0
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 1,
+        "outcomes": {
+          "unchanged_control": 1
+        },
+        "passed": 1,
+        "planned": 1,
+        "rate_observed": 1.0
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 3,
+        "outcomes": {
+          "unresolved": 3
+        },
+        "passed": 0,
+        "planned": 3,
+        "rate_observed": 0.0
+      }
+    },
+    "M2.W.1": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 6,
+        "outcomes": {
+          "unchanged_control": 6
+        },
+        "passed": 6,
+        "planned": 6,
+        "rate_observed": 1.0
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 2,
+        "outcomes": {
+          "unchanged_control": 2
+        },
+        "passed": 2,
+        "planned": 2,
+        "rate_observed": 1.0
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 12,
+        "outcomes": {
+          "unresolved": 12
+        },
+        "passed": 0,
+        "planned": 12,
+        "rate_observed": 0.0
+      }
+    },
+    "M3.W.1": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 2,
+        "outcomes": {
+          "unchanged_control": 2
+        },
+        "passed": 2,
+        "planned": 2,
+        "rate_observed": 1.0
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 3,
+        "outcomes": {
+          "unchanged_control": 3
+        },
+        "passed": 3,
+        "planned": 3,
+        "rate_observed": 1.0
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 10,
+        "outcomes": {
+          "unresolved": 10
+        },
+        "passed": 0,
+        "planned": 10,
+        "rate_observed": 0.0
+      }
+    },
+    "V1.M2.EN.2": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 0,
+        "outcomes": {},
+        "passed": 0,
+        "planned": 0,
+        "rate_observed": null
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 0,
+        "outcomes": {},
+        "passed": 0,
+        "planned": 0,
+        "rate_observed": null
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 2,
+        "outcomes": {
+          "unresolved": 2
+        },
+        "passed": 0,
+        "planned": 2,
+        "rate_observed": 0.0
+      }
+    },
+    "V1.W.1": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 0,
+        "outcomes": {},
+        "passed": 0,
+        "planned": 0,
+        "rate_observed": null
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 0,
+        "outcomes": {},
+        "passed": 0,
+        "planned": 0,
+        "rate_observed": null
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 2,
+        "outcomes": {
+          "unresolved": 2
+        },
+        "passed": 0,
+        "planned": 2,
+        "rate_observed": 0.0
+      }
+    },
+    "V2.M2.EN.1": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 2,
+        "outcomes": {
+          "unchanged_control": 2
+        },
+        "passed": 2,
+        "planned": 2,
+        "rate_observed": 1.0
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 2,
+        "outcomes": {
+          "unchanged_control": 2
+        },
+        "passed": 2,
+        "planned": 2,
+        "rate_observed": 1.0
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 6,
+        "outcomes": {
+          "unresolved": 6
+        },
+        "passed": 0,
+        "planned": 6,
+        "rate_observed": 0.0
+      }
+    },
+    "V2.W.1": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 0,
+        "outcomes": {},
+        "passed": 0,
+        "planned": 0,
+        "rate_observed": null
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 3,
+        "outcomes": {
+          "unchanged_control": 3
+        },
+        "passed": 3,
+        "planned": 3,
+        "rate_observed": 1.0
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 4,
+        "outcomes": {
+          "unresolved": 4
+        },
+        "passed": 0,
+        "planned": 4,
+        "rate_observed": 0.0
+      }
+    }
+  },
+  "scopes": {
+    "primary": "asap7_c2c3_v1",
+    "public_audit": "asap7_public_full",
+    "public_audit_is_acceptance_gate": false
+  },
+  "sources": {
+    "l1_source_0": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 1,
+        "outcomes": {
+          "unchanged_control": 1
+        },
+        "passed": 1,
+        "planned": 1,
+        "rate_observed": 1.0
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 1,
+        "outcomes": {
+          "unchanged_control": 1
+        },
+        "passed": 1,
+        "planned": 1,
+        "rate_observed": 1.0
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 3,
+        "outcomes": {
+          "unresolved": 3
+        },
+        "passed": 0,
+        "planned": 3,
+        "rate_observed": 0.0
+      }
+    },
+    "l1_source_1": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 1,
+        "outcomes": {
+          "unchanged_control": 1
+        },
+        "passed": 1,
+        "planned": 1,
+        "rate_observed": 1.0
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 1,
+        "outcomes": {
+          "unchanged_control": 1
+        },
+        "passed": 1,
+        "planned": 1,
+        "rate_observed": 1.0
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 3,
+        "outcomes": {
+          "unresolved": 3
+        },
+        "passed": 0,
+        "planned": 3,
+        "rate_observed": 0.0
+      }
+    },
+    "l2_source_0": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 1,
+        "outcomes": {
+          "unchanged_control": 1
+        },
+        "passed": 1,
+        "planned": 1,
+        "rate_observed": 1.0
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 1,
+        "outcomes": {
+          "unchanged_control": 1
+        },
+        "passed": 1,
+        "planned": 1,
+        "rate_observed": 1.0
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 3,
+        "outcomes": {
+          "unresolved": 3
+        },
+        "passed": 0,
+        "planned": 3,
+        "rate_observed": 0.0
+      }
+    },
+    "l2_source_1": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 1,
+        "outcomes": {
+          "unchanged_control": 1
+        },
+        "passed": 1,
+        "planned": 1,
+        "rate_observed": 1.0
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 1,
+        "outcomes": {
+          "unchanged_control": 1
+        },
+        "passed": 1,
+        "planned": 1,
+        "rate_observed": 1.0
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 3,
+        "outcomes": {
+          "unresolved": 3
+        },
+        "passed": 0,
+        "planned": 3,
+        "rate_observed": 0.0
+      }
+    },
+    "l3_source_0": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 1,
+        "outcomes": {
+          "unchanged_control": 1
+        },
+        "passed": 1,
+        "planned": 1,
+        "rate_observed": 1.0
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 1,
+        "outcomes": {
+          "unchanged_control": 1
+        },
+        "passed": 1,
+        "planned": 1,
+        "rate_observed": 1.0
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 3,
+        "outcomes": {
+          "unresolved": 3
+        },
+        "passed": 0,
+        "planned": 3,
+        "rate_observed": 0.0
+      }
+    },
+    "l3_source_1": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 1,
+        "outcomes": {
+          "unchanged_control": 1
+        },
+        "passed": 1,
+        "planned": 1,
+        "rate_observed": 1.0
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 1,
+        "outcomes": {
+          "unchanged_control": 1
+        },
+        "passed": 1,
+        "planned": 1,
+        "rate_observed": 1.0
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 3,
+        "outcomes": {
+          "unresolved": 3
+        },
+        "passed": 0,
+        "planned": 3,
+        "rate_observed": 0.0
+      }
+    },
+    "l4_source_0": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 1,
+        "outcomes": {
+          "unchanged_control": 1
+        },
+        "passed": 1,
+        "planned": 1,
+        "rate_observed": 1.0
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 1,
+        "outcomes": {
+          "unchanged_control": 1
+        },
+        "passed": 1,
+        "planned": 1,
+        "rate_observed": 1.0
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 3,
+        "outcomes": {
+          "unresolved": 3
+        },
+        "passed": 0,
+        "planned": 3,
+        "rate_observed": 0.0
+      }
+    },
+    "l4_source_1": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 1,
+        "outcomes": {
+          "unchanged_control": 1
+        },
+        "passed": 1,
+        "planned": 1,
+        "rate_observed": 1.0
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 1,
+        "outcomes": {
+          "unchanged_control": 1
+        },
+        "passed": 1,
+        "planned": 1,
+        "rate_observed": 1.0
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 3,
+        "outcomes": {
+          "unresolved": 3
+        },
+        "passed": 0,
+        "planned": 3,
+        "rate_observed": 0.0
+      }
+    },
+    "l5_source_0": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 1,
+        "outcomes": {
+          "unchanged_control": 1
+        },
+        "passed": 1,
+        "planned": 1,
+        "rate_observed": 1.0
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 1,
+        "outcomes": {
+          "unchanged_control": 1
+        },
+        "passed": 1,
+        "planned": 1,
+        "rate_observed": 1.0
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 3,
+        "outcomes": {
+          "unresolved": 3
+        },
+        "passed": 0,
+        "planned": 3,
+        "rate_observed": 0.0
+      }
+    },
+    "l5_source_1": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 1,
+        "outcomes": {
+          "unchanged_control": 1
+        },
+        "passed": 1,
+        "planned": 1,
+        "rate_observed": 1.0
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 1,
+        "outcomes": {
+          "unchanged_control": 1
+        },
+        "passed": 1,
+        "planned": 1,
+        "rate_observed": 1.0
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 3,
+        "outcomes": {
+          "unresolved": 3
+        },
+        "passed": 0,
+        "planned": 3,
+        "rate_observed": 0.0
+      }
+    }
+  },
+  "summed_case_seconds": 562.364373592427,
+  "this_invocation_wall_seconds": 3266.8884270149283,
+  "validation_level": "geometry_only"
+}

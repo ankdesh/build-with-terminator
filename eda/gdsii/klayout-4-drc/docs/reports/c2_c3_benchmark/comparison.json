@@ -1,0 +1,1227 @@
+{
+  "case_count": 50,
+  "checker": {
+    "path": "/usr/bin/klayout",
+    "python_klayout_version": "0.30.8",
+    "runtime_path": "/usr/lib/klayout/klayout",
+    "runtime_sha256": "5a0fb60d0e2128ccab82cef157042568323989077f64d4bba830674fccd75ff5",
+    "sha256": "32441e21747f7718500e6c36c028229f6f1ce2ffcfe5b11acf03305047639ee3",
+    "version": "KLayout 0.28.16"
+  },
+  "cost": null,
+  "limits": [
+    "One attempt per case.",
+    "Electrical connectivity and timing unverified.",
+    "Few designs and six repair cases per level; no consistency or broad generalization claim."
+  ],
+  "manifest_sha256": "4a566ed1fe78e7deea54831a4d674dd526bd402b9796ec110cd97d8c9205d1fd",
+  "measures": {
+    "agent": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 10,
+        "outcomes": {
+          "invalid_patch": 1,
+          "unchanged_control": 9
+        },
+        "passed": 9,
+        "planned": 10,
+        "rate_observed": 0.9
+      },
+      "failures": {
+        "edit_policy": 6,
+        "geometry_reasoning": 11,
+        "python_execution": 12,
+        "synthesis": 8
+      },
+      "levels": {
+        "1": {
+          "clean_control": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "unchanged_control": 2
+            },
+            "passed": 2,
+            "planned": 2,
+            "rate_observed": 1.0
+          },
+          "no_edit": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "invalid_patch": 1,
+              "unchanged_control": 1
+            },
+            "passed": 1,
+            "planned": 2,
+            "rate_observed": 0.5
+          },
+          "repair": {
+            "blocked": 0,
+            "observed": 6,
+            "outcomes": {
+              "invalid_patch": 2,
+              "model_error": 1,
+              "unresolved": 3
+            },
+            "passed": 0,
+            "planned": 6,
+            "rate_observed": 0.0
+          }
+        },
+        "2": {
+          "clean_control": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "invalid_patch": 1,
+              "unchanged_control": 1
+            },
+            "passed": 1,
+            "planned": 2,
+            "rate_observed": 0.5
+          },
+          "no_edit": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "invalid_patch": 2
+            },
+            "passed": 0,
+            "planned": 2,
+            "rate_observed": 0.0
+          },
+          "repair": {
+            "blocked": 0,
+            "observed": 6,
+            "outcomes": {
+              "invalid_patch": 6
+            },
+            "passed": 0,
+            "planned": 6,
+            "rate_observed": 0.0
+          }
+        },
+        "3": {
+          "clean_control": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "unchanged_control": 2
+            },
+            "passed": 2,
+            "planned": 2,
+            "rate_observed": 1.0
+          },
+          "no_edit": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "unchanged_control": 2
+            },
+            "passed": 2,
+            "planned": 2,
+            "rate_observed": 1.0
+          },
+          "repair": {
+            "blocked": 0,
+            "observed": 6,
+            "outcomes": {
+              "invalid_patch": 3,
+              "unresolved": 3
+            },
+            "passed": 0,
+            "planned": 6,
+            "rate_observed": 0.0
+          }
+        },
+        "4": {
+          "clean_control": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "unchanged_control": 2
+            },
+            "passed": 2,
+            "planned": 2,
+            "rate_observed": 1.0
+          },
+          "no_edit": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "invalid_patch": 1,
+              "model_error": 1
+            },
+            "passed": 0,
+            "planned": 2,
+            "rate_observed": 0.0
+          },
+          "repair": {
+            "blocked": 0,
+            "observed": 6,
+            "outcomes": {
+              "invalid_patch": 1,
+              "model_error": 2,
+              "unresolved": 3
+            },
+            "passed": 0,
+            "planned": 6,
+            "rate_observed": 0.0
+          }
+        },
+        "5": {
+          "clean_control": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "unchanged_control": 2
+            },
+            "passed": 2,
+            "planned": 2,
+            "rate_observed": 1.0
+          },
+          "no_edit": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "model_error": 1,
+              "unchanged_control": 1
+            },
+            "passed": 1,
+            "planned": 2,
+            "rate_observed": 0.5
+          },
+          "repair": {
+            "blocked": 0,
+            "observed": 6,
+            "outcomes": {
+              "invalid_patch": 1,
+              "model_error": 3,
+              "unresolved": 2
+            },
+            "passed": 0,
+            "planned": 6,
+            "rate_observed": 0.0
+          }
+        }
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 10,
+        "outcomes": {
+          "invalid_patch": 4,
+          "model_error": 2,
+          "unchanged_control": 4
+        },
+        "passed": 4,
+        "planned": 10,
+        "rate_observed": 0.4
+      },
+      "outcomes": {
+        "invalid_patch": 18,
+        "model_error": 8,
+        "unchanged_control": 13,
+        "unresolved": 11
+      },
+      "public_audits": {
+        "complete": 24,
+        "not_run": 26
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 30,
+        "outcomes": {
+          "invalid_patch": 13,
+          "model_error": 6,
+          "unresolved": 11
+        },
+        "passed": 0,
+        "planned": 30,
+        "rate_observed": 0.0
+      }
+    },
+    "heuristic": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 10,
+        "outcomes": {
+          "invalid_patch": 6,
+          "unchanged_control": 4
+        },
+        "passed": 4,
+        "planned": 10,
+        "rate_observed": 0.4
+      },
+      "failures": {
+        "edit_policy": 30,
+        "geometry_reasoning": 12
+      },
+      "levels": {
+        "1": {
+          "clean_control": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "unchanged_control": 2
+            },
+            "passed": 2,
+            "planned": 2,
+            "rate_observed": 1.0
+          },
+          "no_edit": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "unchanged_control": 2
+            },
+            "passed": 2,
+            "planned": 2,
+            "rate_observed": 1.0
+          },
+          "repair": {
+            "blocked": 0,
+            "observed": 6,
+            "outcomes": {
+              "unresolved": 6
+            },
+            "passed": 0,
+            "planned": 6,
+            "rate_observed": 0.0
+          }
+        },
+        "2": {
+          "clean_control": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "unchanged_control": 2
+            },
+            "passed": 2,
+            "planned": 2,
+            "rate_observed": 1.0
+          },
+          "no_edit": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "unchanged_control": 2
+            },
+            "passed": 2,
+            "planned": 2,
+            "rate_observed": 1.0
+          },
+          "repair": {
+            "blocked": 0,
+            "observed": 6,
+            "outcomes": {
+              "unresolved": 6
+            },
+            "passed": 0,
+            "planned": 6,
+            "rate_observed": 0.0
+          }
+        },
+        "3": {
+          "clean_control": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "invalid_patch": 2
+            },
+            "passed": 0,
+            "planned": 2,
+            "rate_observed": 0.0
+          },
+          "no_edit": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "invalid_patch": 2
+            },
+            "passed": 0,
+            "planned": 2,
+            "rate_observed": 0.0
+          },
+          "repair": {
+            "blocked": 0,
+            "observed": 6,
+            "outcomes": {
+              "invalid_patch": 6
+            },
+            "passed": 0,
+            "planned": 6,
+            "rate_observed": 0.0
+          }
+        },
+        "4": {
+          "clean_control": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "invalid_patch": 2
+            },
+            "passed": 0,
+            "planned": 2,
+            "rate_observed": 0.0
+          },
+          "no_edit": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "invalid_patch": 2
+            },
+            "passed": 0,
+            "planned": 2,
+            "rate_observed": 0.0
+          },
+          "repair": {
+            "blocked": 0,
+            "observed": 6,
+            "outcomes": {
+              "invalid_patch": 6
+            },
+            "passed": 0,
+            "planned": 6,
+            "rate_observed": 0.0
+          }
+        },
+        "5": {
+          "clean_control": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "invalid_patch": 2
+            },
+            "passed": 0,
+            "planned": 2,
+            "rate_observed": 0.0
+          },
+          "no_edit": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "invalid_patch": 2
+            },
+            "passed": 0,
+            "planned": 2,
+            "rate_observed": 0.0
+          },
+          "repair": {
+            "blocked": 0,
+            "observed": 6,
+            "outcomes": {
+              "invalid_patch": 6
+            },
+            "passed": 0,
+            "planned": 6,
+            "rate_observed": 0.0
+          }
+        }
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 10,
+        "outcomes": {
+          "invalid_patch": 6,
+          "unchanged_control": 4
+        },
+        "passed": 4,
+        "planned": 10,
+        "rate_observed": 0.4
+      },
+      "outcomes": {
+        "invalid_patch": 30,
+        "unchanged_control": 8,
+        "unresolved": 12
+      },
+      "public_audits": {
+        "complete": 20,
+        "not_run": 30
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 30,
+        "outcomes": {
+          "invalid_patch": 18,
+          "unresolved": 12
+        },
+        "passed": 0,
+        "planned": 30,
+        "rate_observed": 0.0
+      }
+    },
+    "no_change": {
+      "clean_control": {
+        "blocked": 0,
+        "observed": 10,
+        "outcomes": {
+          "unchanged_control": 10
+        },
+        "passed": 10,
+        "planned": 10,
+        "rate_observed": 1.0
+      },
+      "failures": {
+        "geometry_reasoning": 30
+      },
+      "levels": {
+        "1": {
+          "clean_control": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "unchanged_control": 2
+            },
+            "passed": 2,
+            "planned": 2,
+            "rate_observed": 1.0
+          },
+          "no_edit": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "unchanged_control": 2
+            },
+            "passed": 2,
+            "planned": 2,
+            "rate_observed": 1.0
+          },
+          "repair": {
+            "blocked": 0,
+            "observed": 6,
+            "outcomes": {
+              "unresolved": 6
+            },
+            "passed": 0,
+            "planned": 6,
+            "rate_observed": 0.0
+          }
+        },
+        "2": {
+          "clean_control": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "unchanged_control": 2
+            },
+            "passed": 2,
+            "planned": 2,
+            "rate_observed": 1.0
+          },
+          "no_edit": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "unchanged_control": 2
+            },
+            "passed": 2,
+            "planned": 2,
+            "rate_observed": 1.0
+          },
+          "repair": {
+            "blocked": 0,
+            "observed": 6,
+            "outcomes": {
+              "unresolved": 6
+            },
+            "passed": 0,
+            "planned": 6,
+            "rate_observed": 0.0
+          }
+        },
+        "3": {
+          "clean_control": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "unchanged_control": 2
+            },
+            "passed": 2,
+            "planned": 2,
+            "rate_observed": 1.0
+          },
+          "no_edit": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "unchanged_control": 2
+            },
+            "passed": 2,
+            "planned": 2,
+            "rate_observed": 1.0
+          },
+          "repair": {
+            "blocked": 0,
+            "observed": 6,
+            "outcomes": {
+              "unresolved": 6
+            },
+            "passed": 0,
+            "planned": 6,
+            "rate_observed": 0.0
+          }
+        },
+        "4": {
+          "clean_control": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "unchanged_control": 2
+            },
+            "passed": 2,
+            "planned": 2,
+            "rate_observed": 1.0
+          },
+          "no_edit": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "unchanged_control": 2
+            },
+            "passed": 2,
+            "planned": 2,
+            "rate_observed": 1.0
+          },
+          "repair": {
+            "blocked": 0,
+            "observed": 6,
+            "outcomes": {
+              "unresolved": 6
+            },
+            "passed": 0,
+            "planned": 6,
+            "rate_observed": 0.0
+          }
+        },
+        "5": {
+          "clean_control": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "unchanged_control": 2
+            },
+            "passed": 2,
+            "planned": 2,
+            "rate_observed": 1.0
+          },
+          "no_edit": {
+            "blocked": 0,
+            "observed": 2,
+            "outcomes": {
+              "unchanged_control": 2
+            },
+            "passed": 2,
+            "planned": 2,
+            "rate_observed": 1.0
+          },
+          "repair": {
+            "blocked": 0,
+            "observed": 6,
+            "outcomes": {
+              "unresolved": 6
+            },
+            "passed": 0,
+            "planned": 6,
+            "rate_observed": 0.0
+          }
+        }
+      },
+      "no_edit": {
+        "blocked": 0,
+        "observed": 10,
+        "outcomes": {
+          "unchanged_control": 10
+        },
+        "passed": 10,
+        "planned": 10,
+        "rate_observed": 1.0
+      },
+      "outcomes": {
+        "unchanged_control": 20,
+        "unresolved": 30
+      },
+      "public_audits": {
+        "complete": 50
+      },
+      "repair": {
+        "blocked": 0,
+        "observed": 30,
+        "outcomes": {
+          "unresolved": 30
+        },
+        "passed": 0,
+        "planned": 30,
+        "rate_observed": 0.0
+      }
+    }
+  },
+  "model_config": {
+    "endpoint": "https://bedrock-runtime.ap-southeast-2.amazonaws.com/openai/v1/chat/completions",
+    "model": "qwen.qwen3-coder-next",
+    "provider": "bedrock",
+    "region": "ap-southeast-2",
+    "temperature": null
+  },
+  "request_attempts": 50,
+  "responses_received": 49,
+  "rows": [
+    {
+      "agent": "invalid_patch",
+      "agent_passed": false,
+      "case_id": "l1_g0_c0",
+      "heuristic": "unresolved",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 1,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "model_error",
+      "agent_passed": false,
+      "case_id": "l1_g0_c1",
+      "heuristic": "unresolved",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 1,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "unresolved",
+      "agent_passed": false,
+      "case_id": "l1_g0_c2",
+      "heuristic": "unresolved",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 1,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "unchanged_control",
+      "agent_passed": true,
+      "case_id": "l1_g0_c3",
+      "heuristic": "unchanged_control",
+      "heuristic_passed": true,
+      "kind": "clean_control",
+      "level": 1,
+      "no_change": "unchanged_control",
+      "no_change_passed": true
+    },
+    {
+      "agent": "unchanged_control",
+      "agent_passed": true,
+      "case_id": "l1_g0_c4",
+      "heuristic": "unchanged_control",
+      "heuristic_passed": true,
+      "kind": "no_edit",
+      "level": 1,
+      "no_change": "unchanged_control",
+      "no_change_passed": true
+    },
+    {
+      "agent": "unresolved",
+      "agent_passed": false,
+      "case_id": "l1_g1_c0",
+      "heuristic": "unresolved",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 1,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "invalid_patch",
+      "agent_passed": false,
+      "case_id": "l1_g1_c1",
+      "heuristic": "unresolved",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 1,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "unresolved",
+      "agent_passed": false,
+      "case_id": "l1_g1_c2",
+      "heuristic": "unresolved",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 1,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "unchanged_control",
+      "agent_passed": true,
+      "case_id": "l1_g1_c3",
+      "heuristic": "unchanged_control",
+      "heuristic_passed": true,
+      "kind": "clean_control",
+      "level": 1,
+      "no_change": "unchanged_control",
+      "no_change_passed": true
+    },
+    {
+      "agent": "invalid_patch",
+      "agent_passed": false,
+      "case_id": "l1_g1_c4",
+      "heuristic": "unchanged_control",
+      "heuristic_passed": true,
+      "kind": "no_edit",
+      "level": 1,
+      "no_change": "unchanged_control",
+      "no_change_passed": true
+    },
+    {
+      "agent": "invalid_patch",
+      "agent_passed": false,
+      "case_id": "l2_g0_c0",
+      "heuristic": "unresolved",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 2,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "invalid_patch",
+      "agent_passed": false,
+      "case_id": "l2_g0_c1",
+      "heuristic": "unresolved",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 2,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "invalid_patch",
+      "agent_passed": false,
+      "case_id": "l2_g0_c2",
+      "heuristic": "unresolved",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 2,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "invalid_patch",
+      "agent_passed": false,
+      "case_id": "l2_g0_c3",
+      "heuristic": "unchanged_control",
+      "heuristic_passed": true,
+      "kind": "clean_control",
+      "level": 2,
+      "no_change": "unchanged_control",
+      "no_change_passed": true
+    },
+    {
+      "agent": "invalid_patch",
+      "agent_passed": false,
+      "case_id": "l2_g0_c4",
+      "heuristic": "unchanged_control",
+      "heuristic_passed": true,
+      "kind": "no_edit",
+      "level": 2,
+      "no_change": "unchanged_control",
+      "no_change_passed": true
+    },
+    {
+      "agent": "invalid_patch",
+      "agent_passed": false,
+      "case_id": "l2_g1_c0",
+      "heuristic": "unresolved",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 2,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "invalid_patch",
+      "agent_passed": false,
+      "case_id": "l2_g1_c1",
+      "heuristic": "unresolved",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 2,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "invalid_patch",
+      "agent_passed": false,
+      "case_id": "l2_g1_c2",
+      "heuristic": "unresolved",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 2,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "unchanged_control",
+      "agent_passed": true,
+      "case_id": "l2_g1_c3",
+      "heuristic": "unchanged_control",
+      "heuristic_passed": true,
+      "kind": "clean_control",
+      "level": 2,
+      "no_change": "unchanged_control",
+      "no_change_passed": true
+    },
+    {
+      "agent": "invalid_patch",
+      "agent_passed": false,
+      "case_id": "l2_g1_c4",
+      "heuristic": "unchanged_control",
+      "heuristic_passed": true,
+      "kind": "no_edit",
+      "level": 2,
+      "no_change": "unchanged_control",
+      "no_change_passed": true
+    },
+    {
+      "agent": "invalid_patch",
+      "agent_passed": false,
+      "case_id": "l3_g0_c0",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 3,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "unresolved",
+      "agent_passed": false,
+      "case_id": "l3_g0_c1",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 3,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "invalid_patch",
+      "agent_passed": false,
+      "case_id": "l3_g0_c2",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 3,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "unchanged_control",
+      "agent_passed": true,
+      "case_id": "l3_g0_c3",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "clean_control",
+      "level": 3,
+      "no_change": "unchanged_control",
+      "no_change_passed": true
+    },
+    {
+      "agent": "unchanged_control",
+      "agent_passed": true,
+      "case_id": "l3_g0_c4",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "no_edit",
+      "level": 3,
+      "no_change": "unchanged_control",
+      "no_change_passed": true
+    },
+    {
+      "agent": "unresolved",
+      "agent_passed": false,
+      "case_id": "l3_g1_c0",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 3,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "unresolved",
+      "agent_passed": false,
+      "case_id": "l3_g1_c1",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 3,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "invalid_patch",
+      "agent_passed": false,
+      "case_id": "l3_g1_c2",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 3,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "unchanged_control",
+      "agent_passed": true,
+      "case_id": "l3_g1_c3",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "clean_control",
+      "level": 3,
+      "no_change": "unchanged_control",
+      "no_change_passed": true
+    },
+    {
+      "agent": "unchanged_control",
+      "agent_passed": true,
+      "case_id": "l3_g1_c4",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "no_edit",
+      "level": 3,
+      "no_change": "unchanged_control",
+      "no_change_passed": true
+    },
+    {
+      "agent": "unresolved",
+      "agent_passed": false,
+      "case_id": "l4_g0_c0",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 4,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "model_error",
+      "agent_passed": false,
+      "case_id": "l4_g0_c1",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 4,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "unresolved",
+      "agent_passed": false,
+      "case_id": "l4_g0_c2",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 4,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "unchanged_control",
+      "agent_passed": true,
+      "case_id": "l4_g0_c3",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "clean_control",
+      "level": 4,
+      "no_change": "unchanged_control",
+      "no_change_passed": true
+    },
+    {
+      "agent": "invalid_patch",
+      "agent_passed": false,
+      "case_id": "l4_g0_c4",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "no_edit",
+      "level": 4,
+      "no_change": "unchanged_control",
+      "no_change_passed": true
+    },
+    {
+      "agent": "model_error",
+      "agent_passed": false,
+      "case_id": "l4_g1_c0",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 4,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "invalid_patch",
+      "agent_passed": false,
+      "case_id": "l4_g1_c1",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 4,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "unresolved",
+      "agent_passed": false,
+      "case_id": "l4_g1_c2",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 4,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "unchanged_control",
+      "agent_passed": true,
+      "case_id": "l4_g1_c3",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "clean_control",
+      "level": 4,
+      "no_change": "unchanged_control",
+      "no_change_passed": true
+    },
+    {
+      "agent": "model_error",
+      "agent_passed": false,
+      "case_id": "l4_g1_c4",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "no_edit",
+      "level": 4,
+      "no_change": "unchanged_control",
+      "no_change_passed": true
+    },
+    {
+      "agent": "unresolved",
+      "agent_passed": false,
+      "case_id": "l5_g0_c0",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 5,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "model_error",
+      "agent_passed": false,
+      "case_id": "l5_g0_c1",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 5,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "model_error",
+      "agent_passed": false,
+      "case_id": "l5_g0_c2",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 5,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "unchanged_control",
+      "agent_passed": true,
+      "case_id": "l5_g0_c3",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "clean_control",
+      "level": 5,
+      "no_change": "unchanged_control",
+      "no_change_passed": true
+    },
+    {
+      "agent": "model_error",
+      "agent_passed": false,
+      "case_id": "l5_g0_c4",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "no_edit",
+      "level": 5,
+      "no_change": "unchanged_control",
+      "no_change_passed": true
+    },
+    {
+      "agent": "unresolved",
+      "agent_passed": false,
+      "case_id": "l5_g1_c0",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 5,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "invalid_patch",
+      "agent_passed": false,
+      "case_id": "l5_g1_c1",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 5,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "model_error",
+      "agent_passed": false,
+      "case_id": "l5_g1_c2",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "repair",
+      "level": 5,
+      "no_change": "unresolved",
+      "no_change_passed": false
+    },
+    {
+      "agent": "unchanged_control",
+      "agent_passed": true,
+      "case_id": "l5_g1_c3",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "clean_control",
+      "level": 5,
+      "no_change": "unchanged_control",
+      "no_change_passed": true
+    },
+    {
+      "agent": "unchanged_control",
+      "agent_passed": true,
+      "case_id": "l5_g1_c4",
+      "heuristic": "invalid_patch",
+      "heuristic_passed": false,
+      "kind": "no_edit",
+      "level": 5,
+      "no_change": "unchanged_control",
+      "no_change_passed": true
+    }
+  ],
+  "scopes": {
+    "primary": "asap7_c2c3_v1",
+    "public_audit": "asap7_public_full",
+    "public_audit_is_acceptance_gate": false
+  },
+  "validation_level": "geometry_only"
+}

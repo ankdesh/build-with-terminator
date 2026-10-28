@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<report-database>
+ <description>ASAP7 Curated DRC runset</description>
+ <original-file/>
+ <generator>drc: script='/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/test_data/rules/asap7_c2c3_v1.lydrc'</generator>
+ <top-cell>BENCHMARK_TOP</top-cell>
+ <tags>
+ </tags>
+ <categories>
+  <category>
+   <name>M1.W.1</name>
+   <description>M1.W.1 : Min. width of M1 : 18nm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M2.W.1</name>
+   <description>M2.W.1 : Min. width of M2 : 18nm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1.A.1</name>
+   <description>M1.A.1 : Min. area of M1 : 504nm2</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1.S.1</name>
+   <description>M1.S.1 : Min. spacing between two M1' edges, when both edges are &gt; 36 nm : 18nm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V1.W.1</name>
+   <description>V1.W.1 : Min. width of V1 : 18nm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M2.S.1</name>
+   <description>M2.S.1 : Min. spacing between two M2' edges, when both edges are &gt; 36 nm : 18nm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M3.W.1</name>
+   <description>M3.W.1 : Min. width of M3 : 18nm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V2.W.1</name>
+   <description>V2.W.1 : Min. width of V2 : 18nm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V1.M2.EN.2</name>
+   <description>V1.M2.EN.2 : enclosure of V1 by M2 on one side : 5nm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V2.M2.EN.1</name>
+   <description>C2+C3 corrected: V2 enclosure by M2 on two opposite sides: 5nm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V2.M3.EN.2</name>
+   <description>V2.M3.EN.2 : enclosure of V2 by M3 on one side : 5nm</description>
+   <categories>
+   </categories>
+  </category>
+ </categories>
+ <cells>
+  <cell>
+   <name>BENCHMARK_TOP</name>
+   <variant/>
+   <references>
+   </references>
+  </cell>
+ </cells>
+ <items>
+  <item>
+   <tags/>
+   <category>'M1.W.1'</category>
+   <cell>BENCHMARK_TOP</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <image/>
+   <values>
+    <value>edge-pair: (2.075,0.373;2.051,0.373)|(2.051,0.385;2.075,0.385)</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'M1.A.1'</category>
+   <cell>BENCHMARK_TOP</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <image/>
+   <values>
+    <value>polygon: (2.051,0.373;2.051,0.385;2.075,0.385;2.075,0.373)</value>
+   </values>
+  </item>
+  <item>
+   <tags/>
+   <category>'M3.W.1'</category>
+   <cell>BENCHMARK_TOP</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <image/>
+   <values>
+    <value>edge-pair: (2.075,0.623;1.975,0.623)|(1.975,0.635;2.075,0.635)</value>
+   </values>
+  </item>
+ </items>
+</report-database>

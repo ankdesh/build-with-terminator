@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<report-database>
+ <description>ASAP7 Curated DRC runset</description>
+ <original-file/>
+ <generator>drc: script='/home/ankdesh/explore/build-with-terminator/eda/gdsii/klayout-4-drc/test_data/rules/asap7_curated.lydrc'</generator>
+ <top-cell>TOP</top-cell>
+ <tags>
+ </tags>
+ <categories>
+  <category>
+   <name>M1.W.1</name>
+   <description>M1.W.1 : Min. width of M1 : 18nm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M2.W.1</name>
+   <description>M2.W.1 : Min. width of M2 : 18nm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1.A.1</name>
+   <description>M1.A.1 : Min. area of M1 : 504nm2</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>M1.S.1</name>
+   <description>M1.S.1 : Min. spacing between two M1' edges, when both edges are &gt; 36 nm : 18nm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>V1.W.1</name>
+   <description>V1.W.1 : Min. width of V1 : 18nm</description>
+   <categories>
+   </categories>
+  </category>
+ </categories>
+ <cells>
+  <cell>
+   <name>TOP</name>
+   <variant/>
+   <references>
+   </references>
+  </cell>
+ </cells>
+ <items>
+  <item>
+   <tags/>
+   <category>'M1.S.1'</category>
+   <cell>TOP</cell>
+   <visited>false</visited>
+   <multiplicity>1</multiplicity>
+   <image/>
+   <values>
+    <value>polygon: (0.05,0;0.05,0.12;0.064,0.12;0.064,0)</value>
+   </values>
+  </item>
+ </items>
+</report-database>

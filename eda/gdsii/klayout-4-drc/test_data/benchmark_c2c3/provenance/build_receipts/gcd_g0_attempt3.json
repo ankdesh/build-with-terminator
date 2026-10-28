@@ -1,0 +1,6 @@
+{
+  "artifacts": {},
+  "identity": "gcd_g0",
+  "reason": "Less than 3 GiB available RAM",
+  "status": "blocked"
+}

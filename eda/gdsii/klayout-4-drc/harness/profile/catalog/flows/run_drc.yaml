@@ -1,7 +1,7 @@
 {
   "id": "klayout.gds_drc_flow",
-  "version": "1.0.0",
-  "description": "Execute KLayout DRC, extract multi-modal context (DRC rules, GDS layout sections, violation tables, knowledge base), and invoke an LLM agent to synthesize a Python repair script.",
+  "version": "1.1.0",
+  "description": "Declarative context flow. The canonical frozen single-request baseline entry point is scripts/run-flow.mjs; model inputs use the same four context sections.",
   "inputSchema": {
     "type": "object",
     "properties": {
@@ -28,11 +28,19 @@
       "output_script_path": {
         "type": "string",
         "description": "Optional destination path for generated Python fix script"
+      },
+      "profile_name": {
+        "type": "string"
+      },
+      "edit_policy_path": {
+        "type": "string"
       }
     },
     "required": [
       "gds_path",
-      "drc_script_path"
+      "drc_script_path",
+      "profile_name",
+      "output_script_path"
     ],
     "additionalProperties": false
   },
@@ -76,6 +84,9 @@
         },
         "output_report_path": {
           "$ref": "inputs.output_report_path"
+        },
+        "profile_name": {
+          "$ref": "inputs.profile_name"
         }
       }
     },
@@ -92,6 +103,12 @@
         },
         "output_text_path": {
           "$ref": "inputs.output_text_path"
+        },
+        "profile_name": {
+          "$ref": "inputs.profile_name"
+        },
+        "edit_policy_path": {
+          "$ref": "inputs.edit_policy_path"
         }
       }
     },
@@ -108,6 +125,12 @@
         },
         "report_db": {
           "$ref": "nodes.run_drc.report_db"
+        },
+        "profile_name": {
+          "$ref": "inputs.profile_name"
+        },
+        "edit_policy_path": {
+          "$ref": "inputs.edit_policy_path"
         }
       }
     },
@@ -124,6 +147,12 @@
         },
         "report_db": {
           "$ref": "nodes.run_drc.report_db"
+        },
+        "profile_name": {
+          "$ref": "inputs.profile_name"
+        },
+        "edit_policy_path": {
+          "$ref": "inputs.edit_policy_path"
         }
       }
     },
@@ -137,13 +166,15 @@
       "inputs": {
         "knowledge_dir": {
           "$ref": "inputs.knowledge_dir"
+        },
+        "profile_name": {
+          "$ref": "inputs.profile_name"
         }
       }
     },
     {
       "id": "agent_llm",
-      "kind": "model",
-      "instructionsFile": "generate_fix.md",
+      "kind": "call",
       "inputs": {
         "violations": {
           "$ref": "nodes.violation_ctx.violations_text"
@@ -156,23 +187,17 @@
         },
         "knowledge": {
           "$ref": "nodes.load_knowledge.knowledge_text"
+        },
+        "profile_name": {
+          "$ref": "inputs.profile_name"
+        },
+        "output_script_path": {
+          "$ref": "inputs.output_script_path"
         }
       },
-      "outputSchema": {
-        "type": "object",
-        "properties": {
-          "python_script": {
-            "type": "string"
-          },
-          "rationale": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "python_script",
-          "rationale"
-        ],
-        "additionalProperties": false
+      "operation": {
+        "id": "klayout.synthesize_candidate",
+        "version": "1.0.0"
       }
     },
     {
@@ -188,6 +213,9 @@
         },
         "output_path": {
           "$ref": "inputs.output_script_path"
+        },
+        "profile_name": {
+          "$ref": "inputs.profile_name"
         }
       },
       "next": null,

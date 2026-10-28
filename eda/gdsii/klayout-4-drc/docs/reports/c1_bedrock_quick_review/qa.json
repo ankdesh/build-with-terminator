@@ -1,0 +1,18 @@
+{
+  "pdf_sha256": "f719f431d863761e4b60bde3c9ba692695c3ced8bd04b7bb2f3a09cecf4ba429",
+  "pages": 4,
+  "selected_cases": 20,
+  "fixed_cases": 10,
+  "unsuccessful_cases": 10,
+  "panels": 60,
+  "missing_output_panels": 5,
+  "source_hashes_verified": 542,
+  "source_files_unchanged": true,
+  "rendered_pages_visually_reviewed": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "visual_result": "No clipped text, overlapping cards, or missing diagrams found. Missing outputs explicitly marked."
+}

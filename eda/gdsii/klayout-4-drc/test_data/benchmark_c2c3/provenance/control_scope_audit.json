@@ -1,0 +1,47 @@
+{
+  "cases": [
+    {
+      "case_id": "l1_g0_c3",
+      "scored_native_marker_count": 0
+    },
+    {
+      "case_id": "l1_g1_c3",
+      "scored_native_marker_count": 0
+    },
+    {
+      "case_id": "l2_g0_c3",
+      "scored_native_marker_count": 0
+    },
+    {
+      "case_id": "l2_g1_c3",
+      "scored_native_marker_count": 0
+    },
+    {
+      "case_id": "l3_g0_c3",
+      "scored_native_marker_count": 0
+    },
+    {
+      "case_id": "l3_g1_c3",
+      "scored_native_marker_count": 0
+    },
+    {
+      "case_id": "l4_g0_c3",
+      "scored_native_marker_count": 0
+    },
+    {
+      "case_id": "l4_g1_c3",
+      "scored_native_marker_count": 0
+    },
+    {
+      "case_id": "l5_g0_c3",
+      "scored_native_marker_count": 0
+    },
+    {
+      "case_id": "l5_g1_c3",
+      "scored_native_marker_count": 0
+    }
+  ],
+  "manifest_sha256": "4a566ed1fe78e7deea54831a4d674dd526bd402b9796ec110cd97d8c9205d1fd",
+  "passed": true,
+  "scope": "asap7_c2c3_v1; public full-deck native markers are separate"
+}
