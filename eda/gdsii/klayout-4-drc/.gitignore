@@ -12,3 +12,28 @@ reports/*.gds
 reports/runs/
 reports/fix_layout.py
 !reports/.gitkeep
+!test_data/benchmark_v1/oracle/*.lyrdb
+test_data/benchmark_v1/oracle/*.stage.json
+
+# Local ORFS tools, build attempts, and benchmark scratch files.
+output/c2c3/
+output/picorv32_asap7/
+!test_data/benchmark_c2c3/oracle/*.lyrdb
+test_data/benchmark_c2c3/oracle/*.stage.json
+!test_data/benchmark_c2c3/provenance/qualification/*.lyrdb
+test_data/benchmark_c2c3/provenance/qualification/*.stage.json
+
+# Generated outputs, rendered artifacts, and local scratch data.
+/output/
+/tmp/
+/.codex-finalizer/
+/docs/reports/**/*.png
+/docs/reports/**/*.jpg
+/docs/reports/**/*.jpeg
+/docs/reports/**/*.webp
+/docs/reports/**/*.pdf
+/docs/reports/**/*.pptx
+
+# Large generated C2+C3 layouts; keep recipes and small qualification fixtures.
+/test_data/benchmark_c2c3/cases/*.gds
+/test_data/benchmark_c2c3/oracle/*.gds
