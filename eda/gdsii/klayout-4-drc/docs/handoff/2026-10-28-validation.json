@@ -1,0 +1,425 @@
+{
+  "archive": {
+    "bundle": {
+      "bytes": 246033703,
+      "name": "2026-10-28.tar.gz",
+      "sha256": "8d9f4717981e33d117fa09fbb1a4c9eb793231e0aac87fda12cc37290ce19547"
+    },
+    "bytes": 1159501645,
+    "files": 15449,
+    "manifest_sha256": "28c79ebfb101c8d0fdfcba6c4ff44588e28805c25683543dce5fa8e04af4fa41",
+    "snapshot": "2026-10-28"
+  },
+  "date": "2026-10-28",
+  "focused_handoff_checks": {
+    "passed": 37,
+    "skipped": 0
+  },
+  "full_regression": {
+    "log_sha256": "ceb41d461d11dcfba6b155df5ea480d1a6dc2830992bdb90a9fb6f59bb84086c",
+    "passed": 280,
+    "skipped": 1
+  },
+  "historical_reports": {
+    "accounting.json": true,
+    "comparison.csv": true,
+    "comparison.json": true,
+    "failure_analysis.csv": true
+  },
+  "model_requests": 0,
+  "node_checks": {
+    "direct_tests_passed": 7,
+    "test_files_passed": 2,
+    "typecheck": "passed"
+  },
+  "original_media": {
+    "output/pdf/c1_bedrock_quick_review.pdf": "f719f431d863761e4b60bde3c9ba692695c3ced8bd04b7bb2f3a09cecf4ba429",
+    "output/pdf/c1_heuristic_quick_review.pdf": "85c41751453d3baab7b9368202a11a96fa6779ac6ca218f2a4405908ab267607",
+    "output/pdf/c1_visual_guide.pdf": "ff8c6d50131877e42fd02d11ead422633ea1f56ae1d00ecc0855fafe3d0bcd1a",
+    "output/pdf/c2_c3_gds_snapshot_atlas.pdf": "24cc65e0b50686db724caf5eb7ae089253aae8dd41cf28db2c5e594b4c1c1c2b",
+    "output/pdf/c2_c3_l1_gds_snapshots.pdf": "3a3b682bdbcef691fead39e9fefa10e4564201a3e19e9d092e819fd0d85614a4",
+    "output/pdf/c2_c3_l2_gds_snapshots.pdf": "263f6593695a1a123f9c7e3ab094b201a814faf71de6db822bb7b07f4a236429",
+    "output/pdf/c2_c3_l3_gds_snapshots.pdf": "2406ca0501ead390e92f9718b3f8cd7977918fc79f5991b54ebf01221d7615a9",
+    "output/pdf/c2_c3_l4_gds_snapshots.pdf": "a93980fee1ec50740a345e97b8ca00e0d58484fb4fedb9b3683ffada9598ca5a",
+    "output/pdf/c2_c3_l5_gds_snapshots.pdf": "1355523a0f7ed02def0d66462d879b278badaeb6cf75b92ad68a18c8b2663865",
+    "output/pdf/c2_c3_selected10_repair_review.pdf": "45e5a9b28a990b6273a54ac0c5f4d166d542c6aa345c7c302c8b77fdb095ccca",
+    "output/slides/build/candidate.pptx": "16b899ecaa4f254514bfe1ce2a5c375e0e0e949f2cf780f8555272e4b206bd73",
+    "output/slides/build/office_renders/candidate.pdf": "d92cbf2b77c0e927b33a7cb449c25488a5a13b8db793296d895a97b2d78aab04",
+    "output/slides/klayout_drc_datasets_and_repairs.pptx": "16b899ecaa4f254514bfe1ce2a5c375e0e0e949f2cf780f8555272e4b206bd73"
+  },
+  "pdfs": {
+    "c1_bedrock_quick_review.pdf": {
+      "pages": 4,
+      "recorded_text_identical": true
+    },
+    "c1_heuristic_quick_review.pdf": {
+      "pages": 2,
+      "recorded_text_identical": true
+    },
+    "c1_visual_guide.pdf": {
+      "pages": 15,
+      "recorded_text_identical": true
+    },
+    "c2_c3_gds_snapshot_atlas.pdf": {
+      "pages": 25,
+      "recorded_text_identical": true
+    },
+    "c2_c3_l1_gds_snapshots.pdf": {
+      "pages": 5,
+      "recorded_text_identical": true
+    },
+    "c2_c3_l2_gds_snapshots.pdf": {
+      "pages": 5,
+      "recorded_text_identical": true
+    },
+    "c2_c3_l3_gds_snapshots.pdf": {
+      "pages": 5,
+      "recorded_text_identical": true
+    },
+    "c2_c3_l4_gds_snapshots.pdf": {
+      "pages": 5,
+      "recorded_text_identical": true
+    },
+    "c2_c3_l5_gds_snapshots.pdf": {
+      "pages": 5,
+      "recorded_text_identical": true
+    },
+    "c2_c3_selected10_repair_review.pdf": {
+      "pages": 10,
+      "recorded_text_identical": true
+    }
+  },
+  "restored_c2c3_no_change": {
+    "cases": 50,
+    "clean_control": {
+      "blocked": 0,
+      "observed": 10,
+      "outcomes": {
+        "unchanged_control": 10
+      },
+      "passed": 10,
+      "planned": 10,
+      "rate_observed": 1.0
+    },
+    "model_requests": 0,
+    "no_edit": {
+      "blocked": 0,
+      "observed": 10,
+      "outcomes": {
+        "unchanged_control": 10
+      },
+      "passed": 10,
+      "planned": 10,
+      "rate_observed": 1.0
+    },
+    "outcomes": {
+      "l1_g0_c0": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l1_g0_c1": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l1_g0_c2": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l1_g0_c3": {
+        "kind": "clean_control",
+        "passed": true,
+        "verdict": "unchanged_control"
+      },
+      "l1_g0_c4": {
+        "kind": "no_edit",
+        "passed": true,
+        "verdict": "unchanged_control"
+      },
+      "l1_g1_c0": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l1_g1_c1": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l1_g1_c2": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l1_g1_c3": {
+        "kind": "clean_control",
+        "passed": true,
+        "verdict": "unchanged_control"
+      },
+      "l1_g1_c4": {
+        "kind": "no_edit",
+        "passed": true,
+        "verdict": "unchanged_control"
+      },
+      "l2_g0_c0": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l2_g0_c1": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l2_g0_c2": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l2_g0_c3": {
+        "kind": "clean_control",
+        "passed": true,
+        "verdict": "unchanged_control"
+      },
+      "l2_g0_c4": {
+        "kind": "no_edit",
+        "passed": true,
+        "verdict": "unchanged_control"
+      },
+      "l2_g1_c0": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l2_g1_c1": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l2_g1_c2": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l2_g1_c3": {
+        "kind": "clean_control",
+        "passed": true,
+        "verdict": "unchanged_control"
+      },
+      "l2_g1_c4": {
+        "kind": "no_edit",
+        "passed": true,
+        "verdict": "unchanged_control"
+      },
+      "l3_g0_c0": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l3_g0_c1": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l3_g0_c2": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l3_g0_c3": {
+        "kind": "clean_control",
+        "passed": true,
+        "verdict": "unchanged_control"
+      },
+      "l3_g0_c4": {
+        "kind": "no_edit",
+        "passed": true,
+        "verdict": "unchanged_control"
+      },
+      "l3_g1_c0": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l3_g1_c1": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l3_g1_c2": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l3_g1_c3": {
+        "kind": "clean_control",
+        "passed": true,
+        "verdict": "unchanged_control"
+      },
+      "l3_g1_c4": {
+        "kind": "no_edit",
+        "passed": true,
+        "verdict": "unchanged_control"
+      },
+      "l4_g0_c0": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l4_g0_c1": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l4_g0_c2": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l4_g0_c3": {
+        "kind": "clean_control",
+        "passed": true,
+        "verdict": "unchanged_control"
+      },
+      "l4_g0_c4": {
+        "kind": "no_edit",
+        "passed": true,
+        "verdict": "unchanged_control"
+      },
+      "l4_g1_c0": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l4_g1_c1": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l4_g1_c2": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l4_g1_c3": {
+        "kind": "clean_control",
+        "passed": true,
+        "verdict": "unchanged_control"
+      },
+      "l4_g1_c4": {
+        "kind": "no_edit",
+        "passed": true,
+        "verdict": "unchanged_control"
+      },
+      "l5_g0_c0": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l5_g0_c1": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l5_g0_c2": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l5_g0_c3": {
+        "kind": "clean_control",
+        "passed": true,
+        "verdict": "unchanged_control"
+      },
+      "l5_g0_c4": {
+        "kind": "no_edit",
+        "passed": true,
+        "verdict": "unchanged_control"
+      },
+      "l5_g1_c0": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l5_g1_c1": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l5_g1_c2": {
+        "kind": "repair",
+        "passed": false,
+        "verdict": "unresolved"
+      },
+      "l5_g1_c3": {
+        "kind": "clean_control",
+        "passed": true,
+        "verdict": "unchanged_control"
+      },
+      "l5_g1_c4": {
+        "kind": "no_edit",
+        "passed": true,
+        "verdict": "unchanged_control"
+      }
+    },
+    "public_audits": {
+      "complete": 50
+    },
+    "recorded_verdicts_equal_historical_baseline": true,
+    "repair": {
+      "blocked": 0,
+      "observed": 30,
+      "outcomes": {
+        "unresolved": 30
+      },
+      "passed": 0,
+      "planned": 30,
+      "rate_observed": 0.0
+    },
+    "summary_sha256": "c653f904b044770f7d0f91d8718c16061f2b944a5facb3dbade0287c3e60c2d1"
+  },
+  "runtime_pins": {
+    "harness_commit": "7388d01e24fa31ef47a5dcb8f9e71f1a488b0946",
+    "harness_install_lock_sha256": "6ba9eb964efbf8d44a5b3d010ecb3939527a3728d975b3aeff191d750f41bfd7",
+    "harness_repository": "git@github.com:ankdesh/deepseek-harness.git",
+    "harness_source_lock_sha256": "5c4d1c37630135de6dc319d6a69ad2044ddaad35e2ce9761a5dbfd51fefc4297",
+    "klayout_cli": "0.28.16",
+    "klayout_python": "0.30.8",
+    "node": "22.23.2",
+    "orfs_image": "openroad/orfs@sha256:6810dbf0e03dddbc89ed8c0a1e13cad09ce4c98d40c4ac0ab99fdc04b0676347",
+    "pnpm": "11.7.0",
+    "python": "3.12.3",
+    "python_series": "3.12",
+    "reference_os": "Ubuntu 24.04 x86_64",
+    "system_packages": [
+      "python3.12",
+      "python3.12-venv",
+      "git",
+      "build-essential",
+      "bubblewrap",
+      "klayout=0.28.16-0ubuntu0.24.04.1",
+      "fonts-dejavu-core",
+      "poppler-utils"
+    ]
+  },
+  "schema_version": 1,
+  "ubuntu24_container": {
+    "archive_and_dataset_verification": "passed",
+    "c1_heuristic": "clean_success",
+    "candidate_policy_changed": false,
+    "candidate_sandbox": "passed",
+    "harness": "read-only mount of separately built clean pinned checkout",
+    "headless_export_and_fonts": "passed",
+    "outer_docker_options": [
+      "--cap-add NET_ADMIN",
+      "--cap-add SYS_ADMIN",
+      "--security-opt seccomp=unconfined",
+      "--security-opt apparmor=unconfined",
+      "--security-opt systempaths=unconfined"
+    ],
+    "pdf_rebuild": "passed",
+    "system_and_python_setup": "passed"
+  }
+}

@@ -15,13 +15,29 @@ from .config import (
     DRCExecutionError,
     DRCParserError,
 )
-from .runner import DRCRunner
-from .parser import DRCParser, DRCReportData, RuleCategory, ViolationItem, ViolationGeometry
-from .reporter import DRCReporter
-from .fixer import DRCFixer
-from .drc_context import DRCContextProcessor, ExtractedRuleInfo
-from .gds_context import GDSContextProcessor, ViolationNeighborhoodWindow, PolygonGeometry
-from .knowledge_loader import KnowledgeLoader, KnowledgeDocument
+# Setup and archive commands must start before third-party packages are installed.
+# Keep the public API, but load geometry modules only when callers use them.
+from importlib import import_module
+
+_LAZY = {
+    'runner': ('DRCRunner',),
+    'parser': ('DRCParser', 'DRCReportData', 'RuleCategory', 'ViolationItem', 'ViolationGeometry'),
+    'reporter': ('DRCReporter',),
+    'fixer': ('DRCFixer',),
+    'drc_context': ('DRCContextProcessor', 'ExtractedRuleInfo'),
+    'gds_context': ('GDSContextProcessor', 'ViolationNeighborhoodWindow', 'PolygonGeometry'),
+    'knowledge_loader': ('KnowledgeLoader', 'KnowledgeDocument'),
+}
+
+
+def __getattr__(name):
+    for module, names in _LAZY.items():
+        if name in names:
+            value = getattr(import_module(f'.{module}', __name__), name)
+            globals()[name] = value
+            return value
+    raise AttributeError(f'module {__name__!r} has no attribute {name!r}')
+
 
 __all__ = [
     "DEFAULT_GDS_PATH",

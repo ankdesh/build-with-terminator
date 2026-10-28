@@ -1,0 +1,32 @@
+# Copy to config/local.toml. Relative paths start at the repository root.
+# Keep API keys and AWS credentials in the environment only.
+[paths]
+harness = ".tools/deepseek-harness"
+fonts = "/usr/share/fonts/truetype/dejavu"
+data = "test_data"
+work = "work"
+archive = "archives"
+
+[tools]
+python = "python3.12"
+uv = "uv"
+node = "node"
+pnpm = "pnpm"
+klayout = "klayout"
+bwrap = "bwrap"
+git = "git"
+docker = "docker"
+
+[resources]
+cpus = 2
+workers = 4
+memory_mb = 2048
+timeout_seconds = 120
+
+# Used only with optional ASIC preparation. See flows/picorv32_asap7/README.md.
+[asic]
+openroad = "openroad"
+yosys = "yosys"
+cpus = 2
+memory_mb = 8192
+timeout_seconds = 3600

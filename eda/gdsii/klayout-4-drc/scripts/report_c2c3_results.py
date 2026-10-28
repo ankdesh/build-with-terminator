@@ -4,6 +4,7 @@ import csv
 import hashlib
 import json
 from pathlib import Path
+from klayout_drc.handoff.report_paths import ROOT, FONTS, resolve_record
 import shutil
 
 from klayout_drc.benchmark.c2c3.contracts import sha256, write_json
@@ -13,7 +14,7 @@ from klayout_drc.layout_diff import LayoutDiffCalculator
 
 
 def main():
-    root = Path.cwd()
+    root = ROOT
     dataset = root/'test_data/benchmark_c2c3'
     manifest = verify_dataset(dataset)
     assert manifest.complete
@@ -25,7 +26,7 @@ def main():
     assert summaries['no_change']['repair']['passed'] == 0
     assert all(summaries['no_change'][kind]['passed'] == 10 for kind in ('clean_control', 'no_edit'))
     identity = json.loads((paths['agent']/'campaign.json').read_text())
-    source = BenchmarkEvaluator._source_bundle()
+    source = json.loads((paths['agent']/'frozen_source.json').read_text())
     assert hashlib.sha256(json.dumps(source, sort_keys=True).encode()).hexdigest() == identity['source_sha256']
     attempts = list((paths['agent']/'runs').glob('*/model_attempt.json'))
     assert len(attempts) == 50
@@ -37,7 +38,7 @@ def main():
     known_usage = 0
     for case in manifest.cases:
         row = next(r for r in summaries['agent']['results'] if r['case_id'] == case.case_id)
-        run = Path(row['run_dir'])
+        run = resolve_record(row['run_dir'])
         assert sha256(run/'input.gds') == case.gds_sha256
         assert json.loads((run/'policy_context.json').read_text())['edit_policy'] == case.edit_policy
         request = json.loads((run/'model_request.json').read_text())
@@ -73,7 +74,7 @@ def main():
             elif kind == 'geometry_reasoning':
                 kind = 'unresolved_unchanged' if row.get('unchanged') else row['verdict']
             counts[kind] += 1
-            run = Path(row['run_dir']) if row.get('run_dir') else None
+            run = resolve_record(row['run_dir']) if row.get('run_dir') else None
             diagnostics = row.get('error') or ''
             if run and (run/'results.json').exists():
                 data = json.loads((run/'results.json').read_text())

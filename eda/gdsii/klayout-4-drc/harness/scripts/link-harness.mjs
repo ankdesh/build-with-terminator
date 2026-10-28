@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { updateHarnessSource } from "./harness-env.mjs";
 
 const product = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const requested = resolve(process.argv[2] || process.env.HARNESS_SOURCE || "/home/ankdesh/explore/deepseek-harness");
+const requested = resolve(process.argv[2] || process.env.HARNESS_SOURCE || join(product, "../.tools/deepseek-harness"));
 if (!existsSync(join(requested, "scripts/product-runtime.mjs"))) {
   throw new Error(`Not a Harness checkout: ${requested}`);
 }

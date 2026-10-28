@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+DRC_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+DRC_PYTHON="${DRC_BOOTSTRAP_PYTHON:-$DRC_ROOT/.venv/bin/python}"
+if [[ ! -x "$DRC_PYTHON" ]]; then DRC_PYTHON=python3.12; fi
+export PYTHONPATH="$DRC_ROOT/src${PYTHONPATH:+:$PYTHONPATH}"
+exec "$DRC_PYTHON" -m klayout_drc.handoff.cli "$@"

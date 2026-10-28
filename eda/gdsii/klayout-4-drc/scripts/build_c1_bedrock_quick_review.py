@@ -12,6 +12,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+from klayout_drc.handoff.report_paths import ROOT, FONTS, resolve_record
 
 os.environ.setdefault('QT_QPA_PLATFORM', 'offscreen')
 import klayout.db as db
@@ -26,9 +27,9 @@ from reportlab.pdfgen import canvas
 
 from capture_c1_examples import COLORS, FONTS, font, geometry, overlays, report_counts
 
-ROOT = Path(__file__).resolve().parents[1]
 BASE = ROOT/'test_data/benchmark_v1'
-CAMPAIGN = ROOT/'reports/runs/c1_bedrock_all100_strict_api_20261027'
+import os
+CAMPAIGN = Path(os.environ.get('DRC_REPORT_CAMPAIGN', ROOT/'reports/runs/c1_bedrock_all100_strict_api_20261027'))
 IMAGES = ROOT/'docs/reports/c1_bedrock_quick_review'
 OUTPUT = ROOT/'output/pdf/c1_bedrock_quick_review.pdf'
 ORIGINAL = ROOT/'output/pdf/c1_heuristic_quick_review.pdf'
@@ -128,7 +129,7 @@ def prepare():
         cid, verdict, label, note, conclusion = spec
         case, result = cases[cid], runs[cid]
         assert result['verdict'] == verdict, cid
-        directory = Path(result['run_dir'])
+        directory = resolve_record(result['run_dir'])
         audit_path = directory/'run_manifest.json'
         audit = json.loads(audit_path.read_text())
         verified[audit_path] = sha(audit_path)
@@ -342,7 +343,7 @@ def capture(prepared):
         records.append({'number':number,'case_id':cid,'verdict':verdict,'label':label,
                         'tier':case['tier'],'rule_id':case['rule_id'],'initially_clean':result['initially_clean'],
                         'initial_total':result['initial_total'],'final_total':result['final_total'],
-                        'run_dir':str(Path(result['run_dir']).relative_to(ROOT)),
+                        'run_dir':str(resolve_record(result['run_dir']).relative_to(ROOT)),
                         'note':note,'conclusion':conclusion,'validation':result['validation'],
                         'marker_comparison':result['marker_comparison'],'images':images})
         print(f'Captured {number:02} {cid}: {label}',flush=True)
@@ -507,7 +508,7 @@ def main():
     for path,expected in verified.items():
         assert sha(path)==expected,f'Source changed: {path}'
     manifest={'schema_version':1,'title':'C1 Bedrock 20-case quick review',
-        'campaign':str(CAMPAIGN.relative_to(ROOT)),'selection':'10 dirty repairs and 10 unsuccessful attempts; non-random',
+        'campaign':str(CAMPAIGN),'selection':'10 dirty repairs and 10 unsuccessful attempts; non-random',
         'renderer_version':db.__version__,'source_files_unchanged':True,
         'verified_sources':{str(p.relative_to(ROOT)):h for p,h in verified.items()},
         'images_count':60,'geometry_panels':55,'missing_output_panels':5,'cases':records,

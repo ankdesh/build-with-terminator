@@ -1,0 +1,30 @@
+{
+  "source_commit": "b2bdb1de0aa65a3e6e3e362f15a553a31893482c",
+  "note": "Original builders before portable path plumbing. Scientific content and layouts retained in current builders.",
+  "files": {
+    "scripts/capture_c1_examples.py": {
+      "sha256": "2b5af334409a6de212bfd063aa31cb313f7530f414fb914492a2617667f45276",
+      "retained_copy": "reports/handoff_original_report_sources/capture_c1_examples.py"
+    },
+    "scripts/build_c1_quick_review.py": {
+      "sha256": "9e5d8202b1d03437b39699632bd724dcd5dfd56458df16dbe290e50a1fef8a23",
+      "retained_copy": "reports/handoff_original_report_sources/build_c1_quick_review.py"
+    },
+    "scripts/build_c1_bedrock_quick_review.py": {
+      "sha256": "7fd23265418dac6d3506829842f4a1beb913ca058b904d21a1722b3dc18ce174",
+      "retained_copy": "reports/handoff_original_report_sources/build_c1_bedrock_quick_review.py"
+    },
+    "scripts/build_c2c3_snapshot_atlas.py": {
+      "sha256": "1345470f64055706b8a84f637e036c431546370868edb4474670eca7603fa0fe",
+      "retained_copy": "reports/handoff_original_report_sources/build_c2c3_snapshot_atlas.py"
+    },
+    "scripts/build_c2c3_selected_review.py": {
+      "sha256": "8b7b54068f440a4a63a08e5628186c73819c88ac8cc4371607184d67d5a7dbab",
+      "retained_copy": "reports/handoff_original_report_sources/build_c2c3_selected_review.py"
+    },
+    "scripts/report_c2c3_results.py": {
+      "sha256": "ac31309333026d39929fd11653f967f782ef050b051c1a42fcf70b73726e3de3",
+      "retained_copy": "reports/handoff_original_report_sources/report_c2c3_results.py"
+    }
+  }
+}

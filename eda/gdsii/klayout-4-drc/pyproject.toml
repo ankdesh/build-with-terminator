@@ -5,8 +5,11 @@ description = "Programmatic KLayout DRC and DeepSeek Harness Flow Integration"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "klayout>=0.30.8",
+    "klayout==0.30.8",
     "pyyaml>=6.0.3",
+    "Pillow>=11.0",
+    "reportlab>=4.0",
+    "pypdf>=5.0",
 ]
 
 [project.optional-dependencies]

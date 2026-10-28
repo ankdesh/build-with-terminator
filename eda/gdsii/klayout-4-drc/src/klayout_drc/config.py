@@ -4,6 +4,7 @@ All hardcoded values, tool execution defaults, rule thresholds, and
 custom exceptions are hoisted here to avoid magic constants across the codebase.
 """
 
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Final
@@ -85,8 +86,8 @@ class DRCJobConfig:
     input_gds: Path
     drc_script: Path
     output_lyrdb: Path
-    klayout_bin: str = DEFAULT_KLAYOUT_BIN
-    timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS
+    klayout_bin: str = field(default_factory=lambda: os.environ.get("KLAYOUT_DRC_KLAYOUT_BIN", DEFAULT_KLAYOUT_BIN))
+    timeout_seconds: int = field(default_factory=lambda: int(os.environ.get("KLAYOUT_DRC_TIMEOUT_SECONDS", DEFAULT_TIMEOUT_SECONDS)))
     param_in_gds: str = "input"
     param_report: str = "report"
     extra_params: dict[str, str] = field(default_factory=dict)

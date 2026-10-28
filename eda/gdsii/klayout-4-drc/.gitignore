@@ -37,3 +37,13 @@ test_data/benchmark_c2c3/provenance/qualification/*.stage.json
 # Large generated C2+C3 layouts; keep recipes and small qualification fixtures.
 /test_data/benchmark_c2c3/cases/*.gds
 /test_data/benchmark_c2c3/oracle/*.gds
+
+# Portable handoff: machine settings, dependencies, runs, and transfer payloads.
+/config/local.toml
+/.tools/
+/work/
+/archives/*/
+/archives/.*-*/
+/archives/*.tar*
+/archives/*.sha256
+/archives/.*.tmp

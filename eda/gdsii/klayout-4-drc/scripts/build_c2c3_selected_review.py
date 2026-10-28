@@ -10,6 +10,7 @@ import csv
 import json
 from collections import Counter
 from pathlib import Path
+from klayout_drc.handoff.report_paths import ROOT, FONTS, resolve_record
 
 import klayout.db as db
 from PIL import Image, ImageDraw
@@ -141,7 +142,7 @@ def prepare():
                     changes.append({'layer': layer, 'added_nm2': added, 'removed_nm2': removed})
         methods = {}
         for mode in ('agent', 'heuristic'):
-            row = runs[mode][cid]; run = Path(row['run_dir']); saved = json.loads((run/'run_manifest.json').read_text())
+            row = runs[mode][cid]; run = resolve_record(row['run_dir']); saved = json.loads((run/'run_manifest.json').read_text())
             for name, expected in saved['artifact_hashes'].items():
                 path = run/name
                 assert sha(path)==expected, path

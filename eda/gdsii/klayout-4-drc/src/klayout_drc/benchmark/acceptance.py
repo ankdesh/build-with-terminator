@@ -4,6 +4,7 @@ References are synthetic legal seeds for the curated scope, not recovered source
 layouts or connectivity references. A recorded region replacement maps each seed
 back to the preserved v1 case geometry.
 """
+import os
 from dataclasses import replace
 import hashlib
 import json
@@ -28,7 +29,7 @@ def run_checker(path, profile, report):
     cfg = DRCJobConfig(input_gds=path, drc_script=profile.deck_path, output_lyrdb=report,
                        param_in_gds=profile.param_in_gds, param_report=profile.param_report,
                        extra_params=profile.extra_params,
-                       timeout_seconds=600 if profile.name == 'asap7_public_full' else 120)
+                       timeout_seconds=600 if profile.name == 'asap7_public_full' else int(os.environ.get('KLAYOUT_DRC_TIMEOUT_SECONDS', 120)))
     DRCRunner(cfg).run()
     return DRCParser().parse(report)
 

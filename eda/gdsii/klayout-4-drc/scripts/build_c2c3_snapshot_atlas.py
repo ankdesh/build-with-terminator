@@ -12,6 +12,7 @@ import math
 import os
 from collections import Counter
 from pathlib import Path
+from klayout_drc.handoff.report_paths import ROOT, FONTS, resolve_record
 
 os.environ.setdefault('QT_QPA_PLATFORM', 'offscreen')
 import klayout.db as db
@@ -27,7 +28,6 @@ from reportlab.pdfgen import canvas
 from capture_c1_examples import FONTS, font, overlays
 from klayout_drc.parser import DRCParser
 
-ROOT = Path(__file__).resolve().parents[1]
 BASE = ROOT / 'test_data/benchmark_c2c3'
 IMAGES = ROOT / 'docs/reports/c2_c3_snapshots'
 OUTPUT = ROOT / 'output/pdf/c2_c3_gds_snapshot_atlas.pdf'

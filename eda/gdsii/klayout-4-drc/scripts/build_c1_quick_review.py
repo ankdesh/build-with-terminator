@@ -9,6 +9,7 @@ import hashlib
 import json
 from collections import Counter
 from pathlib import Path
+from klayout_drc.handoff.report_paths import ROOT, FONTS, resolve_record
 
 from PIL import Image
 from reportlab.lib.colors import HexColor, white
@@ -17,10 +18,8 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 
-ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / 'docs/reports/c1_visual_guide/image_manifest.json'
 OUTPUT = ROOT / 'output/pdf/c1_heuristic_quick_review.pdf'
-FONTS = Path('/usr/share/fonts/truetype/dejavu')
 INK = '#18364A'
 MUTED = '#506779'
 BORDER = '#D7E1E7'

@@ -64,14 +64,14 @@ class ExecutionResult:
 
 class RepairExecutor:
     def __init__(self, candidate_script, input_gds, output_gds,
-                 timeout_seconds=DEFAULT_TIMEOUT_SECONDS, python_bin=sys.executable,
-                 memory_bytes=2*1024**3, max_output_bytes=64*1024**2, max_log_bytes=1024**2):
+                 timeout_seconds=None, python_bin=sys.executable,
+                 memory_bytes=None, max_output_bytes=64*1024**2, max_log_bytes=1024**2):
         self.candidate_script = Path(candidate_script).resolve()
         self.input_gds = Path(input_gds).resolve()
         self.output_gds = Path(output_gds).absolute()
-        self.timeout_seconds = timeout_seconds
+        self.timeout_seconds = timeout_seconds if timeout_seconds is not None else int(os.environ.get("KLAYOUT_DRC_TIMEOUT_SECONDS", DEFAULT_TIMEOUT_SECONDS))
         self.python_bin = Path(python_bin).absolute()
-        self.memory_bytes = memory_bytes
+        self.memory_bytes = memory_bytes if memory_bytes is not None else int(os.environ.get("KLAYOUT_DRC_MEMORY_MB", 2048))*1024**2
         self.max_output_bytes = max_output_bytes
         self.max_log_bytes = max_log_bytes
 

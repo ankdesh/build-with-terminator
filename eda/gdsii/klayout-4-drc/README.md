@@ -281,3 +281,11 @@ The [dedicated PicoRV32 case](flows/picorv32_asap7/README.md) runs pinned upstre
 RV32IMC RTL through the OpenROAD RTL-to-GDS flow on ASAP7. It retains the final
 GDS, DEF, OpenDB, netlist, SDC, SPEF, and public DRC audit for later autofix work.
 See the case guide for setup, run, resume, and inspection commands.
+
+## Portable handoff
+
+Use `./scripts/drc` for setup, diagnostics, evidence transfer, evaluations, and saved reports.
+See [Portable handoff](docs/PORTABLE_HANDOFF.md) for configuration and transfer commands.
+The dated archive payload is transferred separately from Git.
+
+Validation results: [Handoff validation](docs/HANDOFF_VALIDATION.md).

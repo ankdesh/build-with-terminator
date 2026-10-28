@@ -24,7 +24,7 @@ NO_CHANGE = 'import sys\nimport klayout.db as db\nl=db.Layout(); l.read(sys.argv
 def checker_identity():
     """Freeze the actual host checker separately from the ORFS tools."""
     import klayout.db as db
-    executable = shutil.which('klayout')
+    executable = shutil.which(os.environ.get('KLAYOUT_DRC_KLAYOUT_BIN', 'klayout'))
     if executable is None:
         raise ValueError('Missing KLayout checker executable')
     path = Path(executable).resolve()
@@ -42,7 +42,11 @@ def verify_dataset(root):
     profile = DRCProfileManager().get_profile(manifest.profile)
     if sha256(profile.deck_path) != manifest.deck_sha256 or sha256(root/'qualification.json') != manifest.qualification_sha256:
         raise ValueError('Checker or qualification changed')
-    if json.loads((root/'qualification.json').read_text()).get('checker') != checker_identity():
+    qualified = json.loads((root/'qualification.json').read_text()).get('checker')
+    actual = checker_identity()
+    # Paths can differ after transfer. Require identical executable/runtime bytes and versions.
+    identity_keys = ('sha256', 'runtime_sha256', 'version', 'python_klayout_version')
+    if not qualified or any(qualified.get(k) != actual.get(k) for k in identity_keys):
         raise ValueError('Missing or changed qualified checker identity; qualify the pinned checker first')
     for case in manifest.cases:
         if sha256(safe_path(root, case.gds)) != case.gds_sha256:

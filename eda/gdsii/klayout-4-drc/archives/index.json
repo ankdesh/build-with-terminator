@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "snapshots": [
+    {
+      "bytes": 1159501645,
+      "files": 15449,
+      "manifest_sha256": "28c79ebfb101c8d0fdfcba6c4ff44588e28805c25683543dce5fa8e04af4fa41",
+      "snapshot": "2026-10-28",
+      "bundle": {
+        "name": "2026-10-28.tar.gz",
+        "bytes": 246033703,
+        "sha256": "8d9f4717981e33d117fa09fbb1a4c9eb793231e0aac87fda12cc37290ce19547"
+      }
+    }
+  ]
+}

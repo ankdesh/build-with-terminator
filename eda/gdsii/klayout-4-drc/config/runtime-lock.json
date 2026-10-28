@@ -1,0 +1,24 @@
+{
+  "reference_os": "Ubuntu 24.04 x86_64",
+  "python": "3.12.3",
+  "python_series": "3.12",
+  "klayout_cli": "0.28.16",
+  "klayout_python": "0.30.8",
+  "node": "22.23.2",
+  "pnpm": "11.7.0",
+  "harness_repository": "git@github.com:ankdesh/deepseek-harness.git",
+  "harness_commit": "7388d01e24fa31ef47a5dcb8f9e71f1a488b0946",
+  "orfs_image": "openroad/orfs@sha256:6810dbf0e03dddbc89ed8c0a1e13cad09ce4c98d40c4ac0ab99fdc04b0676347",
+  "system_packages": [
+    "python3.12",
+    "python3.12-venv",
+    "git",
+    "build-essential",
+    "bubblewrap",
+    "klayout=0.28.16-0ubuntu0.24.04.1",
+    "fonts-dejavu-core",
+    "poppler-utils"
+  ],
+  "harness_source_lock_sha256": "5c4d1c37630135de6dc319d6a69ad2044ddaad35e2ce9761a5dbfd51fefc4297",
+  "harness_install_lock_sha256": "6ba9eb964efbf8d44a5b3d010ecb3939527a3728d975b3aeff191d750f41bfd7"
+}

@@ -10,6 +10,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+from klayout_drc.handoff.report_paths import ROOT, FONTS, resolve_record
 from xml.etree import ElementTree
 
 os.environ.setdefault('QT_QPA_PLATFORM', 'offscreen')
@@ -24,11 +25,9 @@ from reportlab.pdfbase.ttfonts import TTFont
 from klayout_drc.parser import DRCParser
 from klayout_drc.marker_geometry import EdgePairMarker, EdgeMarker, PolygonMarker, BoxMarker
 
-ROOT = Path(__file__).resolve().parents[1]
 BASE = ROOT / 'test_data/benchmark_v1'
 OUT = ROOT / 'docs/reports/c1_visual_guide'
 PDF = ROOT / 'output/pdf/c1_visual_guide.pdf'
-FONTS = Path('/usr/share/fonts/truetype/dejavu')
 COLORS = {18: ('V0', 0x777777, 3), 19: ('M1', 0x2476B3, 3),
           20: ('M2', 0xBB780D, 5), 21: ('V1', 0x8654AA, 7)}
 EXAMPLES = [
@@ -263,7 +262,7 @@ def prepare():
                      (reports['reference'], a['reference_report_sha256']), (reports['input'], a['report_sha256'])]:
             check_hash(p, h)
             verified[p] = h
-        run_dir = Path(run['run_dir'])
+        run_dir = resolve_record(run['run_dir'])
         rm_path = run_dir / 'run_manifest.json'
         rm = json.loads(rm_path.read_text())
         verified[rm_path] = sha(rm_path)

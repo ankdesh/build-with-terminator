@@ -73,7 +73,13 @@ def test_native_export_places_real_marker_at_shape_edges(tmp_path):
 
 
 def test_delivered_images_share_windows_and_match_manifest():
-    path = ROOT / 'docs/reports/c1_visual_guide/image_manifest.json'
+    # Finished artifacts moved into the verified handoff snapshot. Historical
+    # builder hashes refer to the retained pre-port source, not today's builder.
+    from klayout_drc.handoff.archive import Resolver
+    snapshot = ROOT / 'archives/2026-10-28'
+    resolver = Resolver(snapshot) if snapshot.exists() else None
+    evidence = resolver.root if resolver else ROOT
+    path = evidence / 'docs/reports/c1_visual_guide/image_manifest.json'
     manifest = json.loads(path.read_text())
     assert len(manifest['cases']) == 10
     count = 0
@@ -86,13 +92,13 @@ def test_delivered_images_share_windows_and_match_manifest():
         if 'edge_detail' in case:
             images.append(case['edge_detail'])
         for img in images:
-            image_path = ROOT / img['image']
+            image_path = evidence / img['image']
             guide.check_hash(image_path,img['sha256'])
             with Image.open(image_path) as picture:
                 assert list(picture.size) == img['size_px']
             count += 1
     assert count == manifest['images_count'] == 32
-    guide.check_hash(ROOT / manifest['pdf']['path'],manifest['pdf']['sha256'])
+    guide.check_hash(evidence / manifest['pdf']['path'],manifest['pdf']['sha256'])
     assert manifest['pdf']['pages'] == 15
     for path, expected in manifest['verified_sources'].items():
-        guide.check_hash(ROOT / path,expected)
+        guide.check_hash(resolver.resolve(path, expected) if resolver else ROOT / path, expected)
