@@ -13,9 +13,10 @@ import { TableData } from '../lib/types';
 interface DataTableViewerProps {
   table: TableData;
   onExportCsv?: () => void;
+  embedded?: boolean;
 }
 
-export const DataTableViewer: React.FC<DataTableViewerProps> = ({ table, onExportCsv }) => {
+export const DataTableViewer: React.FC<DataTableViewerProps> = ({ table, onExportCsv, embedded = false }) => {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -85,7 +86,7 @@ export const DataTableViewer: React.FC<DataTableViewerProps> = ({ table, onExpor
   };
 
   return (
-    <div className="border border-slate-200 bg-white rounded-xl shadow-xs overflow-hidden my-3">
+    <div className={embedded ? "table-embedded" : "border border-slate-200 bg-white rounded-xl shadow-xs overflow-hidden my-3"}>
       {/* Table Header Controls */}
       <div className="px-4 py-2.5 bg-slate-50/80 border-b border-slate-200 flex items-center justify-between">
         <div className="flex items-center space-x-2">
@@ -107,7 +108,7 @@ export const DataTableViewer: React.FC<DataTableViewerProps> = ({ table, onExpor
       </div>
 
       {/* Table Content */}
-      <div className="overflow-x-auto">
+      <div className="overflow-auto min-h-0">
         <table className="w-full text-left text-xs border-collapse">
           <thead>
             <tr className="bg-slate-50 border-b border-slate-200 text-slate-600 select-none">
@@ -116,10 +117,10 @@ export const DataTableViewer: React.FC<DataTableViewerProps> = ({ table, onExpor
                 return (
                   <th
                     key={col}
-                    onClick={() => handleSort(col)}
+                    aria-sort={isSorted ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}
                     className="px-3 py-2 font-mono text-[11px] font-semibold hover:bg-slate-100/70 cursor-pointer transition-colors"
                   >
-                    <div className="flex items-center space-x-1">
+                    <button type="button" onClick={() => handleSort(col)} className="table-sort flex items-center space-x-1">
                       <span>{col}</span>
                       {isSorted ? (
                         sortDirection === 'asc' ? (
@@ -130,7 +131,7 @@ export const DataTableViewer: React.FC<DataTableViewerProps> = ({ table, onExpor
                       ) : (
                         <ArrowUpDown className="w-3 h-3 text-slate-300 hover:text-slate-500" />
                       )}
-                    </div>
+                    </button>
                   </th>
                 );
               })}
@@ -175,6 +176,7 @@ export const DataTableViewer: React.FC<DataTableViewerProps> = ({ table, onExpor
 
           <div className="flex items-center space-x-1">
             <button
+              aria-label="Previous table page"
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
               className="p-1 rounded border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:hover:bg-white"
@@ -185,6 +187,7 @@ export const DataTableViewer: React.FC<DataTableViewerProps> = ({ table, onExpor
               {currentPage} / {totalPages}
             </span>
             <button
+              aria-label="Next table page"
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
               className="p-1 rounded border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:hover:bg-white"

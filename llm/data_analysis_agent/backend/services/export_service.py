@@ -21,21 +21,27 @@ class ExportService:
         configured = os.environ.get("WPS_WINDOWS_RUNTIME")
         self.runtime_archive = runtime_archive or (Path(configured) if configured else Path("runtime_cache/windows-x64.zip"))
 
-    def export(self, project_id: str, include_data: bool = True) -> Path:
+    def export(self, project_id: str, include_data: bool = True, revision_id: str | None = None) -> Path:
         project = self.store.get(project_id)
         if not project["accepted_id"]:
             raise ValueError("Accept a validated revision before export")
+        selected = revision_id or project["accepted_id"]
+        if not any(row["id"] == selected and row["accepted"] for row in self.store.revisions(project_id)):
+            raise ValueError("Only an accepted revision can be downloaded")
         if not self.runtime_archive.is_file():
             raise ValueError("The prebuilt Windows runtime is not available. Build it with scripts/build_windows_runtime.py on Windows, then set WPS_WINDOWS_RUNTIME to its ZIP file.")
-        revision = self.store.revision(project_id, project["accepted_id"])
+        revision = self.store.revision(project_id, selected)
         with self.store.connect() as db:
             rows = db.execute("SELECT record FROM runs WHERE project_id=? AND revision_id=? ORDER BY started_at DESC", (project_id, revision.revision_id)).fetchall()
+            acceptance = db.execute("SELECT run_id FROM acceptances WHERE project_id=? AND revision_id=?", (project_id, selected)).fetchone()
         validations = [json.loads(row["record"]) for row in rows]
-        validation = next((r for r in validations if r["status"] == "succeeded" and r["parameters"] == revision.default_parameters()), None)
+        validation = next((r for r in validations if r["status"] == "succeeded" and r["parameters"] == revision.default_parameters()
+            and (not acceptance or r["run_id"] == acceptance["run_id"])), None)
         if not validation:
             raise ValueError("Accepted revision has no successful validation at default parameters")
-        if include_data and validation["input_hash"] != project["dataset_hash"]:
-            raise ValueError("Validate and accept this revision on the current CSV before including that CSV")
+        accepted_input = self.store.project_dir(project_id) / "datasets" / f"{validation['input_hash']}.csv"
+        if include_data and not accepted_input.is_file():
+            raise ValueError("The accepted revision's CSV is unavailable. Download without CSV or validate and accept again.")
         export_dir = self.store.project_dir(project_id) / "exports"
         export_dir.mkdir(exist_ok=True)
         destination = export_dir / f"analysis-{revision.revision_id[:8]}-{uuid4().hex[:8]}.zip"
@@ -62,10 +68,12 @@ class ExportService:
                 (project_dir / "steps" / f"{step.id}.py").write_text(step.code)
             if include_data:
                 (root / "input").mkdir()
-                shutil.copyfile(self.store.dataset_path(project_id), root / "input" / "data.csv")
+                shutil.copyfile(accepted_input, root / "input" / "data.csv")
             (root / "validation.json").write_text(json.dumps({
                 "revision_id": revision.revision_id, "input_hash": validation["input_hash"],
                 "parameters": validation["parameters"], "status": "succeeded",
+                "validation_mode": validation.get("validation_mode", "execution"),
+                "source_run_id": validation.get("source_run_id"),
                 "steps": validation["result"]["steps"],
                 "cleanup_impacts": validation["result"]["cleanup_impacts"],
                 "runtime_versions": installed_versions(),
@@ -83,7 +91,7 @@ class ExportService:
             )
             manifest = {"schema_version": 1, "runtime_abi": RUNTIME_ABI, "runtime_version": RUNTIME_VERSION,
                 "target": "windows-x64", "revision_id": revision.revision_id, "versions": installed_versions(),
-                "dataset_name": project["dataset_name"] if include_data else None,
+                "dataset_name": validation["dataset_name"] if include_data else None,
                 "include_data": include_data, "files": inventory(root)}
             (root / "manifest.json").write_text(json.dumps(manifest, indent=2))
             with zipfile.ZipFile(destination, "w", zipfile.ZIP_DEFLATED) as archive:

@@ -5,12 +5,12 @@ import json
 import logging
 from typing import Any, AsyncGenerator, Dict, List, Optional
 import pandas as pd
-from openai import AsyncOpenAI
 
-from backend.exceptions import CodeExecutionError, LLMConfigurationError, LLMServiceError
+from backend.exceptions import CodeExecutionError
 from backend.models.chat import ChatMessage, ExecutionResult
 from backend.models.profile import DataProfile
 from backend.services.code_executor import CodeExecutor
+from backend.services.llm_gateway import LLMGateway, llm
 from config import config
 
 logger = logging.getLogger(__name__)
@@ -68,28 +68,10 @@ class AgentService:
     def __init__(
         self,
         code_executor: Optional[CodeExecutor] = None,
-        openai_client: Optional[AsyncOpenAI] = None
+        openai_client: Any = None
     ) -> None:
         self.code_executor = code_executor or CodeExecutor()
-        self._client = openai_client
-
-    def _get_client(self) -> AsyncOpenAI:
-        """Lazily initialize and return the AsyncOpenAI client."""
-        if self._client is not None:
-            return self._client
-
-        base_url = config.openai_api_base
-        if not base_url:
-            raise LLMConfigurationError(
-                "OPENAI_API_BASE environment variable is not configured. "
-                "Point it to your local or internal OpenAI-compatible endpoint."
-            )
-
-        self._client = AsyncOpenAI(
-            base_url=base_url,
-            api_key=config.openai_api_key or "EMPTY",
-        )
-        return self._client
+        self.llm = LLMGateway(openai_client) if openai_client is not None else llm
 
     async def run_analysis_stream(
         self,
@@ -246,22 +228,9 @@ class AgentService:
 
     async def _call_llm(self, messages: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Send chat request to OpenAI-compatible endpoint with JSON format enforcement."""
-        from typing import cast
-        client = self._get_client()
-
-        try:
-            response = await client.chat.completions.create(
-                model=config.openai_model_name,
-                messages=cast(Any, messages),
-                temperature=0.1,
-                response_format={"type": "json_object"},
-            )
-            raw_content = response.choices[0].message.content or "{}"
-            parsed: Dict[str, Any] = json.loads(raw_content)
-            return parsed
-        except Exception as e:
-            logger.error("LLM API call failed: %s", e)
-            raise LLMServiceError(status_code=500, response_text=str(e))
+        content = await self.llm.complete(messages, response_format={"type": "json_object"})
+        parsed: Dict[str, Any] = json.loads(content or "{}")
+        return parsed
 
     async def _synthesize_explanation(
         self,
@@ -315,18 +284,7 @@ class AgentService:
 
     async def _call_external_text(self, messages: List[Dict[str, Any]]) -> str:
         """Call external OpenAI endpoint for plain text generation."""
-        from typing import cast
-        client = self._get_client()
-        try:
-            response = await client.chat.completions.create(
-                model=config.openai_model_name,
-                messages=cast(Any, messages),
-                temperature=0.2,
-            )
-            return (response.choices[0].message.content or "").strip()
-        except Exception as e:
-            logger.error("External text generation failed: %s", e)
-            raise
+        return (await self.llm.complete(messages)).strip()
 
     def _build_prompt_messages(
         self,

@@ -1,4 +1,4 @@
-"""Process isolation, resource limits, cancellation, and progress collection."""
+"""Worker processes, resource limits, cancellation, and progress collection."""
 
 import asyncio
 import json
@@ -58,7 +58,7 @@ class WindowsJob:
 
 
 class ProcessRunner:
-    """Run generated code outside the API process. Linux isolation is mandatory."""
+    """Run trusted generated code in a separate process without a code sandbox."""
 
     def __init__(self, timeout_seconds: int = 120, memory_bytes: int = 4 * 1024 ** 3) -> None:
         self.timeout_seconds = timeout_seconds
@@ -72,13 +72,15 @@ class ProcessRunner:
     def _run(self, revision: ProjectRevision, input_path: Path, parameters: dict[str, Any],
              job_dir: Path, cancel: threading.Event, cache_dir: Path | None,
              on_event: Callable[[dict[str, Any]], None] | None) -> dict[str, Any]:
+        job_dir = job_dir.resolve()
         job_dir.mkdir(parents=True, exist_ok=True)
         output = job_dir / "output"
         output.mkdir(exist_ok=True)
         shutil.copyfile(input_path, job_dir / "input.csv")
         request = {"revision": revision.model_dump(), "input_path": "input.csv", "output_dir": "output",
-            "parameters": parameters, "cache_dir": "cache" if cache_dir else None,
-            "timeout_seconds": self.timeout_seconds, "memory_bytes": self.memory_bytes}
+            "parameters": parameters, "cache_dir": str(cache_dir.resolve()) if cache_dir else None,
+            "timeout_seconds": self.timeout_seconds, "memory_bytes": self.memory_bytes,
+            "parent_pid": os.getpid()}
         (job_dir / "request.json").write_text(json.dumps(request))
         env = {"PATH": os.defpath, "PYTHONPATH": str(Path(__file__).resolve().parent.parent),
             "PYTHONIOENCODING": "utf-8", "PYTHONNOUSERSITE": "1", "PYTHONDONTWRITEBYTECODE": "1",
@@ -87,40 +89,14 @@ class ProcessRunner:
             for name in ("SYSTEMROOT", "WINDIR", "TEMP", "TMP"):
                 if name in os.environ:
                     env[name] = os.environ[name]
-            if cache_dir:
-                shutil.copytree(cache_dir, job_dir / "cache", dirs_exist_ok=True)
-            command = ([sys.executable, "--worker", str(job_dir / "request.json")] if getattr(sys, "frozen", False)
-                       else [sys.executable, "-m", "pipeline_core.worker", str(job_dir / "request.json")])
-        else:
-            bwrap = shutil.which("bwrap")
-            if not bwrap:
-                return {"success": False, "error": "Bubblewrap is required for Linux execution. Install it and enable user namespaces."}
-            core = job_dir / "core"
-            shutil.copytree(Path(__file__).parent, core, ignore=shutil.ignore_patterns("__pycache__"), dirs_exist_ok=True)
-            command = [bwrap, "--unshare-all", "--die-with-parent", "--new-session", "--cap-drop", "ALL",
-                "--ro-bind", "/usr", "/usr", "--proc", "/proc", "--dev", "/dev", "--tmpfs", "/tmp",
-                "--dir", "/app", "--ro-bind", str(core), "/app/pipeline_core",
-                "--dir", "/work", "--ro-bind", str(job_dir / "request.json"), "/work/request.json",
-                "--ro-bind", str(job_dir / "input.csv"), "/work/input.csv",
-                "--bind", str(output), "/work/output", "--chdir", "/work"]
-            for library in ("/lib", "/lib64", "/bin", "/etc/ld.so.cache"):
-                if Path(library).exists():
-                    command += ["--ro-bind", library, library]
-            if cache_dir:
-                command += ["--ro-bind", str(cache_dir), "/work/cache"]
-            if sys.prefix != sys.base_prefix:
-                command += ["--ro-bind", sys.prefix, "/runtime"]
-                interpreter = "/runtime/bin/python"
-            else:
-                interpreter = sys.executable
-            env["PYTHONPATH"] = "/app"
-            command += ["--", interpreter, "-m", "pipeline_core.worker", "/work/request.json"]
+        command = ([sys.executable, "--worker", str(job_dir / "request.json")] if getattr(sys, "frozen", False)
+                   else [sys.executable, "-m", "pipeline_core.worker", str(job_dir / "request.json")])
         job = None
         process = None
         try:
             with (job_dir / "worker.log").open("wb") as stderr:
                 process = subprocess.Popen(command, cwd=job_dir, env=env, stdout=stderr, stderr=stderr,
-                    start_new_session=os.name != "nt")
+                    stdin=subprocess.DEVNULL, start_new_session=os.name != "nt")
                 if os.name == "nt":
                     job = WindowsJob(process, self.memory_bytes)
                 deadline = time.monotonic() + self.timeout_seconds

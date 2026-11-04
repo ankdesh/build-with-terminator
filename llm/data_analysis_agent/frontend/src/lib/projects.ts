@@ -4,34 +4,72 @@ export type Scalar = string | number | boolean | null;
 export interface Parameter {
   id: string; label: string; kind: 'number' | 'integer' | 'string' | 'boolean' | 'select';
   default: Scalar; minimum: number | null; maximum: number | null; choices: Scalar[];
-  filter_column: string | null;
+  filter_column: string | null; filter_artifact?: string;
 }
 export interface Step {
-  id: string; title: string; stage: string; code: string; rationale: string;
-  inputs: string[]; outputs: string[];
+  id: string; title: string; stage: 'cleanup' | 'analysis'; code: string; rationale: string;
+  inputs: string[]; outputs: string[]; parameters_used: string[] | null;
+}
+export interface GridPosition { x: number; y: number; w: number; h: number }
+export interface Widget {
+  id: string; kind: 'metric' | 'chart' | 'table' | 'text'; title: string; output: string; width: number;
+  format?: string | null; unit?: string; description?: string; layout?: GridPosition | null;
+  chart_binding?: {kind: 'bar' | 'line' | 'scatter' | 'pie'; x: string; y: string[]; x_label?: string | null; y_label?: string | null} | null;
+}
+export interface DashboardSpec { title: string; subtitle: string; widgets: Widget[] }
+export interface Column { name: string; dtype: string; nullable: boolean; description: string; date_format?: string | null }
+export interface WorkspaceDocument {
+  title: string; summary: string; input_enabled: boolean; input_contract: {columns: Column[]; encoding: string; delimiter: string} | null;
+  steps: Step[]; parameters: Parameter[]; dashboard: DashboardSpec; dependencies: string[]; seed: number;
 }
 export interface Revision {
-  revision_id: string; title: string; summary: string; steps: Step[]; parameters: Parameter[];
-  dashboard: { title: string; subtitle: string; widgets: { id: string; kind: string; title: string; output: string; width: number; format?: string | null }[] };
+  schema_version?: number; revision_id: string; title: string; summary: string; steps: Step[]; parameters: Parameter[];
+  dashboard: DashboardSpec;
+}
+export interface Stage {
+  id: string; type: 'input' | 'cleaning' | 'analysis' | 'visualization'; title: string; rationale?: string;
+  inputs: string[]; outputs: string[]; dependencies: string[];
+}
+export interface Workspace {
+  version: number; document: WorkspaceDocument; issues: string[]; stages: Stage[]; can_undo: boolean; can_redo: boolean;
+  validated_run_id: string | null; calculation_pending: boolean;
+}
+export interface Output {
+  kind: string; value?: Scalar | ChartSpec; columns?: string[]; rows?: TableData['rows']; total_rows?: number;
 }
 export interface Run {
   run_id: string; revision_id: string; dataset_name: string; input_hash: string;
-  status: string; parameters: Record<string, Scalar>; error: string | null;
+  status: string; parameters: Record<string, Scalar>; error: string | null; finished_at?: string | null;
+  validation_mode?: string; workspace_version?: number; source_run_id?: string | null;
   result: {
-    outputs: Record<string, { kind: string; value?: Scalar | ChartSpec; columns?: string[]; rows?: TableData['rows']; total_rows?: number }>;
-    widgets?: Record<string, { kind: string; value?: Scalar | ChartSpec; columns?: string[]; rows?: TableData['rows']; total_rows?: number }>;
+    outputs: Record<string, Output>; widgets?: Record<string, Output>;
+    steps?: {step_id: string; title: string; status: string; cached?: boolean; duration_ms?: number}[];
     cleanup_impacts: { step_id: string; title: string; rationale: string; before_rows: number; after_rows: number;
       removed_rows: number; before_missing_cells: number; after_missing_cells: number;
       changed_cells_in_matched_rows: number | null; requires_confirmation: boolean; columns_removed: string[]; columns_added: string[] }[];
     parameter_options: Record<string, Scalar[]>;
   } | null;
 }
+export interface Job {
+  id: string; revision_id: string; workspace_version: number; status: string; run_id: string | null; error: string | null;
+  events: {event: string; message?: string; step_id?: string; title?: string; status?: string; cached?: boolean}[];
+}
+export interface Target {
+  status: 'running' | 'stopped' | 'failed'; url: string | null; port: number | null; error: string | null;
+  applied_revision?: string | null; pending?: boolean; input_mode?: string; last_error?: string | null; active_run?: boolean;
+}
+export interface RuntimeState {
+  mode: 'live' | 'runtime'; revision: Revision | null; presentation: {title: string; dashboard: DashboardSpec} | null;
+  pending: boolean; calculation_pending: boolean; display_run: Run | null; dataset_name: string | null; has_input: boolean; input_mode: string;
+  last_error: string | null; active_run: Run | null; events: {title?: string; status?: string; message?: string}[];
+  sequence: number; instance_id: string; control_notice?: string | null;
+}
 export interface ProjectSummary { id: string; title: string; dataset_name: string | null; accepted_id: string | null }
 export interface ProjectView {
-  project: ProjectSummary & { draft_id: string | null; description: string; profile: DataProfile | null; dataset_hash: string | null };
-  draft: Revision | null; display_run: Run | null; display_revision: Revision | null;
+  project: ProjectSummary & { draft_id: string | null; description: string; profile: DataProfile | null; dataset_hash: string | null; accepted_run_id?: string | null };
+  workspace: Workspace; draft: Revision | null; display_run: Run | null; display_revision: Revision | null;
   messages: { role: string; content: string; created_at: string }[];
-  revisions: { id: string; summary: string; accepted: number }[];
+  revisions: { id: string; summary: string; accepted: number; created_at?: string }[];
 }
 
 export async function request<T>(path: string, init?: RequestInit): Promise<T> {

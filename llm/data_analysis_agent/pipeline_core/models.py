@@ -5,6 +5,7 @@ from typing import Any, Literal
 from uuid import uuid4
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pipeline_core import RUNTIME_VERSION
 
 Identifier = str
 Scalar = str | int | float | bool | None
@@ -77,6 +78,19 @@ class ChartBinding(Contract):
     y_label: str | None = None
 
 
+class GridPosition(Contract):
+    x: int = Field(default=0, ge=0, le=11)
+    y: int = Field(default=0, ge=0, le=10000)
+    w: int = Field(default=6, ge=1, le=12)
+    h: int = Field(default=12, ge=3, le=100)
+
+    @model_validator(mode="after")
+    def within_grid(self) -> "GridPosition":
+        if self.x + self.w > 12:
+            raise ValueError("Widget extends beyond the dashboard grid")
+        return self
+
+
 class Widget(Contract):
     id: str = Field(pattern=r"^[a-z][a-z0-9_]*$")
     kind: Literal["metric", "chart", "table", "text"]
@@ -85,6 +99,9 @@ class Widget(Contract):
     width: Literal[1, 2] = 1
     format: str | None = None
     chart_binding: ChartBinding | None = None
+    layout: GridPosition | None = None
+    unit: str = Field(default="", max_length=80)
+    description: str = Field(default="", max_length=1000)
 
 
 class DashboardSpec(Contract):
@@ -94,7 +111,7 @@ class DashboardSpec(Contract):
 
 
 class ProjectRevision(Contract):
-    schema_version: Literal[1] = 1
+    schema_version: Literal[1, 2] = 2
     revision_id: str = Field(default_factory=lambda: str(uuid4()))
     parent_revision_id: str | None = None
     created_at: str = Field(default_factory=now)
@@ -126,6 +143,9 @@ class RunRecord(Contract):
     status: Literal["running", "succeeded", "failed", "cancelled", "interrupted"] = "running"
     started_at: str = Field(default_factory=now)
     finished_at: str | None = None
-    runtime_version: str = "0.2.0"
+    runtime_version: str = RUNTIME_VERSION
+    validation_mode: Literal["execution", "presentation"] = "execution"
+    source_run_id: str | None = None
+    workspace_version: int | None = None
     error: str | None = None
     result: dict[str, Any] | None = None

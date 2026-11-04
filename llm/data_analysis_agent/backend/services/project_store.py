@@ -40,7 +40,27 @@ class ProjectStore:
                     id INTEGER PRIMARY KEY, project_id TEXT NOT NULL, role TEXT NOT NULL,
                     content TEXT NOT NULL, created_at TEXT NOT NULL
                 );
+                CREATE TABLE IF NOT EXISTS workspaces (
+                    project_id TEXT PRIMARY KEY, version INTEGER NOT NULL,
+                    document TEXT NOT NULL, history TEXT NOT NULL DEFAULT '[]',
+                    future TEXT NOT NULL DEFAULT '[]'
+                );
+                CREATE TABLE IF NOT EXISTS target_preferences (
+                    project_id TEXT PRIMARY KEY, port INTEGER NOT NULL
+                );
+                CREATE TABLE IF NOT EXISTS jobs (
+                    id TEXT PRIMARY KEY, project_id TEXT NOT NULL, record TEXT NOT NULL
+                );
+                CREATE TABLE IF NOT EXISTS acceptances (
+                    revision_id TEXT PRIMARY KEY, project_id TEXT NOT NULL,
+                    run_id TEXT NOT NULL, accepted_at TEXT NOT NULL
+                );
             """)
+            for row in db.execute("SELECT id,record FROM jobs").fetchall():
+                job = json.loads(row["record"])
+                if job["status"] in {"running", "queued"}:
+                    job.update(status="interrupted", error="Builder stopped before this job completed")
+                    db.execute("UPDATE jobs SET record=? WHERE id=?", (json.dumps(job), row["id"]))
             # A terminated API process cannot leave a live worker-owned run.
             for row in db.execute("SELECT id,record FROM runs").fetchall():
                 record = json.loads(row["record"])
@@ -63,9 +83,11 @@ class ProjectStore:
     def get(self, project_id: str) -> dict[str, Any]:
         with self.connect() as db:
             row = db.execute("SELECT * FROM projects WHERE id=?", (project_id,)).fetchone()
+            acceptance = db.execute("SELECT run_id FROM acceptances WHERE revision_id=(SELECT accepted_id FROM projects WHERE id=?)", (project_id,)).fetchone()
         if row is None:
             raise KeyError("Project not found")
         result = dict(row)
+        result["accepted_run_id"] = acceptance["run_id"] if acceptance else None
         result["profile"] = json.loads(result["profile"]) if result["profile"] else None
         return result
 
@@ -100,18 +122,28 @@ class ProjectStore:
             raise ValueError("Upload a CSV before building a pipeline")
         return self.root / project_id / "datasets" / f"{project['dataset_hash']}.csv"
 
-    def save_revision(self, project_id: str, revision: ProjectRevision) -> None:
+    def save_revision(self, project_id: str, revision: ProjectRevision, sync_workspace: bool = True,
+                      expected_workspace_version: int | None = None) -> None:
         directory = self.project_dir(project_id) / "revisions"
         directory.mkdir(exist_ok=True)
         path = directory / f"{revision.revision_id}.json"
-        if path.exists():
-            raise ValueError("Revisions are immutable; create a new revision")
-        path.write_text(revision.model_dump_json(indent=2))
         with self.connect() as db:
+            db.execute("BEGIN IMMEDIATE")
+            if expected_workspace_version is not None:
+                row = db.execute("SELECT version FROM workspaces WHERE project_id=?", (project_id,)).fetchone()
+                if not row or row["version"] != expected_workspace_version:
+                    from backend.services.workspace_service import WorkspaceConflict
+                    raise WorkspaceConflict("The workspace changed during presentation validation")
+            if path.exists():
+                raise ValueError("Revisions are immutable; create a new revision")
+            path.write_text(revision.model_dump_json(indent=2))
             db.execute("INSERT INTO revisions(id,project_id,parent_id,created_at,summary) VALUES(?,?,?,?,?)",
                 (revision.revision_id, project_id, revision.parent_revision_id, revision.created_at, revision.summary))
             db.execute("UPDATE projects SET draft_id=?,title=?,updated_at=? WHERE id=?",
                 (revision.revision_id, revision.title, now(), project_id))
+        if sync_workspace:
+            from backend.services.workspace_service import Workspaces
+            Workspaces(self).from_revision(project_id, revision)
 
     def revision(self, project_id: str, revision_id: str) -> ProjectRevision:
         with self.connect() as db:
@@ -130,7 +162,9 @@ class ProjectStore:
             db.execute("INSERT INTO runs(id,project_id,revision_id,started_at,record) VALUES(?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET record=excluded.record",
                 (run.run_id, project_id, run.revision_id, run.started_at, run.model_dump_json()))
             if run.status == "succeeded":
-                db.execute("UPDATE projects SET display_run_id=?,updated_at=? WHERE id=?", (run.run_id, now(), project_id))
+                previous = db.execute("SELECT record FROM runs WHERE id=(SELECT display_run_id FROM projects WHERE id=?)", (project_id,)).fetchone()
+                if not previous or json.loads(previous["record"])["started_at"] <= run.started_at:
+                    db.execute("UPDATE projects SET display_run_id=?,updated_at=? WHERE id=?", (run.run_id, now(), project_id))
 
     def run(self, project_id: str, run_id: str) -> RunRecord:
         with self.connect() as db:
@@ -150,6 +184,11 @@ class ProjectStore:
             raise ValueError("Only a successful, validated run can be accepted")
         if run.parameters != revision.default_parameters():
             raise ValueError("Reset dashboard controls and validate the default parameters before acceptance")
+        from backend.services.workspace_service import Workspaces
+        from pipeline_core.workspace import WorkspaceDocument
+        workspace = Workspaces(self).get(project_id)
+        if WorkspaceDocument.from_revision(revision).model_dump() != workspace["document"]:
+            raise ValueError("The workspace changed; run or validate the current workspace before acceptance")
         impacts = run.result.get("cleanup_impacts", [])
         if any(item["requires_confirmation"] for item in impacts) and not cleanup_confirmed:
             raise ValueError("Confirm the cleanup rules and their impact before acceptance")
@@ -158,6 +197,8 @@ class ProjectStore:
             if project["dataset_hash"] != run.input_hash or project["draft_id"] != run.revision_id:
                 raise ValueError("The input or draft changed; validate the current draft again")
             db.execute("UPDATE revisions SET accepted=1 WHERE id=?", (run.revision_id,))
+            db.execute("INSERT INTO acceptances(revision_id,project_id,run_id,accepted_at) VALUES(?,?,?,?) ON CONFLICT(revision_id) DO UPDATE SET run_id=excluded.run_id,accepted_at=excluded.accepted_at",
+                (run.revision_id, project_id, run.run_id, now()))
             db.execute("UPDATE projects SET accepted_id=?,updated_at=? WHERE id=?", (run.revision_id, now(), project_id))
 
     def rollback(self, project_id: str, revision_id: str) -> None:
@@ -169,6 +210,8 @@ class ProjectStore:
             # Keep accepted identity; its dashboard will update only after rerun.
             db.execute("UPDATE projects SET accepted_id=?,draft_id=?,title=?,updated_at=? WHERE id=?",
                 (revision_id, revision_id, revision.title, now(), project_id))
+        from backend.services.workspace_service import Workspaces
+        Workspaces(self).from_revision(project_id, revision)
 
     def message(self, project_id: str, role: str, content: str) -> None:
         self.get(project_id)
@@ -182,7 +225,9 @@ class ProjectStore:
     def view(self, project_id: str) -> dict[str, Any]:
         project = self.get(project_id)
         display = self.run(project_id, project["display_run_id"]) if project["display_run_id"] else None
-        return {"project": project, "revisions": self.revisions(project_id), "messages": self.messages(project_id),
+        from backend.services.workspace_service import Workspaces
+        return {"project": project, "workspace": Workspaces(self).get(project_id),
+            "revisions": self.revisions(project_id), "messages": self.messages(project_id),
             "draft": self.revision(project_id, project["draft_id"]).model_dump() if project["draft_id"] else None,
             "display_run": display.model_dump() if display else None,
             "display_revision": self.revision(project_id, display.revision_id).model_dump() if display else None}

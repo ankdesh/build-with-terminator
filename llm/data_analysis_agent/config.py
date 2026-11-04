@@ -5,7 +5,7 @@ Loads application settings from config.json, while keeping the API key
 strictly in the environment variable (OPENAI_API_KEY) for security.
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import json
 import logging
 import os
@@ -38,7 +38,7 @@ class AppConfig:
     """Immutable application configuration loaded from config.json and environment."""
 
     openai_api_base: str
-    openai_api_key: str
+    openai_api_key: str = field(repr=False)
     openai_model_name: str
     server_host: str
     server_port: int
@@ -48,6 +48,9 @@ class AppConfig:
     exec_timeout_seconds: int
     max_upload_size_bytes: int
     strict_model_outputs: bool
+    llm_timeout_seconds: float = 90.0
+    llm_max_retries: int = 0
+    llm_temperature: float = 0.1
 
     @classmethod
     def load(cls, config_path: Optional[Path] = None) -> "AppConfig":
@@ -59,9 +62,11 @@ class AppConfig:
             try:
                 with open(target_path, "r", encoding="utf-8") as f:
                     file_settings = json.load(f)
+                if not isinstance(file_settings, dict):
+                    raise ValueError("Configuration must be a JSON object")
                 logger.info("Loaded configuration from %s", target_path)
             except Exception as e:
-                logger.error("Failed to parse %s: %s. Using default values.", target_path, e)
+                raise ValueError(f"Cannot load configuration from {target_path}: {e}") from e
         else:
             logger.info("Config file %s not found. Generating default config.json...", target_path)
             file_settings = {
@@ -72,6 +77,9 @@ class AppConfig:
                 "max_retries": MAX_EXECUTION_RETRIES,
                 "exec_timeout_seconds": CODE_EXECUTION_TIMEOUT_SECONDS,
                 "max_upload_size_bytes": MAX_UPLOAD_FILE_SIZE_BYTES,
+                "llm_timeout_seconds": 90,
+                "llm_max_retries": 0,
+                "llm_temperature": 0.1,
             }
             try:
                 with open(target_path, "w", encoding="utf-8") as f:
@@ -89,7 +97,12 @@ class AppConfig:
         upload_limit = int(file_settings.get("max_upload_size_bytes") or MAX_UPLOAD_FILE_SIZE_BYTES)
 
         # API Key is strictly sourced from environment variable for secret isolation
-        api_key = os.getenv("OPENAI_API_KEY", "EMPTY")
+        api_key = os.getenv("OPENAI_API_KEY", "").strip()
+        llm_timeout = float(file_settings.get("llm_timeout_seconds", 90))
+        llm_retries = int(file_settings.get("llm_max_retries", 0))
+        temperature = float(file_settings.get("llm_temperature", 0.1))
+        if not 0 < llm_timeout < float("inf") or llm_retries < 0 or not 0 <= temperature <= 2:
+            raise ValueError("Invalid LLM configuration: timeout must be positive, retries non-negative, and temperature between 0 and 2")
 
         sessions_path = SESSIONS_DIR
         sessions_path.mkdir(parents=True, exist_ok=True)
@@ -106,6 +119,9 @@ class AppConfig:
             exec_timeout_seconds=timeout,
             max_upload_size_bytes=upload_limit,
             strict_model_outputs=bool(file_settings.get("strict_model_outputs", api_base.rstrip("/") == DEFAULT_OPENAI_API_BASE)),
+            llm_timeout_seconds=llm_timeout,
+            llm_max_retries=llm_retries,
+            llm_temperature=temperature,
         )
 
 

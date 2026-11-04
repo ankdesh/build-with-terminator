@@ -63,3 +63,28 @@ async def test_strict_patch_decodes_json_value(simple_revision):
     revised = await ProjectAgent(client).propose({'profile': {}, 'description': ''}, simple_revision, 'Rename', [])
     assert revised.dashboard.title == 'Strict title'
     assert revised.steps == simple_revision.steps
+
+
+@pytest.mark.asyncio
+async def test_patch_accepts_compatible_model_plain_string_for_existing_string_field(simple_revision):
+    client = AsyncMock()
+    code = simple_revision.steps[0].code + "\n# Retain original observations according to the saved rule.\n"
+    client.chat.completions.create.return_value = SimpleNamespace(choices=[SimpleNamespace(message=SimpleNamespace(
+        content=json.dumps({'summary': 'Refine', 'changes': [
+            {'op': 'replace', 'path': '/dashboard/title', 'value_json': 'Plain title'},
+            {'op': 'replace', 'path': '/steps/0/code', 'value_json': code},
+        ]})))])
+    revised = await ProjectAgent(client).propose({'profile': {}, 'description': ''}, simple_revision, 'Refine', [])
+    assert revised.dashboard.title == 'Plain title'
+    assert revised.steps[0].code == code
+
+
+@pytest.mark.asyncio
+async def test_patch_does_not_guess_malformed_non_string_values(simple_revision):
+    client = AsyncMock()
+    client.chat.completions.create.return_value = SimpleNamespace(choices=[SimpleNamespace(message=SimpleNamespace(
+        content=json.dumps({'summary': 'Bad array', 'changes': [
+            {'op': 'replace', 'path': '/steps/0/outputs', 'value_json': '[broken'},
+        ]})))])
+    with pytest.raises(ValueError, match='must be valid JSON'):
+        await ProjectAgent(client).propose({'profile': {}, 'description': ''}, simple_revision, 'Refine', [])

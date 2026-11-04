@@ -1,6 +1,6 @@
 # WPS-AI Data Analysis Studio
 
-Build a reusable analysis application through chat on Linux. Review its cleanup and calculations, refine its dashboard, and accept a saved revision. Export that revision for a Windows workstation with no chat, LLM, or internet dependency.
+Design a reusable analysis application through chat on Linux. Review its stages, arrange its dashboard, and select Run to apply calculations. Use the resulting dashboard on its own local port. Accept a validated revision and export it for Windows with no chat, LLM, or internet dependency.
 
 The application supports one replacement CSV up to 100 MB, generated pandas and NumPy code, SciPy and statsmodels calculations, forecasts, linked filters, and what-if controls. It preserves the last successful dashboard when a refresh fails.
 
@@ -8,7 +8,7 @@ See [PLATFORM.md](PLATFORM.md) for contracts, execution policy, packaging, and r
 
 ## Start the Linux builder
 
-Python 3.12, Node.js, pnpm, and Bubblewrap are required. Enable Linux user namespaces. Workers fail closed when isolation is unavailable.
+Python 3.12, Node.js, and pnpm are required. No system sandbox packages or Linux namespace permissions are required.
 
 ```bash
 uv venv --python 3.12
@@ -17,13 +17,72 @@ uv pip install -e '.[dev]'
 cd frontend
 pnpm install --frozen-lockfile
 pnpm exec vite build
+pnpm exec vite build --mode runtime
 cd ..
 python launcher.py
 ```
 
 Use the existing `config.json` for the model endpoint and model name. Supply credentials through `OPENAI_API_KEY`. The model receives bounded data context while the full CSV stays local.
 
-Select **New project**, upload a CSV, and describe the system in chat. **Load example system** creates a validated energy dashboard without a model call. Open the pipeline inspector to review cleanup and source code. Accept a validated revision before export.
+To load a CSV at startup, use:
+
+```bash
+python launcher.py --csv "/path/to/data.csv"
+# Start without opening a browser:
+python launcher.py --headless --csv "/path/to/data.csv"
+```
+
+This creates a new project, copies and profiles the CSV, and opens its Data view. In headless mode, use the Builder URL printed in the terminal. Each launch with `--csv` creates a new project. The same size and data checks apply to command-line input and UI uploads. No model call or calculation runs during import.
+
+All model requests pass through `backend/services/llm_gateway.py`, including the legacy agent service. Set these options in `config.json`:
+
+```json
+{
+  "openai_api_base": "https://api.openai.com/v1",
+  "openai_model_name": "gpt-4o-mini",
+  "llm_timeout_seconds": 90,
+  "llm_max_retries": 0,
+  "llm_temperature": 0.1,
+  "strict_model_outputs": true
+}
+```
+
+Set `OPENAI_API_KEY` in the environment before launch. API keys in the config file are ignored. For a local endpoint with no authentication, set this environment variable to a non-secret value such as `EMPTY`. `llm_max_retries` controls transport retries; `max_retries` controls proposal repair. A missing key blocks model requests but allows data import and existing dashboard use. Invalid config files fail at startup.
+
+Calculations run as trusted Python in a separate worker process, without code sandboxing or file and network restrictions. Workers use a reduced environment without model credentials. Time and memory limits, cancellation, progress reporting, and parent-exit cleanup remain active. Source checks validate the calculation contract and reproducibility; they do not restrict Python imports or file access.
+
+Select **New project**, upload a CSV in **Data**, and describe the system in **Chat**. The agent creates four fixed stage types: Data input, Data cleaning, Analysis, and Visualization. Chat saves development changes without running calculations. **Load energy example** loads a reference workspace without a model call; select **Run** to calculate it.
+
+Use **Pipeline** to inspect stages and their dependencies. Stage deletion includes an impact review; Undo and Redo restore development edits. Use **Dashboard** to drag and resize widgets or change their properties. Layout and display edits update the target after saving, using saved calculation artifacts. Data and calculation edits stay pending until Run.
+
+The builder and generated dashboards support desktop use. The designer, live target, and exported application share one 12-column grid. There are no tablet or phone layouts or preview modes. The grid resizes within desktop windows; narrower windows and browser zoom use scrolling instead of changing widget positions. Minimum workspace widths are 1100 CSS pixels for the builder and 1000 for the target.
+
+Properties shows only the selected card and controls used by that stage. Select the project name in the top bar to rename the project. Use **Dashboard settings** in Dashboard to edit its title and subtitle, and **Filters and scenario defaults** to set control labels, defaults, and ranges. CSV, column types, and business context stay in Data.
+
+Each opened project starts a separate dashboard service on an available port from `8100` to `8199`. Select **Open dashboard** to use it. Targets stay open when you switch projects and stop when the builder stops. Set `WPS_TARGET_PORT_START` and `WPS_TARGET_PORT_END` to use a different range. Restart reuses the preferred port when it is available.
+
+The target starts with the builder CSV. A target-side CSV upload uses separate runtime state and does not change the development input. **Use builder data** returns to the builder input. A failed refresh or incompatible developer update keeps the last successful revision and results.
+
+Review cleanup and select **Accept revision** before downloading a Windows application. **History** keeps earlier accepted downloads available. The download contains the selected accepted revision and its accepted CSV when included; pending development changes and target-side CSV replacements are excluded.
+
+## Guided analysis tutorials
+
+Open [the tutorial start page](tutorials/index.html) in a desktop browser, or extract [the complete tutorial ZIP](artifacts/wps-ai-tutorial-pack.zip). Keep all folders beside the HTML files. The pack includes four public CSVs, local interactive reference charts, copyable prompts, result checkpoints, and replacement/invalid-schema practice files. The pages work offline and do not call the builder API.
+
+Use one new project per lesson: Palmer Penguins, Q1 2011 Online Retail, Wine Quality, and daily Bike Sharing. Follow the steps in the builder and compare the results with the guide. Source licences, transformations, hashes and model validation records are included in the pack.
+
+To rebuild the guide from the repository root:
+
+```bash
+uv pip install -e '.[tutorials]'
+python scripts/tutorial_data.py
+python scripts/tutorial_validate.py --live-model
+python scripts/build_tutorials.py
+```
+
+Live validation uses the configured model and API tokens. It writes isolated projects under `data/tutorial_validation`; it does not change existing projects or model configuration. Matching successful validations are reused. Data preparation caches the publisher downloads under `data/tutorial_sources`. A page build fails if validation does not match the current prompts and CSV hashes.
+
+The guide documents the Windows runtime requirement. It does not include that runtime or replace a real Windows smoke test.
 
 ## Build and cache the Windows runtime
 
@@ -56,4 +115,6 @@ pnpm exec vite build
 pnpm exec vite build --mode runtime
 ```
 
-Linux worker tests need permission to create Bubblewrap namespaces. Runtime API tests verify CSV replacement, controls, complete table export, failure recovery, and the absence of chat and model routes. The legacy question-answering chat route is retired.
+For the full local service check, run `python scripts/studio_smoke.py`. It uses temporary projects, real target processes, and separate workers without model calls or a Windows runtime cache. It checks ports, live presentation, deletion and Undo, independent CSV input, failure recovery, credentials, restart, shutdown, and parent-crash cleanup.
+
+Worker tests verify direct Python startup, file and local network access, cache reuse, cancellation, and credential exclusion. Runtime API tests verify CSV replacement, controls, complete table export, failure recovery, and the absence of chat and model routes. The legacy question-answering chat route is retired.

@@ -7,6 +7,7 @@ and automatically opens the local user interface in the system default browser.
 
 import argparse
 import logging
+from pathlib import Path
 import socket
 import sys
 import threading
@@ -15,7 +16,7 @@ import urllib.request
 import webbrowser
 import uvicorn
 
-from config import DEFAULT_SERVER_HOST, DEFAULT_SERVER_PORT, config
+from config import config
 
 logging.basicConfig(
     level=logging.INFO,
@@ -54,24 +55,41 @@ def wait_for_server(url: str, timeout_seconds: float = 10.0) -> bool:
     return False
 
 
+def import_startup_csv(source: Path) -> str:
+    """Create a project from a CSV and return its builder navigation path."""
+    from backend.routes.project_routes import store
+    from backend.services.dataset_import import import_csv
+    view = import_csv(store, source.expanduser().resolve())
+    return f"/?project={view['project']['id']}&view=data"
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="WPS-AI Desktop Application Launcher")
     parser.add_argument("--host", default=config.server_host, help="Bind host (default: 127.0.0.1)")
     parser.add_argument("--port", type=int, default=config.server_port, help="Bind port (default: 8080)")
     parser.add_argument("--headless", action="store_true", help="Start server without launching browser")
     parser.add_argument("--log-level", default="info", help="Uvicorn log level (default: info)")
+    parser.add_argument("--csv", type=Path, metavar="FILE", help="Load a CSV into a new project at startup (no model call or calculation)")
     args = parser.parse_args()
+
+    initial_path = "/"
+    if args.csv is not None:
+        try:
+            initial_path = import_startup_csv(args.csv)
+        except Exception as exc:
+            parser.exit(2, f"Cannot load startup CSV: {exc}\n")
 
     host = args.host
     port = find_available_port(host, args.port)
     server_url = f"http://{host}:{port}"
+    builder_url = server_url + initial_path
 
     logger.info("==================================================")
     logger.info("              WPS-AI DATA ANALYST                 ")
     logger.info("==================================================")
     logger.info("Server Target: %s", server_url)
     logger.info("Model:         %s", config.openai_model_name)
-    logger.info("API Endpoint:  %s", config.openai_api_base or "(Not configured - mock fallback active)")
+    logger.info("API Endpoint:  %s", config.openai_api_base)
     logger.info("Sessions Dir:  %s", config.sessions_dir)
     logger.info("==================================================")
 
@@ -82,6 +100,7 @@ def main() -> None:
         port=port,
         log_level=args.log_level.lower(),
         access_log=False,
+        timeout_graceful_shutdown=3,
     )
     server = uvicorn.Server(uvicorn_config)
 
@@ -93,13 +112,14 @@ def main() -> None:
     logger.info("Waiting for local server initialization...")
     if wait_for_server(server_url):
         logger.info("Server is live and healthy at %s", server_url)
+        logger.info("Builder: %s", builder_url)
         if not args.headless:
             logger.info("Launching user interface in system browser...")
             try:
-                webbrowser.open(server_url)
+                webbrowser.open(builder_url)
             except Exception as e:
                 logger.warning("Could not launch browser automatically: %s", e)
-                logger.info("Please open your browser manually at %s", server_url)
+                logger.info("Please open your browser manually at %s", builder_url)
     else:
         logger.error("Server failed to respond to health check within timeout.")
 

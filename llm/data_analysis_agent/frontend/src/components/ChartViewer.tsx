@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as echarts from 'echarts';
 import { Download, TrendingUp } from 'lucide-react';
 import { ChartSpec } from '../lib/types';
+import { downloadChartPng } from '../lib/chartExport';
 
 const COLOR_PALETTE = [
   '#2563eb', // Enterprise Blue
@@ -15,11 +16,14 @@ const COLOR_PALETTE = [
 
 interface ChartViewerProps {
   spec: ChartSpec;
+  embedded?: boolean;
 }
 
-export const ChartViewer: React.FC<ChartViewerProps> = ({ spec }) => {
+export const ChartViewer: React.FC<ChartViewerProps> = ({ spec, embedded = false }) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartInstanceRef = useRef<echarts.ECharts | null>(null);
+  const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState('');
 
   const rawOption = spec?.option;
   const hasSeries = Boolean(rawOption && (rawOption.series || rawOption.dataset));
@@ -67,6 +71,7 @@ export const ChartViewer: React.FC<ChartViewerProps> = ({ spec }) => {
       color: COLOR_PALETTE,
       backgroundColor: 'transparent',
       animation: false,
+      aria: { enabled: true },
       textStyle: {
         fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       },
@@ -112,7 +117,7 @@ export const ChartViewer: React.FC<ChartViewerProps> = ({ spec }) => {
       resizeObserver.disconnect();
       window.removeEventListener('resize', handleResize);
     };
-  }, [spec, hasSeries, rawOption]);
+  }, [hasSeries, rawOption]);
 
   // Clean up instance on unmount
   useEffect(() => {
@@ -128,20 +133,12 @@ export const ChartViewer: React.FC<ChartViewerProps> = ({ spec }) => {
     return null;
   }
 
-  const handleDownloadPng = () => {
+  const handleDownloadPng = async () => {
     if (!chartInstanceRef.current) return;
-    const dataUrl = chartInstanceRef.current.getDataURL({
-      type: 'png',
-      pixelRatio: 2,
-      backgroundColor: '#ffffff',
-    });
-
-    const link = document.createElement('a');
-    link.href = dataUrl;
-    link.download = `${(spec.title || 'chart').toLowerCase().replace(/\s+/g, '_')}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    setExporting(true); setExportError('');
+    try { await downloadChartPng(chartInstanceRef.current, spec.title || 'chart'); }
+    catch (error) { setExportError(error instanceof Error ? error.message : 'PNG export failed'); }
+    finally { setExporting(false); }
   };
 
   const displayTitle =
@@ -152,7 +149,7 @@ export const ChartViewer: React.FC<ChartViewerProps> = ({ spec }) => {
     'Data Visualization';
 
   return (
-    <div className="w-full border border-slate-200 bg-white rounded-xl shadow-xs p-4 my-3 overflow-hidden">
+    <div className={embedded ? "chart-embedded" : "w-full border border-slate-200 bg-white rounded-xl shadow-xs p-4 my-3 overflow-hidden"}>
       {/* Chart Header Bar */}
       <div className="flex items-center justify-between mb-2 border-b border-slate-100 pb-2.5">
         <div className="flex items-center space-x-2">
@@ -169,19 +166,22 @@ export const ChartViewer: React.FC<ChartViewerProps> = ({ spec }) => {
 
         <button
           onClick={handleDownloadPng}
+          disabled={exporting}
           title="Download High-Resolution PNG (2x Retina)"
           className="flex items-center space-x-1 px-2.5 py-1 text-xs text-slate-600 hover:text-blue-600 bg-slate-50 hover:bg-slate-100 rounded-md border border-slate-200 transition-colors shadow-2xs cursor-pointer"
         >
           <Download className="w-3 h-3" />
-          <span>PNG</span>
+          <span>{exporting ? 'Exporting…' : 'PNG'}</span>
         </button>
       </div>
+      {exportError && <p role="alert" className="text-xs text-red-700">{exportError}</p>}
 
       {/* Apache ECharts Container Element */}
       <div
         ref={chartContainerRef}
-        className="w-full h-72 min-h-[288px]"
-        style={{ width: '100%', height: '288px', minHeight: '288px' }}
+        className={embedded ? "chart-surface" : "w-full h-72 min-h-[288px]"}
+        role="img" aria-label={displayTitle}
+        style={{ width: '100%', height: embedded ? '100%' : '288px', minHeight: embedded ? '160px' : '288px' }}
       />
     </div>
   );

@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 
-async def create_demo(store: "ProjectStore") -> dict[str, Any]:
+async def create_demo(store: "ProjectStore", validate: bool = True) -> dict[str, Any]:
     from backend.services.data_profiler import DataProfiler
     from backend.services.project_service import ProjectService
     from examples.electric_dashboard import revision
@@ -28,6 +28,9 @@ async def create_demo(store: "ProjectStore") -> dict[str, Any]:
         store.save_dataset(project["id"], source, "electric.csv", profile.model_dump(), "Hourly electricity consumption by building zone, in kWh.")
     draft = revision()
     store.save_revision(project["id"], draft)
+    if not validate:
+        store.message(project["id"], "assistant", "Energy example loaded. Review its stages and select Run to calculate the dashboard.")
+        return store.view(project["id"])
     service = ProjectService(store)
     run = await service.execute(project["id"], draft, {}, lambda _: None, threading.Event())
     if run.status != "succeeded":

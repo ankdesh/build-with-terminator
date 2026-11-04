@@ -1,0 +1,21 @@
+{
+  "checked_at": "2026-11-04",
+  "browser": "Codex in-app Chromium browser",
+  "pages_opened": ["index.html", "01-penguins.html", "02-retail.html", "03-wine.html", "04-bike.html", "validation.html"],
+  "reference_charts_rendered_without_errors": 14,
+  "copy_controls_checked_against_clipboard": 13,
+  "downloads_confirmed": ["Retail CSV: downloaded bytes match the source SHA-256", "Application Species summary CSV: all three result rows"],
+  "builder_ui_checked": ["Manual Run and results", "Selected-card Properties", "Bar-to-pie binding edit", "Undo and Redo", "Alt+ArrowDown widget movement", "Drag widget handle", "Resize widget handle"],
+  "target_ui_checked": ["Separate project port", "Changing filter leaves existing results visible", "Apply changes the penguin count from 342 to 151", "Saved presentation updates reach the target"],
+  "service_smoke": "Passed: separate ports, manual Run, live presentation, deletion and Undo, isolated input, failure recovery, credentials, restart, shutdown and parent-crash cleanup",
+  "python_suite": "95 passed",
+  "type_checks": "Python mypy and TypeScript passed",
+  "frontend_builds": "Builder and runtime passed",
+  "offline_static_checks": "All local links and assets resolve; no remote automatic resource URLs or runtime fetches; connect-src none policy. ZIP contents match the source pack.",
+  "limits": [
+    "Direct file:// browser opening was blocked by the browser tool URL policy. The extracted files were checked on disk; direct opening remains unverified.",
+    "An OS-level test with external network access disconnected was not available. HTTP page checks used local assets and a policy that blocks remote scripts and network connections.",
+    "PNG buttons were invoked without script errors. This browser did not report the generated image downloads, so saved PNG file contents remain unconfirmed. The application export now renders a temporary canvas instead of saving SVG with a PNG name.",
+    "A real Windows application smoke test was not run: the compatible runtime archive and a Windows host are unavailable. Acceptance and missing-runtime export gating are covered by the service/Python checks."
+  ]
+}

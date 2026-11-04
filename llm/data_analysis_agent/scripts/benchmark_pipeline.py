@@ -1,4 +1,4 @@
-"""Exercise the declared CSV limit with a known-result isolated pipeline."""
+"""Exercise the declared CSV limit with a known-result worker pipeline."""
 
 import argparse
 import asyncio

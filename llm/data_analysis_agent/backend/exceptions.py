@@ -104,5 +104,5 @@ class LLMConfigurationError(WPSAIBaseException):
     def __init__(self, message: str) -> None:
         super().__init__(
             message=message,
-            details="Ensure OPENAI_API_BASE and OPENAI_API_KEY are configured in the environment."
+            details="Set the endpoint and model in config.json. Set OPENAI_API_KEY in the environment."
         )

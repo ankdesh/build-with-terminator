@@ -4,8 +4,9 @@ import contextlib
 import io
 import json
 import os
-import socket
 import sys
+import threading
+import time
 import traceback
 from pathlib import Path
 
@@ -25,25 +26,27 @@ class BoundedLog(io.TextIOBase):
         return len(text)
 
 
+def watch_parent(parent_pid: int) -> None:
+    """Stop this worker process group if its owning service exits."""
+    import signal
+    while True:
+        if os.getppid() != parent_pid:
+            os.killpg(os.getpgrp(), signal.SIGKILL)
+            return
+        time.sleep(0.25)
+
+
 def main(request_file: str) -> int:
     request = json.loads(Path(request_file).read_text())
     output = Path(request["output_dir"])
     output.mkdir(parents=True, exist_ok=True)
     if os.name != "nt":
+        threading.Thread(target=watch_parent, args=(request.get("parent_pid", os.getppid()),), daemon=True).start()
         import resource
         resource.setrlimit(resource.RLIMIT_AS, (request["memory_bytes"], request["memory_bytes"]))
         resource.setrlimit(resource.RLIMIT_CPU, (request["timeout_seconds"], request["timeout_seconds"] + 1))
         resource.setrlimit(resource.RLIMIT_FSIZE, (512 * 1024 * 1024, 512 * 1024 * 1024))
     log = BoundedLog()
-    def deny_network(*args: object, **kwargs: object) -> None:
-        raise ConnectionError("Network access is disabled for pipeline workers")
-    # This guard catches accidental network use in trusted numerical libraries.
-    # Linux additionally enforces network isolation at the OS boundary.
-    for method in ("connect", "connect_ex"):
-        setattr(socket.socket, method, deny_network)
-    socket.create_connection = deny_network  # type: ignore[assignment]
-    socket.getaddrinfo = deny_network  # type: ignore[assignment]
-
     def notify(event: dict) -> None:
         with (output / "events.jsonl").open("a") as stream:
             stream.write(json.dumps(event) + "\n")

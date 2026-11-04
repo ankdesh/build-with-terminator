@@ -7,12 +7,14 @@ __pycache__/
 *.egg-info/
 data/sessions/
 data/projects/
+data/tutorial_sources/
+data/tutorial_validation/
 runtime_static/
 runtime_cache/
 artifacts/*-qa/
 dist/
 node_modules/
+.pnpm-store/
 backend/static/assets/
 backend/static/index.html
 !frontend/src/lib/
-

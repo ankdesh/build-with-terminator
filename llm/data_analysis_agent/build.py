@@ -20,7 +20,10 @@ def build_frontend() -> bool:
         print("Install Node.js and frontend dependencies before building.")
         return False
     result = subprocess.run([node, str(vite), "build"], cwd=FRONTEND_DIR)
-    return result.returncode == 0 and (STATIC_DIR / "index.html").is_file()
+    if result.returncode != 0:
+        return False
+    runtime = subprocess.run([node, str(vite), "build", "--mode", "runtime"], cwd=FRONTEND_DIR)
+    return runtime.returncode == 0 and (STATIC_DIR / "index.html").is_file() and (ROOT_DIR / "runtime_static" / "runtime.html").is_file()
 
 
 def create_portable_bundle() -> bool:
@@ -30,12 +33,13 @@ def create_portable_bundle() -> bool:
     DIST_DIR.mkdir(parents=True)
     for name in ("backend", "pipeline_core", "examples", "scripts", "sample_data"):
         shutil.copytree(ROOT_DIR / name, DIST_DIR / name, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+    shutil.copytree(ROOT_DIR / "runtime_static", DIST_DIR / "runtime_static")
     if (ROOT_DIR / "artifacts").exists():
         shutil.copytree(ROOT_DIR / "artifacts", DIST_DIR / "artifacts", ignore=shutil.ignore_patterns("*-qa"))
     for name in ("config.py", "config.json", "launcher.py", "pyproject.toml", "requirements-runtime.txt", "README.md", "PLATFORM.md", "offline_app.py", "runtime_launcher.py"):
         shutil.copyfile(ROOT_DIR / name, DIST_DIR / name)
     print(f"Linux builder files: {DIST_DIR}")
-    print("Install pinned Python dependencies and Bubblewrap, then run python launcher.py.")
+    print("Install pinned Python dependencies, then run python launcher.py.")
     print("Windows applications are exported from accepted projects with a cached Windows runtime.")
     return True
 

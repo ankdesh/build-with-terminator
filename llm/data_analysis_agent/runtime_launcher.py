@@ -36,7 +36,7 @@ def main() -> None:
         except OSError:
             reservation.bind(("127.0.0.1", 0))
         port = reservation.getsockname()[1]
-    server = uvicorn.Server(uvicorn.Config(app, host="127.0.0.1", port=port, log_level="info"))
+    server = uvicorn.Server(uvicorn.Config(app, host="127.0.0.1", port=port, log_level="info", timeout_graceful_shutdown=3))
     if not args.headless:
         def open_browser() -> None:
             deadline = time.monotonic() + 15

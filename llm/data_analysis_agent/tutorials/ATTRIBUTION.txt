@@ -1,0 +1,27 @@
+PUBLIC DATA SOURCES — WPS-AI tutorial pack
+
+CSV transformations are described in manifest.json. These are historical public observations, not synthetic records.
+
+PENGUINS
+Horst, Hill and Gorman (2020), palmerpenguins; observations by Kristen Gorman and Palmer Station LTER.
+https://allisonhorst.github.io/palmerpenguins/
+Licence: CC0-1.0 — https://creativecommons.org/publicdomain/zero/1.0/
+Normalize CSV encoding and missing tokens to empty cells. Preserve all source observations.
+
+RETAIL
+Chen, D. (2015). Online Retail. UCI Machine Learning Repository. DOI: 10.24432/C5BW33.
+https://archive.ics.uci.edu/dataset/352/online+retail
+Licence: CC-BY-4.0 — https://creativecommons.org/licenses/by/4.0/
+Convert Excel to CSV; retain all rows from 2011-01-01 inclusive to 2011-04-01 exclusive in source order. Normalize dates to ISO and identifiers to text. No analytical cleaning.
+
+WINE
+Cortez, Cerdeira, Almeida, Matos and Reis (2009). Wine Quality. UCI. DOI: 10.24432/C56S3T.
+https://archive.ics.uci.edu/dataset/186/wine+quality
+Licence: CC-BY-4.0 — https://creativecommons.org/licenses/by/4.0/
+Read both semicolon-separated CSVs, append wine_type=red/white, concatenate red then white, and write comma-separated CSV. Preserve repeated observations.
+
+BIKE
+Fanaee-T, H. (2013). Bike Sharing. UCI Machine Learning Repository. DOI: 10.24432/C5W894.
+https://archive.ics.uci.edu/dataset/275/bike+sharing+dataset
+Licence: CC-BY-4.0 — https://creativecommons.org/licenses/by/4.0/
+Use day.csv, not hour.csv. Normalize CSV encoding; keep source values, dates, normalized weather variables, and codes.

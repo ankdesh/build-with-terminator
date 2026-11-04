@@ -1,0 +1,626 @@
+{
+  "schema_version": 1,
+  "lessons": {
+    "penguins": {
+      "status": "passed",
+      "started_at": "2026-11-04T06:14:13.514790+00:00",
+      "model": "gpt-4o-mini",
+      "input_sha256": "f2d6493fc64ad958edbabd55eb0fc989af2c5a0458a2c79ccffe7985606feb60",
+      "prompt_sha256": "e3a4e4d330b0d2cd4761033be3fdcdf64d84d0e44a1a99a55d4d69a56511580d",
+      "prompts": [
+        {
+          "number": 1,
+          "text": "Build a desktop dashboard with separate Data cleaning and Analysis stages and the requested Visualization widgets. Give widgets the exact titles listed below so I can check them. Use readable English labels and correct units. Keep the original CSV unchanged. Preserve repeated observations unless I explicitly ask otherwise. Use standard column bindings for ordinary bar, pie, line and scatter charts so I can edit their bindings in Properties. For advanced charts return JSON-only ECharts options from the analysis. Use no external chart resources or JavaScript callbacks. Declare parameters_used for each step. Add a full table export where requested; do not truncate the underlying table. Save the stages; I will select Run.\nUse every source column. In cleanup, remove only rows missing any of bill_length_mm, bill_depth_mm, flipper_length_mm or body_mass_g; replace missing sex with 'Unknown'. Do not remove duplicate-looking observations.\nAdd a species select filter on the cleaned data, default All (null).\nCreate metrics 'Records used' (row count) and 'Mean body mass' (mean body_mass_g, grams, two decimals).\nCreate 'Species counts' as a bar chart of counts by species, 'Species share' as a pie chart of those same counts, and 'Mass and flipper length' as a scatter plot with flipper_length_mm on X and body_mass_g on Y, one point per cleaned observation.\nCreate the full table 'Species summary' with species, count, mean_body_mass_g and mean_flipper_length_mm. Charts and tables must use the current filtered data. Keep all three standard charts editable through column bindings.\n",
+          "status": "passed",
+          "metrics": {
+            "Records used": {
+              "expected": 342,
+              "actual": 342,
+              "passed": true
+            },
+            "Mean body mass": {
+              "expected": 4201.754385964912,
+              "actual": 4201.754385964912,
+              "passed": true
+            }
+          },
+          "extra_checks": {}
+        },
+        {
+          "number": 2,
+          "text": "Add one computed text widget titled 'Reading the scatter'. Calculate Pearson correlation between flipper_length_mm and body_mass_g from the current filtered cleaned data. Include the observation count and correlation rounded to three decimals, and explain that association does not establish cause. If fewer than two observations or a constant column prevents correlation, say that it is unavailable. Preserve all existing stages, widget titles, bindings, and controls. I will select Run.",
+          "status": "passed",
+          "metrics": {
+            "Records used": {
+              "expected": 342,
+              "actual": 342,
+              "passed": true
+            },
+            "Mean body mass": {
+              "expected": 4201.754385964912,
+              "actual": 4201.754385964912,
+              "passed": true
+            }
+          },
+          "extra_checks": {
+            "scatter_note_matches_scipy": true
+          }
+        }
+      ],
+      "repairs": [],
+      "project_id": "1c51965f-a191-459a-9319-a92941f059b7",
+      "variants": {
+        "filtered": {
+          "parameters": {
+            "species": "Adelie"
+          },
+          "metrics": {
+            "Records used": {
+              "expected": 151,
+              "actual": 151,
+              "passed": true
+            },
+            "Mean body mass": {
+              "expected": 3700.662251655629,
+              "actual": 3700.662251655629,
+              "passed": true
+            }
+          }
+        }
+      },
+      "replacement": {
+        "Records used": {
+          "expected": 123,
+          "actual": 123,
+          "passed": true
+        },
+        "Mean body mass": {
+          "expected": 5076.016260162602,
+          "actual": 5076.016260162602,
+          "passed": true
+        }
+      },
+      "invalid_schema_retains_results": true,
+      "acceptance_passed": true,
+      "finished_at": "2026-11-04T06:14:41.956700+00:00",
+      "independent_checks": [
+        [
+          "Complete measurement rows",
+          342
+        ],
+        [
+          "Missing measurement rows",
+          2
+        ],
+        [
+          "Pearson r: flipper length / body mass",
+          0.871202
+        ]
+      ]
+    },
+    "retail": {
+      "status": "passed",
+      "started_at": "2026-11-04T06:40:23.937799+00:00",
+      "model": "gpt-4o-mini",
+      "input_sha256": "7c7b5d0874013ff2ff29136740694c21a794df0568f259e4c1ffcccf1bbdfb2a",
+      "prompt_sha256": "0feaa9ad225a36eed51a5fd60dcaf26b100e2744ad51f810ac623b510c4fba7c",
+      "prompts": [
+        {
+          "number": 1,
+          "text": "Build a desktop dashboard with separate Data cleaning and Analysis stages and the requested Visualization widgets. Give widgets the exact titles listed below so I can check them. Use readable English labels and correct units. Keep the original CSV unchanged. Preserve repeated observations unless I explicitly ask otherwise. Use standard column bindings for ordinary bar, pie, line and scatter charts so I can edit their bindings in Properties. For advanced charts return JSON-only ECharts options from the analysis. Use no external chart resources or JavaScript callbacks. Declare parameters_used for each step. Add a full table export where requested; do not truncate the underlying table. Save the stages; I will select Run.\nRead InvoiceNo, StockCode and CustomerID as nullable text and InvoiceDate as datetime. Cleanup must keep all source rows, normalize dates, fill missing Description and CustomerID with 'Unknown', and add is_valid_sale for non-cancelled InvoiceNo (case-insensitive C prefix), Quantity > 0 and UnitPrice > 0. Do not deduplicate.\nAdd a Country select filter on cleaned data with All (null), and a numeric discount_pct scenario default 0, minimum 0, maximum 30. Discount only scales sales value; it does not predict a change in quantity. Put the Country control in the root parameters array: {\"id\":\"country\",\"label\":\"Country\",\"kind\":\"select\",\"default\":null,\"minimum\":null,\"maximum\":null,\"choices\":[],\"filter_column\":\"Country\",\"filter_artifact\":\"cleaned\",\"filter_operator\":\"eq\"}. It is not a visualization widget.\nAnalysis uses only valid sale rows for sales metrics and charts, while 'Excluded lines' counts invalid lines in the currently filtered data. Metrics: 'Sales value' (sum Quantity \u00d7 UnitPrice, GBP, two decimals), 'Invoice lines' (valid line count), 'Invoices' (distinct valid InvoiceNo count), 'Excluded lines', 'Scenario sales value' (Sales value \u00d7 (1 - discount_pct/100)).\nCharts: 'Sales by country' (top ten countries ranked by sales value, bar), 'Daily sales' (sum by observed calendar date, line), and 'Top invoice items' (top ten Description values ranked by sales value, horizontal bar). Labels must not claim that all item codes represent physical products.\nCreate full table 'Invoice detail' with every valid invoice line, original columns and sales_value. Never use head() for its exported result. Do not add a pie chart with dozens of countries.\nKeep the graph small: one cleanup step returns cleaned; one analysis step takes cleaned and returns all nine named outputs: sales_value, invoice_lines, invoices, excluded_lines, scenario_sales_value, country_totals, daily_sales, top_items, invoice_detail. Declare these exact names in that analysis step's outputs list and return each of them from its function. First assign valid_sales=valid_sales.assign(sales_value=valid_sales.Quantity*valid_sales.UnitPrice). Compute country_totals=valid_sales.groupby('Country',as_index=False)['sales_value'].sum().nlargest(10,'sales_value'); compute daily_sales=valid_sales.assign(date=valid_sales.InvoiceDate.dt.strftime('%Y-%m-%d')).groupby('date',as_index=False)['sales_value'].sum(). Never aggregate Quantity and label it sales value. country_totals is a DataFrame with Country and sales_value, daily_sales a DataFrame with date and sales_value; bind the country bar and daily line directly to those DataFrames. Build item_totals=valid_sales.assign(sales_value=valid_sales.Quantity*valid_sales.UnitPrice).groupby('Description',as_index=False)['sales_value'].sum().nlargest(10,'sales_value'); top_items={'option':{'xAxis':{'type':'value','name':'GBP'},'yAxis':{'type':'category','data':item_totals.Description.tolist()},'series':[{'type':'bar','data':item_totals.sales_value.tolist()}]}}. Its widget chart_binding must be null. invoice_detail is the full valid-line DataFrame. Metric widgets bind the five separate scalar outputs, not a metrics dictionary. Do not create chart widgets that refer to undeclared or differently named outputs.\n",
+          "status": "passed",
+          "metrics": {
+            "Sales value": {
+              "expected": 1932635.8100000059,
+              "actual": 1932635.81,
+              "passed": true
+            },
+            "Invoice lines": {
+              "expected": 97214,
+              "actual": 97214,
+              "passed": true
+            },
+            "Invoices": {
+              "expected": 3640,
+              "actual": 3640,
+              "passed": true
+            },
+            "Excluded lines": {
+              "expected": 2388,
+              "actual": 2388,
+              "passed": true
+            },
+            "Scenario sales value": {
+              "expected": 1932635.8100000059,
+              "actual": 1932635.81,
+              "passed": true
+            }
+          },
+          "extra_checks": {}
+        },
+        {
+          "number": 2,
+          "text": "Add one chart titled 'Monthly country mix'. Use the current valid sale lines to sum sales_value by calendar month and Country. First set valid_sales=inputs['cleaned'].loc[inputs['cleaned']['is_valid_sale']].copy(); this exclusion is essential. Add valid_sales['sales_value']=valid_sales.Quantity*valid_sales.UnitPrice and valid_sales['month']=valid_sales.InvoiceDate.dt.strftime('%Y-%m'). All grouping below uses valid_sales, never the unfiltered cleaned artifact. Show stacked bars for the five countries with the largest total sales value in the current selection, plus an Other series for the remaining countries. Group by the explicit month and country columns, pivot to countries, then reindex its row index to ['2011-01', '2011-02', '2011-03'] with zero for missing cells. Read chart X labels directly from that index; do not reset an unnamed index and assume it is named Month. Return a JSON chart dictionary, never a pivot DataFrame: pivot=valid_sales.pivot_table(index='month',columns='Country',values='sales_value',aggfunc='sum',fill_value=0).reindex(['2011-01','2011-02','2011-03'],fill_value=0); top=pivot.sum().nlargest(5).index.tolist(); series=[{'name':str(c),'type':'bar','stack':'sales','data':pivot[c].tolist()} for c in top]; remaining=[c for c in pivot.columns if c not in top]; series.append({'name':'Other','type':'bar','stack':'sales','data':pivot[remaining].sum(axis=1).tolist()}); monthly_country_mix={'option':{'legend':{},'xAxis':{'type':'category','data':pivot.index.tolist()},'yAxis':{'type':'value','name':'GBP'},'series':series}}. Declare monthly_country_mix as this step's only output and return {'monthly_country_mix':monthly_country_mix}; point the widget output at monthly_country_mix. Use chart_binding=null on this new widget. Include a legend and GBP axis. The sum of all stack values must equal Sales value. Preserve the existing metrics, charts, full detail table, Country filter and discount scenario. I will select Run.",
+          "status": "passed",
+          "metrics": {
+            "Sales value": {
+              "expected": 1932635.8100000059,
+              "actual": 1932635.81,
+              "passed": true
+            },
+            "Invoice lines": {
+              "expected": 97214,
+              "actual": 97214,
+              "passed": true
+            },
+            "Invoices": {
+              "expected": 3640,
+              "actual": 3640,
+              "passed": true
+            },
+            "Excluded lines": {
+              "expected": 2388,
+              "actual": 2388,
+              "passed": true
+            },
+            "Scenario sales value": {
+              "expected": 1932635.8100000059,
+              "actual": 1932635.81,
+              "passed": true
+            }
+          },
+          "extra_checks": {
+            "stacked_values_reconcile": true,
+            "full_table_rows": 97214
+          }
+        }
+      ],
+      "repairs": [],
+      "project_id": "7df4bd2f-dd45-4014-8871-041fa00260a3",
+      "variants": {
+        "filtered": {
+          "parameters": {
+            "country": "Germany"
+          },
+          "metrics": {
+            "Sales value": {
+              "expected": 40884.58,
+              "actual": 40884.58,
+              "passed": true
+            },
+            "Invoice lines": {
+              "expected": 1651,
+              "actual": 1651,
+              "passed": true
+            },
+            "Invoices": {
+              "expected": 82,
+              "actual": 82,
+              "passed": true
+            },
+            "Excluded lines": {
+              "expected": 129,
+              "actual": 129,
+              "passed": true
+            },
+            "Scenario sales value": {
+              "expected": 40884.58,
+              "actual": 40884.58,
+              "passed": true
+            }
+          }
+        },
+        "scenario": {
+          "parameters": {
+            "discount_pct": 10
+          },
+          "metrics": {
+            "Sales value": {
+              "expected": 1932635.8100000059,
+              "actual": 1932635.81,
+              "passed": true
+            },
+            "Invoice lines": {
+              "expected": 97214,
+              "actual": 97214,
+              "passed": true
+            },
+            "Invoices": {
+              "expected": 3640,
+              "actual": 3640,
+              "passed": true
+            },
+            "Excluded lines": {
+              "expected": 2388,
+              "actual": 2388,
+              "passed": true
+            },
+            "Scenario sales value": {
+              "expected": 1739372.2290000054,
+              "actual": 1739372.229,
+              "passed": true
+            }
+          }
+        }
+      },
+      "replacement": {
+        "Sales value": {
+          "expected": 717639.3599999998,
+          "actual": 717639.36,
+          "passed": true
+        },
+        "Invoice lines": {
+          "expected": 35803,
+          "actual": 35803,
+          "passed": true
+        },
+        "Invoices": {
+          "expected": 1454,
+          "actual": 1454,
+          "passed": true
+        },
+        "Excluded lines": {
+          "expected": 945,
+          "actual": 945,
+          "passed": true
+        },
+        "Scenario sales value": {
+          "expected": 717639.3599999998,
+          "actual": 717639.36,
+          "passed": true
+        }
+      },
+      "invalid_schema_retains_results": true,
+      "acceptance_passed": true,
+      "finished_at": "2026-11-04T06:41:33.390982+00:00",
+      "independent_checks": [
+        [
+          "Valid sale rows with missing customer ID",
+          28883
+        ],
+        [
+          "Repeated-looking source rows retained",
+          784
+        ]
+      ]
+    },
+    "wine": {
+      "status": "passed",
+      "started_at": "2026-11-04T06:35:01.417859+00:00",
+      "model": "gpt-4o-mini",
+      "input_sha256": "f10a10694fcd5a5dc1337769c59320a4a958a43746a4e66dec7759975a0f780f",
+      "prompt_sha256": "dddc784075cfad4879401171cbead3cf808ed4b3342ef0da1e01c7be94c58d78",
+      "prompts": [
+        {
+          "number": 1,
+          "text": "Build a desktop dashboard with separate Data cleaning and Analysis stages and the requested Visualization widgets. Give widgets the exact titles listed below so I can check them. Use readable English labels and correct units. Keep the original CSV unchanged. Preserve repeated observations unless I explicitly ask otherwise. Use standard column bindings for ordinary bar, pie, line and scatter charts so I can edit their bindings in Properties. For advanced charts return JSON-only ECharts options from the analysis. Use no external chart resources or JavaScript callbacks. Declare parameters_used for each step. Add a full table export where requested; do not truncate the underlying table. Save the stages; I will select Run.\nCleanup must preserve every row and every source measurement, including repeated rows. Add a wine_type select filter on cleaned data with All (null), and quality_threshold integer default 7, minimum 0, maximum 10. The threshold is a scenario parameter, not a row-removing filter.\nMetrics: 'Samples' (row count), 'Mean quality' (mean quality, three decimals), 'At or above threshold' (count quality >= quality_threshold).\nCreate 'Alcohol distribution' as a histogram using fixed edges 8.0, 8.5, ..., 15.0 percent alcohol. Bins are left-inclusive/right-exclusive except the last includes its right edge. Show count on Y and alcohol ranges on X.\nCreate 'Alcohol by wine type' as a native ECharts boxplot of alcohol grouped by wine_type. Use minimum, 25th percentile, median, 75th percentile and maximum, with linear quantile interpolation. Label that the whiskers are min/max, not Tukey outliers. Do not silently drop rows.\nCreate full table 'Quality summary' with wine_type, sample_count, mean_quality, median_alcohol and count_at_threshold for the current selection.\nUse exactly one cleanup stage returning cleaned and one initial analysis stage returning these six separately declared outputs: samples (scalar count), mean_quality (scalar), threshold_count (scalar), alcohol_distribution (DataFrame with bin_label and count columns), alcohol_by_type (dictionary with an option key containing native ECharts boxplot options), quality_summary (DataFrame). Bind the three metric widgets to the three separate scalar outputs; never bind a metric to a dictionary of metrics. Use numpy.histogram with bins=np.arange(8.0,15.5,0.5) for the stated bin semantics. The boxplot widget must have chart_binding=null, and its ECharts series data must contain one five-number array per wine type, not a pandas describe table. Keep all table column names unique strings.\nFor the boxplot use this exact structure with computed data: groups=sorted(df['wine_type'].unique().tolist()); five_numbers=[np.quantile(df.loc[df['wine_type']==group,'alcohol'],[0,.25,.5,.75,1]).tolist() for group in groups]; alcohol_by_type={'option':{'xAxis':{'type':'category','data':groups},'yAxis':{'type':'value','name':'Alcohol (% ABV)'},'series':[{'type':'boxplot','data':five_numbers}]}}. Do not return describe().to_dict(), which is a statistics dictionary rather than an ECharts chart.\n",
+          "status": "passed",
+          "metrics": {
+            "Samples": {
+              "expected": 6497,
+              "actual": 6497,
+              "passed": true
+            },
+            "Mean quality": {
+              "expected": 5.818377712790519,
+              "actual": 5.818377712790519,
+              "passed": true
+            },
+            "At or above threshold": {
+              "expected": 1277,
+              "actual": 1277,
+              "passed": true
+            }
+          },
+          "extra_checks": {}
+        },
+        {
+          "number": 2,
+          "text": "Add a native ECharts heatmap titled 'Measurement correlations' using the current filtered samples. Use Spearman correlations, with rows and columns in this order: alcohol, density, residual sugar, volatile acidity, sulphates, quality. Show a diverging colour scale fixed from -1 to +1 with zero in the centre. Include all 36 cells and label the axes. Compute labels=['alcohol','density','residual sugar','volatile acidity','sulphates','quality']; matrix=df[labels].corr(method='spearman'); cells=[[x,y,float(matrix.iloc[y,x])] for y in range(6) for x in range(6)]. Return {'option':{'xAxis':{'type':'category','data':labels},'yAxis':{'type':'category','data':labels},'visualMap':{'min':-1,'max':1,'inRange':{'color':['#245bd7','#ffffff','#bd3945']}},'series':[{'type':'heatmap','data':cells}]}} as the chart artifact and set chart_binding=null. Do not flatten the matrix to bare numbers: each cell needs its x index, y index and value. Python booleans are True/False. Add computed text 'Correlation notes' explaining that quality is ordinal, that Spearman measures ranked association, and that correlation does not establish cause. Preserve all existing calculations and controls. I will select Run.",
+          "status": "passed",
+          "metrics": {
+            "Samples": {
+              "expected": 6497,
+              "actual": 6497,
+              "passed": true
+            },
+            "Mean quality": {
+              "expected": 5.818377712790519,
+              "actual": 5.818377712790519,
+              "passed": true
+            },
+            "At or above threshold": {
+              "expected": 1277,
+              "actual": 1277,
+              "passed": true
+            }
+          },
+          "extra_checks": {
+            "heatmap_cells": 36,
+            "correlation_matches_scipy": true
+          }
+        }
+      ],
+      "repairs": [
+        {
+          "prompt_number": 1,
+          "request": "Repair the current tutorial revision. Preserve its requested widgets, exact titles and metric definitions. Run/independent validation found: The generated revision is missing control wine_type. Correct the saved Python, bindings or chart arrays as needed. Do not hard-code answers. I will select Run."
+        }
+      ],
+      "project_id": "209a2641-d18f-4412-8ceb-e62897f0af99",
+      "variants": {
+        "filtered": {
+          "parameters": {
+            "wine_type": "red"
+          },
+          "metrics": {
+            "Samples": {
+              "expected": 1599,
+              "actual": 1599,
+              "passed": true
+            },
+            "Mean quality": {
+              "expected": 5.6360225140712945,
+              "actual": 5.6360225140712945,
+              "passed": true
+            },
+            "At or above threshold": {
+              "expected": 217,
+              "actual": 217,
+              "passed": true
+            }
+          }
+        },
+        "scenario": {
+          "parameters": {
+            "quality_threshold": 6
+          },
+          "metrics": {
+            "Samples": {
+              "expected": 6497,
+              "actual": 6497,
+              "passed": true
+            },
+            "Mean quality": {
+              "expected": 5.818377712790519,
+              "actual": 5.818377712790519,
+              "passed": true
+            },
+            "At or above threshold": {
+              "expected": 4113,
+              "actual": 4113,
+              "passed": true
+            }
+          }
+        }
+      },
+      "replacement": {
+        "Samples": {
+          "expected": 1599,
+          "actual": 1599,
+          "passed": true
+        },
+        "Mean quality": {
+          "expected": 5.6360225140712945,
+          "actual": 5.6360225140712945,
+          "passed": true
+        },
+        "At or above threshold": {
+          "expected": 217,
+          "actual": 217,
+          "passed": true
+        }
+      },
+      "invalid_schema_retains_results": true,
+      "acceptance_passed": true,
+      "finished_at": "2026-11-04T06:35:33.704448+00:00",
+      "independent_checks": [
+        [
+          "Red source samples",
+          1599
+        ],
+        [
+          "White source samples",
+          4898
+        ],
+        [
+          "Histogram count total",
+          6497
+        ],
+        [
+          "Spearman rho: alcohol / quality",
+          0.446925
+        ]
+      ]
+    },
+    "bike": {
+      "status": "passed",
+      "started_at": "2026-11-04T06:42:55.162176+00:00",
+      "model": "gpt-4o-mini",
+      "input_sha256": "75c2c56f116c9ebbd9bcb06087c2b7fffc7b8f8225dd37d388aa7e1996cf19dc",
+      "prompt_sha256": "a66b2950680868bab19c526f31a18c5f783608c253050bc445f2ad183d39dd73",
+      "prompts": [
+        {
+          "number": 1,
+          "text": "Build a desktop dashboard with separate Data cleaning and Analysis stages and the requested Visualization widgets. Give widgets the exact titles listed below so I can check them. Use readable English labels and correct units. Keep the original CSV unchanged. Preserve repeated observations unless I explicitly ask otherwise. Use standard column bindings for ordinary bar, pie, line and scatter charts so I can edit their bindings in Properties. For advanced charts return JSON-only ECharts options from the analysis. Use no external chart resources or JavaScript callbacks. Declare parameters_used for each step. Add a full table export where requested; do not truncate the underlying table. Save the stages; I will select Run.\nRead dteday as datetime. Cleanup preserves all observations, sorts by dteday, and adds calendar_year from the date. Add a calendar_year select filter on cleaned data (All/null, 2011, 2012). Preserve all dates in a selected year. Add this control to the root parameters list, not the widgets list: {\"id\":\"calendar_year\",\"label\":\"Calendar year\",\"kind\":\"select\",\"default\":null,\"minimum\":null,\"maximum\":null,\"choices\":[2011,2012],\"filter_column\":\"calendar_year\",\"filter_artifact\":\"cleaned\",\"filter_operator\":\"eq\"}. Controls are ParameterSpec objects, not visualization widgets.\nMetrics: 'Days' (number of days), 'Total rentals' (sum cnt), 'Average daily rentals' (mean cnt, two decimals).\nCreate 'Daily demand' with two line series: cnt and a trailing 7-day rolling mean with min_periods=1, dates in ascending order.\nCreate 'Rider mix' as a stacked area chart of casual and registered rentals for each date. The two series must sum to cnt. Both native line series need stack='riders' and areaStyle={} so this is a stacked area chart rather than two ordinary lines.\nCreate 'Calendar pattern' as an ECharts heatmap with month (1\u201312) on X and weekday (Sunday 0 through Saturday 6) on Y. Each cell is MEAN daily cnt for that month/weekday, not a total. Use null or omit a cell if no observations exist.\nCreate the full table 'Daily detail' containing dteday, cnt, casual, registered and rolling_mean_7.\nKeep the initial graph to one cleanup stage returning cleaned and one analysis stage returning these seven separately declared outputs: days (scalar), total_rentals (scalar), average_daily_rentals (scalar), daily_demand (DataFrame), rider_mix (dictionary with an option key), calendar_pattern (dictionary with an option key), daily_detail (DataFrame). Compute rolling_mean_7 on a copy using assign, never concatenate another column named cnt. daily_demand must have unique string columns dteday, cnt, rolling_mean_7 and a standard line chart binding with both numeric Y columns. The area and heatmap widgets use chart_binding=null and complete native ECharts options inside an option key. Return the heatmap as axis labels and [month_index,weekday_index,mean] triples, not a pivot DataFrame with integer column names. Set xAxis.data=list(range(1,13)), yAxis.data=list(range(7)); its cell coordinates MUST be zero-based: cells=[[int(month)-1,int(day),float(value)] for (month,day),value in df.groupby(['mnth','weekday'])['cnt'].mean().items()]. Do not put month 1..12 directly into zero-based category coordinates. Add visualMap={'min':0,'max':float(df.cnt.max()),'inRange':{'color':['#eff6ff','#245bd7']}} and series=[{'type':'heatmap','data':cells}]. Return every declared output and make each widget output match its artifact name exactly.\n",
+          "status": "passed",
+          "metrics": {
+            "Days": {
+              "expected": 731,
+              "actual": 731,
+              "passed": true
+            },
+            "Total rentals": {
+              "expected": 3292679,
+              "actual": 3292679,
+              "passed": true
+            },
+            "Average daily rentals": {
+              "expected": 4504.3488372093025,
+              "actual": 4504.35,
+              "passed": true
+            }
+          },
+          "extra_checks": {}
+        },
+        {
+          "number": 2,
+          "text": "Add a forecasting analysis stage using pipeline_core.statistics.forecast on the current filtered cnt Series indexed by dteday, sorted by date. Use method='arima' (the helper uses ARIMA(1,1,0)), and add horizon integer default 14, minimum 1, maximum 30. Add horizon to the root parameters list with id=horizon, label='Forecast days', kind=integer, default=14, minimum=1, maximum=30, choices=[], filter_column=null, filter_artifact=cleaned, filter_operator=eq. Declare horizon in the forecast step parameters_used. Do not change the helper, use a random split, or fit on future rows. In your patch use numeric JSON Pointer array indices, or /steps/- and /dashboard/widgets/- to append. Stage IDs such as forecast_analysis are not valid array path indices. Add the forecast step only once; on repair replace its existing code at its numeric index rather than appending duplicate IDs. The helper returns keys forecast, prediction_intervals_95 (list of [lower,upper] pairs), backtest_mae, baseline_mae, training_observations, holdout_observations, method, assumptions and uncertainty. It does not return dates: create them with pd.date_range(df.dteday.max()+pd.Timedelta(days=1),periods=horizon,freq='D').strftime('%Y-%m-%d').tolist(). Set chart_binding=null for the forecast option dictionary.\nAdd metrics 'Holdout MAE' and 'Baseline MAE' from the helper, both two decimals. Add computed text 'Forecast checks' with training and holdout observation counts, method, assumptions, uncertainty, and whether the model beats the naive baseline. Do not promise an improvement.\nAdd 'Demand forecast' showing the last 60 observed days, the future daily point forecasts starting the next day, and the helper's 95% model intervals. Use JSON-only ECharts line series. For the interval fill use an invisible lower-bound series and an upper-minus-lower area series stacked together with stackStrategy='all' so negative lower bounds are handled correctly. Do not clip negative bounds or forecasts silently. Keep actuals and predictions visibly distinct. Preserve all existing charts, table and calendar_year filter. I will select Run.\nUse one new stage with id=forecast_analysis, inputs=['cleaned'], outputs=['holdout_mae','baseline_mae','forecast_checks','demand_forecast'], parameters_used=['horizon','calendar_year']. Preserve all earlier steps. Use this function body, including the explicit helper import; pd and np are available but pipeline_core and statsmodels module names are not preloaded:\n\ndef function(inputs, parameters, context):\n    from pipeline_core.statistics import forecast as run_forecast\n    df = inputs['cleaned'].sort_values('dteday').copy()\n    horizon = int(parameters['horizon'])\n    result = run_forecast(df.set_index('dteday')['cnt'], horizon=horizon, method='arima')\n    history = df.tail(60)\n    future = pd.date_range(df.dteday.max()+pd.Timedelta(days=1), periods=horizon, freq='D').strftime('%Y-%m-%d').tolist()\n    dates = history.dteday.dt.strftime('%Y-%m-%d').tolist()+future\n    blank_history = [None]*len(history)\n    intervals = result['prediction_intervals_95']\n    lower = [pair[0] for pair in intervals]\n    width = [pair[1]-pair[0] for pair in intervals]\n    chart = {'option':{'legend':{},'xAxis':{'type':'category','data':dates},'yAxis':{'type':'value','name':'Rentals'},'series':[\n      {'name':'Observed','type':'line','data':history.cnt.tolist()+[None]*horizon},\n      {'name':'Forecast','type':'line','data':blank_history+result['forecast']},\n      {'name':'Lower bound','type':'line','stack':'interval','stackStrategy':'all','data':blank_history+lower,'lineStyle':{'opacity':0},'symbol':'none'},\n      {'name':'95% interval','type':'line','stack':'interval','stackStrategy':'all','data':blank_history+width,'lineStyle':{'opacity':0},'areaStyle':{'opacity':.2},'symbol':'none'}]}}\n    note = f\"Training observations: {result['training_observations']}; holdout observations: {result['holdout_observations']}; method: {result['method']}. {result['assumptions']} {result['uncertainty']} Model beats naive baseline: {result['backtest_mae'] < result['baseline_mae']}. This is a historical exercise, not a promise.\"\n    return {'holdout_mae':result['backtest_mae'],'baseline_mae':result['baseline_mae'],'forecast_checks':note,'demand_forecast':chart}\n\nBind the four new widgets to these exact output names. Forecast and baseline metric formats must be .2f. The forecast widget has chart_binding=null. Do not add a second step with the same id during repair; edit its existing numeric array index.\n",
+          "status": "passed",
+          "metrics": {
+            "Days": {
+              "expected": 731,
+              "actual": 731,
+              "passed": true
+            },
+            "Total rentals": {
+              "expected": 3292679,
+              "actual": 3292679,
+              "passed": true
+            },
+            "Average daily rentals": {
+              "expected": 4504.3488372093025,
+              "actual": 4504.35,
+              "passed": true
+            }
+          },
+          "extra_checks": {
+            "training_observations": 717,
+            "holdout_observations": 14,
+            "mae": 2152.9433564399737,
+            "baseline_mae": 2281.285714285714,
+            "future_days": 14,
+            "forecast_and_intervals_match_independent_fit": true
+          }
+        }
+      ],
+      "repairs": [],
+      "project_id": "4b79ce41-3111-4505-a2bb-00093a7b46dd",
+      "variants": {
+        "filtered": {
+          "parameters": {
+            "calendar_year": 2012
+          },
+          "metrics": {
+            "Days": {
+              "expected": 366,
+              "actual": 366,
+              "passed": true
+            },
+            "Total rentals": {
+              "expected": 2049576,
+              "actual": 2049576,
+              "passed": true
+            },
+            "Average daily rentals": {
+              "expected": 5599.934426229508,
+              "actual": 5599.93,
+              "passed": true
+            }
+          },
+          "extra_checks": {
+            "training_observations": 352,
+            "holdout_observations": 14,
+            "mae": 2159.2801504897657,
+            "baseline_mae": 2281.285714285714,
+            "future_days": 14,
+            "forecast_and_intervals_match_independent_fit": true
+          }
+        },
+        "scenario": {
+          "parameters": {
+            "horizon": 7
+          },
+          "metrics": {
+            "Days": {
+              "expected": 731,
+              "actual": 731,
+              "passed": true
+            },
+            "Total rentals": {
+              "expected": 3292679,
+              "actual": 3292679,
+              "passed": true
+            },
+            "Average daily rentals": {
+              "expected": 4504.3488372093025,
+              "actual": 4504.35,
+              "passed": true
+            }
+          },
+          "extra_checks": {
+            "training_observations": 724,
+            "holdout_observations": 7,
+            "mae": 901.3763318595204,
+            "baseline_mae": 1006.7142857142857,
+            "future_days": 7,
+            "forecast_and_intervals_match_independent_fit": true
+          }
+        }
+      },
+      "replacement": {
+        "Days": {
+          "expected": 366,
+          "actual": 366,
+          "passed": true
+        },
+        "Total rentals": {
+          "expected": 2049576,
+          "actual": 2049576,
+          "passed": true
+        },
+        "Average daily rentals": {
+          "expected": 5599.934426229508,
+          "actual": 5599.93,
+          "passed": true
+        }
+      },
+      "invalid_schema_retains_results": true,
+      "acceptance_passed": true,
+      "finished_at": "2026-11-04T06:43:43.873674+00:00",
+      "independent_checks": [
+        [
+          "First date",
+          "2011-01-01"
+        ],
+        [
+          "Last date",
+          "2012-12-31"
+        ],
+        [
+          "Rows where casual + registered differs from cnt",
+          0
+        ]
+      ]
+    }
+  },
+  "model": "gpt-4o-mini",
+  "endpoint": "https://api.openai.com/v1",
+  "runtime_versions": {
+    "python": "3.12",
+    "pandas": "3.0.5",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "statsmodels": "0.15.0",
+    "patsy": "1.0.3",
+    "python-dateutil": "2.9.0.post0",
+    "tzdata": "2026.5",
+    "pytz": "2026.5",
+    "pydantic": "2.13.5",
+    "pydantic-core": "2.46.5",
+    "fastapi": "0.141.1",
+    "starlette": "1.6.0",
+    "uvicorn": "0.52.4",
+    "python-multipart": "0.0.32"
+  },
+  "tool_versions": {
+    "openai": "3.10.0",
+    "pandas": "3.0.5",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "statsmodels": "0.15.0",
+    "openpyxl": "3.1.5",
+    "python": "3.12.3",
+    "echarts": "6.1.0"
+  }
+}

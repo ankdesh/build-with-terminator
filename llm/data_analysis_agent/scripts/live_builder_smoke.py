@@ -54,6 +54,9 @@ async def check(args: argparse.Namespace) -> None:
         if not args.project_id:
             await operation(base + '/chat', {'query': 'Create a dashboard with the sum of amount, a category totals bar chart and full table, and computed text showing current row count. Add a category select filter with All as the null default. Add a multiplier numeric control with default 1, minimum 0 and maximum 10, and an adjusted-total metric. Cleanup must pass data unchanged; do not drop or impute any rows.'})
         view = (await client.get(base)).json()
+        if not view['workspace']['validated_run_id']:
+            await operation(base + '/revisions/' + view['draft']['revision_id'] + '/run', {'parameters': {}})
+            view = (await client.get(base)).json()
         run = view['display_run']
         assert run and run['status'] == 'succeeded', view
         metrics = [out['value'] for out in run['result'].get('widgets', run['result']['outputs']).values() if out['kind'] == 'metric']
@@ -67,6 +70,7 @@ async def check(args: argparse.Namespace) -> None:
         await operation(base + '/revisions/' + draft['revision_id'] + '/run', {'parameters': {category: 'A'}})
         filtered = (await client.get(base)).json()['display_run']['result']
         assert 30 in [out['value'] for out in filtered.get('widgets', filtered['outputs']).values() if out['kind'] == 'metric']
+        await operation(base + '/revisions/' + draft['revision_id'] + '/run', {'parameters': {}})
         await operation(base + '/chat', {'query': 'Change /dashboard/title to Generated Validation Dashboard. Use a targeted patch. Preserve all steps, Python source, controls, widgets and bindings.'})
         refined = (await client.get(base)).json()
         assert refined['draft']['dashboard']['title'] == 'Generated Validation Dashboard'

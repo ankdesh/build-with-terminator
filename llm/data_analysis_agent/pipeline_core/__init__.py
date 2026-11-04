@@ -1,4 +1,4 @@
 """Model-independent contracts and execution for saved analysis applications."""
 
-RUNTIME_ABI = "1"
-RUNTIME_VERSION = "0.2.0"
+RUNTIME_ABI = "2"
+RUNTIME_VERSION = "0.3.1"

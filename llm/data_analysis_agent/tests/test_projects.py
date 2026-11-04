@@ -13,6 +13,7 @@ import pytest
 from backend.services.project_service import ProjectService
 from backend.services.project_store import ProjectStore
 from backend.services.export_service import ExportService
+from pipeline_core import RUNTIME_ABI, RUNTIME_VERSION
 from pipeline_core.bundle import installed_versions, inventory, load_bundle
 from pipeline_core.engine import PipelineEngine, fingerprint
 from pipeline_core.models import ProjectRevision, RunRecord, now
@@ -72,7 +73,7 @@ def fake_runtime(tmp_path):
     root = tmp_path / "runtime"; (root / "static").mkdir(parents=True)
     (root / "WPSAnalysis.exe").write_bytes(b"release-test-fixture")
     (root / "static/index.html").write_text("<html>Offline dashboard</html>")
-    metadata = {"runtime_abi": "1", "runtime_version": "0.2.0", "platform": "windows-x64", "entrypoint": "WPSAnalysis.exe", "versions": installed_versions(), "files": inventory(root)}
+    metadata = {"runtime_abi": RUNTIME_ABI, "runtime_version": RUNTIME_VERSION, "platform": "windows-x64", "entrypoint": "WPSAnalysis.exe", "versions": installed_versions(), "files": inventory(root)}
     (root / "runtime.json").write_text(json.dumps(metadata))
     path = tmp_path / "runtime.zip"
     with zipfile.ZipFile(path, "w") as archive:
@@ -106,22 +107,59 @@ def test_export_rejects_archive_traversal(saved_project, tmp_path):
 
 
 @pytest.mark.asyncio
-async def test_agent_repairs_failed_draft_and_preserves_current_state(saved_project, simple_revision):
-    store, project_id, good = saved_project
+async def test_agent_saves_without_running_and_repairs_only_schema_errors(saved_project, simple_revision):
+    from backend.services.project_agent import ProposalValidationError
+    store, project_id, original_run = saved_project
     payload = simple_revision.model_dump(); payload["revision_id"] = str(uuid4())
-    broken = deepcopy(payload)
-    broken["revision_id"] = str(uuid4())
-    broken["steps"][1]["code"] = broken["steps"][1]["code"].replace("df['value']", "df['wrong']")
+    proposal = ProjectRevision.model_validate(payload)
     agent = AsyncMock()
-    agent.propose.side_effect = [ProjectRevision.model_validate(broken), ProjectRevision.model_validate(payload)]
-    service = ProjectService(store, agent=agent)
+    agent.propose.side_effect = [ProposalValidationError("Invalid widget binding", payload), proposal]
+    runner = AsyncMock()
+    service = ProjectService(store, agent=agent, runner=runner)
     import threading
     events = []
     await service.build(project_id, "Refine the dashboard", events.append, threading.Event())
     assert agent.propose.await_count == 2
-    assert agent.propose.call_args_list[0].args[1].revision_id == simple_revision.revision_id
-    assert store.view(project_id)["display_run"]["status"] == "succeeded"
+    runner.run.assert_not_awaited()
+    assert store.view(project_id)["display_run"]["run_id"] == original_run.run_id
+    assert store.get(project_id)["draft_id"] == proposal.revision_id
 
+
+@pytest.mark.asyncio
+async def test_malformed_model_patch_is_repaired_without_losing_working_revision(saved_project, simple_revision):
+    store, project_id, original_run = saved_project
+    payload = simple_revision.model_dump()
+    payload["revision_id"] = str(uuid4())
+    payload["dashboard"]["title"] = "Repaired title"
+    proposal = ProjectRevision.model_validate(payload)
+    agent = AsyncMock()
+    agent.propose.side_effect = [json.JSONDecodeError("Invalid patch value_json", "", 0), proposal]
+    runner = AsyncMock()
+    import threading
+    await ProjectService(store, agent=agent, runner=runner).build(project_id, "Rename dashboard", lambda _: None, threading.Event())
+    assert agent.propose.await_count == 2
+    second = agent.propose.await_args_list[1].args
+    assert "Invalid model proposal" in second[4]
+    assert second[5] is None  # A malformed patch is not a complete revision.
+    runner.run.assert_not_awaited()
+    view = store.view(project_id)
+    assert view["workspace"]["document"]["dashboard"]["title"] == "Repaired title"
+    assert view["display_run"]["validation_mode"] == "presentation"
+    assert view["display_run"]["source_run_id"] == original_run.run_id
+
+@pytest.mark.asyncio
+async def test_workspace_conflict_does_not_retry_model(saved_project, simple_revision, monkeypatch):
+    from backend.services.workspace_service import Workspaces, WorkspaceConflict
+    store, project_id, _ = saved_project
+    agent = AsyncMock()
+    agent.propose.return_value = simple_revision
+    def conflict(*args, **kwargs):
+        raise WorkspaceConflict("Concurrent workspace edit")
+    monkeypatch.setattr(Workspaces, "write", conflict)
+    import threading
+    with pytest.raises(WorkspaceConflict):
+        await ProjectService(store, agent=agent).build(project_id, "Rename dashboard", lambda _: None, threading.Event())
+    agent.propose.assert_awaited_once()
 
 @pytest.mark.asyncio
 async def test_project_api_pipeline_and_full_csv(saved_project, monkeypatch):
@@ -141,3 +179,16 @@ async def test_project_api_pipeline_and_full_csv(saved_project, monkeypatch):
         assert (await client.post(f"/api/projects/{project_id}/accept", json={}, headers={"Origin": "https://untrusted.example"})).status_code == 403
         assert (await client.post('/api/sessions/legacy/chat', json={"query": "unsafe"})).status_code in (404, 405)
         assert (await client.get('/health', headers={'Host': 'untrusted.example'})).status_code == 400
+
+
+def test_export_pins_the_accepted_input_after_builder_replacement(saved_project, tmp_path):
+    store, project_id, record = saved_project
+    store.accept(project_id, record.run_id, True)
+    replacement = tmp_path / "new.csv"
+    replacement.write_text("zone,value\nZ,99\n")
+    store.save_dataset(project_id, replacement, "new.csv", {}, "")
+    archive = ExportService(store, fake_runtime(tmp_path)).export(project_id)
+    with zipfile.ZipFile(archive) as package:
+        assert package.read("input/data.csv").startswith(b"zone,value\nA,10")
+        manifest = json.loads(package.read("manifest.json"))
+        assert manifest["dataset_name"] == record.dataset_name

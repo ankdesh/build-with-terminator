@@ -4,7 +4,8 @@ import json
 from typing import Any
 from uuid import uuid4
 
-from openai import AsyncOpenAI, APIError
+from backend.exceptions import LLMConfigurationError, LLMServiceError
+from backend.services.llm_gateway import LLMGateway, llm
 
 from config import config
 from pipeline_core.models import ProjectRevision, now
@@ -19,7 +20,7 @@ Always separate cleanup and analysis. Cleanup outputs DataFrames. Analysis consu
 outputs. Set changes_meaning=true for row removal, imputation, outlier removal or substantive value changes,
 and explain the rule in rationale. Missing values, date formats, timezone, units and duplicate treatment
 must be explicit. Do not silently guess business rules. Preserve raw input.
-Declare columns and their parsing types. Text that needs cleanup must remain string in the input contract.
+Only pd (pandas) and np (NumPy) are preloaded in a step. Explicitly import every other module or helper in its saved source, including from pipeline_core.statistics import forecast. Declare columns and their parsing types. Text that needs cleanup must remain string in the input contract.
 Numeric columns may be nullable. Filter controls have filter_column and filter_artifact (usually cleaned),
 with default=null for All. The engine filters the artifact before analysis and supplies parameters to all
 functions. Every function handles empty filtered data. Non-filter controls require finite defaults and bounds.
@@ -37,7 +38,7 @@ table output is a DataFrame; text output is a string computed from CURRENT data;
 {'title':'...', 'option':{...}} using native ECharts JSON arrays, never Python callbacks or JavaScript.
 Bound each chart axis, series or dataset to 5000 items with explicit aggregation or sampling.
 Do not include external URLs or HTML in chart options. Output tables in full, not head(500).
-IMPORTANT: dashboard.widgets contain ONLY id, kind, title, output, width, format and chart_binding.
+dashboard.widgets use the supplied schema, including optional layout, unit and description. Layout uses a 12-column grid. Keep existing layouts during refinement. The server saves proposals without running calculations; the developer selects Run. Use only cleanup and analysis for executable steps. Input and visualization stages are derived by the UI.
 Never place option, data, value, rows, or columns inside a widget. A widget's output is just the name
 of a step output. Generate chart options dynamically inside Python and return that named output.
 For example the widget {'id':'usage','kind':'chart','title':'Usage','output':'usage_chart','width':1}
@@ -56,11 +57,12 @@ Only return schema fields; the server assigns revision identity and parentage.
 When working_revision is present, return a PATCH instead of the whole revision:
 {"summary":"Describe the changes", "changes":[{"op":"replace","path":"/dashboard/title","value":"New title"}]}.
 Use JSON Pointer paths with add, replace, or remove operations. Patch only fields necessary for the request.
+Arrays require numeric indices: /steps/0/code edits the first step; /steps/- appends a complete step object; /dashboard/widgets/- appends a complete widget. Never put a step ID or widget ID in an array path.
 When the response contract requests value_json, encode each value as a JSON string inside value_json;
 for example value_json='"New title"'. Use value_json=null for remove. Otherwise use value directly.
 A dashboard title change modifies /dashboard/title, not /title (the project name).
 For code changes, replace the affected /steps/<index>/code and any required bindings. Preserve other source.
-For a repair, working_revision is the failed proposal; patch that proposal to correct the validation error.
+For a repair, working_revision is the failed proposal; patch that proposal to correct the validation error. If a step, widget or parameter already exists there, replace its existing fields by numeric index. Do not append it again or reuse its identifier for a second object.
 """
 
 
@@ -106,7 +108,8 @@ PATCH_SCHEMA = {
         "changes": {"type": "array", "items": {
             "type": "object", "additionalProperties": False, "required": ["op", "path", "value_json"],
             "properties": {"op": {"type": "string", "enum": ["add", "replace", "remove"]},
-                "path": {"type": "string"}, "value_json": {"type": ["string", "null"]}},
+                "path": {"type": "string", "description": "JSON Pointer using numeric indices for arrays, such as /dashboard/widgets/0/title. Never use widget IDs as array indices."},
+                "value_json": {"type": ["string", "null"], "description": "A complete JSON-encoded value. String replacements must include JSON quote characters, including Python source and empty strings. For example the replacement title Hello is encoded as \"Hello\", and an empty string as \"\". Arrays and objects must also be valid JSON text. Null is used for remove only."}},
         }},
     },
 }
@@ -153,13 +156,11 @@ def apply_changes(base: dict[str, Any], changes: list[dict[str, Any]]) -> dict[s
 
 class ProjectAgent:
     def __init__(self, client: Any = None) -> None:
-        self.client = client
+        self.llm = LLMGateway(client) if client is not None else llm
 
     async def propose(self, project: dict, current: ProjectRevision | None, query: str,
                       history: list[dict], error: str | None = None,
                       failed: dict | None = None) -> ProjectRevision:
-        if self.client is None:
-            self.client = AsyncOpenAI(base_url=config.openai_api_base, api_key=config.openai_api_key or "EMPTY", timeout=90, max_retries=0)
         profile = project["profile"] or {}
         context = {
             "description": project["description"],
@@ -177,16 +178,13 @@ class ProjectAgent:
             schema = PATCH_SCHEMA if context["working_revision"] else strict_schema(ProjectRevision.model_json_schema())
             response_format = {"type": "json_schema", "json_schema": {"name": "project_patch" if context["working_revision"] else "project_revision", "strict": True, "schema": schema}}
         try:
-            response = await self.client.chat.completions.create(
-                model=config.openai_model_name, temperature=0.1,
+            content = await self.llm.complete(
                 response_format=response_format,
                 messages=[{"role": "system", "content": PROMPT}, {"role": "user", "content": json.dumps(context)}],
             )
-        except APIError as exc:
-            raise ModelUnavailableError(f"Model request failed: {exc}. Check the endpoint, credentials, model and strict_model_outputs setting.") from exc
-        if getattr(response.choices[0].message, "refusal", None):
-            raise ModelUnavailableError("The model declined this request")
-        payload = json.loads(response.choices[0].message.content or "{}")
+        except (LLMConfigurationError, LLMServiceError) as exc:
+            raise ModelUnavailableError(str(exc)) from exc
+        payload = json.loads(content or "{}")
         if "changes" in payload:
             base = failed or (current.model_dump() if current else None)
             if base is None:
@@ -194,10 +192,34 @@ class ProjectAgent:
             summary = payload.get("summary", "Project refined")
             for change in payload["changes"]:
                 if "value_json" in change:
-                    change["value"] = json.loads(change["value_json"]) if change["value_json"] is not None else None
+                    raw = change["value_json"]
+                    if raw is None:
+                        change["value"] = None
+                    else:
+                        try:
+                            change["value"] = json.loads(raw)
+                        except json.JSONDecodeError:
+                            # Some compatible models omit a second layer of JSON
+                            # quoting for string replacements, or emit newlines
+                            # inside that layer. Preserve strings only where the
+                            # existing contract already has a string; never guess
+                            # an object, array, boolean, or numeric replacement.
+                            try:
+                                change["value"] = json.loads(raw, strict=False)
+                            except json.JSONDecodeError:
+                                target: Any = base
+                                try:
+                                    for token in change["path"][1:].split("/"):
+                                        token = token.replace("~1", "/").replace("~0", "~")
+                                        target = target[int(token)] if isinstance(target, list) else target[token]
+                                except (KeyError, IndexError, TypeError, ValueError):
+                                    target = None
+                                if not isinstance(target, str):
+                                    raise ValueError(f"Patch value for {change['path']} must be valid JSON")
+                                change["value"] = raw
             payload = apply_changes(base, payload["changes"])
             payload["summary"] = summary
-        payload.update(revision_id=str(uuid4()), parent_revision_id=current.revision_id if current else None, created_at=now())
+        payload.update(schema_version=2, revision_id=str(uuid4()), parent_revision_id=current.revision_id if current else None, created_at=now())
         try:
             return ProjectRevision.model_validate(payload)
         except ValueError as exc:

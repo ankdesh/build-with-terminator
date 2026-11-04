@@ -1,0 +1,1135 @@
+{
+  "revision": {
+    "schema_version": 2,
+    "revision_id": "373d52c5-70a2-4d0c-b97f-f27b5913430b",
+    "parent_revision_id": "739c3274-121c-4c04-bbf0-2ea71bf6d1ec",
+    "created_at": "2026-11-04T06:35:27.761703+00:00",
+    "title": "Wine Quality Analysis Dashboard",
+    "summary": "Added a heatmap titled 'Measurement correlations' using Spearman correlations for selected features, including computed correlation notes. Preserved all existing calculations and controls.",
+    "input_contract": {
+      "columns": [
+        {
+          "name": "fixed acidity",
+          "dtype": "number",
+          "nullable": false,
+          "description": "",
+          "date_format": null
+        },
+        {
+          "name": "volatile acidity",
+          "dtype": "number",
+          "nullable": false,
+          "description": "",
+          "date_format": null
+        },
+        {
+          "name": "citric acid",
+          "dtype": "number",
+          "nullable": false,
+          "description": "",
+          "date_format": null
+        },
+        {
+          "name": "residual sugar",
+          "dtype": "number",
+          "nullable": false,
+          "description": "",
+          "date_format": null
+        },
+        {
+          "name": "chlorides",
+          "dtype": "number",
+          "nullable": false,
+          "description": "",
+          "date_format": null
+        },
+        {
+          "name": "free sulfur dioxide",
+          "dtype": "number",
+          "nullable": false,
+          "description": "",
+          "date_format": null
+        },
+        {
+          "name": "total sulfur dioxide",
+          "dtype": "number",
+          "nullable": false,
+          "description": "",
+          "date_format": null
+        },
+        {
+          "name": "density",
+          "dtype": "number",
+          "nullable": false,
+          "description": "",
+          "date_format": null
+        },
+        {
+          "name": "pH",
+          "dtype": "number",
+          "nullable": false,
+          "description": "",
+          "date_format": null
+        },
+        {
+          "name": "sulphates",
+          "dtype": "number",
+          "nullable": false,
+          "description": "",
+          "date_format": null
+        },
+        {
+          "name": "alcohol",
+          "dtype": "number",
+          "nullable": false,
+          "description": "",
+          "date_format": null
+        },
+        {
+          "name": "quality",
+          "dtype": "integer",
+          "nullable": false,
+          "description": "",
+          "date_format": null
+        },
+        {
+          "name": "wine_type",
+          "dtype": "string",
+          "nullable": false,
+          "description": "",
+          "date_format": null
+        }
+      ],
+      "encoding": "utf-8-sig",
+      "delimiter": ","
+    },
+    "steps": [
+      {
+        "id": "clean_data",
+        "title": "Clean Data",
+        "stage": "cleanup",
+        "function": "function",
+        "code": "def function(inputs, parameters, context):\n    df = inputs['data'].copy()\n    return {'cleaned': df}",
+        "inputs": [
+          "data"
+        ],
+        "outputs": [
+          "cleaned"
+        ],
+        "parameters_used": null,
+        "changes_meaning": false,
+        "rationale": "Preserve all rows and measurements, including repeated observations."
+      },
+      {
+        "id": "analyze_data",
+        "title": "Analyze Data",
+        "stage": "analysis",
+        "function": "function",
+        "code": "import numpy as np\n\ndef function(inputs, parameters, context):\n    df = inputs['cleaned']\n    quality_threshold = parameters['quality_threshold']\n    wine_type = parameters['wine_type']\n    if wine_type is not None:\n        df = df[df['wine_type'] == wine_type]\n    samples = len(df)\n    mean_quality = df['quality'].mean()\n    threshold_count = (df['quality'] >= quality_threshold).sum()\n    alcohol_distribution, bin_edges = np.histogram(df['alcohol'], bins=np.arange(8.0, 15.5, 0.5))\n    bin_labels = [f'{bin_edges[i]} - {bin_edges[i+1]}' for i in range(len(bin_edges)-1)]\n    alcohol_distribution_df = pd.DataFrame({'bin_label': bin_labels, 'count': alcohol_distribution})\n    groups = sorted(df['wine_type'].unique().tolist())\n    five_numbers = [np.quantile(df.loc[df['wine_type'] == group, 'alcohol'], [0, .25, .5, .75, 1]).tolist() for group in groups]\n    alcohol_by_type = {'option': {'xAxis': {'type': 'category', 'data': groups}, 'yAxis': {'type': 'value', 'name': 'Alcohol (% ABV)'}, 'series': [{'type': 'boxplot', 'data': five_numbers}]}}\n    quality_summary = df.groupby('wine_type').agg(sample_count=('quality', 'size'), mean_quality=('quality', 'mean'), median_alcohol=('alcohol', 'median'), count_at_threshold=('quality', lambda x: (x >= quality_threshold).sum())).reset_index()\n    return {'samples': samples, 'mean_quality': mean_quality, 'threshold_count': threshold_count, 'alcohol_distribution': alcohol_distribution_df, 'alcohol_by_type': alcohol_by_type, 'quality_summary': quality_summary}",
+        "inputs": [
+          "cleaned"
+        ],
+        "outputs": [
+          "samples",
+          "mean_quality",
+          "threshold_count",
+          "alcohol_distribution",
+          "alcohol_by_type",
+          "quality_summary"
+        ],
+        "parameters_used": [
+          "quality_threshold"
+        ],
+        "changes_meaning": false,
+        "rationale": "Perform analysis on cleaned data to derive metrics and visualizations."
+      },
+      {
+        "id": "correlation_analysis",
+        "title": "Correlation Analysis",
+        "stage": "analysis",
+        "function": "function",
+        "code": "import pandas as pd\nimport numpy as np\n\ndef function(inputs, parameters, context):\n    df = inputs['cleaned']\n    labels = ['alcohol', 'density', 'residual sugar', 'volatile acidity', 'sulphates', 'quality']\n    matrix = df[labels].corr(method='spearman')\n    cells = [[x, y, float(matrix.iloc[y, x])] for y in range(len(labels)) for x in range(len(labels))]  \n    return {'measurement_correlations': {'option': {'xAxis': {'type': 'category', 'data': labels}, 'yAxis': {'type': 'category', 'data': labels}, 'visualMap': {'min': -1, 'max': 1, 'inRange': {'color': ['#245bd7', '#ffffff', '#bd3945']}}, 'series': [{'type': 'heatmap', 'data': cells}]}}} \n",
+        "inputs": [
+          "cleaned"
+        ],
+        "outputs": [
+          "measurement_correlations"
+        ],
+        "parameters_used": null,
+        "changes_meaning": false,
+        "rationale": "Compute Spearman correlations for selected measurements and return as a heatmap."
+      }
+    ],
+    "parameters": [
+      {
+        "id": "quality_threshold",
+        "label": "Quality Threshold",
+        "kind": "integer",
+        "default": 7,
+        "minimum": 0.0,
+        "maximum": 10.0,
+        "choices": [],
+        "filter_column": null,
+        "filter_artifact": "cleaned",
+        "filter_operator": "gte"
+      },
+      {
+        "id": "wine_type",
+        "label": "Wine Type",
+        "kind": "string",
+        "default": null,
+        "minimum": null,
+        "maximum": null,
+        "choices": [
+          "red",
+          "white"
+        ],
+        "filter_column": null,
+        "filter_artifact": "cleaned",
+        "filter_operator": "eq"
+      }
+    ],
+    "dashboard": {
+      "title": "Wine Quality Analysis Dashboard",
+      "subtitle": "Metrics and Visualizations for Wine Quality",
+      "widgets": [
+        {
+          "id": "samples_metric",
+          "kind": "metric",
+          "title": "Samples",
+          "output": "samples",
+          "width": 1,
+          "format": null,
+          "chart_binding": null,
+          "layout": null,
+          "unit": "",
+          "description": "Total number of samples."
+        },
+        {
+          "id": "mean_quality_metric",
+          "kind": "metric",
+          "title": "Mean Quality",
+          "output": "mean_quality",
+          "width": 1,
+          "format": "0.000",
+          "chart_binding": null,
+          "layout": null,
+          "unit": "",
+          "description": "Mean quality score."
+        },
+        {
+          "id": "threshold_count_metric",
+          "kind": "metric",
+          "title": "At or Above Threshold",
+          "output": "threshold_count",
+          "width": 1,
+          "format": null,
+          "chart_binding": null,
+          "layout": null,
+          "unit": "",
+          "description": "Count of samples with quality at or above the threshold."
+        },
+        {
+          "id": "alcohol_distribution_chart",
+          "kind": "chart",
+          "title": "Alcohol Distribution",
+          "output": "alcohol_distribution",
+          "width": 2,
+          "format": null,
+          "chart_binding": {
+            "kind": "bar",
+            "x": "bin_label",
+            "y": [
+              "count"
+            ],
+            "x_label": "Alcohol (% ABV)",
+            "y_label": "Count"
+          },
+          "layout": null,
+          "unit": "",
+          "description": "Histogram of alcohol distribution."
+        },
+        {
+          "id": "alcohol_by_type_chart",
+          "kind": "chart",
+          "title": "Alcohol by Wine Type",
+          "output": "alcohol_by_type",
+          "width": 2,
+          "format": null,
+          "chart_binding": null,
+          "layout": null,
+          "unit": "",
+          "description": "Boxplot of alcohol content by wine type."
+        },
+        {
+          "id": "quality_summary_table",
+          "kind": "table",
+          "title": "Quality Summary",
+          "output": "quality_summary",
+          "width": 2,
+          "format": null,
+          "chart_binding": null,
+          "layout": null,
+          "unit": "",
+          "description": "Summary of quality metrics by wine type."
+        },
+        {
+          "id": "measurement_correlations_heatmap",
+          "kind": "chart",
+          "title": "Measurement correlations",
+          "output": "measurement_correlations",
+          "width": 2,
+          "format": null,
+          "chart_binding": null,
+          "layout": null,
+          "unit": "",
+          "description": "Heatmap of Spearman correlations between selected measurements."
+        }
+      ]
+    },
+    "dependencies": [
+      "pandas",
+      "numpy",
+      "scipy",
+      "statsmodels"
+    ],
+    "seed": 0
+  },
+  "run": {
+    "run_id": "95c2bffa-14db-4709-a2bc-78ac2e58c11a",
+    "revision_id": "373d52c5-70a2-4d0c-b97f-f27b5913430b",
+    "dataset_name": "wine_quality.csv",
+    "input_hash": "f10a10694fcd5a5dc1337769c59320a4a958a43746a4e66dec7759975a0f780f",
+    "parameters": {
+      "quality_threshold": 7,
+      "wine_type": null
+    },
+    "status": "succeeded",
+    "started_at": "2026-11-04T06:35:32.874465+00:00",
+    "finished_at": "2026-11-04T06:35:33.682471+00:00",
+    "runtime_version": "0.3.1",
+    "validation_mode": "execution",
+    "source_run_id": null,
+    "workspace_version": 5,
+    "error": null,
+    "result": {
+      "outputs": {
+        "samples": {
+          "kind": "metric",
+          "value": 6497
+        },
+        "mean_quality": {
+          "kind": "metric",
+          "value": 5.818377712790519
+        },
+        "threshold_count": {
+          "kind": "metric",
+          "value": 1277
+        },
+        "alcohol_distribution": {
+          "kind": "table",
+          "columns": [
+            "bin_label",
+            "count"
+          ],
+          "rows": [
+            {
+              "bin_label": "8.0 - 8.5",
+              "count": 7
+            },
+            {
+              "bin_label": "8.5 - 9.0",
+              "count": 317
+            },
+            {
+              "bin_label": "9.0 - 9.5",
+              "count": 1181
+            },
+            {
+              "bin_label": "9.5 - 10.0",
+              "count": 1098
+            },
+            {
+              "bin_label": "10.0 - 10.5",
+              "count": 888
+            },
+            {
+              "bin_label": "10.5 - 11.0",
+              "count": 820
+            },
+            {
+              "bin_label": "11.0 - 11.5",
+              "count": 777
+            },
+            {
+              "bin_label": "11.5 - 12.0",
+              "count": 434
+            },
+            {
+              "bin_label": "12.0 - 12.5",
+              "count": 446
+            },
+            {
+              "bin_label": "12.5 - 13.0",
+              "count": 362
+            },
+            {
+              "bin_label": "13.0 - 13.5",
+              "count": 112
+            },
+            {
+              "bin_label": "13.5 - 14.0",
+              "count": 40
+            },
+            {
+              "bin_label": "14.0 - 14.5",
+              "count": 14
+            },
+            {
+              "bin_label": "14.5 - 15.0",
+              "count": 1
+            }
+          ],
+          "total_rows": 14
+        },
+        "alcohol_by_type": {
+          "kind": "chart",
+          "value": {
+            "option": {
+              "xAxis": {
+                "type": "category",
+                "data": [
+                  "red",
+                  "white"
+                ]
+              },
+              "yAxis": {
+                "type": "value",
+                "name": "Alcohol (% ABV)"
+              },
+              "series": [
+                {
+                  "type": "boxplot",
+                  "data": [
+                    [
+                      8.4,
+                      9.5,
+                      10.2,
+                      11.1,
+                      14.9
+                    ],
+                    [
+                      8.0,
+                      9.5,
+                      10.4,
+                      11.4,
+                      14.2
+                    ]
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "quality_summary": {
+          "kind": "table",
+          "columns": [
+            "wine_type",
+            "sample_count",
+            "mean_quality",
+            "median_alcohol",
+            "count_at_threshold"
+          ],
+          "rows": [
+            {
+              "wine_type": "red",
+              "sample_count": 1599,
+              "mean_quality": 5.6360225140712945,
+              "median_alcohol": 10.2,
+              "count_at_threshold": 217
+            },
+            {
+              "wine_type": "white",
+              "sample_count": 4898,
+              "mean_quality": 5.87790935075541,
+              "median_alcohol": 10.4,
+              "count_at_threshold": 1060
+            }
+          ],
+          "total_rows": 2
+        },
+        "measurement_correlations": {
+          "kind": "chart",
+          "value": {
+            "option": {
+              "xAxis": {
+                "type": "category",
+                "data": [
+                  "alcohol",
+                  "density",
+                  "residual sugar",
+                  "volatile acidity",
+                  "sulphates",
+                  "quality"
+                ]
+              },
+              "yAxis": {
+                "type": "category",
+                "data": [
+                  "alcohol",
+                  "density",
+                  "residual sugar",
+                  "volatile acidity",
+                  "sulphates",
+                  "quality"
+                ]
+              },
+              "visualMap": {
+                "min": -1,
+                "max": 1,
+                "inRange": {
+                  "color": [
+                    "#245bd7",
+                    "#ffffff",
+                    "#bd3945"
+                  ]
+                }
+              },
+              "series": [
+                {
+                  "type": "heatmap",
+                  "data": [
+                    [
+                      0,
+                      0,
+                      1.0
+                    ],
+                    [
+                      1,
+                      0,
+                      -0.6994424737439912
+                    ],
+                    [
+                      2,
+                      0,
+                      -0.32921790708287757
+                    ],
+                    [
+                      3,
+                      0,
+                      -0.023924199542619592
+                    ],
+                    [
+                      4,
+                      0,
+                      0.004583412379119365
+                    ],
+                    [
+                      5,
+                      0,
+                      0.4469254788143539
+                    ],
+                    [
+                      0,
+                      1,
+                      -0.6994424737439912
+                    ],
+                    [
+                      1,
+                      1,
+                      1.0
+                    ],
+                    [
+                      2,
+                      1,
+                      0.5266638133176473
+                    ],
+                    [
+                      3,
+                      1,
+                      0.26143698981126734
+                    ],
+                    [
+                      4,
+                      1,
+                      0.2747915947330435
+                    ],
+                    [
+                      5,
+                      1,
+                      -0.322806048360933
+                    ],
+                    [
+                      0,
+                      2,
+                      -0.32921790708287757
+                    ],
+                    [
+                      1,
+                      2,
+                      0.5266638133176473
+                    ],
+                    [
+                      2,
+                      2,
+                      1.0
+                    ],
+                    [
+                      3,
+                      2,
+                      -0.06438414511931495
+                    ],
+                    [
+                      4,
+                      2,
+                      -0.1381569872096858
+                    ],
+                    [
+                      5,
+                      2,
+                      -0.016890589768127497
+                    ],
+                    [
+                      0,
+                      3,
+                      -0.023924199542619592
+                    ],
+                    [
+                      1,
+                      3,
+                      0.26143698981126734
+                    ],
+                    [
+                      2,
+                      3,
+                      -0.06438414511931495
+                    ],
+                    [
+                      3,
+                      3,
+                      1.0
+                    ],
+                    [
+                      4,
+                      3,
+                      0.2550419991498638
+                    ],
+                    [
+                      5,
+                      3,
+                      -0.2578059010719201
+                    ],
+                    [
+                      0,
+                      4,
+                      0.004583412379119365
+                    ],
+                    [
+                      1,
+                      4,
+                      0.2747915947330435
+                    ],
+                    [
+                      2,
+                      4,
+                      -0.1381569872096858
+                    ],
+                    [
+                      3,
+                      4,
+                      0.2550419991498638
+                    ],
+                    [
+                      4,
+                      4,
+                      1.0
+                    ],
+                    [
+                      5,
+                      4,
+                      0.02983050012256949
+                    ],
+                    [
+                      0,
+                      5,
+                      0.4469254788143539
+                    ],
+                    [
+                      1,
+                      5,
+                      -0.322806048360933
+                    ],
+                    [
+                      2,
+                      5,
+                      -0.016890589768127497
+                    ],
+                    [
+                      3,
+                      5,
+                      -0.2578059010719201
+                    ],
+                    [
+                      4,
+                      5,
+                      0.02983050012256949
+                    ],
+                    [
+                      5,
+                      5,
+                      1.0
+                    ]
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      },
+      "widgets": {
+        "samples_metric": {
+          "kind": "metric",
+          "value": 6497
+        },
+        "mean_quality_metric": {
+          "kind": "metric",
+          "value": 5.818377712790519
+        },
+        "threshold_count_metric": {
+          "kind": "metric",
+          "value": 1277
+        },
+        "alcohol_distribution_chart": {
+          "kind": "chart",
+          "value": {
+            "option": {
+              "xAxis": {
+                "type": "category",
+                "name": "Alcohol (% ABV)",
+                "data": [
+                  "8.0 - 8.5",
+                  "8.5 - 9.0",
+                  "9.0 - 9.5",
+                  "9.5 - 10.0",
+                  "10.0 - 10.5",
+                  "10.5 - 11.0",
+                  "11.0 - 11.5",
+                  "11.5 - 12.0",
+                  "12.0 - 12.5",
+                  "12.5 - 13.0",
+                  "13.0 - 13.5",
+                  "13.5 - 14.0",
+                  "14.0 - 14.5",
+                  "14.5 - 15.0"
+                ]
+              },
+              "yAxis": {
+                "type": "value",
+                "name": "Count"
+              },
+              "series": [
+                {
+                  "name": "count",
+                  "type": "bar",
+                  "data": [
+                    7,
+                    317,
+                    1181,
+                    1098,
+                    888,
+                    820,
+                    777,
+                    434,
+                    446,
+                    362,
+                    112,
+                    40,
+                    14,
+                    1
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "alcohol_by_type_chart": {
+          "kind": "chart",
+          "value": {
+            "option": {
+              "xAxis": {
+                "type": "category",
+                "data": [
+                  "red",
+                  "white"
+                ]
+              },
+              "yAxis": {
+                "type": "value",
+                "name": "Alcohol (% ABV)"
+              },
+              "series": [
+                {
+                  "type": "boxplot",
+                  "data": [
+                    [
+                      8.4,
+                      9.5,
+                      10.2,
+                      11.1,
+                      14.9
+                    ],
+                    [
+                      8.0,
+                      9.5,
+                      10.4,
+                      11.4,
+                      14.2
+                    ]
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "quality_summary_table": {
+          "kind": "table",
+          "columns": [
+            "wine_type",
+            "sample_count",
+            "mean_quality",
+            "median_alcohol",
+            "count_at_threshold"
+          ],
+          "rows": [
+            {
+              "wine_type": "red",
+              "sample_count": 1599,
+              "mean_quality": 5.6360225140712945,
+              "median_alcohol": 10.2,
+              "count_at_threshold": 217
+            },
+            {
+              "wine_type": "white",
+              "sample_count": 4898,
+              "mean_quality": 5.87790935075541,
+              "median_alcohol": 10.4,
+              "count_at_threshold": 1060
+            }
+          ],
+          "total_rows": 2
+        },
+        "measurement_correlations_heatmap": {
+          "kind": "chart",
+          "value": {
+            "option": {
+              "xAxis": {
+                "type": "category",
+                "data": [
+                  "alcohol",
+                  "density",
+                  "residual sugar",
+                  "volatile acidity",
+                  "sulphates",
+                  "quality"
+                ]
+              },
+              "yAxis": {
+                "type": "category",
+                "data": [
+                  "alcohol",
+                  "density",
+                  "residual sugar",
+                  "volatile acidity",
+                  "sulphates",
+                  "quality"
+                ]
+              },
+              "visualMap": {
+                "min": -1,
+                "max": 1,
+                "inRange": {
+                  "color": [
+                    "#245bd7",
+                    "#ffffff",
+                    "#bd3945"
+                  ]
+                }
+              },
+              "series": [
+                {
+                  "type": "heatmap",
+                  "data": [
+                    [
+                      0,
+                      0,
+                      1.0
+                    ],
+                    [
+                      1,
+                      0,
+                      -0.6994424737439912
+                    ],
+                    [
+                      2,
+                      0,
+                      -0.32921790708287757
+                    ],
+                    [
+                      3,
+                      0,
+                      -0.023924199542619592
+                    ],
+                    [
+                      4,
+                      0,
+                      0.004583412379119365
+                    ],
+                    [
+                      5,
+                      0,
+                      0.4469254788143539
+                    ],
+                    [
+                      0,
+                      1,
+                      -0.6994424737439912
+                    ],
+                    [
+                      1,
+                      1,
+                      1.0
+                    ],
+                    [
+                      2,
+                      1,
+                      0.5266638133176473
+                    ],
+                    [
+                      3,
+                      1,
+                      0.26143698981126734
+                    ],
+                    [
+                      4,
+                      1,
+                      0.2747915947330435
+                    ],
+                    [
+                      5,
+                      1,
+                      -0.322806048360933
+                    ],
+                    [
+                      0,
+                      2,
+                      -0.32921790708287757
+                    ],
+                    [
+                      1,
+                      2,
+                      0.5266638133176473
+                    ],
+                    [
+                      2,
+                      2,
+                      1.0
+                    ],
+                    [
+                      3,
+                      2,
+                      -0.06438414511931495
+                    ],
+                    [
+                      4,
+                      2,
+                      -0.1381569872096858
+                    ],
+                    [
+                      5,
+                      2,
+                      -0.016890589768127497
+                    ],
+                    [
+                      0,
+                      3,
+                      -0.023924199542619592
+                    ],
+                    [
+                      1,
+                      3,
+                      0.26143698981126734
+                    ],
+                    [
+                      2,
+                      3,
+                      -0.06438414511931495
+                    ],
+                    [
+                      3,
+                      3,
+                      1.0
+                    ],
+                    [
+                      4,
+                      3,
+                      0.2550419991498638
+                    ],
+                    [
+                      5,
+                      3,
+                      -0.2578059010719201
+                    ],
+                    [
+                      0,
+                      4,
+                      0.004583412379119365
+                    ],
+                    [
+                      1,
+                      4,
+                      0.2747915947330435
+                    ],
+                    [
+                      2,
+                      4,
+                      -0.1381569872096858
+                    ],
+                    [
+                      3,
+                      4,
+                      0.2550419991498638
+                    ],
+                    [
+                      4,
+                      4,
+                      1.0
+                    ],
+                    [
+                      5,
+                      4,
+                      0.02983050012256949
+                    ],
+                    [
+                      0,
+                      5,
+                      0.4469254788143539
+                    ],
+                    [
+                      1,
+                      5,
+                      -0.322806048360933
+                    ],
+                    [
+                      2,
+                      5,
+                      -0.016890589768127497
+                    ],
+                    [
+                      3,
+                      5,
+                      -0.2578059010719201
+                    ],
+                    [
+                      4,
+                      5,
+                      0.02983050012256949
+                    ],
+                    [
+                      5,
+                      5,
+                      1.0
+                    ]
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      },
+      "cleanup_impacts": [
+        {
+          "step_id": "clean_data",
+          "title": "Clean Data",
+          "rationale": "Preserve all rows and measurements, including repeated observations.",
+          "requires_confirmation": false,
+          "before_rows": 6497,
+          "after_rows": 6497,
+          "removed_rows": 0,
+          "before_missing_cells": 0,
+          "after_missing_cells": 0,
+          "changed_cells_in_matched_rows": 0,
+          "columns_removed": [],
+          "columns_added": [],
+          "changed": false
+        }
+      ],
+      "steps": [
+        {
+          "event": "step",
+          "step_id": "clean_data",
+          "title": "Clean Data",
+          "status": "running"
+        },
+        {
+          "event": "step",
+          "step_id": "clean_data",
+          "title": "Clean Data",
+          "status": "succeeded",
+          "cached": false,
+          "duration_ms": 201.71
+        },
+        {
+          "event": "step",
+          "step_id": "analyze_data",
+          "title": "Analyze Data",
+          "status": "running"
+        },
+        {
+          "event": "step",
+          "step_id": "analyze_data",
+          "title": "Analyze Data",
+          "status": "succeeded",
+          "cached": false,
+          "duration_ms": 16.68
+        },
+        {
+          "event": "step",
+          "step_id": "correlation_analysis",
+          "title": "Correlation Analysis",
+          "status": "running"
+        },
+        {
+          "event": "step",
+          "step_id": "correlation_analysis",
+          "title": "Correlation Analysis",
+          "status": "succeeded",
+          "cached": false,
+          "duration_ms": 5.1
+        }
+      ],
+      "parameter_options": {},
+      "input_rows": 6497,
+      "input_hash": "f10a10694fcd5a5dc1337769c59320a4a958a43746a4e66dec7759975a0f780f"
+    }
+  },
+  "input_sha256": "f10a10694fcd5a5dc1337769c59320a4a958a43746a4e66dec7759975a0f780f",
+  "checks": [
+    [
+      "Red source samples",
+      1599
+    ],
+    [
+      "White source samples",
+      4898
+    ],
+    [
+      "Histogram count total",
+      6497
+    ],
+    [
+      "Spearman rho: alcohol / quality",
+      0.446925
+    ]
+  ],
+  "configured_model": "gpt-4o-mini"
+}

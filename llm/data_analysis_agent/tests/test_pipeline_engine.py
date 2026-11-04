@@ -1,4 +1,4 @@
-"""Known-result, replacement, cache, statistics, and isolation acceptance tests."""
+"""Known-result, replacement, cache, statistics, and worker lifecycle tests."""
 
 import asyncio
 import json
@@ -71,12 +71,12 @@ def test_full_table_export_and_checkpoint_reuse(simple_revision, input_csv, tmp_
     assert success[0]["cached"] and not success[1]["cached"]
 
 
-@pytest.mark.parametrize("change", ["cycle", "bad_binding", "unsafe_import", "bad_parameter"])
+@pytest.mark.parametrize("change", ["cycle", "bad_binding", "bad_source", "bad_parameter"])
 def test_contract_rejects_invalid_projects(simple_revision, change):
     payload = simple_revision.model_dump()
     if change == "cycle": payload["steps"][0]["inputs"] = ["records"]
     if change == "bad_binding": payload["dashboard"]["widgets"][0]["output"] = "missing"
-    if change == "unsafe_import": payload["steps"][0]["code"] = "import os\n" + payload["steps"][0]["code"]
+    if change == "bad_source": payload["steps"][0]["code"] = "def clean(inputs):\n    return {}\n"
     if change == "bad_parameter": payload["parameters"][1]["default"] = -1
     with pytest.raises(ValueError): ProjectRevision.model_validate(payload)
 
@@ -138,8 +138,7 @@ async def test_worker_runs_without_model_credentials(simple_revision, input_csv,
 
 
 @pytest.mark.asyncio
-@pytest.mark.skipif(os.name == "nt", reason="Linux authoring network policy")
-async def test_worker_cannot_connect_to_host_network(simple_revision, input_csv, tmp_path):
+async def test_worker_can_connect_to_local_service(simple_revision, input_csv, tmp_path):
     from http.server import HTTPServer, BaseHTTPRequestHandler
     received = threading.Event()
     class Handler(BaseHTTPRequestHandler):
@@ -153,9 +152,8 @@ async def test_worker_cannot_connect_to_host_network(simple_revision, input_csv,
     payload["steps"][0]["code"] = f"def clean(inputs, parameters, context):\n    pd.io.common.urlopen('http://127.0.0.1:{server.server_port}').read()\n    return {{'cleaned': inputs['data']}}\n"
     try:
         response = await ProcessRunner().run(ProjectRevision.model_validate(payload), input_csv, {}, tmp_path / "network-check", threading.Event())
-        assert not response["success"]
-        assert "URLError" in response["error"] or "Network access is disabled" in response["error"]
-        assert not received.is_set()
+        assert response["success"], response
+        assert received.is_set()
     finally:
         server.shutdown(); server.server_close(); thread.join(timeout=2)
 
@@ -177,12 +175,95 @@ async def test_deadline_and_cancellation_terminate_worker(simple_revision, input
 
 
 @pytest.mark.asyncio
-@pytest.mark.skipif(os.name == "nt", reason="Linux authoring isolation policy")
-async def test_worker_cannot_read_host_file(simple_revision, input_csv, tmp_path):
-    secret = tmp_path / "not-mounted.csv"
-    secret.write_text("secret\n123\n")
+async def test_worker_can_read_and_write_host_files(simple_revision, input_csv, tmp_path):
+    source = tmp_path / "external.csv"
+    source.write_text("zone,value\nA,7\nB,11\n")
+    destination = tmp_path / "external-result.txt"
     payload = simple_revision.model_dump()
-    payload["steps"][0]["code"] = f"def clean(inputs, parameters, context):\n    return {{'cleaned': pd.read_csv({str(secret)!r})}}\n"
+    payload["steps"][0]["code"] = ("from pathlib import Path\n"
+        "def clean(inputs, parameters, context):\n"
+        f"    df = pd.read_csv({str(source)!r})\n"
+        f"    with open({str(destination)!r}, 'w') as output:\n"
+        "        output.write(str(int(df['value'].sum())))\n"
+        "    return {'cleaned': df}\n")
     response = await ProcessRunner().run(ProjectRevision.model_validate(payload), input_csv, {}, tmp_path / "job", threading.Event())
-    assert not response["success"]
-    assert "FileNotFoundError" in response["error"]
+    assert response["success"], response
+    assert response["result"]["outputs"]["total"]["value"] == 18
+    assert destination.read_text() == "18"
+
+
+@pytest.mark.asyncio
+async def test_worker_needs_no_external_launcher_and_reuses_cache(simple_revision, input_csv, tmp_path, monkeypatch):
+    import shutil
+    monkeypatch.setattr(shutil, "which", lambda executable: pytest.fail("Worker must launch Python directly"))
+    runner = ProcessRunner()
+    initial = tmp_path / "initial"
+    first = await runner.run(simple_revision, input_csv, {}, initial, threading.Event())
+    assert first["success"], first
+    second = await runner.run(simple_revision, input_csv, {}, tmp_path / "cached", threading.Event(), initial / "output")
+    assert second["success"], second
+    assert second["result"]["outputs"]["total"]["value"] == 30
+    completed = [step for step in second["result"]["steps"] if step["status"] == "succeeded"]
+    assert len(completed) == len(simple_revision.steps)
+    assert all(step["cached"] for step in completed)
+
+
+@pytest.mark.skipif(os.name == "nt", reason="Linux worker parent monitor")
+def test_worker_stops_after_parent_crash(simple_revision, input_csv, tmp_path):
+    import signal
+    import subprocess
+    import sys
+    import time
+
+    marker = tmp_path / "worker.pid"
+    payload = simple_revision.model_dump()
+    payload["steps"][0]["code"] = ("import os, time\nfrom pathlib import Path\n"
+        "def clean(inputs, parameters, context):\n"
+        f"    Path({str(marker)!r}).write_text(str(os.getpid()))\n"
+        "    while True:\n        time.sleep(0.1)\n")
+    revision_file = tmp_path / "revision.json"
+    revision_file.write_text(ProjectRevision.model_validate(payload).model_dump_json())
+    program = """
+from pathlib import Path
+import sys, threading
+from pipeline_core.models import ProjectRevision
+from pipeline_core.process_runner import ProcessRunner
+ProcessRunner()._run(ProjectRevision.model_validate_json(Path(sys.argv[1]).read_text()),
+    Path(sys.argv[2]), {}, Path(sys.argv[3]), threading.Event(), None, None)
+"""
+    parent = subprocess.Popen([sys.executable, "-c", program, str(revision_file), str(input_csv),
+        str(tmp_path / "job")], cwd=Path(__file__).resolve().parent.parent)
+    worker_pid = None
+    try:
+        deadline = time.monotonic() + 10
+        while time.monotonic() < deadline:
+            try:
+                worker_pid = int(marker.read_text())
+                break
+            except (FileNotFoundError, ValueError):
+                pass
+            time.sleep(0.05)
+        assert worker_pid is not None, "Worker did not start"
+        parent.kill()
+        parent.wait(timeout=5)
+        deadline = time.monotonic() + 5
+        state_file = Path(f"/proc/{worker_pid}/stat")
+        while time.monotonic() < deadline:
+            try:
+                state = state_file.read_text().split(") ", 1)[1][0]
+            except FileNotFoundError:
+                break
+            if state == "Z":  # An exited orphan may wait briefly for the host's reaper.
+                break
+            time.sleep(0.05)
+        else:
+            pytest.fail("Worker survived its parent")
+    finally:
+        if parent.poll() is None:
+            parent.kill()
+            parent.wait(timeout=5)
+        if worker_pid:
+            try:
+                os.killpg(worker_pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass

@@ -1,8 +1,9 @@
 """FastAPI application entrypoint for WPS-AI data analysis server."""
 
 import logging
+from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Awaitable, Callable
+from typing import Awaitable, Callable, AsyncIterator
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
@@ -12,6 +13,10 @@ from starlette.responses import Response
 
 from backend.exceptions import WPSAIBaseException
 from backend.routes.project_routes import router as project_router
+from backend.routes import project_routes
+from backend.services.workspace_service import WorkspaceConflict
+from backend.services.llm_gateway import llm
+from pipeline_core import RUNTIME_VERSION
 from backend.routes.session_routes import router as session_router
 from backend.routes.chat_routes import export_table_csv
 from config import config
@@ -23,18 +28,30 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
 )
 logger = logging.getLogger("wps-ai")
+logging.getLogger("httpx").setLevel(logging.WARNING)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    yield
+    for cancel in project_routes.target_cancellations.values():
+        cancel.set()
+    await project_routes.targets.close()
+    await project_routes.jobs.close()
+    await llm.close()
+
 
 app = FastAPI(
     title="WPS-AI Data Analysis Studio",
     description="Chat-built reusable pipelines and offline dashboards",
-    version="0.2.0",
+    version=RUNTIME_VERSION,
+    lifespan=lifespan,
 )
 
 # Enable CORS for local development and embedded webview
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=["http://127.0.0.1:3000", "http://localhost:3000"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -43,6 +60,7 @@ app.add_middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost
 # Include API route modules
 app.include_router(session_router)
 app.include_router(project_router)
+app.include_router(project_routes.internal_router)
 # Retain data-only export compatibility. The legacy chat executor is not routed.
 app.add_api_route("/api/sessions/{session_id}/export-csv", export_table_csv, methods=["POST"])
 
@@ -62,6 +80,11 @@ async def local_origin_guard(request: Request, call_next: Callable[[Request], Aw
 @app.exception_handler(ValueError)
 async def validation_error(request: Request, exc: ValueError) -> JSONResponse:
     return JSONResponse(status_code=422, content={"detail": str(exc)})
+
+
+@app.exception_handler(WorkspaceConflict)
+async def workspace_conflict(request: Request, exc: WorkspaceConflict) -> JSONResponse:
+    return JSONResponse(status_code=409, content={"detail": str(exc)})
 
 
 @app.exception_handler(KeyError)

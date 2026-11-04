@@ -7,37 +7,11 @@ from typing import TYPE_CHECKING, Any
 if TYPE_CHECKING:
     from pipeline_core.models import ProjectRevision
 
-SAFE_MODULES = {
-    "pandas", "numpy", "scipy", "statsmodels", "math", "datetime", "re",
-    "statistics", "collections", "itertools", "functools", "decimal", "typing", "json",
-    "pipeline_core",
-}
-FORBIDDEN_CALLS = {
-    "eval", "exec", "compile", "open", "__import__", "globals", "locals", "vars",
-    "getattr", "setattr", "delattr", "breakpoint", "input",
-}
-
-
 def validate_source(code: str, function: str) -> None:
     tree = ast.parse(code)
     if not any(isinstance(n, ast.FunctionDef) and n.name == function for n in tree.body):
         raise ValueError(f"Source must define function {function}(inputs, parameters, context)")
     for node in ast.walk(tree):
-        if isinstance(node, (ast.Import, ast.ImportFrom)):
-            modules = [a.name for a in node.names] if isinstance(node, ast.Import) else [node.module or ""]
-            if isinstance(node, ast.ImportFrom) and node.level:
-                raise ValueError("Relative imports are not supported")
-            for module in modules:
-                if module.split(".")[0] not in SAFE_MODULES:
-                    raise ValueError(f"Unsupported import: {module}")
-                if module.startswith("pipeline_core") and module != "pipeline_core.statistics":
-                    raise ValueError("Only pipeline_core.statistics is available to generated code")
-        if isinstance(node, ast.Attribute) and node.attr.startswith("__"):
-            raise ValueError("Private runtime attributes are not supported")
-        if isinstance(node, ast.Name) and node.id.startswith("__"):
-            raise ValueError("Private runtime names are not supported")
-        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id in FORBIDDEN_CALLS:
-            raise ValueError(f"Unsupported call: {node.func.id}")
         if isinstance(node, ast.Call):
             name = node.func.attr if isinstance(node.func, ast.Attribute) else node.func.id if isinstance(node.func, ast.Name) else ""
             if name in {"now", "today", "utcnow"}:

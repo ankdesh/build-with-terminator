@@ -1,6 +1,6 @@
 [project]
 name = "wps-ai"
-version = "0.2.0"
+version = "0.3.1"
 description = "Chat-built analysis pipelines with a model-free Windows dashboard runtime"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -26,6 +26,7 @@ dev = [
     "pandas-stubs>=2.2.0",
 ]
 packaging = ["pyinstaller>=6.10.0"]
+tutorials = ["openpyxl>=3.1.5"]
 
 [build-system]
 requires = ["setuptools>=69"]

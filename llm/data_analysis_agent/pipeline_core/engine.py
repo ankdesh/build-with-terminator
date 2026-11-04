@@ -1,4 +1,4 @@
-"""Deterministic pipeline execution. Invoke only inside an isolated worker."""
+"""Deterministic pipeline execution. Invoke inside a separate worker process."""
 
 import csv
 import hashlib
@@ -12,6 +12,7 @@ from typing import Any, Callable
 import numpy as np
 import pandas as pd
 
+from pipeline_core import RUNTIME_VERSION
 from pipeline_core.models import ProjectRevision
 from pipeline_core.validation import ordered_steps, validate_parameters
 
@@ -177,7 +178,7 @@ class PipelineEngine:
                 "code": step.code, "function": step.function, "stage": step.stage,
                 "inputs": {name: hashes[name] for name in step.inputs},
                 "outputs": step.outputs, "parameters": parameters, "seed": revision.seed,
-                "runtime": "0.2.0", "versions": runtime_versions,
+                "runtime": RUNTIME_VERSION, "versions": runtime_versions,
             }, sort_keys=True).encode()).hexdigest()
             reused = False
             step_cache = previous.get(step.id, {})
@@ -196,8 +197,7 @@ class PipelineEngine:
                 reused = True
             else:
                 namespace: dict[str, Any] = {"pd": pd, "np": np, "__name__": "saved_pipeline"}
-                # Source has already passed static checks. OS isolation is provided
-                # by ProcessRunner, not by this namespace or the AST policy.
+                # Source has passed calculation checks and runs as trusted Python.
                 exec(compile(step.code, f"<step:{step.id}>", "exec"), namespace)
                 inputs = {n: artifacts[n].copy(deep=True) if isinstance(artifacts[n], pd.DataFrame) else safe_json(artifacts[n]) for n in step.inputs}
                 np.random.seed(revision.seed)
@@ -222,43 +222,7 @@ class PipelineEngine:
             emit({"event": "step", "step_id": step.id, "title": step.title,
                   "status": "succeeded", "cached": reused, "duration_ms": round((time.monotonic() - start) * 1000, 2)})
 
-        rendered: dict[str, Any] = {}
-        widget_views: dict[str, Any] = {}
-        for widget in revision.dashboard.widgets:
-            value = artifacts[widget.output]
-            if widget.output not in rendered:
-                if isinstance(value, pd.DataFrame):
-                    rendered[widget.output] = {"kind": "table", "columns": [str(c) for c in value.columns],
-                        "rows": safe_json(value.head(500).to_dict("records")), "total_rows": len(value)}
-                elif isinstance(value, dict):
-                    rendered[widget.output] = {"kind": "chart", "value": safe_json(value)}
-                else:
-                    rendered[widget.output] = {"kind": "text" if isinstance(value, str) else "metric", "value": safe_json(value)}
-            if widget.kind == "table":
-                if not isinstance(value, pd.DataFrame):
-                    raise ValueError(f"Table {widget.title} requires a DataFrame")
-                widget_views[widget.id] = rendered[widget.output]
-            elif widget.kind == "chart":
-                if isinstance(value, pd.DataFrame):
-                    if widget.chart_binding is None:
-                        raise ValueError(f"Chart {widget.title} binds DataFrame {widget.output}. Set its chart_binding with kind, x column, and y columns, or return an ECharts option object from Python.")
-                    chart_value = chart_from_frame(value, widget.chart_binding)
-                elif isinstance(value, dict) and isinstance(value.get("option"), dict):
-                    chart_value = safe_json(value)
-                elif isinstance(value, dict) and ("series" in value or "dataset" in value):
-                    chart_value = {"option": safe_json(value)}
-                else:
-                    raise ValueError(f"Chart {widget.title} requires a DataFrame with chart_binding or an ECharts option object")
-                validate_chart(chart_value["option"])
-                widget_views[widget.id] = {"kind": "chart", "value": chart_value}
-            elif widget.kind == "metric":
-                if isinstance(value, (dict, list, pd.DataFrame)):
-                    raise ValueError(f"Metric {widget.title} requires a scalar")
-                widget_views[widget.id] = {"kind": "metric", "value": safe_json(value)}
-            else:
-                if isinstance(value, (dict, list, pd.DataFrame)):
-                    raise ValueError(f"Text {widget.title} must be computed text or a scalar")
-                widget_views[widget.id] = {"kind": "text", "value": str(safe_json(value)) if value is not None else ""}
+        rendered, widget_views = render_artifacts(revision, artifacts)
         (output_dir / "cache.json").write_text(json.dumps(cache, allow_nan=False))
         result = {"outputs": rendered, "widgets": widget_views, "cleanup_impacts": cleanup, "steps": logs,
                   "parameter_options": options, "input_rows": len(frame), "input_hash": fingerprint(input_path)}
@@ -331,3 +295,78 @@ def chart_from_frame(frame: pd.DataFrame, binding: Any) -> dict[str, Any]:
             "yAxis": {"type": "value", "name": binding.y_label or ", ".join(binding.y)},
             "series": [{"name": name, "type": binding.kind, "data": safe_json(frame[name].tolist())} for name in binding.y]}
     return {"option": option}
+
+
+def render_artifacts(revision: ProjectRevision, artifacts: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+    rendered: dict[str, Any] = {}
+    widget_views: dict[str, Any] = {}
+    for widget in revision.dashboard.widgets:
+        value = artifacts[widget.output]
+        if widget.output not in rendered:
+            if isinstance(value, pd.DataFrame):
+                rendered[widget.output] = {"kind": "table", "columns": [str(c) for c in value.columns],
+                    "rows": safe_json(value.head(500).to_dict("records")), "total_rows": len(value)}
+            elif isinstance(value, dict):
+                rendered[widget.output] = {"kind": "chart", "value": safe_json(value)}
+            else:
+                rendered[widget.output] = {"kind": "text" if isinstance(value, str) else "metric", "value": safe_json(value)}
+        if widget.kind == "table":
+            if not isinstance(value, pd.DataFrame):
+                raise ValueError(f"Table {widget.title} requires a DataFrame")
+            widget_views[widget.id] = rendered[widget.output]
+        elif widget.kind == "chart":
+            if isinstance(value, pd.DataFrame):
+                if widget.chart_binding is None:
+                    raise ValueError(f"Chart {widget.title} binds DataFrame {widget.output}. Set its chart_binding with kind, x column, and y columns, or return an ECharts option object from Python.")
+                chart_value = chart_from_frame(value, widget.chart_binding)
+            elif isinstance(value, dict) and isinstance(value.get("option"), dict):
+                chart_value = safe_json(value)
+            elif isinstance(value, dict) and ("series" in value or "dataset" in value):
+                chart_value = {"option": safe_json(value)}
+            else:
+                raise ValueError(f"Chart {widget.title} requires a DataFrame with chart_binding or an ECharts option object")
+            validate_chart(chart_value["option"])
+            widget_views[widget.id] = {"kind": "chart", "value": chart_value}
+        elif widget.kind == "metric":
+            if isinstance(value, (dict, list, pd.DataFrame)):
+                raise ValueError(f"Metric {widget.title} requires a scalar")
+            widget_views[widget.id] = {"kind": "metric", "value": safe_json(value)}
+        else:
+            if isinstance(value, (dict, list, pd.DataFrame)):
+                raise ValueError(f"Text {widget.title} must be computed text or a scalar")
+            widget_views[widget.id] = {"kind": "text", "value": str(safe_json(value)) if value is not None else ""}
+    return rendered, widget_views
+
+
+def render_saved(revision: ProjectRevision, artifact_dir: Path, previous: dict[str, Any],
+                 source_revision: ProjectRevision | None = None) -> dict[str, Any]:
+    """Validate presentation against complete saved artifacts without executing step code."""
+    steps = {step.id: step for step in revision.steps}
+    impacts = [{**impact, "title": steps[impact["step_id"]].title, "rationale": steps[impact["step_id"]].rationale}
+        for impact in previous.get("cleanup_impacts", []) if impact["step_id"] in steps]
+    source_widgets = {widget.id: widget for widget in source_revision.dashboard.widgets} if source_revision else {}
+    if source_revision and all(
+        widget.id in previous.get("widgets", {}) and widget.output in previous.get("outputs", {})
+        and widget.id in source_widgets and widget.kind == source_widgets[widget.id].kind
+        and widget.output == source_widgets[widget.id].output
+        and widget.chart_binding == source_widgets[widget.id].chart_binding
+        for widget in revision.dashboard.widgets
+    ):
+        # Geometry, labels, and formats need no table loading, even with a large dataset.
+        return {**previous, "outputs": {widget.output: previous["outputs"][widget.output] for widget in revision.dashboard.widgets},
+            "widgets": {widget.id: previous["widgets"][widget.id] for widget in revision.dashboard.widgets}, "cleanup_impacts": impacts}
+    cache = json.loads((artifact_dir / "cache.json").read_text())
+    records = {name: record for step in cache.values() for name, record in step["outputs"].items()}
+    artifacts = {}
+    for name in {widget.output for widget in revision.dashboard.widgets}:
+        if name not in records:
+            raise ValueError(f"Output {name} needs a calculation run")
+        record = records[name]
+        if Path(record["file"]).name != record["file"]:
+            raise ValueError("Invalid artifact path")
+        path = artifact_dir / record["file"]
+        if fingerprint(path) != record["sha256"]:
+            raise ValueError("Saved artifact integrity check failed")
+        artifacts[name] = PipelineEngine._load(path, record["kind"])
+    outputs, widgets = render_artifacts(revision, artifacts)
+    return {**previous, "outputs": outputs, "widgets": widgets, "cleanup_impacts": impacts}
