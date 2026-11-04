@@ -1,0 +1,24 @@
+digraph "state" {
+ graph [rankdir=TB,bgcolor="white",pad="0.25",nodesep="0.35",ranksep="0.65",fontname="Arial",fontsize=14,label="State separation: failed work does not replace working or accepted results",labelloc=t];
+ node [shape=box,style="rounded,filled",fillcolor="#f4f7fb",color="#adc0d6",fontname="Arial",fontsize=12,margin="0.16,0.12"];
+ edge [color="#7086a0",fontcolor="#4d6279",fontname="Arial",fontsize=10,arrowsize=0.7];
+
+workspace [label="Editable workspace vN\nmay be incomplete",fillcolor="#e9f1ff"];
+revision [label="Immutable revision + captured input/params"];
+job [label="Run job\nqueued / running"];
+success [label="Succeeded run\ncomplete results",fillcolor="#e8f5f0"];
+failure [label="Failed / cancelled / interrupted",fillcolor="#fff2df"];
+working [label="Applied target state\nlast successful revision + input + results",fillcolor="#e8f5f0"];
+accepted [label="Accepted revision\npinned default validation run",fillcolor="#f1ecfa"];
+newdraft [label="Editable workspace vN+1\nnew work remains pending"];
+workspace -> revision [label="compile valid graph on Run"];
+revision -> job;
+job -> success [label="valid complete result"];
+job -> failure [label="error / cancel / service exit"];
+success -> working [label="target compatibility check succeeds"];
+success -> accepted [label="accept current draft/input/defaults\nconfirm cleanup"];
+workspace -> newdraft [label="save another edit"];
+newdraft -> working [label="presentation-only artifact reuse",style=dashed];
+failure -> working [label="retain previous result",style=dashed];
+
+}

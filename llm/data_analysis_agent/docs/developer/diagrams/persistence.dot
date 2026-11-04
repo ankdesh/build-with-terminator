@@ -1,0 +1,26 @@
+digraph "persistence" {
+ graph [rankdir=TB,bgcolor="white",pad="0.25",nodesep="0.35",ranksep="0.65",fontname="Arial",fontsize=14,label="Logical storage references; not declared SQL foreign-key constraints",labelloc=t];
+ node [shape=box,style="rounded,filled",fillcolor="#f4f7fb",color="#adc0d6",fontname="Arial",fontsize=12,margin="0.16,0.12"];
+ edge [color="#7086a0",fontcolor="#4d6279",fontname="Arial",fontsize=10,arrowsize=0.7];
+
+projects [label="projects\nid · dataset_hash · draft_id\naccepted_id · display_run_id",shape=record,fillcolor="#e9f1ff"];
+workspaces [label="workspaces\nproject_id · version · document\nhistory · future",shape=record];
+revisions [label="revisions\nid · project_id · parent_id\naccepted · summary",shape=record];
+runs [label="runs\nid · project_id · revision_id\nrecord JSON",shape=record];
+acceptances [label="acceptances\nrevision_id · project_id · run_id",shape=record,fillcolor="#f1ecfa"];
+messages [label="messages\nproject_id · role · content",shape=record];
+jobs [label="jobs\nid · project_id · record JSON",shape=record];
+ports [label="target_preferences\nproject_id · port",shape=record];
+files [label="Project files\nCSV snapshots · revision JSON\nrun artifacts · target state · exports",shape=folder,fillcolor="#e8f5f0"];
+projects -> workspaces [label="current draft",style=dashed];
+projects -> revisions [label="draft / accepted pointers",style=dashed];
+projects -> runs [label="display run",style=dashed];
+projects -> messages [label="conversation",style=dashed];
+projects -> jobs [label="job history",style=dashed];
+projects -> ports [label="preferred port",style=dashed];
+acceptances -> revisions [label="approved revision",style=dashed];
+acceptances -> runs [label="pinned validation",style=dashed];
+runs -> revisions [label="executed revision",style=dashed];
+projects -> files [label="project directory",style=dashed];
+
+}

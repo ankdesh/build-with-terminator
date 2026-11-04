@@ -88,3 +88,100 @@ def test_invalid_config_fails_instead_of_using_another_endpoint(tmp_path, conten
     path.write_text(content)
     with pytest.raises(ValueError, match="Cannot load configuration"):
         AppConfig.load(path)
+
+
+def bad_request(param, code, message):
+    import httpx
+    from openai import BadRequestError
+    return BadRequestError('Request rejected', response=httpx.Response(400,
+        request=httpx.Request('POST', 'http://localhost/v1/chat/completions')),
+        body={'error': {'param': param, 'code': code, 'message': message}})
+
+
+def completion():
+    return SimpleNamespace(choices=[SimpleNamespace(message=SimpleNamespace(content='{"ok":true}', refusal=None))])
+
+
+def test_null_temperature_config_uses_model_default(tmp_path):
+    path = tmp_path / 'config.json'
+    path.write_text(json.dumps({'openai_model_name': 'gpt-6-luna', 'llm_temperature': None}))
+    assert AppConfig.load(path).llm_temperature is None
+
+
+@pytest.mark.parametrize('value', [-.1, 2.1, float('nan'), float('inf')])
+def test_invalid_temperature_config_is_rejected(tmp_path, value):
+    path = tmp_path / 'config.json'
+    path.write_text(json.dumps({'llm_temperature': value}))
+    with pytest.raises(ValueError, match='temperature'):
+        AppConfig.load(path)
+
+
+@pytest.mark.asyncio
+async def test_gateway_omits_null_temperature_and_keeps_structured_output():
+    client = AsyncMock()
+    client.chat.completions.create.return_value = completion()
+    gateway = llm_gateway.LLMGateway(client, replace(config, llm_temperature=None))
+    schema = {'type': 'json_schema', 'json_schema': {'name': 'test'}}
+    await gateway.complete([{'role': 'user', 'content': 'Return JSON'}], schema)
+    kwargs = client.chat.completions.create.await_args.kwargs
+    assert 'temperature' not in kwargs
+    assert kwargs['response_format'] == schema
+    assert kwargs['model'] == config.openai_model_name
+
+
+@pytest.mark.parametrize('code', ['unsupported_value', 'unsupported_parameter'])
+@pytest.mark.asyncio
+async def test_gateway_retries_explicit_temperature_rejection_once_and_remembers(code):
+    client = AsyncMock()
+    client.chat.completions.create.side_effect = [bad_request('temperature', code, 'Only the default is supported'), completion(), completion()]
+    gateway = llm_gateway.LLMGateway(client, replace(config, llm_temperature=.1))
+    schema = {'type': 'json_object'}
+    messages = [{'role': 'user', 'content': 'Return JSON'}]
+    assert await gateway.complete(messages, schema) == '{"ok":true}'
+    await gateway.complete(messages, schema)
+    calls = client.chat.completions.create.await_args_list
+    assert len(calls) == 3
+    assert calls[0].kwargs['temperature'] == .1
+    for call in calls[1:]:
+        assert 'temperature' not in call.kwargs
+        assert call.kwargs['model'] == config.openai_model_name
+        assert call.kwargs['messages'] == messages
+        assert call.kwargs['response_format'] == schema
+
+
+@pytest.mark.asyncio
+async def test_gateway_does_not_drop_schema_or_retry_other_bad_requests():
+    client = AsyncMock()
+    client.chat.completions.create.side_effect = bad_request('response_format', 'invalid_json_schema', 'Schema is invalid')
+    gateway = llm_gateway.LLMGateway(client, replace(config, llm_temperature=.1))
+    with pytest.raises(LLMServiceError, match='response_format.*invalid_json_schema'):
+        await gateway.complete([], {'type': 'json_schema'})
+    assert client.chat.completions.create.await_count == 1
+
+
+@pytest.mark.asyncio
+async def test_failed_compatibility_retry_reports_the_second_error_without_further_retry():
+    client = AsyncMock()
+    client.chat.completions.create.side_effect = [
+        bad_request('temperature', 'unsupported_value', 'Only the default is supported'),
+        bad_request('model', 'model_not_found', 'Model unavailable'),
+    ]
+    gateway = llm_gateway.LLMGateway(client, replace(config, llm_temperature=.1))
+    with pytest.raises(LLMServiceError, match='Model unavailable'):
+        await gateway.complete([])
+    assert client.chat.completions.create.await_count == 2
+
+
+@pytest.mark.asyncio
+async def test_provider_diagnostics_redact_credentials_and_ignore_request_echo():
+    client = AsyncMock()
+    error = bad_request('model', 'invalid_request_error', 'Invalid model. key=my-test-secret Bearer another-secret sk-provider-secret')
+    error.body['request'] = {'messages': 'private request text'}
+    client.chat.completions.create.side_effect = error
+    gateway = llm_gateway.LLMGateway(client, replace(config, openai_api_key='my-test-secret', llm_temperature=None))
+    with pytest.raises(LLMServiceError) as caught:
+        await gateway.complete([])
+    details = str(caught.value)
+    assert 'Invalid model' in details and 'invalid_request_error' in details
+    for secret in ['my-test-secret', 'another-secret', 'sk-provider-secret', 'private request text']:
+        assert secret not in details

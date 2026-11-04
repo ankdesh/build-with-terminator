@@ -1,0 +1,24 @@
+digraph "packaging" {
+ graph [rankdir=TB,bgcolor="white",pad="0.25",nodesep="0.35",ranksep="0.65",fontname="Arial",fontsize=14,label="Accepted application delivery: the Windows runtime is built separately",labelloc=t];
+ node [shape=box,style="rounded,filled",fillcolor="#f4f7fb",color="#adc0d6",fontname="Arial",fontsize=12,margin="0.16,0.12"];
+ edge [color="#7086a0",fontcolor="#4d6279",fontname="Arial",fontsize=10,arrowsize=0.7];
+
+source [label="Shared runtime + runtime frontend"];
+winbuild [label="Windows build + real smoke test\nPyInstaller / exact package versions",fillcolor="#fff2df"];
+archive [label="Verified windows-x64.zip\nversion + ABI + inventory"];
+accepted [label="Accepted revision + pinned validation run\noptional accepted CSV",fillcolor="#f1ecfa"];
+export [label="ExportService\nverify runtime / assemble project"];
+zip [label="Application ZIP\nlauncher + local assets + inspectable source"];
+verify [label="Runtime launcher\nintegrity / compatibility checks"];
+app [label="OfflineApplication + RuntimeApp\nseparate writable local state",fillcolor="#e8f5f0"];
+worker [label="Local saved-pipeline worker",fillcolor="#e8f5f0"];
+source -> winbuild [label="compile / freeze"];
+winbuild -> archive [label="release artifact"];
+archive -> export [label="WPS_WINDOWS_RUNTIME"];
+accepted -> export [label="exact approved content"];
+export -> zip [label="inventory + validation report"];
+zip -> verify [label="extract and launch"];
+verify -> app [label="only after verification"];
+app -> worker [label="Apply / CSV / Refresh"];
+
+}

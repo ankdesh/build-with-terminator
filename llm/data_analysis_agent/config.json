@@ -1,9 +1,9 @@
 {
   "openai_api_base": "https://api.openai.com/v1",
-  "openai_model_name": "gpt-4o-mini",
-  "llm_timeout_seconds": 90,
+  "openai_model_name": "gpt-6-luna",
+  "llm_timeout_seconds": 120,
   "llm_max_retries": 0,
-  "llm_temperature": 0.1,
+  "llm_temperature": null,
   "server_host": "127.0.0.1",
   "server_port": 8080,
   "max_retries": 3,

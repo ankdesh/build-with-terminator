@@ -47,10 +47,9 @@ class AppConfig:
     max_retries: int
     exec_timeout_seconds: int
     max_upload_size_bytes: int
-    strict_model_outputs: bool
     llm_timeout_seconds: float = 90.0
     llm_max_retries: int = 0
-    llm_temperature: float = 0.1
+    llm_temperature: float | None = 0.1
 
     @classmethod
     def load(cls, config_path: Optional[Path] = None) -> "AppConfig":
@@ -100,9 +99,11 @@ class AppConfig:
         api_key = os.getenv("OPENAI_API_KEY", "").strip()
         llm_timeout = float(file_settings.get("llm_timeout_seconds", 90))
         llm_retries = int(file_settings.get("llm_max_retries", 0))
-        temperature = float(file_settings.get("llm_temperature", 0.1))
-        if not 0 < llm_timeout < float("inf") or llm_retries < 0 or not 0 <= temperature <= 2:
-            raise ValueError("Invalid LLM configuration: timeout must be positive, retries non-negative, and temperature between 0 and 2")
+        raw_temperature = file_settings.get("llm_temperature", 0.1)
+        temperature = None if raw_temperature is None else float(raw_temperature)
+        if (not 0 < llm_timeout < float("inf") or llm_retries < 0
+                or temperature is not None and not 0 <= temperature <= 2):
+            raise ValueError("Invalid LLM configuration: timeout must be positive, retries non-negative, and temperature null or between 0 and 2")
 
         sessions_path = SESSIONS_DIR
         sessions_path.mkdir(parents=True, exist_ok=True)
@@ -118,7 +119,6 @@ class AppConfig:
             max_retries=retries,
             exec_timeout_seconds=timeout,
             max_upload_size_bytes=upload_limit,
-            strict_model_outputs=bool(file_settings.get("strict_model_outputs", api_base.rstrip("/") == DEFAULT_OPENAI_API_BASE)),
             llm_timeout_seconds=llm_timeout,
             llm_max_retries=llm_retries,
             llm_temperature=temperature,

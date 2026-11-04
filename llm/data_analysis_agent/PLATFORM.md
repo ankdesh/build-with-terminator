@@ -2,6 +2,8 @@
 
 The Linux builder uses chat and visual design tools to create a saved analysis application. Each opened project has a dashboard service on its own loopback port. The Windows application runs the accepted Python pipeline on replacement CSV files. It has dashboard controls and CSV upload, with no chat or model client.
 
+See the [developer handbook](docs/developer/README.md) for component documents, architecture diagrams, dependency tables, supported analyses/visualizations, and an extracted API reference. The [HTML view](docs/developer/index.html) uses local assets.
+
 ## Local builder
 
 Use Python 3.12. Workers launch Python directly; no sandbox package or Linux namespace setup is required. Calculations remain outside the API process.
@@ -18,13 +20,15 @@ cd ..
 python launcher.py
 ```
 
-Configure the hosted model through `config.json` and `OPENAI_API_KEY`. The key is loaded only by the builder. The model receives the profile, bounded samples, business descriptions, saved project state, recent chat, and validation errors. It does not automatically receive the complete CSV.
+Configure the hosted model through `config.json` and `OPENAI_API_KEY`. The key is loaded only by the builder. The model receives the profile, bounded samples, business descriptions, saved project state, recent chat, validation errors, and bounded project run diagnostics. It does not automatically receive the complete CSV.
 
-`backend/services/llm_gateway.py` is the only model entry point. Both agent services use its shared lazy client. Endpoint, model, timeout, transport retries, temperature, and strict output mode come from `config.json`; credentials come only from `OPENAI_API_KEY`. Malformed config files fail at startup. The gateway closes its client on builder shutdown.
+`backend/services/llm_gateway.py` is the only model entry point. Both agent services use its shared lazy client. Endpoint, model, timeout, transport retries, and temperature come from `config.json`; credentials come only from `OPENAI_API_KEY`. Malformed config files fail at startup. The gateway closes its client on builder shutdown.
+
+Set `llm_temperature` to `null` to use a model's default sampling settings. The gateway can also retry one explicit HTTP 400 temperature rejection without that optional field, while preserving the selected model. Other provider errors retain sanitized message, parameter, and code details. Reload settings and code by restarting the builder.
 
 `python launcher.py --csv /path/to/input.csv` creates a new project from a bounded CSV snapshot and selects its Data view. `--headless` prints that project's URL. Startup and API uploads share profiling, input persistence, and workspace invalidation. Import does not call the model or run a pipeline.
 
-Strict JSON schema output is enabled by default for the official OpenAI endpoint. Set `strict_model_outputs` to `false` in `config.json` for a compatible endpoint or model that supports JSON mode only. Application validation and bounded repair still apply. See the [official Structured Outputs guide](https://developers.openai.com/api/docs/guides/structured-outputs).
+Authoring uses plain chat completions without `response_format`. Endpoints do not need JSON mode or strict schema support. JSON text, including a complete fenced JSON block, is parsed and validated locally; bounded proposal repair remains active. The old `strict_model_outputs` option is ignored. Chat receives project-scoped recent run diagnostics and small input previews so it can repair execution failures on request. Repairs save a draft; the developer selects Run to execute it.
 
 The UI has a project switcher, Data, Pipeline, Dashboard, History, and a Chat/Properties dock. Use **Load energy example** to load a reference workspace without a model call, then select Run. The CLI below creates and validates the reference project explicitly:
 

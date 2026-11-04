@@ -7,6 +7,7 @@ from typing import Any, Callable
 
 from backend.services.project_agent import ProjectAgent, ProposalValidationError, ModelUnavailableError
 from backend.services.project_store import ProjectStore
+from backend.services.run_diagnostics import collect_run_diagnostics
 from config import config
 from pipeline_core.engine import fingerprint
 from pipeline_core.models import ProjectRevision, RunRecord, DashboardSpec, now
@@ -79,6 +80,8 @@ class ProjectService:
             project = self.store.get(project_id)
             workspace = Workspaces(self.store)
             base = workspace.get(project_id)
+            run_diagnostics = await asyncio.to_thread(collect_run_diagnostics, self.store, project_id,
+                                                     query, config.openai_api_key)
             document = WorkspaceDocument.model_validate(base["document"])
             current = None
             if document.input_contract:
@@ -96,7 +99,8 @@ class ProjectService:
                 emit({"event": "status", "message": "Updating workspace" if attempt == 0 else f"Repairing proposal ({attempt}/{config.max_retries})"})
                 try:
                     try:
-                        revision = await self.agent.propose(project, current, query, self.store.messages(project_id), error, failed)
+                        revision = await self.agent.propose(project, current, query, self.store.messages(project_id), error, failed,
+                                                            run_diagnostics=run_diagnostics)
                     except (ProposalValidationError, ModelUnavailableError):
                         raise
                     except (ValueError, SyntaxError, KeyError, TypeError) as exc:

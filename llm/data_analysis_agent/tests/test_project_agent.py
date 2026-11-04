@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock
 from types import SimpleNamespace
 import pytest
 
-from backend.services.project_agent import ProjectAgent, ProposalValidationError, apply_changes, strict_schema
+from backend.services.project_agent import ProjectAgent, ProposalValidationError, apply_changes
 from pipeline_core.models import ProjectRevision
 import json
 
@@ -23,12 +23,29 @@ async def test_title_refinement_preserves_all_analysis_code(simple_revision):
     assert revised.revision_id != simple_revision.revision_id
 
 
-def test_strict_schema_preserves_parameter_default_property():
-    schema = strict_schema(ProjectRevision.model_json_schema())
-    parameters = schema['$defs']['ParameterSpec']
-    assert 'default' in parameters['properties']
-    assert set(parameters['required']) == set(parameters['properties'])
-    assert 'default' not in parameters['properties']['default']
+@pytest.mark.asyncio
+async def test_plain_chat_accepts_fenced_json_without_provider_output_modes(simple_revision):
+    client = AsyncMock()
+    payload = simple_revision.model_dump()
+    client.chat.completions.create.return_value = SimpleNamespace(choices=[SimpleNamespace(message=SimpleNamespace(
+        content='```json\n' + json.dumps(payload) + '\n```'))])
+    revised = await ProjectAgent(client).propose({'profile': {}, 'description': ''}, None, 'Build dashboard', [])
+    assert revised.steps == simple_revision.steps
+    assert 'response_format' not in client.chat.completions.create.await_args.kwargs
+
+
+@pytest.mark.asyncio
+async def test_plain_chat_patch_keeps_run_diagnostics_and_local_validation(simple_revision):
+    client = AsyncMock()
+    client.chat.completions.create.return_value = SimpleNamespace(choices=[SimpleNamespace(message=SimpleNamespace(
+        content='{"summary":"Renamed","changes":[{"op":"replace","path":"/dashboard/title","value":"Fixed"}]}'))])
+    diagnostics = {'runs': [{'status': 'failed', 'error': 'Invalid values in column value'}]}
+    revised = await ProjectAgent(client).propose({'profile': {}, 'description': ''}, simple_revision,
+        'Repair the last run', [], run_diagnostics=diagnostics)
+    kwargs = client.chat.completions.create.await_args.kwargs
+    assert 'response_format' not in kwargs
+    assert json.loads(kwargs['messages'][1]['content'])['run_diagnostics'] == diagnostics
+    assert revised.dashboard.title == 'Fixed'
 
 
 @pytest.mark.parametrize('change', [
@@ -56,7 +73,7 @@ async def test_invalid_proposal_retains_source_for_repair(simple_revision):
 
 
 @pytest.mark.asyncio
-async def test_strict_patch_decodes_json_value(simple_revision):
+async def test_legacy_encoded_patch_decodes_json_value(simple_revision):
     client = AsyncMock()
     client.chat.completions.create.return_value = SimpleNamespace(choices=[SimpleNamespace(message=SimpleNamespace(
         content=json.dumps({'summary': 'Rename', 'changes': [{'op': 'replace', 'path': '/dashboard/title', 'value_json': json.dumps('Strict title')}]})))])
@@ -88,3 +105,10 @@ async def test_patch_does_not_guess_malformed_non_string_values(simple_revision)
         ]})))])
     with pytest.raises(ValueError, match='must be valid JSON'):
         await ProjectAgent(client).propose({'profile': {}, 'description': ''}, simple_revision, 'Refine', [])
+
+
+@pytest.mark.parametrize('content', ['[]', 'null', 'not JSON', '```json\n[1,2]\n```'])
+def test_model_text_parser_rejects_invalid_objects(content):
+    from backend.services.model_output import parse_model_object
+    with pytest.raises(ValueError):
+        parse_model_object(content)

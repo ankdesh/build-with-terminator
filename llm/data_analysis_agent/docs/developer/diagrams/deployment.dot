@@ -1,0 +1,36 @@
+digraph "deployment" {
+ graph [rankdir=TB,bgcolor="white",pad="0.25",nodesep="0.35",ranksep="0.65",fontname="Arial",fontsize=14,label="Process boundaries: authoring, dashboard use, and offline delivery",labelloc=t];
+ node [shape=box,style="rounded,filled",fillcolor="#f4f7fb",color="#adc0d6",fontname="Arial",fontsize=12,margin="0.16,0.12"];
+ edge [color="#7086a0",fontcolor="#4d6279",fontname="Arial",fontsize=10,arrowsize=0.7];
+
+subgraph cluster_local { label="Developer workstation · loopback services"; color="#b9cadc";
+  developer [label="Developer browser\nBuilderApp",fillcolor="#e9f1ff"];
+  builder [label="Builder service\nFastAPI · default 8080",fillcolor="#e9f1ff"];
+  target1 [label="Project A target\n8100–8199",fillcolor="#e8f5f0"];
+  target2 [label="Project B target\nseparate port",fillcolor="#e8f5f0"];
+  user [label="Dashboard browser\nRuntimeApp",fillcolor="#e8f5f0"];
+  slot [label="One shared execution slot\nProjectService.lock"];
+  worker [label="Pipeline worker\ntrusted Python",fillcolor="#fff2df"];
+  store [label="SQLite + project files",shape=cylinder];
+  developer -> builder [label="HTTP + SSE"];
+  builder -> store [label="read / commit"];
+  builder -> target1 [label="token + snapshots"];
+  builder -> target2 [label="token + snapshots"];
+  user -> target1 [label="same-origin HTTP + SSE"];
+  target1 -> slot [label="authenticated broker request"];
+  target2 -> slot [label="authenticated broker request"];
+  builder -> slot [label="developer Run"];
+  slot -> worker [label="start one job"];
+}
+model [label="Configured model endpoint\nLLM gateway only",fillcolor="#f1ecfa"];
+builder -> model [label="authoring context / proposal"];
+subgraph cluster_offline { label="Separate Windows workstation"; color="#b9cadc";
+  offline [label="Exported runtime\nno builder or model",fillcolor="#e8f5f0"];
+  offlineworker [label="Local pipeline worker",fillcolor="#fff2df"];
+  offlinebrowser [label="Dashboard browser\nRuntimeApp"];
+  offlinebrowser -> offline [label="same-origin HTTP + SSE"];
+  offline -> offlineworker [label="ProcessRunner"];
+}
+builder -> offline [label="accepted application ZIP",style=dashed];
+
+}

@@ -6,6 +6,10 @@ The application supports one replacement CSV up to 100 MB, generated pandas and 
 
 See [PLATFORM.md](PLATFORM.md) for contracts, execution policy, packaging, and release checks. The system design document is in [artifacts/data-analysis-system-design.docx](artifacts/data-analysis-system-design.docx).
 
+## Developer documentation
+
+Open the [developer handbook](docs/developer/index.html) or its [Markdown index](docs/developer/README.md). It includes component architecture, eight diagrams with editable sources, dependencies, data/state contracts, API routes, analysis and chart support, and build/extension guidance. Run `python scripts/build_developer_docs.py` to refresh the local HTML, diagrams, API inventory, and package tables. Graphviz is required only for documentation generation.
+
 ## Start the Linux builder
 
 Python 3.12, Node.js, and pnpm are required. No system sandbox packages or Linux namespace permissions are required.
@@ -42,12 +46,17 @@ All model requests pass through `backend/services/llm_gateway.py`, including the
   "openai_model_name": "gpt-4o-mini",
   "llm_timeout_seconds": 90,
   "llm_max_retries": 0,
-  "llm_temperature": 0.1,
-  "strict_model_outputs": true
+  "llm_temperature": null
 }
 ```
 
 Set `OPENAI_API_KEY` in the environment before launch. API keys in the config file are ignored. For a local endpoint with no authentication, set this environment variable to a non-secret value such as `EMPTY`. `llm_max_retries` controls transport retries; `max_retries` controls proposal repair. A missing key blocks model requests but allows data import and existing dashboard use. Invalid config files fail at startup.
+
+For models that require their default sampling settings, set `"llm_temperature": null`. The gateway then omits temperature. This is the setting used for `gpt-6-luna` with its default reasoning behavior. If a provider explicitly rejects temperature with HTTP 400, the gateway retries once without that field and remembers the restriction for the current client. It keeps the selected model. Other API errors include the provider message, parameter, and code with credentials redacted. Restart the builder after changing its configuration or gateway code. See the [official GPT-6 parameter guidance](https://developers.openai.com/api/docs/guides/latest-model).
+
+Authoring uses ordinary chat completions. It does not send `response_format` or require provider-side JSON mode or strict schema support. The model returns JSON text; the application parses it and checks the revision, source, and graph locally. A complete fenced JSON block is accepted. The old `strict_model_outputs` setting is ignored.
+
+To repair a failed calculation, ask Chat: **“Fix the latest failed run using its logs. Save the repair; I will select Run.”** Chat receives bounded recent builder and target diagnostics for the current project, including errors, traceback, output logs, step events, and a three-row input preview. Include a run ID to select an older run. Explain a column rename or intended datatype when needed. Chat saves a repair without executing it. Select **Run** to check the repair. The previous successful results remain visible until a new run succeeds.
 
 Calculations run as trusted Python in a separate worker process, without code sandboxing or file and network restrictions. Workers use a reduced environment without model credentials. Time and memory limits, cancellation, progress reporting, and parent-exit cleanup remain active. Source checks validate the calculation contract and reproducibility; they do not restrict Python imports or file access.
 

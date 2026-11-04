@@ -1,0 +1,24 @@
+digraph "runtime" {
+ graph [rankdir=TB,bgcolor="white",pad="0.25",nodesep="0.35",ranksep="0.65",fontname="Arial",fontsize=14,label="Live and offline runtimes share state and rendering; adapters differ",labelloc=t];
+ node [shape=box,style="rounded,filled",fillcolor="#f4f7fb",color="#adc0d6",fontname="Arial",fontsize=12,margin="0.16,0.12"];
+ edge [color="#7086a0",fontcolor="#4d6279",fontname="Arial",fontsize=10,arrowsize=0.7];
+
+manager [label="TargetManager\nsaved presentation + validated revision"];
+live [label="Live RuntimeApplication\nbuilder/replacement input",fillcolor="#e8f5f0"];
+broker [label="BrokerRunner\nNDJSON + per-target token"];
+slot [label="Builder execution coordinator\none lock + ProcessRunner",fillcolor="#fff2df"];
+offline [label="OfflineApplication\naccepted bundle + local state",fillcolor="#e8f5f0"];
+local [label="Local ProcessRunner",fillcolor="#fff2df"];
+state [label="Shared state machine\nvalidate / keep old result / atomic promote"];
+http [label="Shared runtime HTTP\nstate / upload / Apply / cancel / CSV / SSE"];
+ui [label="RuntimeApp + shared Dashboard"];
+manager -> live [label="authenticated snapshot"];
+live -> broker [label="saved revision + current input"];
+broker -> slot [label="execute / cancel"];
+offline -> local [label="same Runner protocol"];
+live -> state [label="shared behavior"];
+offline -> state [label="shared behavior"];
+state -> http [label="view + notifications"];
+ui -> http [label="same-origin requests"];
+
+}

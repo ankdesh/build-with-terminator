@@ -11,6 +11,7 @@ from backend.models.chat import ChatMessage, ExecutionResult
 from backend.models.profile import DataProfile
 from backend.services.code_executor import CodeExecutor
 from backend.services.llm_gateway import LLMGateway, llm
+from backend.services.model_output import parse_model_object
 from config import config
 
 logger = logging.getLogger(__name__)
@@ -227,9 +228,9 @@ class AgentService:
                 return
 
     async def _call_llm(self, messages: List[Dict[str, Any]]) -> Dict[str, Any]:
-        """Send chat request to OpenAI-compatible endpoint with JSON format enforcement."""
-        content = await self.llm.complete(messages, response_format={"type": "json_object"})
-        parsed: Dict[str, Any] = json.loads(content or "{}")
+        """Send plain chat and validate the returned JSON locally."""
+        content = await self.llm.complete(messages)
+        parsed: Dict[str, Any] = parse_model_object(content)
         return parsed
 
     async def _synthesize_explanation(

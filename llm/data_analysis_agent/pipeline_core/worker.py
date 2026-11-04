@@ -59,8 +59,12 @@ def main(request_file: str) -> int:
         response = {"success": True, "result": result, "stdout": "".join(log.parts)}
         code = 0
     except Exception as exc:
-        response = {"success": False, "error": f"{type(exc).__name__}: {exc}", "traceback": traceback.format_exc()[-16000:]}
+        response = {"success": False, "error": f"{type(exc).__name__}: {exc}", "traceback": traceback.format_exc()[-16000:],
+                    "stdout": "".join(log.parts)}
         code = 1
+    # Keep diagnostic text separate from potentially large successful result sets.
+    (output / "diagnostics.json").write_text(json.dumps({key: response[key] for key in
+        ("success", "error", "traceback", "stdout") if key in response}, allow_nan=False))
     (output / "response.json").write_text(json.dumps(response, allow_nan=False))
     return code
 

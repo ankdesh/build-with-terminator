@@ -1,0 +1,31 @@
+digraph "authoring" {
+ graph [rankdir=TB,bgcolor="white",pad="0.25",nodesep="0.35",ranksep="0.65",fontname="Arial",fontsize=14,label="Authoring flow: calculations require a separate Run",labelloc=t];
+ node [shape=box,style="rounded,filled",fillcolor="#f4f7fb",color="#adc0d6",fontname="Arial",fontsize=12,margin="0.16,0.12"];
+ edge [color="#7086a0",fontcolor="#4d6279",fontname="Arial",fontsize=10,arrowsize=0.7];
+
+browser [label="Chat request + current workspace",fillcolor="#e9f1ff"];
+context [label="ProjectAgent\nprofile + samples + schema + history\nproject run diagnostics"];
+gateway [label="LLMGateway\nconfig endpoint/model + environment key",fillcolor="#f1ecfa"];
+proposal [label="Complete revision or JSON Pointer patch"];
+validate [label="Syntax / graph / contract valid?",shape=diamond];
+repair [label="Bounded proposal repair\nuse failed proposal as base"];
+cas [label="Expected workspace version matches?",shape=diamond];
+conflict [label="409 conflict\nfetch latest state",fillcolor="#fff2df"];
+save [label="Save editable version + immutable revision"];
+presentation [label="Try saved-artifact presentation validation"];
+run [label="Developer selects Run separately",fillcolor="#e8f5f0"];
+browser -> context [label="build"];
+context -> gateway [label="messages"];
+gateway -> proposal [label="JSON text; no response_format"];
+logs [label="Recent builder/target runs\nerrors + traceback + logs + input preview"];
+logs -> context [label="bounded project evidence"];
+proposal -> validate;
+validate -> repair [label="no; attempts remain"];
+repair -> gateway [label="error + failed source"];
+validate -> cas [label="yes"];
+cas -> conflict [label="no"];
+cas -> save [label="yes"];
+save -> presentation;
+presentation -> run [label="calculation changes remain pending",style=dashed];
+
+}

@@ -1,0 +1,32 @@
+digraph "components" {
+ graph [rankdir=TB,bgcolor="white",pad="0.25",nodesep="0.35",ranksep="0.65",fontname="Arial",fontsize=14,label="Selected component dependencies: arrows point to the called dependency",labelloc=t];
+ node [shape=box,style="rounded,filled",fillcolor="#f4f7fb",color="#adc0d6",fontname="Arial",fontsize=12,margin="0.16,0.12"];
+ edge [color="#7086a0",fontcolor="#4d6279",fontname="Arial",fontsize=10,arrowsize=0.7];
+
+ui [label="BuilderApp\nData · Pipeline · Designer · History",fillcolor="#e9f1ff"];
+routes [label="Project routes\nHTTP composition"];
+workspace [label="Workspaces\nCAS edits / presentation reuse"];
+service [label="ProjectService\nauthoring / shared run lock"];
+jobs [label="ProjectJobs + events\ndurable status / notifications"];
+agent [label="ProjectAgent\ncontracts / patches"];
+gateway [label="LLMGateway\nsingle model client",fillcolor="#f1ecfa"];
+store [label="ProjectStore\nSQLite + immutable files",shape=cylinder];
+targets [label="TargetManager\nprocesses / ports / sync"];
+runner [label="ProcessRunner\nworker lifecycle",fillcolor="#fff2df"];
+engine [label="PipelineEngine\nparse / run / render",fillcolor="#fff2df"];
+ui -> routes [label="requests"];
+routes -> workspace [label="edit"];
+routes -> jobs [label="Run"];
+routes -> targets [label="control / sync"];
+routes -> service [label="chat"];
+service -> agent [label="propose"];
+agent -> gateway [label="complete"];
+service -> workspace [label="save proposal"];
+service -> runner [label="execute"];
+jobs -> service [label="run captured version"];
+workspace -> store [label="versioned commit"];
+service -> store [label="revisions / runs"];
+targets -> store [label="input / port preference"];
+runner -> engine [label="worker invokes"];
+
+}

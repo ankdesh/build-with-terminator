@@ -1,0 +1,25 @@
+digraph "pipeline" {
+ graph [rankdir=TB,bgcolor="white",pad="0.25",nodesep="0.35",ranksep="0.65",fontname="Arial",fontsize=14,label="Execution data flow: artifacts connect steps and widgets",labelloc=t];
+ node [shape=box,style="rounded,filled",fillcolor="#f4f7fb",color="#adc0d6",fontname="Arial",fontsize=12,margin="0.16,0.12"];
+ edge [color="#7086a0",fontcolor="#4d6279",fontname="Arial",fontsize=10,arrowsize=0.7];
+
+csv [label="Immutable input CSV",shape=note];
+parse [label="InputContract parsing\ncolumn types / missing values"];
+cleanup [label="Cleanup steps\nDataFrame outputs + impact report",fillcolor="#e9f1ff"];
+filters [label="Apply filters once\nbefore first analysis"];
+analysis [label="Analysis DAG\nfunctions or valid cached outputs",fillcolor="#e9f1ff"];
+artifacts [label="Complete artifacts\ntyped JSON + full CSV",shape=cylinder];
+views [label="Widget-specific views\nstandard binding or native option"];
+dash [label="Shared Dashboard renderer\nmetric · chart · table · text",fillcolor="#e8f5f0"];
+cache [label="Cache identity\ncode + input hashes + all parameters\nseed + runtime/package versions"];
+csv -> parse [label="read"];
+parse -> cleanup [label="data artifact"];
+cleanup -> filters [label="named cleaned frames"];
+filters -> analysis [label="filtered artifacts"];
+cache -> analysis [label="match + checksum verify",style=dashed];
+analysis -> artifacts [label="exact declared outputs"];
+artifacts -> views [label="complete saved values"];
+views -> dash [label="result set"];
+artifacts -> cache [label="new checkpoints",style=dashed];
+
+}
