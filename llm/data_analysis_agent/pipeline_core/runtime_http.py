@@ -23,7 +23,8 @@ class Controls(BaseModel):
     parameters: dict[str, Any] = Field(default_factory=dict)
 
 
-def create_runtime_app(application: RuntimeApplication, static: Path, control_token: str | None = None) -> FastAPI:
+def create_runtime_app(application: RuntimeApplication, static: Path, control_token: str | None = None,
+                       allowed_hosts: list[str] | None = None) -> FastAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         yield
@@ -31,7 +32,7 @@ def create_runtime_app(application: RuntimeApplication, static: Path, control_to
 
     app = FastAPI(title="Saved Data Analysis Dashboard", docs_url=None, redoc_url=None,
         openapi_url=None, lifespan=lifespan)
-    app.add_middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost"])
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=allowed_hosts or ["127.0.0.1", "localhost"])
     app.state.application = application
 
     @app.middleware("http")

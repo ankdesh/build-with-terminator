@@ -38,6 +38,22 @@ python launcher.py --headless --csv "/path/to/data.csv"
 
 This creates a new project, copies and profiles the CSV, and opens its Data view. In headless mode, use the Builder URL printed in the terminal. Each launch with `--csv` creates a new project. The same size and data checks apply to command-line input and UI uploads. No model call or calculation runs during import.
 
+### Access from other machines
+
+The checked-in `config.json` binds the builder and live project dashboards to `0.0.0.0` (all IPv4 interfaces). Start the host with:
+
+```bash
+python launcher.py --headless --host 0.0.0.0 --port 8080
+```
+
+On another machine, open `http://<server-IP>:8080`. Use the hosting machine's IP address or DNS name, not `0.0.0.0`, `localhost`, or `127.0.0.1`. Dashboard links use that same host with each project's target port. Allow inbound TCP 8080 and 8100–8199 through the host firewall; use the actual ports printed by the launcher if the defaults are occupied. `WPS_TARGET_PORT_START` and `WPS_TARGET_PORT_END` set the target range.
+
+`server_host` in `config.json` sets the default bind address. `--host` overrides it for both builder and live targets. Set it to `127.0.0.1` for local-only access. Startup health checks and the host's browser use a reachable local address when binding all interfaces.
+
+`allowed_hosts` defaults to `["*"]`, accepting LAN IP addresses and DNS names. To limit host names, set it to a list such as `["analysis.lan", "192.168.1.10"]` without schemes or ports. Loopback names remain allowed for internal service calls. Restart the builder after a configuration change. Browser requests must still use the service's own origin; remote clients do not need CORS changes.
+
+Use this deployment on a trusted network. There is no user login or project isolation between clients; clients can edit projects and run trusted Python under the host's account. The downloaded Windows application's default remains local-only.
+
 All model requests pass through `backend/services/llm_gateway.py`, including the legacy agent service. Set these options in `config.json`:
 
 ```json

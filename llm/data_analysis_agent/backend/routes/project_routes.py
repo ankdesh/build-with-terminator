@@ -296,8 +296,11 @@ async def project_events(project_id: str, request: Request) -> StreamingResponse
 
 
 @router.get("/{project_id}/target")
-async def target_status(project_id: str) -> dict:
+async def target_status(project_id: str, request: Request) -> dict:
     status = targets.status(project_id)
+    if status["url"]:
+        # Use the host seen by this client, never the server's loopback address.
+        status["url"] = str(request.url.replace(port=status["port"], path="", query=""))
     state = await targets.state(project_id)
     if state:
         status.update(applied_revision=state["revision"]["revision_id"] if state["revision"] else None,
@@ -311,9 +314,11 @@ async def target_control(project_id: str, action: Literal["start", "stop", "rest
     if action in {"stop", "restart"}:
         await targets.stop(project_id)
     if action in {"start", "restart"}:
-        await targets.start(project_id, str(request.base_url).rstrip("/"))
+        bind_host = os.environ.get("WPS_BIND_HOST", config.server_host)
+        broker_host = "127.0.0.1" if bind_host == "0.0.0.0" else bind_host
+        await targets.start(project_id, f"http://{broker_host}:{request.url.port or config.server_port}")
     events.publish(project_id)
-    return await target_status(project_id)
+    return await target_status(project_id, request)
 
 
 @internal_router.post("/{project_id}/execute")

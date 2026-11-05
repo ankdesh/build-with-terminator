@@ -178,7 +178,7 @@ async def test_project_api_pipeline_and_full_csv(saved_project, monkeypatch):
         assert "A,10" in table.text and "B,20" in table.text
         assert (await client.post(f"/api/projects/{project_id}/accept", json={}, headers={"Origin": "https://untrusted.example"})).status_code == 403
         assert (await client.post('/api/sessions/legacy/chat', json={"query": "unsafe"})).status_code in (404, 405)
-        assert (await client.get('/health', headers={'Host': 'untrusted.example'})).status_code == 400
+        assert (await client.get('/health', headers={'Host': 'analysis.lan'})).status_code == 200
 
 
 def test_export_pins_the_accepted_input_after_builder_replacement(saved_project, tmp_path):

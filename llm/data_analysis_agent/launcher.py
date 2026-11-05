@@ -7,6 +7,7 @@ and automatically opens the local user interface in the system default browser.
 
 import argparse
 import logging
+import os
 from pathlib import Path
 import socket
 import sys
@@ -28,8 +29,11 @@ logger = logging.getLogger("launcher")
 def is_port_in_use(host: str, port: int) -> bool:
     """Check whether a TCP port is currently open and in use."""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.settimeout(0.5)
-        return s.connect_ex((host, port)) == 0
+        try:
+            s.bind((host, port))
+            return False
+        except OSError:
+            return True
 
 
 def find_available_port(host: str, starting_port: int) -> int:
@@ -65,13 +69,15 @@ def import_startup_csv(source: Path) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="WPS-AI Desktop Application Launcher")
-    parser.add_argument("--host", default=config.server_host, help="Bind host (default: 127.0.0.1)")
+    parser.add_argument("--host", default=config.server_host, help="Bind address; use 0.0.0.0 for LAN access (default: config.json)")
     parser.add_argument("--port", type=int, default=config.server_port, help="Bind port (default: 8080)")
     parser.add_argument("--headless", action="store_true", help="Start server without launching browser")
     parser.add_argument("--log-level", default="info", help="Uvicorn log level (default: info)")
     parser.add_argument("--csv", type=Path, metavar="FILE", help="Load a CSV into a new project at startup (no model call or calculation)")
     args = parser.parse_args()
 
+    # Targets must use the actual bind address, including a command-line override.
+    os.environ["WPS_BIND_HOST"] = args.host
     initial_path = "/"
     if args.csv is not None:
         try:
@@ -81,12 +87,16 @@ def main() -> None:
 
     host = args.host
     port = find_available_port(host, args.port)
-    server_url = f"http://{host}:{port}"
+    local_host = "127.0.0.1" if host == "0.0.0.0" else host
+    server_url = f"http://{local_host}:{port}"
     builder_url = server_url + initial_path
 
     logger.info("==================================================")
     logger.info("              WPS-AI DATA ANALYST                 ")
     logger.info("==================================================")
+    logger.info("Bind address:  %s:%s", host, port)
+    if host == "0.0.0.0":
+        logger.info("LAN clients:   http://<server-IP>:%s", port)
     logger.info("Server Target: %s", server_url)
     logger.info("Model:         %s", config.openai_model_name)
     logger.info("API Endpoint:  %s", config.openai_api_base)

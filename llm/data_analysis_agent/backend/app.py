@@ -55,7 +55,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.add_middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost"])
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=list(config.allowed_hosts))
 
 # Include API route modules
 app.include_router(session_router)
@@ -66,12 +66,12 @@ app.add_api_route("/api/sessions/{session_id}/export-csv", export_table_csv, met
 
 
 @app.middleware("http")
-async def local_origin_guard(request: Request, call_next: Callable[[Request], Awaitable[Response]]) -> Response:
-    """Reject cross-site requests to the local authoring service."""
+async def same_origin_guard(request: Request, call_next: Callable[[Request], Awaitable[Response]]) -> Response:
+    """Reject cross-site requests while allowing same-origin LAN clients."""
     origin = request.headers.get("origin")
     allowed = {str(request.base_url).rstrip("/"), "http://localhost:3000", "http://127.0.0.1:3000"}
     if origin and origin not in allowed:
-        return JSONResponse(status_code=403, content={"detail": "Cross-site access to this local application is blocked"})
+        return JSONResponse(status_code=403, content={"detail": "Cross-site access to this application is blocked"})
     response = await call_next(request)
     response.headers["Content-Security-Policy"] = CONTENT_SECURITY_POLICY
     return response

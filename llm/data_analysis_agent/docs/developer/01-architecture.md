@@ -42,6 +42,12 @@ A saved presentation edit can reuse complete artifacts without executing Python.
 
 The builder loads `OPENAI_API_KEY`. Target and worker processes receive a reduced environment without that key. Internal target control and execution requests use a per-target token. Target browsers call their own origin; they do not receive the internal token.
 
-Generated Python is trusted application code. The worker has no bubblewrap, namespace sandbox, seccomp policy, or worker network guard. It has normal file and network access under the service account. Process separation, deadlines, memory limits, cancellation, and parent-exit cleanup remain. Localhost checks and the browser content policy protect the browser boundary; they do not sandbox Python.
+Generated Python is trusted application code. The worker has no bubblewrap, namespace sandbox, seccomp policy, or worker network guard. It has normal file and network access under the service account. Process separation, deadlines, memory limits, cancellation, and parent-exit cleanup remain. Configurable host checks, same-origin request checks, and the browser content policy protect the browser boundary; they do not sandbox Python. LAN clients share the same projects and service account. There is no user authentication.
 
 Targets stop with the builder, including parent-pipe monitoring after a crash. A downloaded application runs independently. Shared remote hosting, user accounts, tenant isolation, and concurrent distributed workers are outside the current architecture.
+
+## LAN access
+
+The checked-in configuration binds builder and live target sockets to all IPv4 interfaces. `server_host` or `launcher.py --host` can select a specific interface or loopback. Host allowlists come from `allowed_hosts`; the default wildcard accepts a hosting machine's LAN addresses and DNS names. Internal loopback names are retained. Target status/control responses build dashboard URLs using the client's requested server host and the target's port. Internal broker URLs use the builder's bind address (loopback for a wildcard bind) and listening port, rather than the requested host name. The target's reduced bootstrap configuration receives the host allowlist but no model credentials. The offline adapter retains its default loopback policy.
+
+Remote users access builder and targets on separate ports. Permit those ports through the host firewall. This is a direct HTTP deployment for trusted networks, without per-user permissions. Same-origin checks remain enabled; accepting LAN hosts does not enable cross-site requests.

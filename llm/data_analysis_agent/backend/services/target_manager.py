@@ -1,4 +1,4 @@
-"""Own one loopback dashboard process per opened project."""
+"""Own one dashboard process per opened project."""
 
 from __future__ import annotations
 
@@ -17,6 +17,7 @@ from typing import Any
 
 import httpx
 
+from config import config
 from backend.services.project_store import ProjectStore
 from backend.services.workspace_service import Workspaces
 from pipeline_core.runtime import link_or_copy
@@ -30,10 +31,11 @@ class Target:
     port: int
     root: Path
     error: str | None = None
+    connect_host: str = "127.0.0.1"
 
     @property
     def url(self) -> str:
-        return f"http://127.0.0.1:{self.port}"
+        return f"http://{self.connect_host}:{self.port}"
 
 
 class TargetManager:
@@ -66,11 +68,13 @@ class TargetManager:
             with self.store.connect() as db:
                 row = db.execute("SELECT port FROM target_preferences WHERE project_id=?", (project_id,)).fetchone()
             preferred = [row["port"]] if row and self.start_port <= row["port"] <= self.end_port else []
+            bind_host = os.environ.get("WPS_BIND_HOST", config.server_host)
+            connect_host = "127.0.0.1" if bind_host == "0.0.0.0" else bind_host
             reservation = socket.socket()
             reservation.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             for port in dict.fromkeys([*preferred, *range(self.start_port, self.end_port + 1)]):
                 try:
-                    reservation.bind(("127.0.0.1", port))
+                    reservation.bind((bind_host, port))
                     break
                 except OSError:
                     continue
@@ -88,11 +92,11 @@ class TargetManager:
                     process = subprocess.Popen([sys.executable, "-m", "pipeline_core.live_target"], cwd=project_root,
                         env=environment, stdin=subprocess.PIPE, stdout=log, stderr=log,
                         pass_fds=(reservation.fileno(),), start_new_session=True)
-                target = Target(process, token, port, root)
+                target = Target(process, token, port, root, connect_host=connect_host)
                 self.targets[project_id] = target
                 assert process.stdin is not None
                 settings = {"root": str(root), "token": token, "port": port, "socket": reservation.fileno(),
-                    "static": str(project_root / "runtime_static"),
+                    "static": str(project_root / "runtime_static"), "allowed_hosts": list(config.allowed_hosts),
                     "broker": f"{builder_url.rstrip('/')}/api/internal/targets/{project_id}"}
                 process.stdin.write((json.dumps(settings) + "\n").encode())
                 process.stdin.flush()

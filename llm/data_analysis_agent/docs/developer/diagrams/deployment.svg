@@ -13,7 +13,7 @@
 <g id="clust1" class="cluster">
 <title>cluster_local</title>
 <polygon fill="white" stroke="#b9cadc" points="8,-8 8,-518 536,-518 536,-8 8,-8"/>
-<text text-anchor="middle" x="272" y="-502.8" font-family="Arial" font-size="14.00">Developer workstation · loopback services</text>
+<text text-anchor="middle" x="272" y="-502.8" font-family="Arial" font-size="14.00">Hosting machine · configurable network interfaces</text>
 </g>
 <g id="clust2" class="cluster">
 <title>cluster_offline</title>
@@ -23,23 +23,23 @@
 <!-- developer -->
 <g id="node1" class="node">
 <title>developer</title>
-<path fill="#e9f1ff" stroke="#adc0d6" d="M463,-487C463,-487 361,-487 361,-487 355,-487 349,-481 349,-475 349,-475 349,-455 349,-455 349,-449 355,-443 361,-443 361,-443 463,-443 463,-443 469,-443 475,-449 475,-455 475,-455 475,-475 475,-475 475,-481 469,-487 463,-487"/>
-<text text-anchor="middle" x="412" y="-468.4" font-family="Arial" font-size="12.00">Developer browser</text>
-<text text-anchor="middle" x="412" y="-455.4" font-family="Arial" font-size="12.00">BuilderApp</text>
+<path fill="#e9f1ff" stroke="#adc0d6" d="M492.5,-487C492.5,-487 317.5,-487 317.5,-487 311.5,-487 305.5,-481 305.5,-475 305.5,-475 305.5,-455 305.5,-455 305.5,-449 311.5,-443 317.5,-443 317.5,-443 492.5,-443 492.5,-443 498.5,-443 504.5,-449 504.5,-455 504.5,-455 504.5,-475 504.5,-475 504.5,-481 498.5,-487 492.5,-487"/>
+<text text-anchor="middle" x="405" y="-468.4" font-family="Arial" font-size="12.00">Developer browser (host or LAN)</text>
+<text text-anchor="middle" x="405" y="-455.4" font-family="Arial" font-size="12.00">BuilderApp</text>
 </g>
 <!-- builder -->
 <g id="node2" class="node">
 <title>builder</title>
-<path fill="#e9f1ff" stroke="#adc0d6" d="M471.5,-369C471.5,-369 352.5,-369 352.5,-369 346.5,-369 340.5,-363 340.5,-357 340.5,-357 340.5,-337 340.5,-337 340.5,-331 346.5,-325 352.5,-325 352.5,-325 471.5,-325 471.5,-325 477.5,-325 483.5,-331 483.5,-337 483.5,-337 483.5,-357 483.5,-357 483.5,-363 477.5,-369 471.5,-369"/>
-<text text-anchor="middle" x="412" y="-350.4" font-family="Arial" font-size="12.00">Builder service</text>
-<text text-anchor="middle" x="412" y="-337.4" font-family="Arial" font-size="12.00">FastAPI · default 8080</text>
+<path fill="#e9f1ff" stroke="#adc0d6" d="M464.5,-369C464.5,-369 345.5,-369 345.5,-369 339.5,-369 333.5,-363 333.5,-357 333.5,-357 333.5,-337 333.5,-337 333.5,-331 339.5,-325 345.5,-325 345.5,-325 464.5,-325 464.5,-325 470.5,-325 476.5,-331 476.5,-337 476.5,-337 476.5,-357 476.5,-357 476.5,-363 470.5,-369 464.5,-369"/>
+<text text-anchor="middle" x="405" y="-350.4" font-family="Arial" font-size="12.00">Builder service</text>
+<text text-anchor="middle" x="405" y="-337.4" font-family="Arial" font-size="12.00">FastAPI · default 8080</text>
 </g>
 <!-- developer&#45;&gt;builder -->
 <g id="edge1" class="edge">
 <title>developer&#45;&gt;builder</title>
-<path fill="none" stroke="#7086a0" d="M412,-442.99C412,-424.39 412,-397.06 412,-376.49"/>
-<polygon fill="#7086a0" stroke="#7086a0" points="414.45,-376.24 412,-369.24 409.55,-376.24 414.45,-376.24"/>
-<text text-anchor="middle" x="441.5" y="-411" font-family="Arial" font-size="10.00" fill="#4d6279">HTTP + SSE</text>
+<path fill="none" stroke="#7086a0" d="M405,-442.99C405,-424.39 405,-397.06 405,-376.49"/>
+<polygon fill="#7086a0" stroke="#7086a0" points="407.45,-376.24 405,-369.24 402.55,-376.24 407.45,-376.24"/>
+<text text-anchor="middle" x="434.5" y="-411" font-family="Arial" font-size="10.00" fill="#4d6279">HTTP + SSE</text>
 </g>
 <!-- target1 -->
 <g id="node3" class="node">
@@ -51,8 +51,8 @@
 <!-- builder&#45;&gt;target1 -->
 <g id="edge3" class="edge">
 <title>builder&#45;&gt;target1</title>
-<path fill="none" stroke="#7086a0" d="M340.49,-336.15C295.94,-328.92 237.81,-317.45 188,-301 162.74,-292.66 135.83,-280.31 114,-269.33"/>
-<polygon fill="#7086a0" stroke="#7086a0" points="115.04,-267.11 107.69,-266.12 112.82,-271.48 115.04,-267.11"/>
+<path fill="none" stroke="#7086a0" d="M333.03,-335.45C290.24,-328.11 235.26,-316.78 188,-301 162.77,-292.58 135.86,-280.22 114.02,-269.26"/>
+<polygon fill="#7086a0" stroke="#7086a0" points="115.06,-267.04 107.71,-266.06 112.84,-271.41 115.06,-267.04"/>
 <text text-anchor="middle" x="229" y="-293" font-family="Arial" font-size="10.00" fill="#4d6279">token + snapshots</text>
 </g>
 <!-- target2 -->
@@ -65,8 +65,8 @@
 <!-- builder&#45;&gt;target2 -->
 <g id="edge4" class="edge">
 <title>builder&#45;&gt;target2</title>
-<path fill="none" stroke="#7086a0" d="M350.82,-324.96C332.28,-317.98 312.06,-309.74 294,-301 275.12,-291.86 255.03,-280.18 238.3,-269.86"/>
-<polygon fill="#7086a0" stroke="#7086a0" points="239.53,-267.74 232.29,-266.13 236.94,-271.9 239.53,-267.74"/>
+<path fill="none" stroke="#7086a0" d="M348.37,-324.97C330.7,-317.9 311.32,-309.61 294,-301 275.36,-291.74 255.47,-280.15 238.8,-269.92"/>
+<polygon fill="#7086a0" stroke="#7086a0" points="240.05,-267.82 232.81,-266.22 237.48,-271.98 240.05,-267.82"/>
 <text text-anchor="middle" x="335" y="-293" font-family="Arial" font-size="10.00" fill="#4d6279">token + snapshots</text>
 </g>
 <!-- slot -->
@@ -79,7 +79,7 @@
 <!-- builder&#45;&gt;slot -->
 <g id="edge8" class="edge">
 <title>builder&#45;&gt;slot</title>
-<path fill="none" stroke="#7086a0" d="M403.24,-324.74C397.53,-313.13 389.07,-299.28 378,-290 355.35,-271.03 332.7,-290.37 316,-266 298.89,-241.03 317.5,-228.17 320,-198 320.4,-193.13 322.81,-191 320,-187 310.91,-174.07 297.74,-164.84 283.31,-158.25"/>
+<path fill="none" stroke="#7086a0" d="M399.01,-324.75C394.8,-313.15 388.07,-299.3 378,-290 356.29,-269.96 332.7,-290.37 316,-266 298.89,-241.03 317.5,-228.17 320,-198 320.4,-193.13 322.81,-191 320,-187 310.91,-174.07 297.74,-164.84 283.31,-158.25"/>
 <polygon fill="#7086a0" stroke="#7086a0" points="284.01,-155.89 276.61,-155.41 282.1,-160.4 284.01,-155.89"/>
 <text text-anchor="middle" x="348" y="-241.5" font-family="Arial" font-size="10.00" fill="#4d6279">developer Run</text>
 </g>
@@ -93,9 +93,9 @@
 <!-- builder&#45;&gt;store -->
 <g id="edge2" class="edge">
 <title>builder&#45;&gt;store</title>
-<path fill="none" stroke="#7086a0" d="M422.18,-324.58C429.52,-309.14 439.47,-288.2 447.32,-271.68"/>
-<polygon fill="#7086a0" stroke="#7086a0" points="449.53,-272.73 450.33,-265.36 445.11,-270.63 449.53,-272.73"/>
-<text text-anchor="middle" x="468.5" y="-293" font-family="Arial" font-size="10.00" fill="#4d6279">read / commit</text>
+<path fill="none" stroke="#7086a0" d="M416.66,-324.58C425.07,-309.14 436.47,-288.2 445.47,-271.68"/>
+<polygon fill="#7086a0" stroke="#7086a0" points="447.72,-272.67 448.92,-265.36 443.42,-270.33 447.72,-272.67"/>
+<text text-anchor="middle" x="465.5" y="-293" font-family="Arial" font-size="10.00" fill="#4d6279">read / commit</text>
 </g>
 <!-- model -->
 <g id="node9" class="node">
@@ -107,9 +107,9 @@
 <!-- builder&#45;&gt;model -->
 <g id="edge10" class="edge">
 <title>builder&#45;&gt;model</title>
-<path fill="none" stroke="#7086a0" d="M458.89,-324.95C495.3,-308.61 545.79,-285.94 583.72,-268.92"/>
-<polygon fill="#7086a0" stroke="#7086a0" points="584.78,-271.12 590.17,-266.02 582.78,-266.65 584.78,-271.12"/>
-<text text-anchor="middle" x="592.5" y="-293" font-family="Arial" font-size="10.00" fill="#4d6279">authoring context / proposal</text>
+<path fill="none" stroke="#7086a0" d="M453.35,-324.95C490.89,-308.61 542.95,-285.94 582.06,-268.92"/>
+<polygon fill="#7086a0" stroke="#7086a0" points="583.27,-271.06 588.71,-266.02 581.31,-266.57 583.27,-271.06"/>
+<text text-anchor="middle" x="588.5" y="-293" font-family="Arial" font-size="10.00" fill="#4d6279">authoring context / proposal</text>
 </g>
 <!-- offline -->
 <g id="node10" class="node">
@@ -121,9 +121,9 @@
 <!-- builder&#45;&gt;offline -->
 <g id="edge13" class="edge">
 <title>builder&#45;&gt;offline</title>
-<path fill="none" stroke="#7086a0" stroke-dasharray="5,2" d="M483.63,-335.63C533.24,-327.8 600.6,-315.86 659,-301 694.56,-291.95 733.5,-279.33 765.12,-268.36"/>
-<polygon fill="#7086a0" stroke="#7086a0" points="765.95,-270.67 771.75,-266.05 764.33,-266.04 765.95,-270.67"/>
-<text text-anchor="middle" x="750.5" y="-293" font-family="Arial" font-size="10.00" fill="#4d6279">accepted application ZIP</text>
+<path fill="none" stroke="#7086a0" stroke-dasharray="5,2" d="M476.66,-335.7C526.93,-327.84 595.53,-315.85 655,-301 691.36,-291.92 731.2,-279.3 763.58,-268.34"/>
+<polygon fill="#7086a0" stroke="#7086a0" points="764.53,-270.6 770.37,-266.03 762.95,-265.96 764.53,-270.6"/>
+<text text-anchor="middle" x="747.5" y="-293" font-family="Arial" font-size="10.00" fill="#4d6279">accepted application ZIP</text>
 </g>
 <!-- target1&#45;&gt;slot -->
 <g id="edge6" class="edge">
@@ -142,15 +142,15 @@
 <!-- user -->
 <g id="node5" class="node">
 <title>user</title>
-<path fill="#e8f5f0" stroke="#adc0d6" d="M134,-369C134,-369 28,-369 28,-369 22,-369 16,-363 16,-357 16,-357 16,-337 16,-337 16,-331 22,-325 28,-325 28,-325 134,-325 134,-325 140,-325 146,-331 146,-337 146,-337 146,-357 146,-357 146,-363 140,-369 134,-369"/>
-<text text-anchor="middle" x="81" y="-350.4" font-family="Arial" font-size="12.00">Dashboard browser</text>
-<text text-anchor="middle" x="81" y="-337.4" font-family="Arial" font-size="12.00">RuntimeApp</text>
+<path fill="#e8f5f0" stroke="#adc0d6" d="M206.5,-369C206.5,-369 27.5,-369 27.5,-369 21.5,-369 15.5,-363 15.5,-357 15.5,-357 15.5,-337 15.5,-337 15.5,-331 21.5,-325 27.5,-325 27.5,-325 206.5,-325 206.5,-325 212.5,-325 218.5,-331 218.5,-337 218.5,-337 218.5,-357 218.5,-357 218.5,-363 212.5,-369 206.5,-369"/>
+<text text-anchor="middle" x="117" y="-350.4" font-family="Arial" font-size="12.00">Dashboard browser (host or LAN)</text>
+<text text-anchor="middle" x="117" y="-337.4" font-family="Arial" font-size="12.00">RuntimeApp</text>
 </g>
 <!-- user&#45;&gt;target1 -->
 <g id="edge5" class="edge">
 <title>user&#45;&gt;target1</title>
-<path fill="none" stroke="#7086a0" d="M55.97,-324.96C49.52,-318.07 43.43,-309.87 40,-301 36.24,-291.29 39.27,-281.07 44.57,-272.06"/>
-<polygon fill="#7086a0" stroke="#7086a0" points="46.74,-273.23 48.54,-266.04 42.65,-270.53 46.74,-273.23"/>
+<path fill="none" stroke="#7086a0" d="M63.84,-324.92C54.3,-318.68 45.63,-310.8 40,-301 34.68,-291.73 37.63,-281.39 43.33,-272.14"/>
+<polygon fill="#7086a0" stroke="#7086a0" points="45.44,-273.39 47.4,-266.24 41.41,-270.61 45.44,-273.39"/>
 <text text-anchor="middle" x="96" y="-293" font-family="Arial" font-size="10.00" fill="#4d6279">same&#45;origin HTTP + SSE</text>
 </g>
 <!-- worker -->

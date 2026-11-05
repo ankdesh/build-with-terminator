@@ -60,7 +60,8 @@ def main() -> None:
     settings = json.loads(sys.stdin.buffer.readline())
     root = Path(settings["root"])
     application = RuntimeApplication(root, runner=BrokerRunner(settings["broker"], settings["token"], root), live=True)
-    app = create_runtime_app(application, Path(settings["static"]), settings["token"])
+    app = create_runtime_app(application, Path(settings["static"]), settings["token"],
+        allowed_hosts=settings.get("allowed_hosts"))
     import uvicorn
     server = uvicorn.Server(uvicorn.Config(app, host="127.0.0.1", port=settings["port"], access_log=False,
         log_level="warning", timeout_graceful_shutdown=3))

@@ -80,7 +80,7 @@ Live control routes are only installed when a control token exists. Offline Use 
 | GET | `/api/projects/{project_id}/runs/{run_id}/tables/{output_name}` | [export_table](../../backend/routes/project_routes.py) · line 203 |
 | POST | `/api/projects/{project_id}/stages/{stage_id}/delete` | [delete_stage](../../backend/routes/project_routes.py) · line 239 |
 | GET | `/api/projects/{project_id}/target` | [target_status](../../backend/routes/project_routes.py) · line 299 |
-| POST | `/api/projects/{project_id}/target/{action}` | [target_control](../../backend/routes/project_routes.py) · line 310 |
+| POST | `/api/projects/{project_id}/target/{action}` | [target_control](../../backend/routes/project_routes.py) · line 313 |
 | GET | `/api/projects/{project_id}/workspace` | [get_workspace](../../backend/routes/project_routes.py) · line 223 |
 | PATCH | `/api/projects/{project_id}/workspace` | [edit_workspace](../../backend/routes/project_routes.py) · line 228 |
 
@@ -104,23 +104,23 @@ Live control routes are only installed when a control token exists. Offline Use 
 
 | Method | Path | Handler/source |
 | --- | --- | --- |
-| POST | `/api/internal/targets/{project_id}/cancel/{run_id}` | [cancel_target](../../backend/routes/project_routes.py) · line 379 |
-| POST | `/api/internal/targets/{project_id}/execute` | [execute_target](../../backend/routes/project_routes.py) · line 320 |
+| POST | `/api/internal/targets/{project_id}/cancel/{run_id}` | [cancel_target](../../backend/routes/project_routes.py) · line 384 |
+| POST | `/api/internal/targets/{project_id}/execute` | [execute_target](../../backend/routes/project_routes.py) · line 325 |
 
 ### Shared runtime API
 
 | Method | Path | Handler/source |
 | --- | --- | --- |
-| GET | `/` | [dashboard](../../pipeline_core/runtime_http.py) · line 147 |
-| POST | `/api/runtime/cancel` | [cancel](../../pipeline_core/runtime_http.py) · line 121 |
-| GET | `/api/runtime/events` | [events](../../pipeline_core/runtime_http.py) · line 59 |
-| POST | `/api/runtime/run` | [run](../../pipeline_core/runtime_http.py) · line 80 |
-| GET | `/api/runtime/state` | [state](../../pipeline_core/runtime_http.py) · line 55 |
-| GET | `/api/runtime/tables/{output_name}` | [table](../../pipeline_core/runtime_http.py) · line 127 |
-| POST | `/api/runtime/upload` | [upload](../../pipeline_core/runtime_http.py) · line 90 |
-| POST | `/api/runtime/use-builder-data` | [use_builder_data](../../pipeline_core/runtime_http.py) · line 110 |
-| GET | `/health` | [health](../../pipeline_core/runtime_http.py) · line 51 |
-| POST | `/internal/snapshot` | [snapshot](../../pipeline_core/runtime_http.py) · line 137 |
+| GET | `/` | [dashboard](../../pipeline_core/runtime_http.py) · line 148 |
+| POST | `/api/runtime/cancel` | [cancel](../../pipeline_core/runtime_http.py) · line 122 |
+| GET | `/api/runtime/events` | [events](../../pipeline_core/runtime_http.py) · line 60 |
+| POST | `/api/runtime/run` | [run](../../pipeline_core/runtime_http.py) · line 81 |
+| GET | `/api/runtime/state` | [state](../../pipeline_core/runtime_http.py) · line 56 |
+| GET | `/api/runtime/tables/{output_name}` | [table](../../pipeline_core/runtime_http.py) · line 128 |
+| POST | `/api/runtime/upload` | [upload](../../pipeline_core/runtime_http.py) · line 91 |
+| POST | `/api/runtime/use-builder-data` | [use_builder_data](../../pipeline_core/runtime_http.py) · line 111 |
+| GET | `/health` | [health](../../pipeline_core/runtime_http.py) · line 52 |
+| POST | `/internal/snapshot` | [snapshot](../../pipeline_core/runtime_http.py) · line 138 |
 
 <!-- END_API_TABLES -->
 

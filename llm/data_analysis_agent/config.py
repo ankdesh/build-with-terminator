@@ -50,6 +50,7 @@ class AppConfig:
     llm_timeout_seconds: float = 90.0
     llm_max_retries: int = 0
     llm_temperature: float | None = 0.1
+    allowed_hosts: tuple[str, ...] = ("*",)
 
     @classmethod
     def load(cls, config_path: Optional[Path] = None) -> "AppConfig":
@@ -105,6 +106,11 @@ class AppConfig:
                 or temperature is not None and not 0 <= temperature <= 2):
             raise ValueError("Invalid LLM configuration: timeout must be positive, retries non-negative, and temperature null or between 0 and 2")
 
+        allowed_hosts = file_settings.get("allowed_hosts", ["*"])
+        if (not isinstance(allowed_hosts, list) or not allowed_hosts
+                or any(not isinstance(hostname, str) or not hostname.strip() for hostname in allowed_hosts)):
+            raise ValueError("allowed_hosts must be a non-empty list of host names or IP addresses")
+
         sessions_path = SESSIONS_DIR
         sessions_path.mkdir(parents=True, exist_ok=True)
 
@@ -122,6 +128,7 @@ class AppConfig:
             llm_timeout_seconds=llm_timeout,
             llm_max_retries=llm_retries,
             llm_temperature=temperature,
+            allowed_hosts=tuple(dict.fromkeys(["127.0.0.1", "localhost", *allowed_hosts])),
         )
 
 

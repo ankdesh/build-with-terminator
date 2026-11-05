@@ -1,6 +1,6 @@
 # Saved Data Analysis Platform
 
-The Linux builder uses chat and visual design tools to create a saved analysis application. Each opened project has a dashboard service on its own loopback port. The Windows application runs the accepted Python pipeline on replacement CSV files. It has dashboard controls and CSV upload, with no chat or model client.
+The Linux builder uses chat and visual design tools to create a saved analysis application. Each opened project has a dashboard service on its own configurable network port. The Windows application runs the accepted Python pipeline on replacement CSV files. It has dashboard controls and CSV upload, with no chat or model client.
 
 See the [developer handbook](docs/developer/README.md) for component documents, architecture diagrams, dependency tables, supported analyses/visualizations, and an extracted API reference. The [HTML view](docs/developer/index.html) uses local assets.
 
@@ -147,3 +147,7 @@ Run `python scripts/studio_smoke.py` for the real multi-process local workflow. 
 The Windows smoke test checks the real frozen launcher and worker with Python removed from the child's PATH and no model credentials. Full Windows release verification also requires a clean Windows VM with external network access blocked, browser interactions, replacement upload, cancellation, and numerical comparison. These checks cannot be completed on a Linux-only host.
 
 Multiple CSVs, scheduled refresh, append history, shared network hosting, arbitrary React generation, general ML training, and offline pipeline editing are outside version 1.
+
+## LAN hosting
+
+The checked-in builder configuration uses `server_host=0.0.0.0` and `allowed_hosts=["*"]`. `launcher.py --host` overrides the bind address for builder and live targets. Clients open the server's actual IP/DNS name on the builder port; target URLs use the requesting client's server host and the target port. Open the builder port and configured target port range in the host firewall. Target snapshots, readiness checks, and execution broker traffic use host-side addresses rather than a client-supplied host name. Token checks and same-origin browser policy remain active. Offline runtime hosting remains loopback-only by default. See README for host allowlists and trusted-network deployment limits.

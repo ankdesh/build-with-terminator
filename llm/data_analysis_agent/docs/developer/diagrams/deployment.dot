@@ -3,12 +3,12 @@ digraph "deployment" {
  node [shape=box,style="rounded,filled",fillcolor="#f4f7fb",color="#adc0d6",fontname="Arial",fontsize=12,margin="0.16,0.12"];
  edge [color="#7086a0",fontcolor="#4d6279",fontname="Arial",fontsize=10,arrowsize=0.7];
 
-subgraph cluster_local { label="Developer workstation · loopback services"; color="#b9cadc";
-  developer [label="Developer browser\nBuilderApp",fillcolor="#e9f1ff"];
+subgraph cluster_local { label="Hosting machine · configurable network interfaces"; color="#b9cadc";
+  developer [label="Developer browser (host or LAN)\nBuilderApp",fillcolor="#e9f1ff"];
   builder [label="Builder service\nFastAPI · default 8080",fillcolor="#e9f1ff"];
   target1 [label="Project A target\n8100–8199",fillcolor="#e8f5f0"];
   target2 [label="Project B target\nseparate port",fillcolor="#e8f5f0"];
-  user [label="Dashboard browser\nRuntimeApp",fillcolor="#e8f5f0"];
+  user [label="Dashboard browser (host or LAN)\nRuntimeApp",fillcolor="#e8f5f0"];
   slot [label="One shared execution slot\nProjectService.lock"];
   worker [label="Pipeline worker\ntrusted Python",fillcolor="#fff2df"];
   store [label="SQLite + project files",shape=cylinder];
