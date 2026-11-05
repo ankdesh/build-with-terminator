@@ -94,6 +94,12 @@ Update Python contracts, frontend types, compatibility/default loading, workspac
 
 Keep route handlers thin. Put persistence and state changes in the owning service. Require expected_version for workspace mutations; publish an event after a committed change and synchronize the target where needed. Do not make browser disconnection cancel a durable workspace job. Keep agent routes out of create_runtime_app.
 
+## Automatic frontend preparation
+
+`launcher.py` reserves the configured server port, then calls `backend/services/frontend_build.py` before importing startup data or starting the server. The helper hashes frontend sources, package declarations, and the lockfile, excluding dependency/build directories. It also hashes both output trees. Missing or changed outputs rebuild both bundles. A missing or changed dependency stamp runs `pnpm install --frozen-lockfile` first.
+
+Successful builds write `runtime_cache/frontend-build.json`; dependency state is stored under `frontend/node_modules`. Both locations are ignored by Git. A failed command invalidates the build stamp and stops startup. If source changes during a build, startup stops and asks for another launch. Unchanged verified bundles require no build tools at startup. Update Git separately, then restart; the launcher never pulls or merges Git changes.
+
 ## Troubleshooting
 
 | Symptom | Inspect | Next action |

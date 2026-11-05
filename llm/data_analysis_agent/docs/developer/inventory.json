@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-05T05:55:09.661996+00:00",
+  "generated_at": "2026-11-05T06:09:20.794590+00:00",
   "scope": "Static declarations and selected source hashes, not a complete runtime call graph",
   "source_sha256": {
     "backend/__init__.py": "13c8ca4ef8546541da5e51c4c023c0b51d7a52395bd505844dcda011173369b5",
@@ -19,6 +19,7 @@
     "backend/services/data_profiler.py": "8e8a1c705a0995e34605d105e0a86f514aecdd60a1405bbd03295a0947950631",
     "backend/services/dataset_import.py": "b2ac48b8f6f142f6bb66f98eb69da548af5b3d0b6852f278fd4f82143dfdde13",
     "backend/services/export_service.py": "aeaa6c14071f974a7a7b9e2fa44e1d815be5adcdb5660f7badbc68abdbcce764",
+    "backend/services/frontend_build.py": "5a202accf14242744e4999c264b6ecd707764e972430adec015eda48898e2a76",
     "backend/services/llm_gateway.py": "474e6196d82628521c8fedd4efa31c6c86c3f9914a0a9f3ad19124002b53a4e4",
     "backend/services/model_output.py": "660ce04e25ace233892d3864c63b0f946b27272569aaec01bfe42aca18096f80",
     "backend/services/project_agent.py": "f0f4bcb8948d674670e0c5a53031645f4a6f4a3807a1ed507b4b7f0c82ed687a",
@@ -53,7 +54,7 @@
     "frontend/src/main.tsx": "272b0ae8e1d3ccabfae8acd6dde6df3aa2e7994f370be2ca0b4f3bc6a4a13938",
     "frontend/src/runtime.main.tsx": "d435f7be9c9fabc49e46e5b4c0f73c1a6482c425f572b8f9315708cedfbb3f39",
     "frontend/vite.config.ts": "729295df28b62276724b7bff8911dd9628939dea1cfda9e1a5ef668e36546215",
-    "launcher.py": "c80041475c122aeb7a1ba49d60cff4a8401f5e97f3cf915279fbf9d9992fc911",
+    "launcher.py": "236052b20867d411dfdecdd48fca808570bfbc54cfc24fa3ace5ea58626c9f30",
     "offline_app.py": "a965d47d8e9a9ef298631955f25998e30d007bc678a5a2c14f239fb5ee78c02b",
     "pipeline_core/__init__.py": "04e09d494c4a67de2e1c6e009c2a1e290a5d19d1bb2ec028b6c6235fd9cd36ae",
     "pipeline_core/bundle.py": "fb1cf0d558a7bda613bb5c144783bb1420ef7650219e74e59201e4434d641c0c",
@@ -555,18 +556,23 @@
     },
     {
       "from": "launcher",
-      "to": "config",
+      "to": "backend.services.frontend_build",
       "line": 20
     },
     {
       "from": "launcher",
+      "to": "config",
+      "line": 21
+    },
+    {
+      "from": "launcher",
       "to": "backend.routes.project_routes",
-      "line": 58
+      "line": 59
     },
     {
       "from": "launcher",
       "to": "backend.services.dataset_import",
-      "line": 59
+      "line": 60
     },
     {
       "from": "offline_app",

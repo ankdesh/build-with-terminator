@@ -17,6 +17,7 @@ import urllib.request
 import webbrowser
 import uvicorn
 
+from backend.services.frontend_build import ensure_frontend
 from config import config
 
 logging.basicConfig(
@@ -77,6 +78,12 @@ def main() -> None:
         listener = reserve_server_socket(host, port)
     except OSError as exc:
         parser.exit(2, f"Cannot bind {host}:{port}: {exc}. Stop the service using this port or change server_port/--port. No other port was selected.\n")
+
+    try:
+        ensure_frontend(Path(__file__).resolve().parent)
+    except (OSError, RuntimeError) as exc:
+        listener.close()
+        parser.exit(1, f"Cannot prepare frontend: {exc}\n")
 
     # Targets must use the actual bind address, including a command-line override.
     os.environ["WPS_BIND_HOST"] = args.host

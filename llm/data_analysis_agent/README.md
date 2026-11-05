@@ -18,13 +18,12 @@ Python 3.12, Node.js, and pnpm are required. No system sandbox packages or Linux
 uv venv --python 3.12
 uv pip install -r requirements-runtime.txt
 uv pip install -e '.[dev]'
-cd frontend
-pnpm install --frozen-lockfile
-pnpm exec vite build
-pnpm exec vite build --mode runtime
-cd ..
 python launcher.py
 ```
+
+The launcher prepares both frontend bundles before starting the server. On the first launch, or after dependency changes, it runs `pnpm install --frozen-lockfile`. Missing, altered, or outdated UI files trigger the builder and runtime Vite builds. Source and output hashes let unchanged bundles start without rebuilding. Node.js and pnpm must be available on PATH when a rebuild is needed. A failed install or build stops startup with an error instead of serving old files.
+
+To update a checkout, stop the builder, run `git pull`, then launch again. The launcher does not update Git automatically. Python changes take effect after restart. No separate manual frontend build is needed.
 
 Use the existing `config.json` for the model endpoint and model name. Supply credentials through `OPENAI_API_KEY`. The model receives bounded data context while the full CSV stays local.
 

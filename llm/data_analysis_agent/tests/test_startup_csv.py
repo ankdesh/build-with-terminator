@@ -13,6 +13,11 @@ from config import config
 from dataclasses import replace
 
 
+@pytest.fixture(autouse=True)
+def mock_frontend_for_unit_launches(monkeypatch):
+    monkeypatch.setattr(launcher, 'ensure_frontend', Mock())
+
+
 def test_startup_csv_creates_selected_project_without_running(tmp_path, monkeypatch):
     store = ProjectStore(tmp_path / "projects")
     monkeypatch.setattr(project_routes, "store", store)
