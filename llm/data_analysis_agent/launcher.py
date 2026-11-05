@@ -26,24 +26,18 @@ logging.basicConfig(
 logger = logging.getLogger("launcher")
 
 
-def is_port_in_use(host: str, port: int) -> bool:
-    """Check whether a TCP port is currently open and in use."""
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        try:
-            s.bind((host, port))
-            return False
-        except OSError:
-            return True
-
-
-def find_available_port(host: str, starting_port: int) -> int:
-    """Find the next available TCP port if the default port is already bound."""
-    port = starting_port
-    while port < starting_port + 50:
-        if not is_port_in_use(host, port):
-            return port
-        port += 1
-    return starting_port
+def reserve_server_socket(host: str, port: int) -> socket.socket:
+    """Bind the exact requested port and hold it until server shutdown."""
+    listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        if os.name != "nt":
+            listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        listener.bind((host, port))
+        listener.listen(128)
+    except OSError:
+        listener.close()
+        raise
+    return listener
 
 
 def wait_for_server(url: str, timeout_seconds: float = 10.0) -> bool:
@@ -70,11 +64,19 @@ def import_startup_csv(source: Path) -> str:
 def main() -> None:
     parser = argparse.ArgumentParser(description="WPS-AI Desktop Application Launcher")
     parser.add_argument("--host", default=config.server_host, help="Bind address; use 0.0.0.0 for LAN access (default: config.json)")
-    parser.add_argument("--port", type=int, default=config.server_port, help="Bind port (default: 8080)")
+    parser.add_argument("--port", type=int, default=config.server_port, help="Exact bind port (default: config.json); fail if unavailable")
     parser.add_argument("--headless", action="store_true", help="Start server without launching browser")
     parser.add_argument("--log-level", default="info", help="Uvicorn log level (default: info)")
     parser.add_argument("--csv", type=Path, metavar="FILE", help="Load a CSV into a new project at startup (no model call or calculation)")
     args = parser.parse_args()
+
+    if not 1 <= args.port <= 65535:
+        parser.exit(2, "Port must be between 1 and 65535.\n")
+    host, port = args.host, args.port
+    try:
+        listener = reserve_server_socket(host, port)
+    except OSError as exc:
+        parser.exit(2, f"Cannot bind {host}:{port}: {exc}. Stop the service using this port or change server_port/--port. No other port was selected.\n")
 
     # Targets must use the actual bind address, including a command-line override.
     os.environ["WPS_BIND_HOST"] = args.host
@@ -83,10 +85,9 @@ def main() -> None:
         try:
             initial_path = import_startup_csv(args.csv)
         except Exception as exc:
+            listener.close()
             parser.exit(2, f"Cannot load startup CSV: {exc}\n")
 
-    host = args.host
-    port = find_available_port(host, args.port)
     local_host = "127.0.0.1" if host == "0.0.0.0" else host
     server_url = f"http://{local_host}:{port}"
     builder_url = server_url + initial_path
@@ -115,7 +116,7 @@ def main() -> None:
     server = uvicorn.Server(uvicorn_config)
 
     # Start server in daemon thread
-    server_thread = threading.Thread(target=server.run, daemon=True)
+    server_thread = threading.Thread(target=server.run, kwargs={"sockets": [listener]}, daemon=True)
     server_thread.start()
 
     # Wait for server readiness
@@ -131,7 +132,10 @@ def main() -> None:
                 logger.warning("Could not launch browser automatically: %s", e)
                 logger.info("Please open your browser manually at %s", builder_url)
     else:
-        logger.error("Server failed to respond to health check within timeout.")
+        server.should_exit = True
+        server_thread.join(timeout=3.0)
+        listener.close()
+        parser.exit(1, "Server failed to start on the requested port.\n")
 
     try:
         # Keep main thread alive while server runs
@@ -143,6 +147,8 @@ def main() -> None:
         server_thread.join(timeout=3.0)
         logger.info("Shutdown complete.")
         sys.exit(0)
+    finally:
+        listener.close()
 
 
 if __name__ == "__main__":

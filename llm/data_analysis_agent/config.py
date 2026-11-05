@@ -91,7 +91,9 @@ class AppConfig:
         api_base = str(file_settings.get("openai_api_base") or DEFAULT_OPENAI_API_BASE).rstrip("/")
         model_name = str(file_settings.get("openai_model_name") or DEFAULT_MODEL_NAME)
         host = str(file_settings.get("server_host") or DEFAULT_SERVER_HOST)
-        port = int(file_settings.get("server_port") or DEFAULT_SERVER_PORT)
+        port = int(file_settings.get("server_port", DEFAULT_SERVER_PORT))
+        if not 1 <= port <= 65535:
+            raise ValueError("server_port must be between 1 and 65535")
         retries = int(file_settings.get("max_retries") or MAX_EXECUTION_RETRIES)
         timeout = int(file_settings.get("exec_timeout_seconds") or CODE_EXECUTION_TIMEOUT_SECONDS)
         upload_limit = int(file_settings.get("max_upload_size_bytes") or MAX_UPLOAD_FILE_SIZE_BYTES)

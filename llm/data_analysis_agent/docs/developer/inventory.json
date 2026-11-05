@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-05T05:42:44.237541+00:00",
+  "generated_at": "2026-11-05T05:55:09.661996+00:00",
   "scope": "Static declarations and selected source hashes, not a complete runtime call graph",
   "source_sha256": {
     "backend/__init__.py": "13c8ca4ef8546541da5e51c4c023c0b51d7a52395bd505844dcda011173369b5",
@@ -29,7 +29,7 @@
     "backend/services/session_store.py": "a6b30cb4b2a1634ccc9ba7e067793a3b7b69ca2783d46b862fd3fd258d6430c1",
     "backend/services/target_manager.py": "81404065ff7e5cf62cc4a1de156e20ef405a9c88b37cb4f2967b3f4b75bc1504",
     "backend/services/workspace_service.py": "08f44dffe00f173304a342c244565ab3ce76c094830c43d39ec607e08b4ee23b",
-    "config.py": "fab4c9eddac90d8891b192c1fe7584c627c3e3020a738d2e3ac11d1b90f635f5",
+    "config.py": "5f01a28d223abf07f96a0053d1d00f6112f5edb5e951d9e1d0bb96f1ba47bb08",
     "frontend/package.json": "8ad26fe5f6d0b383646bc82952451016d340cd2476028d4553f36cebf66c0942",
     "frontend/src/App.tsx": "f9f59de20a88f582c69af87103634c707ad3cc8c22e0f4eabd202c13a2121307",
     "frontend/src/BuilderApp.tsx": "f6c2ed169698141fcefb2db5c8092e0fcadeb1549dedbe6b85306a15bee9dee0",
@@ -53,7 +53,7 @@
     "frontend/src/main.tsx": "272b0ae8e1d3ccabfae8acd6dde6df3aa2e7994f370be2ca0b4f3bc6a4a13938",
     "frontend/src/runtime.main.tsx": "d435f7be9c9fabc49e46e5b4c0f73c1a6482c425f572b8f9315708cedfbb3f39",
     "frontend/vite.config.ts": "729295df28b62276724b7bff8911dd9628939dea1cfda9e1a5ef668e36546215",
-    "launcher.py": "2f8b4e54df0fdee5293a535051841bf579c25346303cbf83069866e45ef3d9b2",
+    "launcher.py": "c80041475c122aeb7a1ba49d60cff4a8401f5e97f3cf915279fbf9d9992fc911",
     "offline_app.py": "a965d47d8e9a9ef298631955f25998e30d007bc678a5a2c14f239fb5ee78c02b",
     "pipeline_core/__init__.py": "04e09d494c4a67de2e1c6e009c2a1e290a5d19d1bb2ec028b6c6235fd9cd36ae",
     "pipeline_core/bundle.py": "fb1cf0d558a7bda613bb5c144783bb1420ef7650219e74e59201e4434d641c0c",
@@ -561,12 +561,12 @@
     {
       "from": "launcher",
       "to": "backend.routes.project_routes",
-      "line": 64
+      "line": 58
     },
     {
       "from": "launcher",
       "to": "backend.services.dataset_import",
-      "line": 65
+      "line": 59
     },
     {
       "from": "offline_app",

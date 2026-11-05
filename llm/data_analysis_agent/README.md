@@ -46,7 +46,7 @@ The checked-in `config.json` binds the builder and live project dashboards to `0
 python launcher.py --headless --host 0.0.0.0 --port 8080
 ```
 
-On another machine, open `http://<server-IP>:8080`. Use the hosting machine's IP address or DNS name, not `0.0.0.0`, `localhost`, or `127.0.0.1`. Dashboard links use that same host with each project's target port. Allow inbound TCP 8080 and 8100–8199 through the host firewall; use the actual ports printed by the launcher if the defaults are occupied. `WPS_TARGET_PORT_START` and `WPS_TARGET_PORT_END` set the target range.
+On another machine, open `http://<server-IP>:8080`. Use the hosting machine's IP address or DNS name, not `0.0.0.0`, `localhost`, or `127.0.0.1`. Dashboard links use that same host with each project's target port. Allow inbound TCP 8080 and 8100–8199 through the host firewall; use your configured builder port if it differs. The builder uses exactly `server_port` (or `--port`) and exits with an error if it cannot bind that port; it never selects a different port. `WPS_TARGET_PORT_START` and `WPS_TARGET_PORT_END` set the target range.
 
 `server_host` in `config.json` sets the default bind address. `--host` overrides it for both builder and live targets. Set it to `127.0.0.1` for local-only access. Startup health checks and the host's browser use a reachable local address when binding all interfaces.
 

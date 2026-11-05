@@ -16,7 +16,7 @@ The builder is hosted through the Linux development path. Windows packaging and 
 | Exported launcher/server | [runtime_launcher.py](../../runtime_launcher.py), [offline_app.py](../../offline_app.py) | Verify package; serve a saved dashboard; execute local workers | Standalone application session |
 | Model endpoint | [llm_gateway.py](../../backend/services/llm_gateway.py) | Generate or refine project definitions | Called during authoring only |
 
-Builder default: `127.0.0.1:8080`. Live targets use distinct available ports in `8100–8199`, with a stored preferred port per project. The exported runtime requests port 8080 by default and can select another available port if occupied. Vite development uses port 3000 and proxies API traffic to the builder.
+The checked-in builder bind address is `0.0.0.0:8080`. The builder reserves exactly `server_port` (or `--port`) before importing startup data. If binding fails, it exits with an error; it never scans for another port. Live targets use distinct available ports in `8100–8199`, with a stored preferred port per project. The exported runtime requests port 8080 by default and can select another available port if occupied. Vite development uses port 3000 and proxies API traffic to the builder.
 
 ## Component view
 
