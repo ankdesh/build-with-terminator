@@ -223,6 +223,16 @@ class PipelineEngine:
                   "status": "succeeded", "cached": reused, "duration_ms": round((time.monotonic() - start) * 1000, 2)})
 
         rendered, widget_views = render_artifacts(revision, artifacts)
+        from pipeline_core.partial import PartialRevision
+        if isinstance(revision, PartialRevision):
+            for name, value in artifacts.items():
+                if name == 'data' or name in rendered:
+                    continue
+                if isinstance(value, pd.DataFrame):
+                    rendered[name] = {'kind': 'table', 'columns': list(value.columns[:20]),
+                        'rows': safe_json(value.iloc[:5, :20].to_dict('records')), 'total_rows': len(value)}
+                elif value is None or isinstance(value, (str, int, float, bool, np.generic)):
+                    rendered[name] = {'kind': 'text' if isinstance(value, str) else 'metric', 'value': safe_json(value)}
         (output_dir / "cache.json").write_text(json.dumps(cache, allow_nan=False))
         result = {"outputs": rendered, "widgets": widget_views, "cleanup_impacts": cleanup, "steps": logs,
                   "parameter_options": options, "input_rows": len(frame), "input_hash": fingerprint(input_path)}

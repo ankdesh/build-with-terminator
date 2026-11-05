@@ -16,7 +16,7 @@ export function ChatReview({ item, projectId, developer, disabled, issues, onAct
     }).catch(() => {});
     return () => { disposed = true; };
   }, [item.id, item.status, item.stale, projectId, developer]);
-  const canRun = !item.stale && !issues.length && !item.job_id && !item.run_skipped && (item.status === 'applied' || item.kind === 'needs_run');
+  const canRun = !item.stale && !item.job_id && !item.run_skipped && (item.status === 'applied' || item.kind === 'needs_run');
   const value = (data: unknown) => data == null ? 'Not present' : typeof data === 'string' ? data : JSON.stringify(data, null, 2);
   return <section className="chat-review" aria-label={item.kind === 'proposal' ? 'Review proposed changes' : 'Run required'}>
     <strong>{item.kind === 'proposal' ? `Changes · ${item.status}` : 'Results need a run'}</strong>
@@ -41,7 +41,7 @@ export function ChatReview({ item, projectId, developer, disabled, issues, onAct
     {item.status === 'applied' && <div className="review-actions"><button disabled={disabled || !canRun} onClick={() => onAction(item.id, 'run')}>Run and ask again</button>
       <button disabled={disabled || item.stale || Boolean(item.job_id)} onClick={onUndo}>Undo</button>
       {!item.job_id && !item.run_skipped && <button disabled={disabled} onClick={() => onAction(item.id, 'discard')}>Skip run</button>}</div>}
-    {!!issues.length && item.status !== 'discarded' && !item.job_id && <p className="muted">Complete the workspace before Run: {issues.join('; ')}</p>}
+    {!!issues.length && item.status !== 'discarded' && !item.job_id && <p className="muted">Run executes available stages. Complete these items before acceptance: {issues.join('; ')}</p>}
     {item.run_skipped && <p>Run skipped.</p>}
     {item.run_status && <p role="status">Run and follow-up: {item.run_status}{item.run_error ? ` · ${item.run_error}` : ''}</p>}
   </section>;

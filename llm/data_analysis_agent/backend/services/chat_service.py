@@ -87,6 +87,10 @@ class ChatService:
         context = captured_context or context_for(workspace['document'], stage_id, bool(project['dataset_hash']))
         if not answer_only:
             self.store.message(project_id, 'user', query, {'context': context, 'workspace_version': workspace['version']})
+        partial = self.store.partial_run(project_id)
+        if (not run_id and partial and partial.workspace_version == workspace['version']
+                and partial.input_hash == project['dataset_hash']):
+            run_id = partial.run_id
         run_id = run_id or project['display_run_id']
         run = self.store.run(project_id, run_id).model_dump() if run_id else None
         diagnostics = await asyncio.to_thread(collect_run_diagnostics, self.store, project_id, query, config.openai_api_key)

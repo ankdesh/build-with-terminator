@@ -53,7 +53,8 @@ def main(request_file: str) -> int:
 
     try:
         with contextlib.redirect_stdout(log), contextlib.redirect_stderr(log):
-            revision = ProjectRevision.model_validate(request["revision"])
+            from pipeline_core.partial import PartialRevision
+            revision = (PartialRevision if request.get("partial") else ProjectRevision).model_validate(request["revision"])
             result = PipelineEngine().execute(revision, Path(request["input_path"]), request["parameters"],
                 output, Path(request["cache_dir"]) if request.get("cache_dir") else None, notify)
         response = {"success": True, "result": result, "stdout": "".join(log.parts)}

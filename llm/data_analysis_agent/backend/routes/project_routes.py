@@ -305,8 +305,11 @@ async def rollback_revision(project_id: str, revision_id: str) -> dict:
 @router.get("/{project_id}/runs/{run_id}/tables/{output_name}")
 async def export_table(project_id: str, run_id: str, output_name: str) -> FileResponse:
     run = store.run(project_id, run_id)
-    revision = store.revision(project_id, run.revision_id)
-    names = {w.output for w in revision.dashboard.widgets if w.kind == "table"}
+    if run.validation_mode == 'partial':
+        names = {name for name, output in (run.result or {}).get('outputs', {}).items() if output.get('kind') == 'table'}
+    else:
+        revision = store.revision(project_id, run.revision_id)
+        names = {w.output for w in revision.dashboard.widgets if w.kind == "table"}
     if run.status != "succeeded" or output_name not in names:
         raise HTTPException(404, "Table output not found")
     return FileResponse(store.run_dir(project_id, run_id) / "output" / f"{output_name}.csv", media_type="text/csv", filename=f"{output_name}.csv")
@@ -362,6 +365,27 @@ async def describe_project(project_id: str, request: Request) -> dict:
 @router.post("/{project_id}/run", status_code=202)
 async def run_workspace(project_id: str, request: WorkspaceRun) -> dict:
     return jobs.create(project_id, request.expected_version, request.parameters)
+
+
+@router.delete("/{project_id}/temporary-results")
+async def clear_temporary_results(project_id: str) -> dict:
+    if any(job['status'] in {'queued', 'running'} for job in jobs.list(project_id)):
+        raise ValueError('Wait for the run to finish or cancel it before clearing results')
+    with store.connect() as db:
+        rows = db.execute('SELECT record FROM runs WHERE project_id=?', (project_id,)).fetchall()
+    from pipeline_core.models import RunRecord
+    for row in rows:
+        run = RunRecord.model_validate_json(row['record'])
+        output = store.run_dir(project_id, run.run_id) / 'output'
+        if run.validation_mode == 'partial':
+            # Keep logs, diagnostics and the captured request for error repair.
+            for path in output.glob('*'):
+                if path.name not in {'diagnostics.json', 'events.jsonl'} and path.is_file():
+                    path.unlink()
+            run.result = None
+            store.put_run(project_id, run)
+    events.publish(project_id)
+    return store.view(project_id)
 
 
 @router.get("/{project_id}/jobs")

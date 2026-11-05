@@ -13,9 +13,17 @@ if TYPE_CHECKING:
     from backend.services.project_store import ProjectStore
 
 
+STAGE_CATEGORIES = {
+    "category:input": "Data input", "category:cleaning": "Data cleaning",
+    "category:analysis": "Analysis", "category:visualization": "Visualization",
+}
+
+
 def context_for(document: dict, stage_id: str | None, has_input: bool = True) -> dict:
     if stage_id is None:
         return {'stage_id': None, 'label': 'Project'}
+    if stage_id in STAGE_CATEGORIES:
+        return {'stage_id': stage_id, 'label': STAGE_CATEGORIES[stage_id] + ' · Create or edit stages'}
     stage = next((s for s in stages(WorkspaceDocument.model_validate(document), has_input) if s['id'] == stage_id), None)
     if not stage:
         raise ValueError('The selected stage no longer exists. Select a stage or clear the chat context.')
@@ -73,16 +81,21 @@ def review_changes(before: dict, after: dict, selected: str | None, reasons: dic
             for step in document['steps']:
                 if step.get('parameters_used') is None or parameter['id'] in step['parameters_used']:
                     edge(pid, f"step:{step['id']}")
+    primary = {selected} if selected else set(graph)
+    if selected in STAGE_CATEGORIES:
+        category = selected.split(":", 1)[1]
+        primary = {s["id"] for document in [before, after]
+            for s in stages(WorkspaceDocument.model_validate(document), True) if s["type"] == category}
     connected: set[str] = set()
     for direction in [graph, children]:
-        visited = {selected} if selected else set(graph)
+        visited = set(primary)
         pending = list(visited)
         while pending:
             for adjacent in direction.get(pending.pop(), set()) - visited:
                 visited.add(adjacent)
                 pending.append(adjacent)
         connected.update(visited)
-    linked = changed - {selected} if selected else set()
+    linked = changed - primary if selected else set()
     if selected and changed - connected:
         raise ValueError('Unrelated edits are not allowed in stage context. Use Project context for: '+', '.join(sorted(changed-connected)))
     if selected and any(not reasons.get(identifier, '').strip() for identifier in linked):

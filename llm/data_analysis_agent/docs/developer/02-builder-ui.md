@@ -55,3 +55,9 @@ Selecting a stage or widget opens Chat and sets a visible context strip above th
 One project transcript shows context and saved-result provenance. Explain, Inputs / outputs, Fix latest error and Next steps populate the composer without sending. Changes appear as review cards with affected stages, linked reasons, before/after fields, Apply and Discard. Applied changes offer Undo and Run and ask again; missing results offer Run and ask again or Skip. Stale reviews cannot be applied.
 
 The launcher flag --developer-mode enables the read-only Inspect tab for all clients. GET /api/capabilities reports the flag. Inspection endpoints enforce it and return 404 when disabled. Inputs/widgets show configuration and links to producer code rather than invented local Python. Inspection contains stage configuration, inputs/outputs, related controls, bounded result previews, provenance and diagnostics; credentials are redacted. JSON download is a same-origin attachment. This feature is not a user permission system or a code editor.
+
+## Select a stage before creating cards
+
+Each of the four stage headings is a button. Empty columns also have a selection button. Both set a `category:input`, `category:cleaning`, `category:analysis` or `category:visualization` chat context. The context stays visible above the chat box. This lets a user request cleaning without first creating a complete pipeline. Selecting an existing card sets the narrower card context. Clear returns to Project context.
+
+The server checks category scope on proposal creation and Apply. Changes in the selected stage type are primary edits. Changes to connected stages or controls need explicit linked reasons. Unrelated edits are rejected. Stage inspection still needs a real card.

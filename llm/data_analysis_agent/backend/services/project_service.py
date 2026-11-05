@@ -1,6 +1,7 @@
 """Build, execute, validate, accept, and refine persistent analysis projects."""
 
 import asyncio
+import json
 import threading
 from pathlib import Path
 from typing import Any, Callable
@@ -33,13 +34,24 @@ class ProjectService:
                       workspace_version: int | None = None) -> RunRecord:
         project = self.store.get(project_id)
         input_path = input_path or self.store.dataset_path(project_id)
-        run = RunRecord(revision_id=revision.revision_id, dataset_name=dataset_name or project["dataset_name"],
+        from pipeline_core.partial import PartialRevision
+        partial = isinstance(revision, PartialRevision)
+        run = RunRecord(validation_mode="partial" if partial else "execution", revision_id=revision.revision_id, dataset_name=dataset_name or project["dataset_name"],
                         input_hash=fingerprint(input_path), parameters=validate_parameters(revision, parameters),
                         workspace_version=workspace_version or Workspaces(self.store).get(project_id)["version"])
         self.store.put_run(project_id, run)
         self.cancellations[run.run_id] = cancel
         emit({"event": "run_started", "run_id": run.run_id})
         previous = project["display_run_id"]
+        # Prefer the latest retained execution cache, including a partial run.
+        with self.store.connect() as db:
+            rows = db.execute("SELECT record FROM runs WHERE project_id=? ORDER BY started_at DESC LIMIT 100", (project_id,)).fetchall()
+        for row in rows:
+            candidate = json.loads(row["record"])
+            directory = self.store.run_dir(project_id, candidate["run_id"]) / "output"
+            if candidate["status"] == "succeeded" and (directory / "cache.json").exists():
+                previous = candidate["run_id"]
+                break
         cache = self.store.run_dir(project_id, previous) / "output" if previous else None
         loop = asyncio.get_running_loop()
         def relay(event: dict[str, Any]) -> None:

@@ -44,8 +44,8 @@ def ordered_steps(revision: "ProjectRevision") -> list[Any]:
     return ordered
 
 
-def validate_revision(revision: "ProjectRevision") -> None:
-    if {s.stage for s in revision.steps} != {"cleanup", "analysis"}:
+def validate_revision(revision: "ProjectRevision", partial: bool = False) -> None:
+    if not partial and {s.stage for s in revision.steps} != {"cleanup", "analysis"}:
         raise ValueError("Projects require separate cleanup and analysis steps")
     if len({s.id for s in revision.steps}) != len(revision.steps):
         raise ValueError("Step identifiers must be unique")
@@ -68,7 +68,7 @@ def validate_revision(revision: "ProjectRevision") -> None:
     for p in revision.parameters:
         if p.minimum is not None and p.maximum is not None and p.minimum > p.maximum:
             raise ValueError(f"Invalid limits for {p.id}")
-        if p.filter_column and p.filter_artifact not in cleanup_outputs:
+        if not partial and p.filter_column and p.filter_artifact not in cleanup_outputs:
             raise ValueError("Filters must bind to source data or a cleanup output")
     if len({w.id for w in revision.dashboard.widgets}) != len(revision.dashboard.widgets):
         raise ValueError("Widget identifiers must be unique")

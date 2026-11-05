@@ -77,7 +77,8 @@ class ProcessRunner:
         output = job_dir / "output"
         output.mkdir(exist_ok=True)
         shutil.copyfile(input_path, job_dir / "input.csv")
-        request = {"revision": revision.model_dump(), "input_path": "input.csv", "output_dir": "output",
+        from pipeline_core.partial import PartialRevision
+        request = {"partial": isinstance(revision, PartialRevision), "revision": revision.model_dump(), "input_path": "input.csv", "output_dir": "output",
             "parameters": parameters, "cache_dir": str(cache_dir.resolve()) if cache_dir else None,
             "timeout_seconds": self.timeout_seconds, "memory_bytes": self.memory_bytes,
             "parent_pid": os.getpid()}

@@ -122,7 +122,8 @@ def collect_run_diagnostics(store: ProjectStore, project_id: str, query: str = '
         try:
             contract = store.revision(project_id, record['revision_id']).input_contract.model_dump()
         except (KeyError, ValueError, OSError):
-            pass
+            snapshot = read_object(directory / 'request.json', root, limit=1024*1024)
+            contract = snapshot.get('revision', {}).get('input_contract', {})
         input_path = directory / 'input.csv'
         if not inside_file(input_path, root):
             input_path = (root if source == 'builder' else root / 'target') / 'datasets' / f"{record.get('input_hash', '')}.csv"

@@ -170,7 +170,7 @@ class ProjectStore:
         with self.connect() as db:
             db.execute("INSERT INTO runs(id,project_id,revision_id,started_at,record) VALUES(?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET record=excluded.record",
                 (run.run_id, project_id, run.revision_id, run.started_at, run.model_dump_json()))
-            if run.status == "succeeded":
+            if run.status == "succeeded" and run.validation_mode != "partial":
                 previous = db.execute("SELECT record FROM runs WHERE id=(SELECT display_run_id FROM projects WHERE id=?)", (project_id,)).fetchone()
                 if not previous or json.loads(previous["record"])["started_at"] <= run.started_at:
                     db.execute("UPDATE projects SET display_run_id=?,updated_at=? WHERE id=?", (run.run_id, now(), project_id))
@@ -188,6 +188,8 @@ class ProjectStore:
 
     def accept(self, project_id: str, run_id: str, cleanup_confirmed: bool) -> None:
         run = self.run(project_id, run_id)
+        if run.validation_mode == "partial":
+            raise ValueError("Partial runs cannot be accepted. Complete the dashboard first.")
         revision = self.revision(project_id, run.revision_id)
         if run.status != "succeeded" or run.result is None:
             raise ValueError("Only a successful, validated run can be accepted")
@@ -235,6 +237,16 @@ class ProjectStore:
             return [{**dict(r), "metadata": json.loads(r["metadata"])} for r in db.execute(
                 "SELECT id,role,content,created_at,metadata FROM messages WHERE project_id=? ORDER BY id", (project_id,))]
 
+    def partial_run(self, project_id: str) -> RunRecord | None:
+        """Return retained partial evidence without promoting it to the dashboard."""
+        with self.connect() as db:
+            rows = db.execute("SELECT record FROM runs WHERE project_id=? ORDER BY started_at DESC", (project_id,)).fetchall()
+        for row in rows:
+            record = RunRecord.model_validate_json(row['record'])
+            if record.validation_mode == 'partial' and record.status == 'succeeded' and record.result is not None:
+                return record
+        return None
+
     def view(self, project_id: str) -> dict[str, Any]:
         project = self.get(project_id)
         display = self.run(project_id, project["display_run_id"]) if project["display_run_id"] else None
@@ -243,5 +255,6 @@ class ProjectStore:
         return {"project": project, "workspace": Workspaces(self).get(project_id), "chat_items": ChatStore(self).list(project_id),
             "revisions": self.revisions(project_id), "messages": self.messages(project_id),
             "draft": self.revision(project_id, project["draft_id"]).model_dump() if project["draft_id"] else None,
+            "partial_run": partial.model_dump() if (partial := self.partial_run(project_id)) else None,
             "display_run": display.model_dump() if display else None,
             "display_revision": self.revision(project_id, display.revision_id).model_dump() if display else None}

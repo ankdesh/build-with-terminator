@@ -46,15 +46,16 @@ export function StageCanvas({ workspace, selected, onSelect, onDelete, run, job,
     const event = [...(job?.events || [])].reverse().find(e => e.step_id === stepId);
     if (job?.status === 'failed' && job.workspace_version === workspace.version && event?.status === 'running') return 'Failed';
     if (job && ['queued', 'running'].includes(job.status) && event) return event.status === 'running' ? 'Running' : event.cached ? 'Reused' : 'Succeeded';
-    if (pending) return 'Pending';
+    if (job?.workspace_version === workspace.version && event?.status === 'blocked') return 'Blocked';
     const saved = [...(run?.result?.steps || [])].reverse().find(e => e.step_id === stepId);
-    return saved?.cached ? 'Reused' : saved || (stage.type === 'visualization' && run) ? 'Succeeded' : 'Ready';
+    if (pending && (run?.workspace_version !== workspace.version || !saved && stage.type !== 'visualization')) return 'Pending';
+    return saved?.cached ? 'Reused' : saved || (stage.type === 'visualization' && stage.inputs.some(name => run?.result?.outputs[name])) ? 'Succeeded' : pending ? 'Pending' : 'Ready';
   };
   return <div className="pipeline-scroll"><div className="pipeline-canvas" ref={root}>
     <svg className="stage-connections" aria-hidden="true"><defs><marker id={marker} markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7" fill="#4079df" /></marker></defs>
       {paths.map((path, i) => <path key={i} d={path} fill="none" stroke="#4079df" strokeWidth="1.7" markerEnd={`url(#${marker})`} />)}</svg>
     {columns.map(({ type, title, icon: Icon, description }, index) => <section className={`stage-column stage-${type}`} key={type} aria-label={title}>
-      <header className="stage-column-heading"><span className="stage-type-icon"><Icon size={18} /></span><div><span className="eyebrow">Stage {index + 1}</span><h3>{title}</h3></div><span className="stage-count">{workspace.stages.filter(s => s.type === type).length}</span></header>
+      <button type="button" className="stage-column-heading" onClick={() => onSelect(`category:${type}`)} aria-pressed={selected === `category:${type}`} title={`Select ${title} chat context`}><span className="stage-type-icon"><Icon size={18} /></span><div><span className="eyebrow">Stage {index + 1}</span><h3>{title}</h3></div><span className="stage-count">{workspace.stages.filter(s => s.type === type).length}</span></button>
       <p className="stage-column-description">{description}</p>
       <div className="stage-stack">{workspace.stages.filter(stage => stage.type === type).map(stage => <div key={stage.id} ref={node => { if (node) nodes.current.set(stage.id, node); else nodes.current.delete(stage.id); }}
         className={`stage-node ${selected === stage.id ? 'selected' : ''} ${related.has(stage.id) ? 'related' : ''}`}>
@@ -67,7 +68,7 @@ export function StageCanvas({ workspace, selected, onSelect, onDelete, run, job,
         </button>
         <button className="icon-button stage-delete" onClick={() => onDelete(stage)} aria-label={`Delete ${stage.title}`}><Trash2 size={14} /></button>
       </div>)}
-      {!workspace.stages.some(stage => stage.type === type) && <div className="stage-empty">{type === 'input' ? 'Upload a CSV in Data to begin.' : 'Describe this stage in chat.'}</div>}</div>
+      {!workspace.stages.some(stage => stage.type === type) && <button type="button" className="stage-empty" onClick={() => onSelect(`category:${type}`)}>{type === 'input' ? 'Upload a CSV in Data to begin.' : 'Select this stage and describe it in chat.'}</button>}</div>
     </section>)}
   </div></div>;
 }

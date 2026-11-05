@@ -10,7 +10,7 @@ from backend.services.project_service import ProjectService
 from backend.services.project_store import ProjectStore
 from backend.services.target_manager import TargetManager
 from backend.services.workspace_service import Workspaces, WorkspaceConflict
-from pipeline_core.models import now
+from pipeline_core.models import ProjectRevision, now
 
 
 class ProjectEvents:
@@ -56,7 +56,20 @@ class ProjectJobs:
                expected_input_hash: str | None = None) -> dict[str, Any]:
         if any(job["status"] in {"queued", "running"} for job in self.list(project_id)):
             raise ValueError("A workspace run is already queued or running for this project")
-        revision = Workspaces(self.store).compile(project_id, version)
+        workspaces = Workspaces(self.store)
+        current = workspaces.get(project_id)
+        if current['version'] != version:
+            raise WorkspaceConflict('Save the latest workspace before running')
+        revision: ProjectRevision
+        blocked: list[dict] = []
+        partial = bool(current['issues'])
+        if partial:
+            from pipeline_core.partial import execution_plan
+            from pipeline_core.workspace import WorkspaceDocument
+            self.store.dataset_path(project_id)
+            revision, blocked = execution_plan(WorkspaceDocument.model_validate(current['document']))
+        else:
+            revision = workspaces.compile(project_id, version)
         with self.store.connect() as db:
             db.execute('BEGIN IMMEDIATE')
             project = dict(db.execute('SELECT * FROM projects WHERE id=?', (project_id,)).fetchone())
@@ -66,7 +79,7 @@ class ProjectJobs:
                 raise WorkspaceConflict('The workspace or input changed before the run was captured. Ask again.')
         source = self.store.root / project_id / 'datasets' / f"{project['dataset_hash']}.csv"
         job: dict[str, Any] = {"id": str(uuid4()), "revision_id": revision.revision_id, "workspace_version": version,
-            "status": "queued", "run_id": None, "error": None, "events": [], "created_at": now()}
+            "status": "queued", "run_id": None, "error": None, "partial": partial, "events": [{"event": "step", **v} for v in blocked], "created_at": now()}
         self.put(project_id, job)
         cancel = threading.Event()
         self.cancellations[job["id"]] = cancel
@@ -86,10 +99,11 @@ class ProjectJobs:
                 run = await self.service.execute(project_id, revision, parameters, emit, cancel,
                     input_path=source, dataset_name=project["dataset_name"], workspace_version=version)
                 job.update(status=run.status, error=run.error)
-                if run.status == "succeeded":
+                if run.status == "succeeded" and not partial:
                     # Later presentation edits may safely reuse this run, but later calculation edits stay pending.
                     await asyncio.to_thread(Workspaces(self.store).validate_presentation, project_id)
-                await self.targets.sync(project_id)
+                if not partial:
+                    await self.targets.sync(project_id)
             except asyncio.CancelledError:
                 cancel.set()
                 job.update(status="interrupted" if self.closing else "cancelled", error="Builder stopped" if self.closing else "Run cancelled")

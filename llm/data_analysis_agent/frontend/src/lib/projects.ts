@@ -51,6 +51,7 @@ export interface Run {
   } | null;
 }
 export interface Job {
+  partial?: boolean;
   id: string; revision_id: string; workspace_version: number; status: string; run_id: string | null; error: string | null;
   events: {event: string; message?: string; step_id?: string; title?: string; status?: string; cached?: boolean}[];
 }
@@ -78,6 +79,7 @@ export interface ChatMessage {
   metadata?: {context?: ChatContext; kind?: string; item_id?: string; run_id?: string | null; revision_id?: string | null; input_hash?: string | null; workspace_version?: number};
 }
 export interface ProjectView {
+  partial_run?: Run | null;
   project: ProjectSummary & { draft_id: string | null; description: string; profile: DataProfile | null; dataset_hash: string | null; accepted_run_id?: string | null };
   workspace: Workspace; draft: Revision | null; display_run: Run | null; display_revision: Revision | null;
   messages: ChatMessage[]; chat_items: ChatItem[];

@@ -71,25 +71,26 @@ Live control routes are only installed when a control token exists. Offline Use 
 | POST | `/api/projects/{project_id}/chat/items/{item_id}/apply` | [apply_chat_item](../../backend/routes/project_routes.py) · line 177 |
 | POST | `/api/projects/{project_id}/chat/items/{item_id}/discard` | [discard_chat_item](../../backend/routes/project_routes.py) · line 185 |
 | POST | `/api/projects/{project_id}/chat/items/{item_id}/run` | [run_and_reask](../../backend/routes/project_routes.py) · line 192 |
-| PATCH | `/api/projects/{project_id}/context` | [describe_project](../../backend/routes/project_routes.py) · line 352 |
+| PATCH | `/api/projects/{project_id}/context` | [describe_project](../../backend/routes/project_routes.py) · line 355 |
 | POST | `/api/projects/{project_id}/dataset` | [upload_dataset](../../backend/routes/project_routes.py) · line 142 |
-| GET | `/api/projects/{project_id}/events` | [project_events](../../backend/routes/project_routes.py) · line 383 |
-| GET | `/api/projects/{project_id}/export` | [export_project](../../backend/routes/project_routes.py) · line 316 |
-| GET | `/api/projects/{project_id}/jobs` | [list_jobs](../../backend/routes/project_routes.py) · line 368 |
-| GET | `/api/projects/{project_id}/jobs/{job_id}` | [get_job](../../backend/routes/project_routes.py) · line 373 |
-| POST | `/api/projects/{project_id}/jobs/{job_id}/cancel` | [cancel_job](../../backend/routes/project_routes.py) · line 378 |
+| GET | `/api/projects/{project_id}/events` | [project_events](../../backend/routes/project_routes.py) · line 407 |
+| GET | `/api/projects/{project_id}/export` | [export_project](../../backend/routes/project_routes.py) · line 319 |
+| GET | `/api/projects/{project_id}/jobs` | [list_jobs](../../backend/routes/project_routes.py) · line 392 |
+| GET | `/api/projects/{project_id}/jobs/{job_id}` | [get_job](../../backend/routes/project_routes.py) · line 397 |
+| POST | `/api/projects/{project_id}/jobs/{job_id}/cancel` | [cancel_job](../../backend/routes/project_routes.py) · line 402 |
 | POST | `/api/projects/{project_id}/revisions/{revision_id}/rollback` | [rollback_revision](../../backend/routes/project_routes.py) · line 298 |
 | POST | `/api/projects/{project_id}/revisions/{revision_id}/run` | [run_revision](../../backend/routes/project_routes.py) · line 271 |
-| POST | `/api/projects/{project_id}/run` | [run_workspace](../../backend/routes/project_routes.py) · line 363 |
+| POST | `/api/projects/{project_id}/run` | [run_workspace](../../backend/routes/project_routes.py) · line 366 |
 | POST | `/api/projects/{project_id}/runs/{run_id}/cancel` | [cancel_run](../../backend/routes/project_routes.py) · line 282 |
 | GET | `/api/projects/{project_id}/runs/{run_id}/tables/{output_name}` | [export_table](../../backend/routes/project_routes.py) · line 306 |
-| POST | `/api/projects/{project_id}/stages/{stage_id}/delete` | [delete_stage](../../backend/routes/project_routes.py) · line 342 |
+| POST | `/api/projects/{project_id}/stages/{stage_id}/delete` | [delete_stage](../../backend/routes/project_routes.py) · line 345 |
 | GET | `/api/projects/{project_id}/stages/{stage_id}/inspect` | [inspect_stage](../../backend/routes/project_routes.py) · line 242 |
 | GET | `/api/projects/{project_id}/stages/{stage_id}/inspect.json` | [download_inspection](../../backend/routes/project_routes.py) · line 265 |
-| GET | `/api/projects/{project_id}/target` | [target_status](../../backend/routes/project_routes.py) · line 402 |
-| POST | `/api/projects/{project_id}/target/{action}` | [target_control](../../backend/routes/project_routes.py) · line 416 |
-| GET | `/api/projects/{project_id}/workspace` | [get_workspace](../../backend/routes/project_routes.py) · line 326 |
-| PATCH | `/api/projects/{project_id}/workspace` | [edit_workspace](../../backend/routes/project_routes.py) · line 331 |
+| GET | `/api/projects/{project_id}/target` | [target_status](../../backend/routes/project_routes.py) · line 426 |
+| POST | `/api/projects/{project_id}/target/{action}` | [target_control](../../backend/routes/project_routes.py) · line 440 |
+| DELETE | `/api/projects/{project_id}/temporary-results` | [clear_temporary_results](../../backend/routes/project_routes.py) · line 371 |
+| GET | `/api/projects/{project_id}/workspace` | [get_workspace](../../backend/routes/project_routes.py) · line 329 |
+| PATCH | `/api/projects/{project_id}/workspace` | [edit_workspace](../../backend/routes/project_routes.py) · line 334 |
 
 ### Compatibility data export
 
@@ -111,8 +112,8 @@ Live control routes are only installed when a control token exists. Offline Use 
 
 | Method | Path | Handler/source |
 | --- | --- | --- |
-| POST | `/api/internal/targets/{project_id}/cancel/{run_id}` | [cancel_target](../../backend/routes/project_routes.py) · line 487 |
-| POST | `/api/internal/targets/{project_id}/execute` | [execute_target](../../backend/routes/project_routes.py) · line 428 |
+| POST | `/api/internal/targets/{project_id}/cancel/{run_id}` | [cancel_target](../../backend/routes/project_routes.py) · line 511 |
+| POST | `/api/internal/targets/{project_id}/execute` | [execute_target](../../backend/routes/project_routes.py) · line 452 |
 
 ### Shared runtime API
 
@@ -132,3 +133,9 @@ Live control routes are only installed when a control token exists. Offline Use 
 <!-- END_API_TABLES -->
 
 Routes in the generated inventory are grouped by owner. Runtime nested route definitions are extracted statically; conditional live-only installation is stated in the notes above. Refer to the route's linked source for exact response payloads, query arguments, and error details.
+
+## Partial runs and temporary results
+
+`POST /api/projects/{id}/run` keeps its version-checked request. Incomplete workspaces execute available stages. The job includes `partial: true` and Blocked step events. Project state includes `partial_run` separately from `display_run`. Partial table outputs use the existing run table export endpoint.
+
+`DELETE /api/projects/{id}/temporary-results` clears partial artifacts for one project. It rejects an active builder run and preserves full dashboard artifacts, logs, captured requests and history. Partial runs cannot be accepted or exported as applications.

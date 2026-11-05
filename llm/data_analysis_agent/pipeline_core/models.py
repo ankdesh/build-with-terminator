@@ -144,7 +144,7 @@ class RunRecord(Contract):
     started_at: str = Field(default_factory=now)
     finished_at: str | None = None
     runtime_version: str = RUNTIME_VERSION
-    validation_mode: Literal["execution", "presentation"] = "execution"
+    validation_mode: Literal["execution", "presentation", "partial"] = "execution"
     source_run_id: str | None = None
     workspace_version: int | None = None
     error: str | None = None

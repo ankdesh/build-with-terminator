@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-05T08:36:43.143407+00:00",
+  "generated_at": "2026-11-05T12:13:34.318274+00:00",
   "scope": "Static declarations and selected source hashes, not a complete runtime call graph",
   "source_sha256": {
     "backend/__init__.py": "13c8ca4ef8546541da5e51c4c023c0b51d7a52395bd505844dcda011173369b5",
@@ -11,13 +11,13 @@
     "backend/models/session.py": "73272c6b44bd9038c83e227d066350f680c9414b02093ccba72b9a412487e79d",
     "backend/routes/__init__.py": "8e439515b027256b6b77435aaae267e0cb9bbbe1d348ce7662a576d4462a11a6",
     "backend/routes/chat_routes.py": "1cbb7e4e6d95c91aab83cb974089dc3abe39a34175f6cdf3e7c95d4e5bae5cac",
-    "backend/routes/project_routes.py": "d7f023842835335f65a9f746157280ca9eb09204d092f96aa164febd3a99bc88",
+    "backend/routes/project_routes.py": "814a17065e2e1e7050dbdafa5dd0cb7ea68b376f30233169dd5a680345d2f451",
     "backend/routes/session_routes.py": "7959942137b8cd24cf10d5aaebcfb8ceca45e7c9f5b9dc10c606d7fddbeb1faf",
     "backend/services/__init__.py": "df47f23d13ca14bd12106df3c435dc87a3407b329d702390e35c1b354548b3e4",
     "backend/services/agent_service.py": "95ca6d545074b738c7baaa19c30e3765aee2f74ee40e08a0d5b3c629804ee64d",
-    "backend/services/chat_agent.py": "410dc68ef5df71d7c055c181538e435b85d36e1e94f44a95525294ef7fddf8ac",
-    "backend/services/chat_service.py": "f4fdfcde894cdb636c681c9ea53aacfb229ea0f5c81507d4b64aad98c7bbf99e",
-    "backend/services/chat_store.py": "4d2b82e0afaca6484662aff46911d52c51cb0e1d317e29edc527afdbdc93c089",
+    "backend/services/chat_agent.py": "21c990252fd9aece39fab2a16b3ca593082a13369574d594800ac91c3120ecae",
+    "backend/services/chat_service.py": "8d8955590d9a9c37c8e0d9457a2de9c1e012caf8bf15461032254c83a512ba87",
+    "backend/services/chat_store.py": "ce68e3e63147db3079b937795010b017b68cce9d64642d6210d5526e231b7ad0",
     "backend/services/code_executor.py": "cd649f25c3dcfbe249e15bd80e3a702cf878e340ad1bc6ca01dd9202841884a8",
     "backend/services/data_profiler.py": "8e8a1c705a0995e34605d105e0a86f514aecdd60a1405bbd03295a0947950631",
     "backend/services/dataset_import.py": "b2ac48b8f6f142f6bb66f98eb69da548af5b3d0b6852f278fd4f82143dfdde13",
@@ -25,22 +25,22 @@
     "backend/services/frontend_build.py": "5a202accf14242744e4999c264b6ecd707764e972430adec015eda48898e2a76",
     "backend/services/llm_gateway.py": "474e6196d82628521c8fedd4efa31c6c86c3f9914a0a9f3ad19124002b53a4e4",
     "backend/services/model_output.py": "660ce04e25ace233892d3864c63b0f946b27272569aaec01bfe42aca18096f80",
-    "backend/services/project_agent.py": "076a9980ed55c637cb7bbec5baad791c182fe35f98d337180dec87a23f16f8d2",
-    "backend/services/project_jobs.py": "03de4b64d78331a57f9eb075f6ddeab1e3e2d2fbbca4d04f6093e5cfcf2571d0",
-    "backend/services/project_service.py": "fdb7d77edc7322d3758bcfec7c2dedb11681ea803b577f4d80aabefc8fbbeb9d",
-    "backend/services/project_store.py": "5dc295ab92b9da8b37df47b2b12aa1f3e385770667ff78c478403e91a5c555ef",
-    "backend/services/run_diagnostics.py": "ab841bcec22fa981a6f88f7c60d9e16711e646982554830835db4f86f454fb55",
+    "backend/services/project_agent.py": "5aa28a8c2c538f5cd36b1cd0b94456c01dfddc4d863d0363cdd3f51ff156629a",
+    "backend/services/project_jobs.py": "095117d44d448f60f7fff2a3bbc5e8b167bbc5bb733cb4b8a40e7ddb7a64f641",
+    "backend/services/project_service.py": "db6077f18394b9507d4f21654a40f089c13e08e196a173fb7379f97282d883e2",
+    "backend/services/project_store.py": "9e3b7b4e28bf64260e8d19454fe3c51c900d154d0c0509e6d3f76e985fc25e69",
+    "backend/services/run_diagnostics.py": "f7be5b66409674d7aee06c317288670b1c9987b3adcc1927b7d844f8ca15aa63",
     "backend/services/session_store.py": "a6b30cb4b2a1634ccc9ba7e067793a3b7b69ca2783d46b862fd3fd258d6430c1",
     "backend/services/target_manager.py": "81404065ff7e5cf62cc4a1de156e20ef405a9c88b37cb4f2967b3f4b75bc1504",
     "backend/services/workspace_service.py": "08f44dffe00f173304a342c244565ab3ce76c094830c43d39ec607e08b4ee23b",
     "config.py": "5f01a28d223abf07f96a0053d1d00f6112f5edb5e951d9e1d0bb96f1ba47bb08",
     "frontend/package.json": "8ad26fe5f6d0b383646bc82952451016d340cd2476028d4553f36cebf66c0942",
     "frontend/src/App.tsx": "f9f59de20a88f582c69af87103634c707ad3cc8c22e0f4eabd202c13a2121307",
-    "frontend/src/BuilderApp.tsx": "f0bf37561e78573ac36639841fa1e3e714e700edce8a506231ed839aaff4c824",
+    "frontend/src/BuilderApp.tsx": "3d500c321238e1c8de87f2e45f6bc6c2dcd42f7d87ec75fce641b27c449f9cfd",
     "frontend/src/RuntimeApp.tsx": "e137492ef30fb4ef24dd40b06e67a288d7a4d488c94886f0584fde946cdb6e2d",
     "frontend/src/components/ChartViewer.tsx": "6c4af93a2197b28af09aa6dce9c4ae7655659b77eead52b92f3392cd89877922",
     "frontend/src/components/ChatInterface.tsx": "d871d04f4babead078155fb679123e5278526eb5bef0c5bb209030aabad67b59",
-    "frontend/src/components/ChatReview.tsx": "388104cdc507e9134f3faff55998dae1ac9dc1dc1fe901d1040298a7c2f21d43",
+    "frontend/src/components/ChatReview.tsx": "e598c300dc0bfdc5541b4c6f9d9d6a6cab619c88243706765a31e4d276fca3b2",
     "frontend/src/components/Dashboard.tsx": "84bd79b9668dff227c361956e48f2752f09bc70aa03317412d918446abdeaabc",
     "frontend/src/components/DataProfileCard.tsx": "c607931cd09022b131fe7dca1f74fb8de7f572046e0b99f60c8320c032ed0d50",
     "frontend/src/components/DataTableViewer.tsx": "eaa0804c4e5c47653ac06bdb582eb2691a6d7d0d13f13aa728129829fb0191dc",
@@ -50,11 +50,11 @@
     "frontend/src/components/SessionSidebar.tsx": "10b38644f3c8059684fd3a49faf6c64d9d8ae238030c024279e6ebbd1371c8d9",
     "frontend/src/components/SettingsFields.tsx": "9df9bde4db503b750a57aea629f7e21166d552e4ee394c05bb21746f9c7d0e97",
     "frontend/src/components/SidePanel.tsx": "cf72136e9713e99f1fc1764b2d4e32c111de68cf72beca6f727615902cf9f8a3",
-    "frontend/src/components/StageCanvas.tsx": "a88dce7fbf8a2c8b58b402d84d33232456f69c3c9b15537622eef4fd498518ce",
+    "frontend/src/components/StageCanvas.tsx": "65b61364fe69d6c0e0e202dd93c3eccd91782e7c092f9675b6240d224a3bbed0",
     "frontend/src/components/StageInspector.tsx": "9b1446c339e0131318e9cc7806ac25e5475726de2dd5082d7b390d3e4b3b2895",
     "frontend/src/lib/api.ts": "cf9a0a8fa7029494055722e6dddd3d6f8194065dcc59f878b3d99179b96bae47",
     "frontend/src/lib/chartExport.ts": "9dd2b5eaa4035bff4c2bc39caff532077c25b9b0382a1ab2d2f13b758694ddf6",
-    "frontend/src/lib/projects.ts": "97374194dd35e8e703c6530fd8c6a5cf937b922722ddc648a273ea928fdccb01",
+    "frontend/src/lib/projects.ts": "b3fbbfbdd7e89bf2a48e46a79df15d5af987a9ab9b5ad74124ff5357c5fc29c5",
     "frontend/src/lib/types.ts": "0ac50f6233537ea0f111b050a827bee1fdd823d9d4248179ec45e816ab50882f",
     "frontend/src/main.tsx": "272b0ae8e1d3ccabfae8acd6dde6df3aa2e7994f370be2ca0b4f3bc6a4a13938",
     "frontend/src/runtime.main.tsx": "d435f7be9c9fabc49e46e5b4c0f73c1a6482c425f572b8f9315708cedfbb3f39",
@@ -63,16 +63,17 @@
     "offline_app.py": "a965d47d8e9a9ef298631955f25998e30d007bc678a5a2c14f239fb5ee78c02b",
     "pipeline_core/__init__.py": "04e09d494c4a67de2e1c6e009c2a1e290a5d19d1bb2ec028b6c6235fd9cd36ae",
     "pipeline_core/bundle.py": "fb1cf0d558a7bda613bb5c144783bb1420ef7650219e74e59201e4434d641c0c",
-    "pipeline_core/engine.py": "0800b8680d20277905083dc9e0c611098174cfcd76bc5b2fb5dcd0b27824dc6f",
+    "pipeline_core/engine.py": "42156760df0866c2fb739d91f2cbf3ea54de6031890eadc6231e5a028b1f129f",
     "pipeline_core/http_policy.py": "5370765d89b66263b1871fa075ed436e5df118a9c0dd20f0f3f8a1f9798d2c12",
     "pipeline_core/live_target.py": "8b427f10fc7c134020dd96d60304f643779dc9eb7524d82023acdcc8b678eb36",
-    "pipeline_core/models.py": "2383eeb915de9544aff578c9e2bce0a163380698182da9dcabcfb9283124b821",
-    "pipeline_core/process_runner.py": "10f03ee8ab8c76a38bbc60afd2efe84386cedf9061d36a041249af2bce44ce98",
+    "pipeline_core/models.py": "6e074ce6b1a8591c96c7cc945c0f1b338596d535de667443e4a04a125b0743ec",
+    "pipeline_core/partial.py": "ab10af8be73ea8ae844b3bf4a52215659fdbf6718cd03bf30c3a0fb6bced0281",
+    "pipeline_core/process_runner.py": "88fa1b8749f79feb741888b190143886aa1d77dd85603a8eaa6d898bc6a16359",
     "pipeline_core/runtime.py": "9bc62b7e60ad76f61252c09cdbce45a9406bc3f5637c405dbf4b9583821c5e2f",
     "pipeline_core/runtime_http.py": "41d919a6495caf4dd20951864282fd12ddf8da3ceeb3f037dc2ddee38b22f994",
     "pipeline_core/statistics.py": "da634850083467ee6e7fbcc410c4bae762c1de07a120d30d277a127140324a9c",
-    "pipeline_core/validation.py": "27e3a0aa41f304ba680c80f5b8c301e595215db3bbdfd7c9457d215de37ca5f8",
-    "pipeline_core/worker.py": "7259bce641b90b159a5631141b9321167482391d632189da7892b833401d557f",
+    "pipeline_core/validation.py": "e8553977a7add5e1d858f64cd506ac9330288d45f96b9dbcd7865ff836c9f4d6",
+    "pipeline_core/worker.py": "1bc07737f20f2945e32721a53ac2baefe4052ccb361b55f94b472838b8a5eeef",
     "pipeline_core/workspace.py": "5ba5be4ada0b9925938d5b0f33df94c6cb52a95a41212386f1b3c0cefb2ed0d8",
     "pyproject.toml": "be05d3f3225d9bb9290c2d5463aac393f118cacfcac2f6cc488f6a56e8e1c4ea",
     "requirements-runtime.txt": "439f75f9f4ae07b913df587ac2be8ddaa8ae61d0c8d0202ac7acf7634c9972f8",
@@ -217,7 +218,12 @@
     {
       "from": "backend.routes.project_routes",
       "to": "backend.services.export_service",
-      "line": 317
+      "line": 320
+    },
+    {
+      "from": "backend.routes.project_routes",
+      "to": "pipeline_core.models",
+      "line": 376
     },
     {
       "from": "backend.routes.session_routes",
@@ -362,7 +368,7 @@
     {
       "from": "backend.services.chat_store",
       "to": "pipeline_core.validation",
-      "line": 111
+      "line": 124
     },
     {
       "from": "backend.services.code_executor",
@@ -505,64 +511,79 @@
       "line": 13
     },
     {
-      "from": "backend.services.project_service",
-      "to": "backend.services.project_agent",
-      "line": 8
+      "from": "backend.services.project_jobs",
+      "to": "pipeline_core.partial",
+      "line": 67
+    },
+    {
+      "from": "backend.services.project_jobs",
+      "to": "pipeline_core.workspace",
+      "line": 68
     },
     {
       "from": "backend.services.project_service",
-      "to": "backend.services.chat_store",
+      "to": "backend.services.project_agent",
       "line": 9
     },
     {
       "from": "backend.services.project_service",
-      "to": "backend.services.project_store",
+      "to": "backend.services.chat_store",
       "line": 10
     },
     {
       "from": "backend.services.project_service",
-      "to": "backend.services.run_diagnostics",
+      "to": "backend.services.project_store",
       "line": 11
+    },
+    {
+      "from": "backend.services.project_service",
+      "to": "backend.services.run_diagnostics",
+      "line": 12
     },
     {
       "from": "backend.services.project_service",
       "to": "config",
-      "line": 12
-    },
-    {
-      "from": "backend.services.project_service",
-      "to": "pipeline_core.engine",
       "line": 13
     },
     {
       "from": "backend.services.project_service",
-      "to": "pipeline_core.models",
+      "to": "pipeline_core.engine",
       "line": 14
     },
     {
       "from": "backend.services.project_service",
-      "to": "pipeline_core.process_runner",
+      "to": "pipeline_core.models",
       "line": 15
     },
     {
       "from": "backend.services.project_service",
-      "to": "pipeline_core.validation",
+      "to": "pipeline_core.process_runner",
       "line": 16
     },
     {
       "from": "backend.services.project_service",
-      "to": "backend.services.workspace_service",
+      "to": "pipeline_core.validation",
       "line": 17
     },
     {
       "from": "backend.services.project_service",
-      "to": "pipeline_core.workspace",
+      "to": "backend.services.workspace_service",
       "line": 18
     },
     {
       "from": "backend.services.project_service",
+      "to": "pipeline_core.workspace",
+      "line": 19
+    },
+    {
+      "from": "backend.services.project_service",
+      "to": "pipeline_core.partial",
+      "line": 37
+    },
+    {
+      "from": "backend.services.project_service",
       "to": "backend.services.workspace_service",
-      "line": 87
+      "line": 99
     },
     {
       "from": "backend.services.project_store",
@@ -577,27 +598,27 @@
     {
       "from": "backend.services.project_store",
       "to": "backend.services.workspace_service",
-      "line": 196
+      "line": 198
     },
     {
       "from": "backend.services.project_store",
       "to": "pipeline_core.workspace",
-      "line": 197
+      "line": 199
     },
     {
       "from": "backend.services.project_store",
       "to": "backend.services.workspace_service",
-      "line": 222
+      "line": 224
     },
     {
       "from": "backend.services.project_store",
       "to": "backend.services.workspace_service",
-      "line": 241
+      "line": 253
     },
     {
       "from": "backend.services.project_store",
       "to": "backend.services.chat_store",
-      "line": 242
+      "line": 254
     },
     {
       "from": "backend.services.project_store",
@@ -760,6 +781,11 @@
       "line": 123
     },
     {
+      "from": "pipeline_core.engine",
+      "to": "pipeline_core.partial",
+      "line": 226
+    },
+    {
       "from": "pipeline_core.live_target",
       "to": "pipeline_core.models",
       "line": 13
@@ -785,9 +811,34 @@
       "line": 129
     },
     {
+      "from": "pipeline_core.partial",
+      "to": "pipeline_core.models",
+      "line": 4
+    },
+    {
+      "from": "pipeline_core.partial",
+      "to": "pipeline_core.workspace",
+      "line": 5
+    },
+    {
+      "from": "pipeline_core.partial",
+      "to": "pipeline_core.validation",
+      "line": 24
+    },
+    {
+      "from": "pipeline_core.partial",
+      "to": "pipeline_core.validation",
+      "line": 18
+    },
+    {
       "from": "pipeline_core.process_runner",
       "to": "pipeline_core.models",
       "line": 14
+    },
+    {
+      "from": "pipeline_core.process_runner",
+      "to": "pipeline_core.partial",
+      "line": 80
     },
     {
       "from": "pipeline_core.runtime",
@@ -838,6 +889,11 @@
       "from": "pipeline_core.worker",
       "to": "pipeline_core.models",
       "line": 14
+    },
+    {
+      "from": "pipeline_core.worker",
+      "to": "pipeline_core.partial",
+      "line": 56
     },
     {
       "from": "pipeline_core.workspace",
@@ -963,7 +1019,7 @@
       "path": "/api/projects/{project_id}/context",
       "handler": "describe_project",
       "source": "backend/routes/project_routes.py",
-      "line": 352
+      "line": 355
     },
     {
       "owner": "Builder project API",
@@ -979,7 +1035,7 @@
       "path": "/api/projects/{project_id}/events",
       "handler": "project_events",
       "source": "backend/routes/project_routes.py",
-      "line": 383
+      "line": 407
     },
     {
       "owner": "Builder project API",
@@ -987,7 +1043,7 @@
       "path": "/api/projects/{project_id}/export",
       "handler": "export_project",
       "source": "backend/routes/project_routes.py",
-      "line": 316
+      "line": 319
     },
     {
       "owner": "Builder project API",
@@ -995,7 +1051,7 @@
       "path": "/api/projects/{project_id}/jobs",
       "handler": "list_jobs",
       "source": "backend/routes/project_routes.py",
-      "line": 368
+      "line": 392
     },
     {
       "owner": "Builder project API",
@@ -1003,7 +1059,7 @@
       "path": "/api/projects/{project_id}/jobs/{job_id}",
       "handler": "get_job",
       "source": "backend/routes/project_routes.py",
-      "line": 373
+      "line": 397
     },
     {
       "owner": "Builder project API",
@@ -1011,7 +1067,7 @@
       "path": "/api/projects/{project_id}/jobs/{job_id}/cancel",
       "handler": "cancel_job",
       "source": "backend/routes/project_routes.py",
-      "line": 378
+      "line": 402
     },
     {
       "owner": "Builder project API",
@@ -1035,7 +1091,7 @@
       "path": "/api/projects/{project_id}/run",
       "handler": "run_workspace",
       "source": "backend/routes/project_routes.py",
-      "line": 363
+      "line": 366
     },
     {
       "owner": "Builder project API",
@@ -1059,7 +1115,7 @@
       "path": "/api/projects/{project_id}/stages/{stage_id}/delete",
       "handler": "delete_stage",
       "source": "backend/routes/project_routes.py",
-      "line": 342
+      "line": 345
     },
     {
       "owner": "Builder project API",
@@ -1083,7 +1139,7 @@
       "path": "/api/projects/{project_id}/target",
       "handler": "target_status",
       "source": "backend/routes/project_routes.py",
-      "line": 402
+      "line": 426
     },
     {
       "owner": "Builder project API",
@@ -1091,7 +1147,15 @@
       "path": "/api/projects/{project_id}/target/{action}",
       "handler": "target_control",
       "source": "backend/routes/project_routes.py",
-      "line": 416
+      "line": 440
+    },
+    {
+      "owner": "Builder project API",
+      "method": "DELETE",
+      "path": "/api/projects/{project_id}/temporary-results",
+      "handler": "clear_temporary_results",
+      "source": "backend/routes/project_routes.py",
+      "line": 371
     },
     {
       "owner": "Builder project API",
@@ -1099,7 +1163,7 @@
       "path": "/api/projects/{project_id}/workspace",
       "handler": "get_workspace",
       "source": "backend/routes/project_routes.py",
-      "line": 326
+      "line": 329
     },
     {
       "owner": "Builder project API",
@@ -1107,7 +1171,7 @@
       "path": "/api/projects/{project_id}/workspace",
       "handler": "edit_workspace",
       "source": "backend/routes/project_routes.py",
-      "line": 331
+      "line": 334
     },
     {
       "owner": "Compatibility data export",
@@ -1163,7 +1227,7 @@
       "path": "/api/internal/targets/{project_id}/cancel/{run_id}",
       "handler": "cancel_target",
       "source": "backend/routes/project_routes.py",
-      "line": 487
+      "line": 511
     },
     {
       "owner": "Internal target broker",
@@ -1171,7 +1235,7 @@
       "path": "/api/internal/targets/{project_id}/execute",
       "handler": "execute_target",
       "source": "backend/routes/project_routes.py",
-      "line": 428
+      "line": 452
     },
     {
       "owner": "Shared runtime API",

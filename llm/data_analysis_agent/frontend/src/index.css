@@ -356,3 +356,7 @@ button:disabled, fieldset:disabled { cursor: default; }
 
 .chat-composer .chat-context span { font-size: 12px; font-weight: 600; color: #285894; }
 .chat-composer > div:last-child > span { font-size: 10px; color: #6b7e97; }
+
+button.stage-column-heading { width: 100%; border-radius: 6px; text-align: left; background: transparent; }
+button.stage-column-heading[aria-pressed="true"] { background: #eaf1ff; border-bottom-color: #4079df; }
+button.stage-empty { width: 100%; cursor: pointer; white-space: normal; }

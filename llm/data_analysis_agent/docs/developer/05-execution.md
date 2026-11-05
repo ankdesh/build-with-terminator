@@ -56,3 +56,11 @@ A failed or cancelled result does not replace the successful display result. Ins
 Holdout size is `max(2, min(horizon, n // 5))`. The helper fits on the earlier observations and scores the trailing holdout with MAE. Its naive baseline repeats the last training value. It then refits on all current observations for the future forecast.
 
 ARIMA uses order `(1,1,0)` and returns 95% model intervals. Exponential smoothing uses an additive trend and optional additive seasonality; season_length requires at least three full seasons. Naive and exponential smoothing do not return calibrated intervals from this helper. Return fields include forecast, prediction_intervals_95, backtest_mae, baseline_mae, training/holdout counts, method, assumptions, and uncertainty. Future dates and chart options are the saved step's responsibility.
+
+## Partial workspace execution
+
+Run also accepts an incomplete workspace with a defined input contract and uploaded CSV. `pipeline_core/partial.py` builds a version-bound execution snapshot. It selects steps whose input artifacts are available. Missing dependencies, cycles, invalid source and unavailable filter sources produce Blocked entries. Cleanup cannot depend on analysis. A runtime error still stops the run; it is reported in the run logs.
+
+`PartialRevision` uses the same worker and engine. It does not change the complete revision requirements. Partial runs have `validation_mode=partial`; they cannot become the target display or an accepted release. Their captured request and run provenance remain available for chat diagnostics. Complete runs retain the existing target update and acceptance rules.
+
+The builder keeps partial artifacts in local run files. Later runs can reuse them when the source, inputs, parameters, runtime and package versions match. These are disk artifacts, not a worker kept in RAM. The run drawer shows partial previews and links to complete table CSV files. **Clear partial results** removes partial artifacts and reuse caches. It keeps logs, captured requests, saved dashboard results and accepted revisions. Clearing is blocked while a builder run is active.
