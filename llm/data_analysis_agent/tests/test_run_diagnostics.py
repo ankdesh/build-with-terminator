@@ -100,13 +100,15 @@ async def test_requested_dtype_repair_uses_real_failed_run_without_running_on_ch
     repaired=ProjectRevision.model_validate(payload)
     agent=AsyncMock();agent.propose.return_value=repaired
     chat_runner=AsyncMock()
-    await ProjectService(store,agent=agent,runner=chat_runner).build(pid,'Fix the latest failed run; values allow thousands separators.',lambda _:None,threading.Event())
+    item = await ProjectService(store,agent=agent,runner=chat_runner).build(pid,'Fix the latest failed run; values allow thousands separators.',lambda _:None,threading.Event())
     evidence=agent.propose.await_args.kwargs['run_diagnostics']['runs'][0]
     assert evidence['run_id']==failed.run_id
     assert 'read_input' in evidence['traceback']
     assert evidence['input_preview']['rows'][0]['value']=='1,200'
     chat_runner.run.assert_not_awaited()
     assert store.get(pid)['display_run_id']==good.run_id
+    from backend.services.chat_store import ChatStore
+    ChatStore(store).apply(pid,item["id"])
     workspace=Workspaces(store);state=workspace.get(pid)
     rerun=await service.execute(pid,workspace.compile(pid,state['version']),{},lambda _:None,threading.Event())
     assert rerun.status=='succeeded'
@@ -130,13 +132,15 @@ async def test_requested_missing_column_repair_uses_failure_and_preserves_csv(tm
     agent = AsyncMock()
     agent.propose.return_value = ProjectRevision.model_validate(payload)
     runner = AsyncMock()
-    await ProjectService(store, agent=agent, runner=runner).build(pid,
+    item = await ProjectService(store, agent=agent, runner=runner).build(pid,
         'Fix the latest failed run. The supplier renamed value to amount; same units and meaning.',
         lambda _: None, threading.Event())
     evidence = agent.propose.await_args.kwargs['run_diagnostics']['runs'][0]
     assert evidence['run_id'] == failed.run_id
     assert evidence['input_preview']['columns'] == ['zone', 'amount']
     runner.run.assert_not_awaited()
+    from backend.services.chat_store import ChatStore
+    ChatStore(store).apply(pid,item["id"])
     workspace = Workspaces(store)
     state = workspace.get(pid)
     result = await service.execute(pid, workspace.compile(pid, state['version']), {}, lambda _: None, threading.Event())

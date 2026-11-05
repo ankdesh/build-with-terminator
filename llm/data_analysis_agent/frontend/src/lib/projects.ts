@@ -65,10 +65,22 @@ export interface RuntimeState {
   sequence: number; instance_id: string; control_notice?: string | null;
 }
 export interface ProjectSummary { id: string; title: string; dataset_name: string | null; accepted_id: string | null }
+export interface ChatContext { stage_id: string | null; label: string }
+export interface ChatItem {
+  id: string; kind: 'proposal' | 'needs_run'; status: 'pending' | 'applied' | 'discarded'; message: string;
+  context: ChatContext; version: number; input_hash: string | null; applied_version?: number; stale?: boolean;
+  changes?: {stage_id: string; title: string; field: string; before: unknown; after: unknown}[];
+  affected?: string[]; linked_reasons?: Record<string, string>; calculation_changed?: boolean; issues?: string[];
+  job_id?: string; run_status?: string; run_error?: string; run_skipped?: boolean;
+}
+export interface ChatMessage {
+  id?: number; role: string; content: string; created_at: string;
+  metadata?: {context?: ChatContext; kind?: string; item_id?: string; run_id?: string | null; revision_id?: string | null; input_hash?: string | null; workspace_version?: number};
+}
 export interface ProjectView {
   project: ProjectSummary & { draft_id: string | null; description: string; profile: DataProfile | null; dataset_hash: string | null; accepted_run_id?: string | null };
   workspace: Workspace; draft: Revision | null; display_run: Run | null; display_revision: Revision | null;
-  messages: { role: string; content: string; created_at: string }[];
+  messages: ChatMessage[]; chat_items: ChatItem[];
   revisions: { id: string; summary: string; accepted: number; created_at?: string }[];
 }
 

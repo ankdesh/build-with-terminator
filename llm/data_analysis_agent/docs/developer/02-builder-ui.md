@@ -47,3 +47,11 @@ Keep controls as an editable form until Apply. Keep a successful result visible 
 ## Legacy UI
 
 `App.tsx`, `ChatInterface`, `SessionSidebar`, and related session-era components remain in the repository. The active builder entry point imports `BuilderApp`, not `App.tsx`. A package or component present in the source tree is not proof that it is part of the active saved-project UI.
+
+## Stage-aware chat and developer inspection
+
+Selecting a stage or widget opens Chat and sets a visible context strip above the composer. Clear returns to Project context. Properties remains a separate tab. Composer text survives card/tab switches; sending captures the context so in-flight replies cannot be retagged. Project switches clear the composer/context. Deleted stages clear active selection without rewriting transcript labels.
+
+One project transcript shows context and saved-result provenance. Explain, Inputs / outputs, Fix latest error and Next steps populate the composer without sending. Changes appear as review cards with affected stages, linked reasons, before/after fields, Apply and Discard. Applied changes offer Undo and Run and ask again; missing results offer Run and ask again or Skip. Stale reviews cannot be applied.
+
+The launcher flag --developer-mode enables the read-only Inspect tab for all clients. GET /api/capabilities reports the flag. Inspection endpoints enforce it and return 404 when disabled. Inputs/widgets show configuration and links to producer code rather than invented local Python. Inspection contains stage configuration, inputs/outputs, related controls, bounded result previews, provenance and diagnostics; credentials are redacted. JSON download is a same-origin attachment. This feature is not a user permission system or a code editor.

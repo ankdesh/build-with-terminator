@@ -12,6 +12,8 @@ An arrow means the source component calls or imports the target for the labelled
 | ProjectStore | Models, fingerprint helper | sqlite3 and local filesystem | Workspace, authoring, jobs, targets, export |
 | Workspaces | Store, WorkspaceDocument, validation, saved renderer | Pydantic, SQLite | Forms, agent proposals, jobs, target snapshots |
 | LLMGateway | AppConfig, domain errors | OpenAI-compatible client | ProjectAgent and legacy AgentService |
+| ChatService / ChatAgent | ProjectService, gateway, ChatStore, run diagnostics | Local JSON/Pydantic validation | Conversational chat routes |
+| ChatStore | Store, WorkspaceDocument, revision validation | SQLite transactions, immutable files | Reviews, Apply/Discard, explicit run actions |
 | ProjectAgent | LLMGateway, model_output parser, ProjectRevision, patch logic | JSON, Pydantic | ProjectService.build |
 | Run diagnostics | Store, credential redaction | pandas, JSON, bounded project file reads | ProjectService.build |
 | ProjectService | Store, Agent, Workspaces, ProcessRunner, run diagnostics | asyncio/threading | Routes, ProjectJobs, shared broker lock |

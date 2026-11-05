@@ -15,16 +15,21 @@ save [label="Save editable version + immutable revision"];
 presentation [label="Try saved-artifact presentation validation"];
 run [label="Developer selects Run separately",fillcolor="#e8f5f0"];
 browser -> context [label="build"];
-context -> gateway [label="messages"];
+context -> gateway [label="infer answer / edit / needs run"];
+answer [label="Answer or clarification\nno workspace changes",fillcolor="#e8f5f0"];
+gateway -> answer [label="question"];
 gateway -> proposal [label="JSON text; no response_format"];
 logs [label="Recent builder/target runs\nerrors + traceback + logs + input preview"];
 logs -> context [label="bounded project evidence"];
 proposal -> validate;
 validate -> repair [label="no; attempts remain"];
 repair -> gateway [label="error + failed source"];
-validate -> cas [label="yes"];
+
 cas -> conflict [label="no"];
-cas -> save [label="yes"];
+review [label="Persist review + context + diff\nuser selects Apply or Discard",fillcolor="#fff2df"];
+validate -> review [label="valid proposed edit"];
+review -> cas [label="Apply: version + input hash"];
+cas -> save [label="yes; one atomic Undo step"];
 save -> presentation;
 presentation -> run [label="calculation changes remain pending",style=dashed];
 

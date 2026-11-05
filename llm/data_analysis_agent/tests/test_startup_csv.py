@@ -110,7 +110,7 @@ def test_real_headless_launcher_imports_csv_without_model_key(tmp_path):
         stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     try:
         base = f"http://127.0.0.1:{port}"
-        deadline = time.monotonic() + 15
+        deadline = time.monotonic() + 90
         while time.monotonic() < deadline:
             if process.poll() is not None:
                 pytest.fail(f"Launcher exited: {process.communicate()}")

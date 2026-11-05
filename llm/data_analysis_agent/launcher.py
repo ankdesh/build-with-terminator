@@ -69,6 +69,7 @@ def main() -> None:
     parser.add_argument("--headless", action="store_true", help="Start server without launching browser")
     parser.add_argument("--log-level", default="info", help="Uvicorn log level (default: info)")
     parser.add_argument("--csv", type=Path, metavar="FILE", help="Load a CSV into a new project at startup (no model call or calculation)")
+    parser.add_argument("--developer-mode", action="store_true", help="Enable read-only stage code/configuration inspection for this builder")
     args = parser.parse_args()
 
     if not 1 <= args.port <= 65535:
@@ -87,6 +88,7 @@ def main() -> None:
 
     # Targets must use the actual bind address, including a command-line override.
     os.environ["WPS_BIND_HOST"] = args.host
+    os.environ["WPS_DEVELOPER_MODE"] = "1" if args.developer_mode else "0"
     initial_path = "/"
     if args.csv is not None:
         try:

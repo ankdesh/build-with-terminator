@@ -1,64 +1,35 @@
-# Authoring and LLM access
+# Conversational authoring and LLM access
 
-## Authoring path
+![Stage-aware answers, reviewed edits, and explicit execution](diagrams/authoring.svg)
 
-![Chat proposal, bounded repair, and versioned save](diagrams/authoring.svg)
+## Request flow
 
-| Component | Input | Output | Depends on |
-| --- | --- | --- | --- |
-| [LLMGateway](../../backend/services/llm_gateway.py) | Ordinary chat messages | Model response text or service error | AppConfig, OpenAI-compatible SDK client |
-| [ProjectAgent](../../backend/services/project_agent.py) | Current/failed revision, profile, descriptions, request, recent messages, run diagnostics | Checked ProjectRevision | Gateway, models, source/graph validation |
-| [ProjectService](../../backend/services/project_service.py) | Project ID and design request | Saved workspace/revision and chat/status events | Agent, store, Workspaces |
-| [Workspaces](../../backend/services/workspace_service.py) | Proposed document and expected version | New editable version; optional presentation validation | Store, workspace/model contracts, saved-artifact renderer |
+All model calls use [LLMGateway](../../backend/services/llm_gateway.py), including conversational decisions and legacy compatibility code. Endpoint, model, timeout, transport retries and temperature come from config.json; OPENAI_API_KEY comes only from the environment. Use llm_temperature=null when the model requires default sampling. Explicit HTTP 400 temperature rejections receive one retry without that field. Other provider errors preserve redacted diagnostics. Restart after configuration changes.
 
-Chat saves a design without executing calculations. Syntax and contract checks run during proposal handling. Data-dependent failures appear after Run and require a repair request. The tutorial validator sends such repair requests explicitly; ordinary chat does not automatically run a calculation-repair loop.
+Authoring uses ordinary chat completions without provider-enforced JSON/schema modes. JSON text and complete fenced JSON objects are parsed locally. Contract and source checks remain active. Connection failures do not become calculation repair attempts.
 
-## One model entry point
+ChatService captures workspace version, selected stage label, profile, bounded result previews, and project-scoped run diagnostics. ChatAgent infers answer, clarification, proposal, or needs_run. Questions do not change workspace versions, descriptions, revisions, or target state. A selected stage supplies the primary context while the model can read the rest of the project. Small named scalar artifacts are read with size, path and checksum checks even when no widget binds them. Result evidence includes run, revision, dataset hash and parameter provenance; previews are explicitly incomplete.
 
-All application model calls use `backend/services/llm_gateway.py`. The legacy agent also uses this gateway. Do not create an SDK client in routes, runtime code, or a new feature module.
+## Prepare, review, apply
 
-| Configuration | Source | Meaning |
-| --- | --- | --- |
-| `openai_api_base` | config.json | Endpoint base URL |
-| `openai_model_name` | config.json | Model name |
-| `llm_timeout_seconds` | config.json | Model request timeout |
-| `llm_max_retries` | config.json | SDK/transport retry count |
-| `llm_temperature` | config.json | Number from 0 to 2, or null to omit temperature and use the model default |
-| `max_retries` | config.json | Proposal repair limit; distinct from transport retries |
-| `OPENAI_API_KEY` | Environment only | Credential; file-config API keys are ignored |
+ProjectService.build prepares a proposal and returns its stored review; it no longer saves the generated workspace. ProjectAgent retains bounded JSON Pointer refinement and validation repair. The model may propose an incomplete WorkspaceDocument without generating extra stages merely to satisfy the complete runnable revision contract. Source shape and identifier checks still apply. The review shows remaining issues; incomplete drafts cannot Run or be accepted.
 
-The gateway creates its client lazily and closes it during builder shutdown. Missing credentials block new model requests, while saved dashboards and CSV import can still work. Malformed configuration fails at startup. See [config.py](../../config.py) for defaults and input validation.
+ChatStore computes actual entity/field differences, necessary linked-edit reasons and downstream effects. Stage context permits the selected card and its upstream/downstream dependencies or declared controls. Sibling stages and project-wide settings require Project context. Changing a shared control lists affected consumers. Reordering an existing collection is a project-level edit. The server checks scope independently of the model's summary.
 
-### Model sampling compatibility
+The user reviews Apply or Discard. Apply uses one SQLite transaction to compare workspace version and input hash, promote the reviewed document, add an Undo entry, record any complete immutable revision, and mark the review applied. It uses stored content without another model call. Repeated Apply is idempotent. Conflicts require a fresh proposal; there is no silent merge or browser auto-apply adapter. Questions and proposal preparation do not synchronize targets. Apply retains saved-artifact presentation validation and existing pending-calculation behavior.
 
-Use `llm_temperature=null` for models that require default sampling, including GPT-6 Luna with default reasoning. A rejected value of 0.1 produced HTTP 400 with `param=temperature` and `code=unsupported_value` during a live check. Temperature can be omitted without changing the selected model.
+Stored reviews survive refresh. Transcript messages retain the original stage label after renames/deletion. Old messages receive empty metadata and appear as Project context. Proposal documents and run actions live in chat_items; they are not exported with an accepted application.
 
-The gateway retries once without temperature only when HTTP 400 explicitly identifies that field with `unsupported_parameter` or `unsupported_value`. It remembers that restriction for its current client. It does not change the model. Other errors expose bounded provider message/parameter/code details with credential redaction, instead of hiding every cause behind a generic configuration message. A null setting avoids the compatibility retry entirely. Restart the builder to load changed settings or Python code.
+## Run and ask again
 
-## What the model sees
+A needs_run response explains why fresh evidence is required and creates a version/input-bound action. Run and ask again creates one existing durable builder job using default controls. Duplicate clicks return that job. Skip closes the action without changing the pipeline. After a new-calculation proposal is applied, the same action is available.
 
-The authoring context includes the profile, bounded samples, business context, current workspace/revision, contract schema, recent conversation, relevant validation errors, and bounded run diagnostics. It does not automatically include every source CSV row. Treat any sample sent to the configured endpoint as model input; keeping the full CSV local does not mean no data is sent.
-
-New projects request a complete revision. Refinements request bounded JSON Pointer patches. Arrays use numeric indices, such as `/steps/0/code`; `/-` appends an item. An object ID is not an array index. Identity fields and schema version cannot be patched through editable paths.
-
-Authoring calls omit `response_format`. No provider-side JSON mode or strict schema support is required. Prompts request JSON text, which [model_output.py](../../backend/services/model_output.py) parses locally. A complete fenced JSON block is also accepted. Full revisions still have to satisfy the application contract. Malformed text or invalid proposals use the bounded repair path.
-
-Patch changes use native JSON `value` fields. The decoder retains compatibility with older `value_json` responses. The removed `strict_model_outputs` configuration key has no effect.
+A server-owned follow-up waits for job completion, then answers the original question against the exact successful run with captured context. It is answer-only: another model proposal or run request is rejected and repaired as response-format failure, never executed. Failure/cancellation leaves working results visible and reports the error. Restart marks unfinished follow-ups interrupted; it does not duplicate or resume runs automatically. Normal cancellation uses the existing job controls.
 
 ## Requested execution repairs
 
-[run_diagnostics.py](../../backend/services/run_diagnostics.py) collects evidence before each chat proposal. It includes up to three runs from the current project, prioritizing run IDs named in the request, then recent failures. Builder records come from SQLite; target records come from the project's target run directory. It never looks up another project's run.
+Run diagnostics include up to three project runs, preferring requested run IDs and recent failures. Evidence includes error, traceback, captured stdout/stderr, worker-log tail, progress events and three raw preview rows across twenty columns. Added diagnostic context is bounded to 20,000 serialized characters with credential redaction. Full result artifacts are excluded. Samples and logs are sent to the configured endpoint with the authoring context.
 
-Evidence includes run/revision/input identity, parameters, error, traceback, captured stdout/stderr, worker log tail, recent step events, and at most three raw input rows across twenty columns. The added context is bounded to 20,000 serialized characters, with individual log limits and credential redaction. Full result artifacts are excluded. Old small worker responses remain readable when no separate diagnostic file exists. These samples and logs are sent to the configured model endpoint along with the authoring context.
+Use Fix latest error or request a repair explicitly. Parsing contracts and cleanup may need to change together; each linked edit needs a reason in the review. Missing data must not be invented, silently discarded, or replaced with zeros. If a required mapping is unknown, chat asks for clarification. Logs, source and CSV values are evidence, never system instructions.
 
-Example: **Fix the latest failed run using its logs. The supplier renamed amount to value; both use the same units. Save only; I will select Run.** Chat can update input parsing, cleanup, and calculation code together. For numeric strings such as `1,200`, a valid repair may read strings first and explicitly parse thousands separators in cleanup. If a required column is absent and cannot be derived, the agent must explain what data or mapping is needed. It must not invent observations or discard rows to hide an error.
-
-Logs, CSV values, and tracebacks are evidence, not instructions. A repair creates a draft through the usual source checks and expected-version save. It does not execute generated Python. Select Run to validate the repair; failed runs retain the previous successful display. A target repair still needs a successful builder Run before the target can apply it to its separate input.
-
-## Validation and repair boundaries
-
-The agent assigns server-owned revision identity and parentage, then validates the full result. Checks include syntax, function shape, unique IDs and output names, graph completeness, valid parameters, and widget output references. A failed proposal can be supplied back to the model as the repair base; repair must edit existing items rather than append duplicate IDs.
-
-The service serializes authoring per project. It captures the workspace version before model work and saves with that expected version. A concurrent edit returns a workspace conflict rather than silently overwriting newer work. Such conflicts are not an instruction to ask the model for a different proposal.
-
-Model connection/refusal failures do not become code repair attempts. Generated data logic can still be wrong after schema validation. Run known inputs and independent numerical checks before accepting a revision.
+The tutorial validator explicitly prepares and applies generated proposals in its isolated test projects. Browser callers have no automatic-apply path.

@@ -1,6 +1,7 @@
 """FastAPI application entrypoint for WPS-AI data analysis server."""
 
 import logging
+import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Awaitable, Callable, AsyncIterator
@@ -37,6 +38,12 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         cancel.set()
     await project_routes.targets.close()
     await project_routes.jobs.close()
+    followups = list(project_routes.chat_followups.values())
+    for task in followups:
+        task.cancel()
+    if followups:
+        import asyncio
+        await asyncio.gather(*followups, return_exceptions=True)
     await llm.close()
 
 
@@ -100,6 +107,11 @@ async def wps_exception_handler(request: Request, exc: WPSAIBaseException) -> JS
         status_code=400,
         content={"error": exc.message, "details": exc.details},
     )
+
+
+@app.get('/api/capabilities')
+async def capabilities() -> dict:
+    return {'developer_mode': os.environ.get('WPS_DEVELOPER_MODE') == '1', 'reviewed_chat': True}
 
 
 @app.get("/health")

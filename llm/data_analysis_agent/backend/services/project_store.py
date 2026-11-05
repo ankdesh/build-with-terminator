@@ -56,6 +56,15 @@ class ProjectStore:
                     run_id TEXT NOT NULL, accepted_at TEXT NOT NULL
                 );
             """)
+            columns = {row["name"] for row in db.execute("PRAGMA table_info(messages)")}
+            if "metadata" not in columns:
+                db.execute("ALTER TABLE messages ADD COLUMN metadata TEXT NOT NULL DEFAULT '{}'")
+            db.execute("CREATE TABLE IF NOT EXISTS chat_items (id TEXT PRIMARY KEY, project_id TEXT NOT NULL, record TEXT NOT NULL)")
+            for item in db.execute("SELECT id,record FROM chat_items").fetchall():
+                record = json.loads(item["record"])
+                if record.get("run_status") in {"queued", "answering"}:
+                    record.update(run_status="interrupted", run_error="Builder stopped. No automatic retry was started.")
+                    db.execute("UPDATE chat_items SET record=? WHERE id=?", (json.dumps(record), item["id"]))
             for row in db.execute("SELECT id,record FROM jobs").fetchall():
                 job = json.loads(row["record"])
                 if job["status"] in {"running", "queued"}:
@@ -213,20 +222,25 @@ class ProjectStore:
         from backend.services.workspace_service import Workspaces
         Workspaces(self).from_revision(project_id, revision)
 
-    def message(self, project_id: str, role: str, content: str) -> None:
+    def message(self, project_id: str, role: str, content: str, metadata: dict | None = None) -> int:
         self.get(project_id)
         with self.connect() as db:
-            db.execute("INSERT INTO messages(project_id,role,content,created_at) VALUES(?,?,?,?)", (project_id, role, content, now()))
+            cursor = db.execute("INSERT INTO messages(project_id,role,content,created_at,metadata) VALUES(?,?,?,?,?)",
+                (project_id, role, content, now(), json.dumps(metadata or {})))
+            assert cursor.lastrowid is not None
+            return cursor.lastrowid
 
     def messages(self, project_id: str) -> list[dict[str, Any]]:
         with self.connect() as db:
-            return [dict(r) for r in db.execute("SELECT role,content,created_at FROM messages WHERE project_id=? ORDER BY id", (project_id,))]
+            return [{**dict(r), "metadata": json.loads(r["metadata"])} for r in db.execute(
+                "SELECT id,role,content,created_at,metadata FROM messages WHERE project_id=? ORDER BY id", (project_id,))]
 
     def view(self, project_id: str) -> dict[str, Any]:
         project = self.get(project_id)
         display = self.run(project_id, project["display_run_id"]) if project["display_run_id"] else None
         from backend.services.workspace_service import Workspaces
-        return {"project": project, "workspace": Workspaces(self).get(project_id),
+        from backend.services.chat_store import ChatStore
+        return {"project": project, "workspace": Workspaces(self).get(project_id), "chat_items": ChatStore(self).list(project_id),
             "revisions": self.revisions(project_id), "messages": self.messages(project_id),
             "draft": self.revision(project_id, project["draft_id"]).model_dump() if project["draft_id"] else None,
             "display_run": display.model_dump() if display else None,

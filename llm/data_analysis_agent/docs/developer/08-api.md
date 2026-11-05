@@ -54,41 +54,48 @@ Live control routes are only installed when a control token exists. Offline Use 
 
 | Method | Path | Handler/source |
 | --- | --- | --- |
-| GET | `/health` | [health_check](../../backend/app.py) · line 106 |
+| GET | `/api/capabilities` | [capabilities](../../backend/app.py) · line 113 |
+| GET | `/health` | [health_check](../../backend/app.py) · line 118 |
 
 ### Builder project API
 
 | Method | Path | Handler/source |
 | --- | --- | --- |
-| GET | `/api/projects` | [list_projects](../../backend/routes/project_routes.py) · line 115 |
-| POST | `/api/projects` | [create_project](../../backend/routes/project_routes.py) · line 120 |
-| POST | `/api/projects/examples/energy` | [energy_example](../../backend/routes/project_routes.py) · line 125 |
-| GET | `/api/projects/{project_id}` | [get_project](../../backend/routes/project_routes.py) · line 131 |
-| POST | `/api/projects/{project_id}/accept` | [accept_revision](../../backend/routes/project_routes.py) · line 188 |
-| POST | `/api/projects/{project_id}/chat` | [build_project](../../backend/routes/project_routes.py) · line 155 |
-| PATCH | `/api/projects/{project_id}/context` | [describe_project](../../backend/routes/project_routes.py) · line 249 |
-| POST | `/api/projects/{project_id}/dataset` | [upload_dataset](../../backend/routes/project_routes.py) · line 136 |
-| GET | `/api/projects/{project_id}/events` | [project_events](../../backend/routes/project_routes.py) · line 280 |
-| GET | `/api/projects/{project_id}/export` | [export_project](../../backend/routes/project_routes.py) · line 213 |
-| GET | `/api/projects/{project_id}/jobs` | [list_jobs](../../backend/routes/project_routes.py) · line 265 |
-| GET | `/api/projects/{project_id}/jobs/{job_id}` | [get_job](../../backend/routes/project_routes.py) · line 270 |
-| POST | `/api/projects/{project_id}/jobs/{job_id}/cancel` | [cancel_job](../../backend/routes/project_routes.py) · line 275 |
-| POST | `/api/projects/{project_id}/revisions/{revision_id}/rollback` | [rollback_revision](../../backend/routes/project_routes.py) · line 195 |
-| POST | `/api/projects/{project_id}/revisions/{revision_id}/run` | [run_revision](../../backend/routes/project_routes.py) · line 168 |
-| POST | `/api/projects/{project_id}/run` | [run_workspace](../../backend/routes/project_routes.py) · line 260 |
-| POST | `/api/projects/{project_id}/runs/{run_id}/cancel` | [cancel_run](../../backend/routes/project_routes.py) · line 179 |
-| GET | `/api/projects/{project_id}/runs/{run_id}/tables/{output_name}` | [export_table](../../backend/routes/project_routes.py) · line 203 |
-| POST | `/api/projects/{project_id}/stages/{stage_id}/delete` | [delete_stage](../../backend/routes/project_routes.py) · line 239 |
-| GET | `/api/projects/{project_id}/target` | [target_status](../../backend/routes/project_routes.py) · line 299 |
-| POST | `/api/projects/{project_id}/target/{action}` | [target_control](../../backend/routes/project_routes.py) · line 313 |
-| GET | `/api/projects/{project_id}/workspace` | [get_workspace](../../backend/routes/project_routes.py) · line 223 |
-| PATCH | `/api/projects/{project_id}/workspace` | [edit_workspace](../../backend/routes/project_routes.py) · line 228 |
+| GET | `/api/projects` | [list_projects](../../backend/routes/project_routes.py) · line 121 |
+| POST | `/api/projects` | [create_project](../../backend/routes/project_routes.py) · line 126 |
+| POST | `/api/projects/examples/energy` | [energy_example](../../backend/routes/project_routes.py) · line 131 |
+| GET | `/api/projects/{project_id}` | [get_project](../../backend/routes/project_routes.py) · line 137 |
+| POST | `/api/projects/{project_id}/accept` | [accept_revision](../../backend/routes/project_routes.py) · line 291 |
+| POST | `/api/projects/{project_id}/chat` | [build_project](../../backend/routes/project_routes.py) · line 161 |
+| GET | `/api/projects/{project_id}/chat/items/{item_id}` | [chat_item](../../backend/routes/project_routes.py) · line 172 |
+| POST | `/api/projects/{project_id}/chat/items/{item_id}/apply` | [apply_chat_item](../../backend/routes/project_routes.py) · line 177 |
+| POST | `/api/projects/{project_id}/chat/items/{item_id}/discard` | [discard_chat_item](../../backend/routes/project_routes.py) · line 185 |
+| POST | `/api/projects/{project_id}/chat/items/{item_id}/run` | [run_and_reask](../../backend/routes/project_routes.py) · line 192 |
+| PATCH | `/api/projects/{project_id}/context` | [describe_project](../../backend/routes/project_routes.py) · line 352 |
+| POST | `/api/projects/{project_id}/dataset` | [upload_dataset](../../backend/routes/project_routes.py) · line 142 |
+| GET | `/api/projects/{project_id}/events` | [project_events](../../backend/routes/project_routes.py) · line 383 |
+| GET | `/api/projects/{project_id}/export` | [export_project](../../backend/routes/project_routes.py) · line 316 |
+| GET | `/api/projects/{project_id}/jobs` | [list_jobs](../../backend/routes/project_routes.py) · line 368 |
+| GET | `/api/projects/{project_id}/jobs/{job_id}` | [get_job](../../backend/routes/project_routes.py) · line 373 |
+| POST | `/api/projects/{project_id}/jobs/{job_id}/cancel` | [cancel_job](../../backend/routes/project_routes.py) · line 378 |
+| POST | `/api/projects/{project_id}/revisions/{revision_id}/rollback` | [rollback_revision](../../backend/routes/project_routes.py) · line 298 |
+| POST | `/api/projects/{project_id}/revisions/{revision_id}/run` | [run_revision](../../backend/routes/project_routes.py) · line 271 |
+| POST | `/api/projects/{project_id}/run` | [run_workspace](../../backend/routes/project_routes.py) · line 363 |
+| POST | `/api/projects/{project_id}/runs/{run_id}/cancel` | [cancel_run](../../backend/routes/project_routes.py) · line 282 |
+| GET | `/api/projects/{project_id}/runs/{run_id}/tables/{output_name}` | [export_table](../../backend/routes/project_routes.py) · line 306 |
+| POST | `/api/projects/{project_id}/stages/{stage_id}/delete` | [delete_stage](../../backend/routes/project_routes.py) · line 342 |
+| GET | `/api/projects/{project_id}/stages/{stage_id}/inspect` | [inspect_stage](../../backend/routes/project_routes.py) · line 242 |
+| GET | `/api/projects/{project_id}/stages/{stage_id}/inspect.json` | [download_inspection](../../backend/routes/project_routes.py) · line 265 |
+| GET | `/api/projects/{project_id}/target` | [target_status](../../backend/routes/project_routes.py) · line 402 |
+| POST | `/api/projects/{project_id}/target/{action}` | [target_control](../../backend/routes/project_routes.py) · line 416 |
+| GET | `/api/projects/{project_id}/workspace` | [get_workspace](../../backend/routes/project_routes.py) · line 326 |
+| PATCH | `/api/projects/{project_id}/workspace` | [edit_workspace](../../backend/routes/project_routes.py) · line 331 |
 
 ### Compatibility data export
 
 | Method | Path | Handler/source |
 | --- | --- | --- |
-| POST | `/api/sessions/{session_id}/export-csv` | [export_table_csv](../../backend/app.py) · line 65 |
+| POST | `/api/sessions/{session_id}/export-csv` | [export_table_csv](../../backend/app.py) · line 72 |
 
 ### Compatibility session API
 
@@ -104,8 +111,8 @@ Live control routes are only installed when a control token exists. Offline Use 
 
 | Method | Path | Handler/source |
 | --- | --- | --- |
-| POST | `/api/internal/targets/{project_id}/cancel/{run_id}` | [cancel_target](../../backend/routes/project_routes.py) · line 384 |
-| POST | `/api/internal/targets/{project_id}/execute` | [execute_target](../../backend/routes/project_routes.py) · line 325 |
+| POST | `/api/internal/targets/{project_id}/cancel/{run_id}` | [cancel_target](../../backend/routes/project_routes.py) · line 487 |
+| POST | `/api/internal/targets/{project_id}/execute` | [execute_target](../../backend/routes/project_routes.py) · line 428 |
 
 ### Shared runtime API
 

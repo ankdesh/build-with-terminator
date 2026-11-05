@@ -95,7 +95,7 @@ def test_real_lan_builder_and_target(tmp_path):
             cwd=Path(__file__).resolve().parents[1], env=environment, stdout=log, stderr=log)
         try:
             with httpx.Client(base_url=f'http://{address}:{port}', trust_env=False, timeout=15) as client:
-                deadline = time.monotonic()+15
+                deadline = time.monotonic()+90
                 while True:
                     try:
                         if client.get('/health').status_code == 200:

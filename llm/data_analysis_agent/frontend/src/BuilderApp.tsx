@@ -9,6 +9,8 @@ import {
 import { Dashboard } from './components/Dashboard';
 import { DataProfileCard } from './components/DataProfileCard';
 import { StageCanvas } from './components/StageCanvas';
+import { ChatReview } from './components/ChatReview';
+import { StageInspector } from './components/StageInspector';
 import { PropertiesPanel } from './components/PropertiesPanel';
 import { SettingsField, ControlSettings } from './components/SettingsFields';
 import { jsonBody, request, streamProject } from './lib/projects';
@@ -35,7 +37,8 @@ export default function BuilderApp() {
   const [selected, setSelected] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const [description, setDescription] = useState('');
-  const [dock, setDock] = useState<'chat' | 'properties'>('chat');
+  const [dock, setDock] = useState<'chat' | 'properties' | 'inspect'>('chat');
+  const [developer, setDeveloper] = useState(false);
   const [dockOpen, setDockOpen] = useState(true);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [target, setTarget] = useState<Target>(stopped);
@@ -75,13 +78,14 @@ export default function BuilderApp() {
     updateView(value); setJobs(records); setTarget(runtime);
   }, [updateView]);
   const chooseProject = useCallback((id: string) => {
-    current.current = id; setProjectId(id); setSelected(null); setError(''); setNotice(''); setJobs([]); setTarget(stopped);
+    current.current = id; setProjectId(id); setSelected(null); setQuery(''); setError(''); setNotice(''); setJobs([]); setTarget(stopped);
     localStorage.setItem('wps:studio:project', id);
     const url = new URL(window.location.href); url.searchParams.set('project', id); window.history.replaceState(null, '', url);
   }, []);
   useEffect(() => {
     if (initialized.current) return;
     initialized.current = true;
+    request<{developer_mode: boolean}>('/api/capabilities').then(value => setDeveloper(value.developer_mode)).catch(() => {});
     const url = new URL(window.location.href);
     const initialPage = url.searchParams.get('view');
     if (navigation.some(p => p.id === initialPage)) setPage(initialPage as Page);
@@ -119,6 +123,8 @@ export default function BuilderApp() {
   const progress = status || lastEvent?.message || (lastEvent?.title ? `${lastEvent.title}: ${lastEvent.status}` : activeJob ? 'Waiting for the execution slot' : '');
   const needsConfirmation = view?.display_run?.result?.cleanup_impacts.some(impact => impact.requires_confirmation);
   const stage = workspace?.stages.find(s => s.id === selected);
+  const context = stage ? { stage_id: stage.id, label: `${{input: 'Data input', cleaning: 'Data cleaning', analysis: 'Analysis', visualization: 'Visualization'}[stage.type]} · ${stage.title}` } : { stage_id: null, label: 'Project' };
+  useEffect(() => { if (selected && workspace && !workspace.stages.some(s => s.id === selected)) setSelected(null); }, [selected, workspace]);
 
   const navigate = (next: Page) => {
     setPage(next);
@@ -159,11 +165,11 @@ export default function BuilderApp() {
   const send = async () => {
     if (!view || !query.trim()) return;
     const id = view.project.id, text = query.trim();
-    setQuery(''); setChatBusy(true); setError(''); setNotice(''); setStatus('Preparing the workspace');
+    setQuery(''); setChatBusy(true); setError(''); setNotice(''); setStatus('Reading your question');
     abort.current = new AbortController();
-    updateView({ ...view, messages: [...view.messages, { role: 'user', content: text, created_at: new Date().toISOString() }] });
+    updateView({ ...view, messages: [...view.messages, { role: 'user', content: text, created_at: new Date().toISOString(), metadata: { context } }] });
     try {
-      await streamProject(`/api/projects/${id}/chat`, { query: text, description }, event => {
+      await streamProject(`/api/projects/${id}/chat`, { query: text, stage_id: context.stage_id, expected_version: view.workspace.version }, event => {
         if (event.event === 'status') setStatus(event.message);
         if (event.event === 'error') setError(event.message);
       }, abort.current.signal);
@@ -226,7 +232,18 @@ export default function BuilderApp() {
     catch (e: any) { setError(e.message); }
     finally { setTargetBusy(false); }
   };
-  const selectStage = (id: string) => { setSelected(id); setDock('properties'); setDockOpen(true); };
+  const selectStage = (id: string) => { setSelected(id); setDock('chat'); setDockOpen(true); };
+  const chatAction = async (id: string, action: 'apply' | 'discard' | 'run') => {
+    if (!projectId) return;
+    const project = projectId;
+    setSaving(true); setError('');
+    try {
+      const result = await request<any>(`/api/projects/${project}/chat/items/${id}/${action}`, jsonBody({}));
+      if (current.current === project && action === 'run') { setJobs(values => [result, ...values.filter(value => value.id !== result.id)]); setLogsOpen(true); }
+      await refresh(project); await list();
+    } catch (e: any) { setError(e.message); await refresh(project).catch(() => {}); }
+    finally { setSaving(false); }
+  };
   const restore = async (id: string) => {
     if (!projectId) return;
     setSaving(true); setError('');
@@ -306,11 +323,31 @@ export default function BuilderApp() {
           </div>}
         </section>
       </main>
-      {dockOpen && <aside className="studio-dock"><div className="dock-tabs"><button className={dock === 'chat' ? 'active' : ''} onClick={() => setDock('chat')}><MessageSquare size={15} />Chat</button><button className={dock === 'properties' ? 'active' : ''} onClick={() => setDock('properties')}><Settings2 size={15} />Properties</button></div>
-        {dock === 'chat' ? <><div className="chat-intro"><span className="assistant-mark"><Sparkles size={17} /></span><div><strong>Your development partner</strong><p>Describe the system you want to build.</p></div></div><div className="studio-messages" aria-live="polite">{!view?.messages.length && <div className="chat-empty"><h3>Start with the question.</h3><p>Tell the agent what to calculate, which filters to offer, and how to present the results.</p><button disabled={!view?.project.dataset_name || working} onClick={() => setQuery('Create an overview with key metrics, a comparison chart, a trend chart where the data supports it, and a detailed table. Explain the cleaning steps and add useful filters.')}>Create an overview dashboard<ArrowRight size={14} /></button><button disabled={!view?.project.dataset_name || working} onClick={() => setQuery('Review the input columns and propose data cleaning, analysis, and visualization stages for this dataset.')}>Help me choose the stages<ArrowRight size={14} /></button></div>}
-          {view?.messages.map((message, index) => <article className={`studio-message ${message.role}`} key={`${message.created_at}-${index}`}><span>{message.role === 'user' ? 'You' : 'WPS-AI'}</span><p>{message.content}</p></article>)}{chatBusy && <div className="chat-thinking"><Loader2 size={14} className="spin" />{status}</div>}<div ref={chatEnd} /></div>
-          <form className="chat-composer" onSubmit={event => { event.preventDefault(); send(); }}><textarea aria-label="Describe the system or changes" placeholder={view?.project.dataset_name ? 'Describe a calculation, chart, or change…' : 'Upload a CSV to start designing…'} value={query} disabled={working || !view?.project.dataset_name} onChange={e => setQuery(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); send(); } }} /><div><span>Changes are saved. Run applies calculations.</span><button className="primary icon-button" disabled={working || !query.trim() || !view?.project.dataset_name} aria-label="Send design request"><Send size={16} /></button></div></form>
-        </> : document ? <PropertiesPanel document={document} stage={stage} run={view?.display_run || null} onChange={save} onDelete={deleteStage} onOpenData={() => navigate('data')} disabled={working} /> : <p className="dock-description">Create a project to edit properties.</p>}
+      {dockOpen && <aside className="studio-dock"><div className="dock-tabs"><button className={dock === 'chat' ? 'active' : ''} onClick={() => setDock('chat')}><MessageSquare size={15} />Chat</button><button className={dock === 'properties' ? 'active' : ''} onClick={() => setDock('properties')}><Settings2 size={15} />Properties</button>{developer && <button className={dock === 'inspect' ? 'active' : ''} onClick={() => setDock('inspect')}>Inspect</button>}</div>
+        {dock === 'chat' ? <><div className="chat-intro"><span className="assistant-mark"><Sparkles size={17} /></span><div><strong>Your development partner</strong><p>Ask questions or propose changes. Edits need your approval.</p></div></div><div className="studio-messages" aria-live="polite">{!view?.messages.length && <div className="chat-empty"><h3>Start with the question.</h3><p>Tell the agent what to calculate, which filters to offer, and how to present the results.</p><button disabled={!view?.project.dataset_name || working} onClick={() => setQuery('Create an overview with key metrics, a comparison chart, a trend chart where the data supports it, and a detailed table. Explain the cleaning steps and add useful filters.')}>Create an overview dashboard<ArrowRight size={14} /></button><button disabled={!view?.project.dataset_name || working} onClick={() => setQuery('Review the input columns and propose data cleaning, analysis, and visualization stages for this dataset.')}>Help me choose the stages<ArrowRight size={14} /></button></div>}
+          {view?.messages.map((message, index) => {
+            const item = view.chat_items?.find(value => value.id === message.metadata?.item_id);
+            return <article className={`studio-message ${message.role}`} key={`${message.created_at}-${index}`}>
+              <span>{message.role === 'user' ? 'You' : 'WPS-AI'} · {message.metadata?.context?.label || 'Project'}</span>
+              <p>{message.content}</p>
+              {message.metadata?.run_id && <small className="message-provenance">Run {message.metadata.run_id.slice(0, 8)} · Revision {message.metadata.revision_id?.slice(0, 8)} · Input {message.metadata.input_hash?.slice(0, 8)}</small>}
+              {item && ['proposal', 'needs_run'].includes(message.metadata?.kind || '') && <ChatReview item={item} projectId={view.project.id} developer={developer} disabled={working || Boolean(activeJob)} issues={workspace?.issues || []}
+                onAction={chatAction} onUndo={() => document && save(document, 'undo')} />}
+            </article>;
+          })}{chatBusy && <div className="chat-thinking"><Loader2 size={14} className="spin" />{status}</div>}<div ref={chatEnd} /></div>
+          <form className="chat-composer" onSubmit={event => { event.preventDefault(); send(); }}>
+            <div className="chat-context" aria-label="Chat context"><span>{context.label}</span>{selected && <button type="button" onClick={() => setSelected(null)} aria-label="Clear chat context"><X size={13} />Clear</button>}</div>
+            <div className="chat-shortcuts">{[
+              ['Explain', 'Explain this stage: its purpose, inputs, outputs, and assumptions. Do not change anything.'],
+              ['Inputs / outputs', 'Explain how the inputs and outputs connect in this context. Do not change anything.'],
+              ['Fix latest error', 'Review the latest relevant failed run and propose the smallest repair for this context. Explain any linked changes.'],
+              ['Next steps', 'Suggest useful next steps for this context. Explain them without changing the pipeline.'],
+            ].map(([label, text]) => <button type="button" disabled={working || !view} key={label} onClick={() => setQuery(text)}>{label}</button>)}</div>
+            <textarea aria-label="Ask about the selected context or request changes" placeholder={stage ? `Ask about ${stage.title} or request a change…` : 'Ask a question or describe a pipeline change…'} value={query} disabled={working || !view} onChange={e => setQuery(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); send(); } }} />
+            <div><span>Answers do not edit. Review and Apply changes.</span><button className="primary icon-button" disabled={working || !query.trim() || !view} aria-label="Send chat message"><Send size={16} /></button></div>
+          </form>
+        </> : dock === 'inspect' && developer && view ? <StageInspector projectId={view.project.id} stageId={selected} version={view.workspace.version} runKey={`${view.display_run?.run_id || ""}:${latestJob?.id || ""}:${latestJob?.status || ""}`} onSelect={id => setSelected(id)} />
+          : document ? <PropertiesPanel document={document} stage={stage} run={view?.display_run || null} onChange={save} onDelete={deleteStage} onOpenData={() => navigate('data')} disabled={working} /> : <p className="dock-description">Create a project to edit properties.</p>}
       </aside>}
     </div>
     <input ref={file} type="file" accept=".csv,text/csv" hidden onChange={event => { if (event.target.files?.[0]) upload(event.target.files[0]); }} />

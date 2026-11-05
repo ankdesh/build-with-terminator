@@ -151,3 +151,7 @@ Multiple CSVs, scheduled refresh, append history, shared network hosting, arbitr
 ## LAN hosting
 
 The checked-in builder configuration uses `server_host=0.0.0.0` and `allowed_hosts=["*"]`. `launcher.py --host` overrides the bind address for builder and live targets. Clients open the server's actual IP/DNS name on the builder port; target URLs use the requesting client's server host and the target port. Open the builder port and configured target port range in the host firewall. Target snapshots, readiness checks, and execution broker traffic use host-side addresses rather than a client-supplied host name. Token checks and same-origin browser policy remain active. Offline runtime hosting remains loopback-only by default. See README for host allowlists and trusted-network deployment limits.
+
+## Contextual chat and reviewed authoring
+
+Stage selection is captured with each chat message. Chat infers answers, clarification, reviewed edit proposals, or missing-run evidence. Answers are read-only. ProjectService.build now prepares a stored review; only explicit Apply promotes it using workspace-version and input-hash checks. Scope checks allow necessary ancestor/descendant changes and declare shared-control effects; unrelated edits require Project context. Incomplete drafts can be reviewed, but cannot Run until valid. Run and ask again uses one existing job and one answer-only follow-up. Developer mode (`launcher.py --developer-mode`) adds read-only inspection, enforced by builder endpoints, without adding target routes or a code editor.

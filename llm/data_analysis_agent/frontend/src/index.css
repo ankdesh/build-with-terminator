@@ -331,3 +331,28 @@ button:disabled, fieldset:disabled { cursor: default; }
 
 .dashboard-widget.widget-metric { container-type: inline-size; }
 @supports (font-size: 1cqw) { .metric-value { font-size: clamp(16px, 10cqw, 34px); } }
+
+/* Contextual conversation, review, and read-only inspection. */
+.chat-context { display: flex; align-items: center; justify-content: space-between; gap: 8px; background: #edf4ff; border-radius: 7px; padding: 8px 10px; color: #285894; font-size: 12px; }
+.chat-context span { overflow-wrap: anywhere; }
+.platform .chat-context button { border: 0; background: transparent; min-height: 24px; padding: 2px 4px; flex-shrink: 0; font-size: 11px; }
+.chat-shortcuts, .review-actions { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.platform .chat-shortcuts button { min-height: 26px; padding: 4px 7px; font-size: 10px; }
+.chat-review { margin-top: 12px; padding: 12px; background: #f7faff; border: 1px solid #dbe6f6; border-radius: 8px; font-size: 12px; color: #405c80; }
+.chat-review p, .chat-review li { font-size: 12px; }
+.chat-review details { margin: 9px 0; }
+.chat-review summary, .stage-inspector summary { cursor: pointer; font-weight: 600; line-height: 1.6; }
+.review-change { margin: 10px 0; padding-top: 8px; border-top: 1px solid #e0e8f4; }
+.review-change strong, .review-change small, .review-change > span { display: block; overflow-wrap: anywhere; }
+.review-change small, .message-provenance { color: #6b7e97; font-size: 10px; }
+.review-change pre, .stage-inspector pre { overflow: auto; max-height: 320px; padding: 10px; background: #eef2f8; border-radius: 5px; font: 11px/1.6 monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+.review-warning { color: #946016 !important; background: #fff7e8; border-radius: 5px; padding: 8px; }
+.platform .review-actions button { min-height: 28px; padding: 5px 8px; font-size: 11px; }
+.stage-inspector { padding: 18px; overflow: auto; font-size: 12px; }
+.stage-inspector h3, .stage-inspector h4 { margin: 14px 0 8px; }
+.stage-inspector details { margin: 14px 0; }
+.platform .inspector-link { display: block; margin: 5px 0; font-family: monospace; font-size: 11px; }
+.message-provenance { display: block; margin-top: 6px; }
+
+.chat-composer .chat-context span { font-size: 12px; font-weight: 600; color: #285894; }
+.chat-composer > div:last-child > span { font-size: 10px; color: #6b7e97; }

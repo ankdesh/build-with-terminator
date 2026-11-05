@@ -6,15 +6,17 @@ import os
 from pathlib import Path
 import tempfile
 import threading
-from typing import Any, AsyncIterator, Literal
+from typing import Any, AsyncIterator, Literal, cast
 from uuid import UUID
 
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile, Request
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse, JSONResponse
 from pydantic import BaseModel, Field
 from sse_starlette.sse import EventSourceResponse
 
 from backend.services.dataset_import import import_csv
+from backend.services.chat_service import ChatService, redact, results_preview
+from backend.services.chat_store import ChatStore, context_for, public_item
 from backend.services.project_service import ProjectService
 from backend.services.project_store import ProjectStore
 from backend.services.workspace_service import Workspaces
@@ -33,6 +35,8 @@ internal_router = APIRouter(prefix="/api/internal/targets", include_in_schema=Fa
 target_cancellations: dict[tuple[str, str], threading.Event] = {}
 target_tasks: dict[tuple[str, str], asyncio.Task[None]] = {}
 target_running: set[tuple[str, str]] = set()
+chat_followups: dict[str, asyncio.Task[None]] = {}
+chat_action_lock = asyncio.Lock()
 
 
 class CreateProject(BaseModel):
@@ -42,6 +46,8 @@ class CreateProject(BaseModel):
 class BuildRequest(BaseModel):
     query: str = Field(min_length=1, max_length=12000)
     description: str | None = Field(default=None, max_length=12000)
+    stage_id: str | None = Field(default=None, max_length=200)
+    expected_version: int | None = None
 
 
 class RunRequest(BaseModel):
@@ -153,15 +159,112 @@ async def upload_dataset(project_id: str, csv_file: UploadFile = File(...), desc
 
 @router.post("/{project_id}/chat")
 async def build_project(project_id: str, request: BuildRequest) -> EventSourceResponse:
-    store.dataset_path(project_id)
-    if request.description is not None:
-        store.describe(project_id, request.description)
     async def update(emit: Any, cancel: threading.Event) -> None:
         try:
-            await service.build(project_id, request.query, emit, cancel)
+            await ChatService(service).respond(project_id, request.query, request.stage_id,
+                request.expected_version, emit, cancel)
         finally:
-            await changed(project_id)
+            events.publish(project_id)
     return stream_operation(update)
+
+
+@router.get('/{project_id}/chat/items/{item_id}')
+async def chat_item(project_id: str, item_id: str) -> dict:
+    return cast(dict, redact(public_item(ChatStore(store).get(project_id, item_id), os.environ.get('WPS_DEVELOPER_MODE') == '1')))
+
+
+@router.post('/{project_id}/chat/items/{item_id}/apply')
+async def apply_chat_item(project_id: str, item_id: str) -> dict:
+    item = ChatStore(store).apply(project_id, item_id)
+    await asyncio.to_thread(Workspaces(store).validate_presentation, project_id)
+    await changed(project_id)
+    return public_item(item)
+
+
+@router.post('/{project_id}/chat/items/{item_id}/discard')
+async def discard_chat_item(project_id: str, item_id: str) -> dict:
+    item = ChatStore(store).discard(project_id, item_id)
+    events.publish(project_id)
+    return public_item(item)
+
+
+@router.post('/{project_id}/chat/items/{item_id}/run', status_code=202)
+async def run_and_reask(project_id: str, item_id: str) -> dict:
+    from backend.services.workspace_service import WorkspaceConflict
+    async with chat_action_lock:
+        items = ChatStore(store)
+        item = items.get(project_id, item_id)
+        if item.get('job_id'):
+            return jobs.get(project_id, item['job_id'])
+        if item.get('run_skipped'):
+            raise ValueError('Run was skipped. Ask the question again to request another run.')
+        if not ((item['kind'] == 'proposal' and item['status'] == 'applied')
+                or (item['kind'] == 'needs_run' and item['status'] == 'pending')):
+            raise ValueError('This chat action cannot be run')
+        workspace = Workspaces(store).get(project_id)
+        if workspace['version'] != item.get('applied_version', item['version']) or store.get(project_id)['dataset_hash'] != item['input_hash']:
+            raise WorkspaceConflict('The workspace or input changed. Ask your question again before running.')
+        if item['kind'] == 'needs_run':
+            context_for(workspace['document'], item['context']['stage_id'], bool(item['input_hash']))
+        job = jobs.create(project_id, workspace['version'], {}, expected_input_hash=item['input_hash'])
+        item.update(job_id=job['id'], run_status='queued')
+        items.put(project_id, item)
+        async def finish() -> None:
+            try:
+                while True:
+                    current_job = jobs.get(project_id, job['id'])
+                    if current_job['status'] not in {'queued', 'running'}: break
+                    await asyncio.sleep(.1)
+                if current_job['status'] != 'succeeded':
+                    raise ValueError(current_job.get('error') or 'Run did not succeed')
+                item['run_status'] = 'answering'
+                items.put(project_id, item)
+                await ChatService(service).respond(project_id, item['query'], item['context']['stage_id'], None,
+                    lambda event: events.publish(project_id), threading.Event(), answer_only=True,
+                    run_id=current_job['run_id'], captured_context=item['context'])
+                item['run_status'] = 'answered'
+            except asyncio.CancelledError:
+                item.update(run_status='interrupted', run_error='Builder stopped before the follow-up completed.')
+                raise
+            except Exception as exc:
+                item.update(run_status='failed', run_error=str(exc))
+                store.message(project_id, 'assistant', f'Run and ask again stopped: {exc}',
+                    {'kind': 'error', 'context': item['context'], 'item_id': item_id})
+            finally:
+                items.put(project_id, item)
+                events.publish(project_id)
+                chat_followups.pop(item_id, None)
+        chat_followups[item_id] = asyncio.create_task(finish())
+        return job
+
+
+@router.get('/{project_id}/stages/{stage_id}/inspect')
+async def inspect_stage(project_id: str, stage_id: str) -> dict:
+    if os.environ.get('WPS_DEVELOPER_MODE') != '1':
+        raise HTTPException(404, 'Developer inspection is disabled')
+    from backend.services.run_diagnostics import collect_run_diagnostics
+    from backend.services.chat_store import entities
+    workspace = Workspaces(store).get(project_id)
+    project = store.get(project_id)
+    context = context_for(workspace['document'], stage_id, bool(project['dataset_hash']))
+    stage = next(s for s in workspace['stages'] if s['id'] == stage_id)
+    configuration = entities(workspace['document'])[stage_id]
+    owners = {output: step for step in workspace['document']['steps'] for output in step['outputs']}
+    producer = configuration if stage_id.startswith('step:') else owners.get(configuration.get('output'), {})
+    declared = producer.get('parameters_used')
+    controls = [p for p in workspace['document']['parameters'] if (producer and declared is None)
+        or p['id'] in (declared or []) or (p.get('filter_column') and (producer.get('stage') == 'analysis' or p.get('filter_artifact') in stage['outputs']))]
+    run = store.run(project_id, project['display_run_id']).model_dump() if project['display_run_id'] else None
+    return cast(dict, redact({'context': context, 'workspace_version': workspace['version'], 'configuration': configuration,
+        'source': configuration.get('code'), 'dependencies': stage['dependencies'], 'inputs': stage['inputs'],
+        'outputs': stage['outputs'], 'controls': controls, 'saved_results': results_preview(run, store, project_id),
+        'diagnostics': collect_run_diagnostics(store, project_id, secret=config.openai_api_key)}))
+
+
+@router.get('/{project_id}/stages/{stage_id}/inspect.json')
+async def download_inspection(project_id: str, stage_id: str) -> JSONResponse:
+    data = await inspect_stage(project_id, stage_id)
+    return JSONResponse(data, headers={'Content-Disposition': 'attachment; filename="stage-inspection.json"'})
 
 
 @router.post("/{project_id}/revisions/{revision_id}/run")

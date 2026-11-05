@@ -9,7 +9,7 @@ from uuid import uuid4
 from backend.services.project_service import ProjectService
 from backend.services.project_store import ProjectStore
 from backend.services.target_manager import TargetManager
-from backend.services.workspace_service import Workspaces
+from backend.services.workspace_service import Workspaces, WorkspaceConflict
 from pipeline_core.models import now
 
 
@@ -52,12 +52,19 @@ class ProjectJobs:
             rows = db.execute("SELECT record FROM jobs WHERE project_id=? ORDER BY rowid DESC LIMIT 20", (project_id,)).fetchall()
         return [json.loads(row["record"]) for row in rows]
 
-    def create(self, project_id: str, version: int, parameters: dict[str, Any]) -> dict[str, Any]:
+    def create(self, project_id: str, version: int, parameters: dict[str, Any],
+               expected_input_hash: str | None = None) -> dict[str, Any]:
         if any(job["status"] in {"queued", "running"} for job in self.list(project_id)):
             raise ValueError("A workspace run is already queued or running for this project")
         revision = Workspaces(self.store).compile(project_id, version)
-        project = self.store.get(project_id)
-        source = self.store.dataset_path(project_id)
+        with self.store.connect() as db:
+            db.execute('BEGIN IMMEDIATE')
+            project = dict(db.execute('SELECT * FROM projects WHERE id=?', (project_id,)).fetchone())
+            workspace = db.execute('SELECT version FROM workspaces WHERE project_id=?', (project_id,)).fetchone()
+            if (not workspace or workspace['version'] != version
+                    or (expected_input_hash is not None and project['dataset_hash'] != expected_input_hash)):
+                raise WorkspaceConflict('The workspace or input changed before the run was captured. Ask again.')
+        source = self.store.root / project_id / 'datasets' / f"{project['dataset_hash']}.csv"
         job: dict[str, Any] = {"id": str(uuid4()), "revision_id": revision.revision_id, "workspace_version": version,
             "status": "queued", "run_id": None, "error": None, "events": [], "created_at": now()}
         self.put(project_id, job)

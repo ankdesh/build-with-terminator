@@ -29,6 +29,7 @@ from config import config
 from pipeline_core.bundle import installed_versions
 from pipeline_core.engine import safe_json
 from pipeline_core.models import now
+from backend.services.chat_store import ChatStore
 from scripts.tutorial_data import PACK, sha
 from scripts.tutorial_specs import LESSONS, expected, checks
 
@@ -255,7 +256,9 @@ async def validate(keys: list[str], state_dir: Path) -> None:
             try:
                 for number, prompt in enumerate(lesson["prompts"], 1):
                     print(f"[{key}] Testing published prompt {number}", flush=True)
-                    await service.build(project_id, prompt, emit, threading.Event())
+                    proposal = await service.build(project_id, prompt, emit, threading.Event())
+                    if proposal.get("kind") == "proposal":
+                        ChatStore(store).apply(project_id, proposal["id"])
                     for attempt in range(3):
                         try:
                             revision, run = await execute()
@@ -270,7 +273,9 @@ async def validate(keys: list[str], state_dir: Path) -> None:
                             repair = f"Repair the current tutorial revision. Preserve its requested widgets, exact titles and metric definitions. Run/independent validation found: {exc}. Correct the saved Python, bindings or chart arrays as needed. Do not hard-code answers. I will select Run."
                             entry["repairs"].append({"prompt_number": number, "request": repair})
                             print(f"[{key}] Repair {attempt+1}: {exc}", flush=True)
-                            await service.build(project_id, repair, emit, threading.Event())
+                            proposal = await service.build(project_id, repair, emit, threading.Event())
+                            if proposal.get("kind") == "proposal":
+                                ChatStore(store).apply(project_id, proposal["id"])
                     entry["prompts"].append({"number": number, "text": prompt, "status": "passed", "metrics": metrics, "extra_checks": extra})
                     report_path.write_text(json.dumps(safe_json(report), indent=2))
                 baseline_revision, baseline_run = revision, run

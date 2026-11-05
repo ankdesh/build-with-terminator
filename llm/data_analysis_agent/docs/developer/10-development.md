@@ -116,3 +116,7 @@ Successful builds write `runtime_cache/frontend-build.json`; dependency state is
 ## Documentation build
 
 The documentation builder uses the Python standard library and Graphviz `dot`. It does not import backend.app, initialize a project store, read the API key, call the model, start workers, or change user projects. Rebuild after changing routes, package declarations, or diagram sources. Inspect the diagrams and review architecture prose; automated extraction cannot prove that prose is correct.
+
+## Developer inspection launch
+
+Start with `python launcher.py --developer-mode` (combine with --headless and --host as needed). The default is off. It enables read-only inspection for the entire builder process, including LAN clients. The live target and exported application do not receive this flag. Use tests/test_stage_chat.py for answer purity, scope checks, incomplete proposals, atomic Apply, conflicts, migration, developer gating and run/follow-up behavior. Chat edits now require an explicit Apply before existing Run checks.

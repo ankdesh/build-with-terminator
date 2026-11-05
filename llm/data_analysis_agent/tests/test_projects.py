@@ -110,7 +110,7 @@ def test_export_rejects_archive_traversal(saved_project, tmp_path):
 async def test_agent_saves_without_running_and_repairs_only_schema_errors(saved_project, simple_revision):
     from backend.services.project_agent import ProposalValidationError
     store, project_id, original_run = saved_project
-    payload = simple_revision.model_dump(); payload["revision_id"] = str(uuid4())
+    payload = simple_revision.model_dump(); payload["revision_id"] = str(uuid4()); payload["dashboard"]["title"] = "Reviewed dashboard"
     proposal = ProjectRevision.model_validate(payload)
     agent = AsyncMock()
     agent.propose.side_effect = [ProposalValidationError("Invalid widget binding", payload), proposal]
@@ -118,7 +118,10 @@ async def test_agent_saves_without_running_and_repairs_only_schema_errors(saved_
     service = ProjectService(store, agent=agent, runner=runner)
     import threading
     events = []
-    await service.build(project_id, "Refine the dashboard", events.append, threading.Event())
+    item = await service.build(project_id, "Refine the dashboard", events.append, threading.Event())
+    assert store.get(project_id)["draft_id"] == original_run.revision_id
+    from backend.services.chat_store import ChatStore
+    ChatStore(store).apply(project_id, item["id"])
     assert agent.propose.await_count == 2
     runner.run.assert_not_awaited()
     assert store.view(project_id)["display_run"]["run_id"] == original_run.run_id
@@ -136,7 +139,11 @@ async def test_malformed_model_patch_is_repaired_without_losing_working_revision
     agent.propose.side_effect = [json.JSONDecodeError("Invalid patch value_json", "", 0), proposal]
     runner = AsyncMock()
     import threading
-    await ProjectService(store, agent=agent, runner=runner).build(project_id, "Rename dashboard", lambda _: None, threading.Event())
+    item = await ProjectService(store, agent=agent, runner=runner).build(project_id, "Rename dashboard", lambda _: None, threading.Event())
+    from backend.services.chat_store import ChatStore
+    ChatStore(store).apply(project_id, item["id"])
+    from backend.services.workspace_service import Workspaces
+    Workspaces(store).validate_presentation(project_id)
     assert agent.propose.await_count == 2
     second = agent.propose.await_args_list[1].args
     assert "Invalid model proposal" in second[4]
@@ -153,12 +160,20 @@ async def test_workspace_conflict_does_not_retry_model(saved_project, simple_rev
     store, project_id, _ = saved_project
     agent = AsyncMock()
     agent.propose.return_value = simple_revision
-    def conflict(*args, **kwargs):
-        raise WorkspaceConflict("Concurrent workspace edit")
-    monkeypatch.setattr(Workspaces, "write", conflict)
+    payload = simple_revision.model_dump()
+    payload['dashboard']['title'] = 'Proposed title'
+    agent.propose.return_value = ProjectRevision.model_validate(payload)
     import threading
+    item = await ProjectService(store, agent=agent).build(project_id, "Rename dashboard", lambda _: None, threading.Event())
+    workspace = Workspaces(store)
+    current = workspace.get(project_id)
+    from pipeline_core.workspace import WorkspaceDocument
+    document = WorkspaceDocument.model_validate(current['document'])
+    document.title = 'Concurrent edit'
+    workspace.write(project_id, current['version'], document)
+    from backend.services.chat_store import ChatStore
     with pytest.raises(WorkspaceConflict):
-        await ProjectService(store, agent=agent).build(project_id, "Rename dashboard", lambda _: None, threading.Event())
+        ChatStore(store).apply(project_id, item['id'])
     agent.propose.assert_awaited_once()
 
 @pytest.mark.asyncio
