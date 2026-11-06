@@ -17,6 +17,7 @@ This document outlines the architectural principles, design constraints, and eng
   - `DataProfiler`: Pandas-based schema analysis, descriptive stats, and data quality checks.
   - `CodeExecutor`: Direct in-memory Python script execution producing JSON-serializable outputs.
   - `AgentService`: LLM orchestration, plan-execute-explain streaming pipeline, and self-correction loop.
+- **Dedicated Stage Views & Interactive AI Chat**: Each pipeline stage (Data input, Data cleaning, Analysis, Visualization) provides a dedicated configuration view showing stage internals (Python code, configuration options, input/output contracts, cleanup verification, and table previews) alongside an interactive AI stage creator bar (`AIStageCreatorBar`) and contextual AI chat actions (`StageInternalsCard`). The Pipeline view preserves the end-to-end flow with stage navigation links.
 - **One Primary Class Per File**: Every Python file hosts one primary domain class (`SessionStore` in `session_store.py`, `DataProfiler` in `data_profiler.py`, `CodeExecutor` in `code_executor.py`, `AgentService` in `agent_service.py`).
 - **Separation of Visualization**: Visual chart generation is handled client-side in the React layer via native Apache ECharts specifications (`ChartSpec.option`). The backend only emits data series, axes, and option trees.
 

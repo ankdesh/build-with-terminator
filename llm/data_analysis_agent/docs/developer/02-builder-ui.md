@@ -6,8 +6,10 @@
 
 | Component | Owns | Direct dependencies | Does not own |
 | --- | --- | --- | --- |
-| [BuilderApp](../../frontend/src/BuilderApp.tsx) | Project selection; navigation; workspace requests; dock; job status; settings; acceptance/history | React, project API helpers, StageCanvas, PropertiesPanel, Dashboard, settings/profile components | Pipeline execution or artifact storage |
-| [StageCanvas](../../frontend/src/components/StageCanvas.tsx) | Four stage columns; selection; derived connections; status display; deletion request | Stage/workspace types, React, icons | Creating Python stages or arbitrary graph connections |
+| [BuilderApp](../../frontend/src/BuilderApp.tsx) | Project selection; navigation; workspace requests; dock; job status; settings; acceptance/history | React, project API helpers, StageCanvas, PropertiesPanel, Dashboard, StageInternalsCard, AIStageCreatorBar, settings/profile components | Pipeline execution or artifact storage |
+| [StageCanvas](../../frontend/src/components/StageCanvas.tsx) | Four stage columns; selection; derived connections; status display; direct page jump; deletion request | Stage/workspace types, React, icons | Creating Python stages or arbitrary graph connections |
+| [StageInternalsCard](../../frontend/src/components/StageInternalsCard.tsx) | Stage internals inspection and configuration; title and rationale; inputs/outputs flow; Python code view and edit; cleanup impact stats; table/metric result preview; AI actions (refine, explain, fix) | React, DataTableViewer, workspace and run types | Pipeline execution or server-side sandbox management |
+| [AIStageCreatorBar](../../frontend/src/components/AIStageCreatorBar.tsx) | Interactive stage creation prompt input; tailored suggestion chips; manual stage trigger | React, Lucide icons | Direct execution or saving without chat review |
 | [PropertiesPanel](../../frontend/src/components/PropertiesPanel.tsx) | Fields for the selected input, executable step, or widget | SettingsFields, workspace and run types | Project-wide settings |
 | [SettingsFields](../../frontend/src/components/SettingsFields.tsx) | Commit-on-blur fields; parameter labels, defaults, bounds | React, workspace and run types | Calculations or server validation |
 | [Dashboard](../../frontend/src/components/Dashboard.tsx) | Shared widgets; desktop grid; designer selection; drag/resize; keyboard movement | React Grid Layout, ChartViewer, DataTableViewer | Fetching project state or running Python |
@@ -15,7 +17,17 @@
 | [DataTableViewer](../../frontend/src/components/DataTableViewer.tsx) | Preview table and CSV action | Table types and caller-supplied export callback | Reconstructing full CSV from the preview |
 | [RuntimeApp](../../frontend/src/RuntimeApp.tsx) | Dashboard use, CSV upload, controls, refresh/cancel, runtime events | React, Dashboard, DashboardControls, runtime API helpers | Chat, workspace editing, project history |
 
-Stages and logic are created through chat. The builder has no source-code editor. Direct forms edit the supported contract and presentation fields.
+Stages and logic can be created interactively through AI chat or directly configured. Dedicated pages for Data cleaning and Analysis expose the complete internals of each stage (Python code, configuration options, input/output contracts, cleanup verification, and output tables).
+
+## Navigation and dedicated stage pages
+
+The builder provides dedicated pages for each stage of the analysis pipeline alongside high-level overview views:
+1. **Pipeline**: Shows the end-to-end flow with SVG connection curves, stage status badges, and quick links to open dedicated stage pages.
+2. **Data input**: Manages source CSV upload, business context, input schema contract, and descriptive profiling.
+3. **Data cleaning**: Dedicated page for data cleaning stages, featuring the `AIStageCreatorBar` for interactive AI generation, full stage internals inspection (`StageInternalsCard`), Python script editor, cleanup impact statistics (rows and missing cells before/after), and cleaned data preview tables.
+4. **Analysis**: Dedicated page for analytical and aggregation stages, featuring the `AIStageCreatorBar`, stage internals cards, Python calculation editor, parameter bindings, scalar metrics, and resulting tables.
+5. **Visualization**: Dedicated page for dashboard presentation, interactive widget creation with AI, 12-column grid layout customization, and scenario control parameters.
+6. **History**: Accepted application downloads and version rollback.
 
 ## Settings locations
 
