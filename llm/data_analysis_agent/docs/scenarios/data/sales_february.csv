@@ -1,0 +1,7 @@
+InvoiceNo,InvoiceDate,Country,Quantity,UnitPrice
+2001,2026-02-01,India,2,100
+2002,2026-02-01,UK,2,50
+2003,2026-02-02,India,1,80
+2004,2026-02-02,UK,3,40
+C2005,2026-02-02,UK,-1,50
+2006,2026-02-03,India,2,0

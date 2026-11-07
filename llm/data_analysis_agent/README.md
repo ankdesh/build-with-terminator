@@ -95,6 +95,10 @@ The target starts with the builder CSV. A target-side CSV upload uses separate r
 
 Review cleanup and select **Accept revision** before downloading a Windows application. **History** keeps earlier accepted downloads available. The download contains the selected accepted revision and its accepted CSV when included; pending development changes and target-side CSV replacements are excluded.
 
+## Practical scenarios
+
+Start with the [step-by-step Markdown scenarios](docs/scenarios/README.md) to explore energy costs, build a ten-row sales report, inspect demand trends, and reuse a report with a new CSV. Each guide includes result checks and a short demonstration script. The first scenario needs no model access; the sales guide includes small synthetic practice files.
+
 ## Guided analysis tutorials
 
 Open [the tutorial start page](tutorials/index.html) in a desktop browser, or extract [the complete tutorial ZIP](artifacts/wps-ai-tutorial-pack.zip). Keep all folders beside the HTML files. The pack includes four public CSVs, local interactive reference charts, copyable prompts, result checkpoints, and replacement/invalid-schema practice files. The pages work offline and do not call the builder API.
