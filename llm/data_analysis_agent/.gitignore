@@ -18,3 +18,4 @@ node_modules/
 backend/static/assets/
 backend/static/index.html
 !frontend/src/lib/
+artifact/
