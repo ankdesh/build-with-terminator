@@ -5,7 +5,8 @@ import json
 import logging
 from pathlib import Path
 import shutil
-from typing import List, Optional
+import threading
+from typing import Any, ClassVar, Dict, List, Optional
 import uuid
 
 from backend.exceptions import SessionNotFoundError
@@ -20,9 +21,24 @@ logger = logging.getLogger(__name__)
 class SessionStore:
     """Manages session creation, persistence, file storage, and retrieval on local disk."""
 
+    # Shared in-memory surrogate model cache across all SessionStore instances (Milestone 3)
+    _surrogate_cache: ClassVar[Dict[str, Any]] = {}
+    _cache_lock: ClassVar[threading.Lock] = threading.Lock()
+
     def __init__(self, base_dir: Optional[Path] = None) -> None:
         self.base_dir: Path = base_dir or config.sessions_dir
         self.base_dir.mkdir(parents=True, exist_ok=True)
+        # Note: _surrogate_cache is a shared ClassVar, not initialized per instance.
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        """Route instance assignments to _surrogate_cache into the shared class dictionary."""
+        if name == "_surrogate_cache":
+            with SessionStore._cache_lock:
+                SessionStore._surrogate_cache.clear()
+                if isinstance(value, dict):
+                    SessionStore._surrogate_cache.update(value)
+            return
+        super().__setattr__(name, value)
 
     def _get_session_dir(self, session_id: str) -> Path:
         return self.base_dir / session_id
@@ -108,6 +124,9 @@ class SessionStore:
         session_dir = self._get_session_dir(session_id)
         if not session_dir.exists():
             raise SessionNotFoundError(session_id)
+
+        # Invalidate cached surrogate model since underlying dataset changed
+        self.invalidate_surrogate_cache(session_id)
 
         # Save CSV file
         csv_path = session_dir / "data.csv"
@@ -195,8 +214,80 @@ class SessionStore:
             logger.warning("Error loading messages for %s: %s", session_id, e)
             return []
 
+    def get_surrogate(self, session_id: str, target_col: Optional[str] = None) -> Optional[Any]:
+        """Retrieve cached in-memory surrogate model for a session and target metric.
+
+        Strict target matching:
+        - If target_col is provided (not None): checks f"{session_id}:{target_col}".
+          If found, returns it. If NOT found, returns None (never falls back to an unrelated metric).
+        - If target_col is None: checks f"{session_id}:default". If found, returns it.
+          If not found, falls back to returning the first cached model matching f"{session_id}:" or key == session_id.
+        - Returns None on cache miss. Thread-safe class-level cache lookup.
+        """
+        with SessionStore._cache_lock:
+            if target_col is not None:
+                return SessionStore._surrogate_cache.get(f"{session_id}:{target_col}")
+
+            default_key = f"{session_id}:default"
+            if default_key in SessionStore._surrogate_cache:
+                return SessionStore._surrogate_cache[default_key]
+
+            prefix = f"{session_id}:"
+            for key, model in list(SessionStore._surrogate_cache.items()):
+                if key.startswith(prefix) or key == session_id:
+                    return model
+            return None
+
+    def save_surrogate(
+        self,
+        session_id: str,
+        target_col_or_surrogate: Any,
+        surrogate_or_none: Optional[Any] = None,
+    ) -> None:
+        """Store trained surrogate model into fast in-memory cache for sub-millisecond evaluation.
+
+        Supports both (session_id, target_col, surrogate) and (session_id, surrogate, target_col) signatures.
+        """
+        if isinstance(target_col_or_surrogate, str):
+            target = target_col_or_surrogate
+            model = surrogate_or_none
+        else:
+            model = target_col_or_surrogate
+            target = surrogate_or_none or getattr(model, "target_col", None) or "default"
+
+        cache_key = f"{session_id}:{target}"
+        with SessionStore._cache_lock:
+            SessionStore._surrogate_cache[cache_key] = model
+        logger.info("Cached surrogate model in memory for session %s (key: %s)", session_id, cache_key)
+
+    # Alias for save_surrogate
+    set_surrogate = save_surrogate
+
+    def invalidate_surrogate_cache(self, session_id: str) -> None:
+        """Evict all cached surrogate models for a session across all store instances."""
+        prefix = f"{session_id}:"
+        with SessionStore._cache_lock:
+            keys_to_delete = [
+                k for k in list(SessionStore._surrogate_cache.keys())
+                if k.startswith(prefix) or k == session_id
+            ]
+            for k in keys_to_delete:
+                SessionStore._surrogate_cache.pop(k, None)
+        if keys_to_delete:
+            logger.info("Evicted %d surrogate cache entries for session %s", len(keys_to_delete), session_id)
+
+    # Alias for invalidate_surrogate_cache
+    clear_surrogate = invalidate_surrogate_cache
+
+    @classmethod
+    def clear_all_surrogates(cls) -> None:
+        """Evict all cached surrogate models across all sessions (primarily for testing and resets)."""
+        with cls._cache_lock:
+            cls._surrogate_cache.clear()
+
     def delete_session(self, session_id: str) -> None:
         """Permanently delete a session and all its stored files."""
+        self.invalidate_surrogate_cache(session_id)
         session_dir = self._get_session_dir(session_id)
         if session_dir.exists():
             shutil.rmtree(session_dir)

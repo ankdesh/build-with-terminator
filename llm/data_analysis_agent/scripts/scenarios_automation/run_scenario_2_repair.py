@@ -1,7 +1,13 @@
+import sys
 import time
+from pathlib import Path
 from playwright.sync_api import sync_playwright
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from common import SCREENSHOTS_DIR, ensure_temp_dirs
+
 def run():
+    ensure_temp_dirs()
     with sync_playwright() as p:
         browser = p.chromium.launch(executable_path='/usr/bin/google-chrome', headless=True)
         context = browser.new_context(viewport={'width': 1366, 'height': 850})
@@ -33,7 +39,7 @@ def run():
         if drawer_btn.count() > 0:
             drawer_btn.click()
             page.wait_for_timeout(1000)
-            page.screenshot(path='artifacts/scenario_report/screenshots/s2_09a_run_error_drawer.png')
+            page.screenshot(path=str(SCREENSHOTS_DIR / 's2_09a_run_error_drawer.png'))
 
         # Ensure Chat dock is open
         if page.locator('aside.studio-dock').count() == 0:
@@ -64,13 +70,13 @@ def run():
                 break
             time.sleep(2)
 
-        page.screenshot(path='artifacts/scenario_report/screenshots/s2_09b_repair_review_received.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's2_09b_repair_review_received.png'))
 
         # Click Apply
         print("[Scenario 2 Repair] Applying repair...")
         apply_btn.click()
         page.wait_for_timeout(2000)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s2_09c_repair_applied.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's2_09c_repair_applied.png'))
 
         # Select Run
         print("[Scenario 2 Repair] Clicking Run in top bar...")
@@ -87,13 +93,13 @@ def run():
                 break
             time.sleep(1)
         print(f"[Scenario 2 Repair] Run completed. Succeeded: {run_done}")
-        page.screenshot(path='artifacts/scenario_report/screenshots/s2_09d_run_succeeded.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's2_09d_run_succeeded.png'))
 
         # Check Visualization
         print("[Scenario 2 Repair] Checking Visualization view...")
         page.locator('aside.studio-navigation nav button:has-text("Visualization")').click()
         page.wait_for_timeout(2000)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s2_10_visualization_view.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's2_10_visualization_view.png'))
 
         vis_content = page.content()
         print("Sales value 800.00:", "800.00" in vis_content or "800" in vis_content)
@@ -112,13 +118,13 @@ def run():
             dash_page.goto(dash_url)
             dash_page.wait_for_load_state('networkidle')
             dash_page.wait_for_timeout(2000)
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s2_11_dashboard_initial.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's2_11_dashboard_initial.png'))
 
             # Open Filters and scenarios
             print("[Scenario 2 Repair] Opening Filters and scenarios drawer...")
             dash_page.locator('button:has-text("Filters and scenarios")').click()
             dash_page.wait_for_timeout(1000)
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s2_12_dashboard_controls_open.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's2_12_dashboard_controls_open.png'))
 
             # Set Discount percent to 10
             print("[Scenario 2 Repair] Setting Discount percent to 10...")
@@ -128,7 +134,7 @@ def run():
             dash_page.locator('button:has-text("Apply controls")').click()
             dash_page.wait_for_timeout(3000)
             dash_page.wait_for_load_state('networkidle')
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s2_13_discount_10_applied.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's2_13_discount_10_applied.png'))
 
             d1_content = dash_page.content()
             print("Scenario sales 720.00:", "720.00" in d1_content or "720" in d1_content)
@@ -144,7 +150,7 @@ def run():
             dash_page.locator('button:has-text("Apply controls")').click()
             dash_page.wait_for_timeout(3000)
             dash_page.wait_for_load_state('networkidle')
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s2_14_india_discount_10.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's2_14_india_discount_10.png'))
 
             d2_content = dash_page.content()
             print("India sales 530.00:", "530.00" in d2_content or "530" in d2_content)
@@ -162,7 +168,7 @@ def run():
             dash_page.locator('button:has-text("Apply controls")').click()
             dash_page.wait_for_timeout(3000)
             dash_page.wait_for_load_state('networkidle')
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s2_15_dashboard_reset.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's2_15_dashboard_reset.png'))
 
         browser.close()
 

@@ -106,3 +106,84 @@ class LLMConfigurationError(WPSAIBaseException):
             message=message,
             details="Set the endpoint and model in config.json. Set OPENAI_API_KEY in the environment."
         )
+
+
+class DiagnosticEngineError(WPSAIBaseException):
+    """Base exception for all visual diagnostic engine calculations."""
+
+    def __init__(self, message: str, details: str = "") -> None:
+        super().__init__(
+            message=message,
+            details=details or "Inspect diagnostic inputs, variance, and segment parameters.",
+        )
+
+
+class SubgroupSliceError(DiagnosticEngineError):
+    """Raised when subgroup slice isolation fails."""
+
+    def __init__(self, message: str, details: str = "") -> None:
+        super().__init__(
+            message=message,
+            details=details or "Check metric column variance and dimension cardinalities.",
+        )
+
+
+class AttributionDecompositionError(DiagnosticEngineError):
+    """Raised when period shift decomposition fails."""
+
+    def __init__(self, message: str, details: str = "") -> None:
+        super().__init__(
+            message=message,
+            details=details or "Verify baseline and current period partitions and feature columns.",
+        )
+
+
+class ChangepointDetectionError(DiagnosticEngineError):
+    """Raised when timeline changepoint detection or cascade ordering fails."""
+
+    def __init__(self, message: str, details: str = "") -> None:
+        super().__init__(
+            message=message,
+            details=details or "Ensure time series has at least 10 finite observations and valid time indexing.",
+        )
+
+
+class ScenarioSimulationError(WPSAIBaseException):
+    """Base exception for scenario simulation and what-if studio."""
+
+    def __init__(self, message: str, details: str = "") -> None:
+        super().__init__(
+            message=message,
+            details=details or "Verify lever assignments and simulation inputs.",
+        )
+
+
+class SurrogateModelError(ScenarioSimulationError):
+    """Raised when surrogate model fitting, caching, or fast evaluation fails."""
+
+    def __init__(self, message: str, details: str = "") -> None:
+        super().__init__(
+            message=message,
+            details=details or "Check lever collinearity or ensure model is cached before prediction.",
+        )
+
+
+class OODDetectionError(ScenarioSimulationError):
+    """Raised when out-of-distribution evaluation fails."""
+
+    def __init__(self, message: str, details: str = "") -> None:
+        super().__init__(
+            message=message,
+            details=details or "Check covariance invertibility and feature vector dimensions.",
+        )
+
+
+class CounterfactualOptimizationError(ScenarioSimulationError):
+    """Raised when counterfactual goal-seeking solver fails."""
+
+    def __init__(self, message: str, details: str = "") -> None:
+        super().__init__(
+            message=message,
+            details=details or "Target goal may be unreachable within historical lever boundaries.",
+        )
+

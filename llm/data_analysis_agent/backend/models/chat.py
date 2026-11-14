@@ -1,6 +1,7 @@
 """Chat interaction, code execution, and visualization specification models."""
 
 from datetime import datetime, timezone
+import re
 from typing import Any, Dict, List, Literal, Optional
 from pydantic import BaseModel, Field, model_validator
 
@@ -101,6 +102,105 @@ class TableData(BaseModel):
     total_rows: int = Field(default=0, description="Total number of rows in the complete result")
 
 
+class ConfidenceBadge(BaseModel):
+    """Plain-English confidence or risk badge representing underlying statistical health."""
+
+    level: Literal["high", "moderate", "warning", "uncharted", "low"] = Field(
+        ...,
+        description="Semantic confidence tier: high (green), moderate/warning (yellow), uncharted/low (red)",
+    )
+    icon: Literal["🟢", "🟡", "🔴"] = Field(
+        ...,
+        description="Visual traffic-light status emoji (🟢 = trustworthy, 🟡 = caution/low sample, 🔴 = uncharted/risk)",
+    )
+    title: str = Field(
+        ...,
+        description="Human-readable confidence headline (e.g. 'High Confidence Finding', 'Low Sample Warning')",
+    )
+    subtitle: str = Field(
+        default="",
+        description="Contextual plain-English explanation or caveat without raw formulas",
+    )
+    metric_source: str = Field(
+        default="general",
+        description="Statistical test or metric source (e.g. 'p_value', 'r_squared', 'mahalanobis', 'sample_size')",
+    )
+    raw_value: float = Field(
+        default=0.0,
+        description="Raw numerical value of the underlying statistic for auditing/debugging",
+    )
+    badge: Optional[str] = Field(
+        default=None,
+        description="Combined badge string for fast display (e.g. '🟢 High Confidence Finding')",
+    )
+
+    @model_validator(mode="before")
+    @classmethod
+    def populate_defaults(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            # Normalize level aliases
+            if data.get("level") == "uncharted_territory":
+                data["level"] = "uncharted"
+
+            # Auto-populate icon and title if only combined badge string was passed
+            if "badge" in data and data["badge"]:
+                b_str = str(data["badge"])
+                if "icon" not in data or not data["icon"]:
+                    for ic in ["🟢", "🟡", "🔴"]:
+                        if ic in b_str:
+                            data["icon"] = ic
+                            break
+                    if "icon" not in data or not data["icon"]:
+                        data["icon"] = "🟢" if data.get("level") == "high" else ("🔴" if data.get("level") in ["uncharted", "low"] else "🟡")
+                if "title" not in data or not data["title"]:
+                    clean_title = re.sub(r"[🟢🟡🔴]", "", b_str).strip()
+                    data["title"] = clean_title or "Statistical Confidence"
+            elif "icon" in data and "title" in data and ("badge" not in data or not data["badge"]):
+                data["badge"] = f"{data['icon']} {data['title']}"
+
+            # Fallback icon if missing
+            if "icon" not in data or not data["icon"]:
+                data["icon"] = "🟢" if data.get("level") == "high" else ("🔴" if data.get("level") in ["uncharted", "low"] else "🟡")
+
+            # Fallback raw_value if None
+            if "raw_value" in data and data["raw_value"] is None:
+                data["raw_value"] = 0.0
+        return data
+
+    def __getitem__(self, item: str) -> Any:
+        return getattr(self, item)
+
+    def get(self, item: str, default: Any = None) -> Any:
+        return getattr(self, item, default)
+
+
+class FollowUpChip(BaseModel):
+    """Interactive next-step action chip prompting contextual follow-up workflows."""
+
+    id: str = Field(
+        ...,
+        description="Unique identifier for action routing (e.g. 'drilldown_warehouse', 'simulate_recovery')",
+    )
+    label: str = Field(
+        ...,
+        description="User-facing chip button text with emoji icon (e.g. '🔍 Show me which customer group caused this')",
+    )
+    prompt: str = Field(
+        ...,
+        description="Pre-formulated chat query submitted when the user clicks the chip",
+    )
+    action_type: Literal["drilldown", "simulate", "recipes", "compare"] = Field(
+        ...,
+        description="Action category for UI routing: 'drilldown', 'simulate', 'recipes', 'compare'",
+    )
+
+    def __getitem__(self, item: str) -> Any:
+        return getattr(self, item)
+
+    def get(self, item: str, default: Any = None) -> Any:
+        return getattr(self, item, default)
+
+
 class ExecutionResult(BaseModel):
     """Output generated from running data analysis code against the session DataFrame."""
 
@@ -115,6 +215,18 @@ class ExecutionResult(BaseModel):
     execution_time_ms: float = Field(default=0.0, description="Execution duration in milliseconds")
     retries_attempted: int = Field(default=0, description="Count of retry attempts required to succeed")
     step_logs: List[str] = Field(default_factory=list, description="Step-by-step diagnostic and execution log entries")
+    confidence_badges: List[ConfidenceBadge] = Field(
+        default_factory=list,
+        description="List of plain-English confidence and data quality badges",
+    )
+    follow_up_chips: List[FollowUpChip] = Field(
+        default_factory=list,
+        description="Interactive next-step action chips displayed below the response",
+    )
+    diagnostic_summary: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Structured diagnostic metadata from anomaly, waterfall, or domino engines",
+    )
 
 
 class ChatMessage(BaseModel):

@@ -1,11 +1,16 @@
 import os
+import sys
 import time
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from common import SCREENSHOTS_DIR, ensure_temp_dirs
+
 CSV_PATH = str(Path('tutorials/data/bike_daily.csv').resolve())
 
 def run():
+    ensure_temp_dirs()
     with sync_playwright() as p:
         browser = p.chromium.launch(executable_path='/usr/bin/google-chrome', headless=True)
         context = browser.new_context(viewport={'width': 1366, 'height': 850})
@@ -20,7 +25,7 @@ def run():
         page.locator('button[aria-label="New project"]').click()
         page.wait_for_timeout(2000)
         page.wait_for_load_state('networkidle')
-        page.screenshot(path='artifacts/scenario_report/screenshots/s3_01_new_project_created.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's3_01_new_project_created.png'))
 
         # Rename project to 'Daily rental demand'
         print("[Scenario 3] Renaming project to 'Daily rental demand'...")
@@ -32,7 +37,7 @@ def run():
         page.wait_for_timeout(500)
         page.locator('button:has-text("Done")').click()
         page.wait_for_timeout(1000)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s3_02_project_renamed.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's3_02_project_renamed.png'))
 
         # 2. Upload CSV in Data input
         print("[Scenario 3] Navigating to Data input...")
@@ -44,7 +49,7 @@ def run():
         file_input.set_input_files(CSV_PATH)
         page.wait_for_timeout(3000)
         page.wait_for_load_state('networkidle')
-        page.screenshot(path='artifacts/scenario_report/screenshots/s3_03_csv_uploaded.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's3_03_csv_uploaded.png'))
 
         # Check profile
         content = page.content()
@@ -61,7 +66,7 @@ def run():
         bc_textarea.fill(b_context)
         page.locator('header.studio-header').click()
         page.wait_for_timeout(1000)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s3_04_business_context_saved.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's3_04_business_context_saved.png'))
 
         # 3. Chat prompt
         print("[Scenario 3] Opening Chat dock...")
@@ -91,7 +96,7 @@ Keep the original CSV unchanged. Save the stages for review; I will select Run."
         print("[Scenario 3] Pasting prompt and sending to chat...")
         chat_input = page.locator('aside.studio-dock textarea')
         chat_input.fill(prompt_text)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s3_05_prompt_entered.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's3_05_prompt_entered.png'))
         
         send_btn = page.locator('aside.studio-dock button[aria-label="Send chat message"]')
         send_btn.click()
@@ -103,7 +108,7 @@ Keep the original CSV unchanged. Save the stages for review; I will select Run."
         while time.time() - start_wait < 120:
             if apply_btn.count() > 0 and apply_btn.is_visible() and not apply_btn.is_disabled():
                 print(f"[Scenario 3] LLM review arrived in {int(time.time() - start_wait)}s!")
-                page.screenshot(path='artifacts/scenario_report/screenshots/s3_06_review_received.png')
+                page.screenshot(path=str(SCREENSHOTS_DIR / 's3_06_review_received.png'))
                 apply_btn.click()
                 applied = True
                 break
@@ -111,12 +116,12 @@ Keep the original CSV unchanged. Save the stages for review; I will select Run."
 
         if not applied:
             print("[Scenario 3] ERROR: Apply button did not appear!")
-            page.screenshot(path='artifacts/scenario_report/screenshots/s3_06_error_review.png')
+            page.screenshot(path=str(SCREENSHOTS_DIR / 's3_06_error_review.png'))
             browser.close()
             return
 
         page.wait_for_timeout(2000)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s3_07_review_applied.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's3_07_review_applied.png'))
 
         # Select Run
         print("[Scenario 3] Clicking Run in top bar...")
@@ -133,7 +138,7 @@ Keep the original CSV unchanged. Save the stages for review; I will select Run."
                 break
             time.sleep(1)
         print(f"[Scenario 3] Run completed in {int(time.time() - start_run)}s. Done: {run_done}")
-        page.screenshot(path='artifacts/scenario_report/screenshots/s3_08_run_completed.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's3_08_run_completed.png'))
 
         # If run failed, check logs and repair if needed
         if not run_done:
@@ -142,7 +147,7 @@ Keep the original CSV unchanged. Save the stages for review; I will select Run."
             if drawer_btn.count() > 0:
                 drawer_btn.click()
                 page.wait_for_timeout(1000)
-                page.screenshot(path='artifacts/scenario_report/screenshots/s3_08a_run_drawer_error.png')
+                page.screenshot(path=str(SCREENSHOTS_DIR / 's3_08a_run_drawer_error.png'))
             
             # Send repair prompt
             print("[Scenario 3] Sending repair prompt...")
@@ -164,13 +169,13 @@ Keep the original CSV unchanged. Save the stages for review; I will select Run."
                 page.wait_for_timeout(2000)
                 page.locator('header.studio-header button.primary:has-text("Run")').click()
                 time.sleep(10)
-                page.screenshot(path='artifacts/scenario_report/screenshots/s3_08b_repaired_run.png')
+                page.screenshot(path=str(SCREENSHOTS_DIR / 's3_08b_repaired_run.png'))
 
         # Navigate to Visualization
         print("[Scenario 3] Navigating to Visualization...")
         page.locator('aside.studio-navigation nav button:has-text("Visualization")').click()
         page.wait_for_timeout(2000)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s3_09_visualization_view.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's3_09_visualization_view.png'))
 
         vis_content = page.content()
         print("Visualization check Days 731:", "731" in vis_content)
@@ -187,12 +192,12 @@ Keep the original CSV unchanged. Save the stages for review; I will select Run."
             dash_page.goto(dash_url)
             dash_page.wait_for_load_state('networkidle')
             dash_page.wait_for_timeout(2000)
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s3_10_dashboard_initial_all.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's3_10_dashboard_initial_all.png'))
 
             # Open Filters and scenarios
             dash_page.locator('button:has-text("Filters and scenarios")').click()
             dash_page.wait_for_timeout(1000)
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s3_11_filters_open.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's3_11_filters_open.png'))
 
             # Filter Calendar year to 2011
             print("[Scenario 3] Selecting Calendar year 2011...")
@@ -202,7 +207,7 @@ Keep the original CSV unchanged. Save the stages for review; I will select Run."
             dash_page.locator('button:has-text("Apply controls")').click()
             dash_page.wait_for_timeout(3000)
             dash_page.wait_for_load_state('networkidle')
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s3_12_dashboard_2011.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's3_12_dashboard_2011.png'))
 
             d2011_content = dash_page.content()
             print("2011 check Days 365:", "365" in d2011_content)
@@ -218,7 +223,7 @@ Keep the original CSV unchanged. Save the stages for review; I will select Run."
             dash_page.locator('button:has-text("Apply controls")').click()
             dash_page.wait_for_timeout(3000)
             dash_page.wait_for_load_state('networkidle')
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s3_13_dashboard_2012.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's3_13_dashboard_2012.png'))
 
             d2012_content = dash_page.content()
             print("2012 check Days 366:", "366" in d2012_content)
@@ -234,7 +239,7 @@ Keep the original CSV unchanged. Save the stages for review; I will select Run."
             dash_page.locator('button:has-text("Apply controls")').click()
             dash_page.wait_for_timeout(3000)
             dash_page.wait_for_load_state('networkidle')
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s3_14_dashboard_reset_all.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's3_14_dashboard_reset_all.png'))
 
         # 4. Ask a question about saved evidence in Builder
         print("[Scenario 3] Returning to Builder to ask evidence question...")
@@ -252,7 +257,7 @@ Keep the original CSV unchanged. Save the stages for review; I will select Run."
         )
         print("[Scenario 3] Sending evidence explanation question to chat...")
         page.locator('aside.studio-dock textarea').fill(q_prompt)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s3_15_qa_prompt_entered.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's3_15_qa_prompt_entered.png'))
         page.locator('aside.studio-dock button[aria-label="Send chat message"]').click()
 
         # Wait for answer
@@ -270,7 +275,7 @@ Keep the original CSV unchanged. Save the stages for review; I will select Run."
             time.sleep(2)
         
         page.wait_for_timeout(1000)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s3_16_qa_answer_received.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's3_16_qa_answer_received.png'))
 
         browser.close()
 

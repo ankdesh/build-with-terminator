@@ -1,0 +1,1479 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Visual Diagnostics & "What-If" Studio · WPS-AI Field Guide</title>
+  <link rel="stylesheet" href="assets/tutorials.css">
+  <script src="assets/echarts.min.js"></script>
+  <style>
+    /* Scoped interactive extensions for Lesson 05 */
+    :root {
+      --alert-red: #ef4444;
+      --alert-bg: #fef2f2;
+      --alert-border: #fecaca;
+      --safe-green: #10b981;
+      --safe-bg: #ecfdf5;
+      --safe-border: #a7f3d0;
+      --stretch-amber: #f59e0b;
+      --stretch-bg: #fffbeb;
+      --stretch-border: #fde68a;
+      --sim-blue: #3b82f6;
+      --sim-bg: #eff6ff;
+      --slate-muted: #94a3b8;
+    }
+    
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .kpi-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 16px 20px;
+      position: relative;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .kpi-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+    .kpi-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .kpi-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .status-pill.normal { background: var(--safe-bg); color: #065f46; border: 1px solid var(--safe-border); }
+    .status-pill.watch { background: var(--stretch-bg); color: #92400e; border: 1px solid var(--stretch-border); }
+    .status-pill.alert { background: var(--alert-bg); color: #991b1b; border: 1px solid var(--alert-border); animation: pulseAlert 2s infinite; }
+    
+    @keyframes pulseAlert {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.4); }
+      50% { box-shadow: 0 0 0 6px rgba(239,68,68,0); }
+    }
+    
+    .kpi-value {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--ink);
+    }
+    .kpi-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    /* Interactive Simulator Card */
+    .simulator-container {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .simulator-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+    @media (max-width: 900px) {
+      .simulator-grid { grid-template-columns: 1fr; }
+    }
+    
+    .slider-group {
+      margin-bottom: 22px;
+    }
+    .slider-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    .slider-label {
+      font-weight: 600;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .slider-val-badge {
+      font-weight: 700;
+      color: var(--blue);
+      background: #edf3ff;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+    
+    /* Gradient Safe-Zone Range Input */
+    .safezone-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 10px;
+      border-radius: 5px;
+      outline: none;
+      background: linear-gradient(to right, #10b981 0%, #10b981 60%, #f59e0b 60%, #f59e0b 80%, #ef4444 80%, #ef4444 100%);
+      position: relative;
+    }
+    .safezone-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid var(--blue);
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+      transition: transform 0.1s ease;
+    }
+    .safezone-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+    
+    .slider-legend {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    
+    .locked-param {
+      opacity: 0.65;
+      background: #f8fafc;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px dashed #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+    
+    .reality-check-banner {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-left: 4px solid #f59e0b;
+      padding: 12px 16px;
+      border-radius: 6px;
+      color: #92400e;
+      font-size: 12px;
+      margin-top: 16px;
+      display: none;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    
+    /* Recipe Cards */
+    .recipe-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 20px 0;
+    }
+    @media (max-width: 900px) {
+      .recipe-grid { grid-template-columns: 1fr; }
+    }
+    .recipe-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 18px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .recipe-card:hover {
+      border-color: var(--blue);
+      box-shadow: 0 4px 14px rgba(36,91,215,0.08);
+      transform: translateY(-2px);
+    }
+    .recipe-card.active {
+      border-color: var(--blue);
+      border-width: 2px;
+      background: #f8faff;
+      box-shadow: 0 4px 14px rgba(36,91,215,0.12);
+    }
+    .recipe-tag {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--blue);
+      margin-bottom: 8px;
+    }
+    .recipe-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .recipe-change {
+      background: #f1f5f9;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: ui-monospace, monospace;
+      color: #334155;
+      margin-bottom: 12px;
+    }
+    .recipe-metrics {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+      border-top: 1px solid #e2e8f0;
+      padding-top: 10px;
+    }
+    
+    /* Action chips */
+    .chip-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .action-chip {
+      background: #edf3ff;
+      color: var(--blue);
+      border: 1px solid #d0e0fc;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .action-chip:hover {
+      background: var(--blue);
+      color: white;
+      border-color: var(--blue);
+    }
+    
+    /* Domino timeline interactive rows */
+    .domino-chain {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 16px 0;
+    }
+    .domino-node {
+      display: grid;
+      grid-template-columns: 80px 180px 1fr 140px;
+      align-items: center;
+      gap: 16px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 16px;
+      transition: all 0.2s ease;
+    }
+    .domino-node.culprit {
+      border-left: 4px solid var(--alert-red);
+      background: #fffdfd;
+    }
+    .domino-time {
+      font-family: ui-monospace, monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+    .domino-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .domino-spark {
+      height: 32px;
+    }
+    .domino-badge {
+      font-size: 11px;
+      text-align: right;
+    }
+    
+    .translation-table th { background: #f8fafc; }
+    .badge-high { color: #065f46; background: #ecfdf5; padding: 2px 6px; border-radius: 4px; font-weight: 600; font-size: 10px; }
+    .badge-warn { color: #92400e; background: #fffbeb; padding: 2px 6px; border-radius: 4px; font-weight: 600; font-size: 10px; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="top">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">▥</span>
+      <strong>WPS-AI <em>Field Guide</em></strong>
+    </a>
+    <span>Learn in the guide. Build in the Studio.</span>
+    <a href="index.html#setup">Start here ↗</a>
+  </header>
+
+  <div class="page">
+    <aside class="sidebar">
+      <a class="overview-link" href="index.html">Overview &amp; setup</a>
+      <p class="overline">Five practical lessons</p>
+      <a class="lesson-link" href="01-penguins.html">
+        <span>01</span>
+        <div><strong>Explore and compare</strong><small>Palmer Penguins</small></div>
+      </a>
+      <a class="lesson-link" href="02-retail.html">
+        <span>02</span>
+        <div><strong>Build a sales dashboard</strong><small>Online Retail · Q1 2011</small></div>
+      </a>
+      <a class="lesson-link" href="03-wine.html">
+        <span>03</span>
+        <div><strong>Inspect distributions and relationships</strong><small>Wine Quality</small></div>
+      </a>
+      <a class="lesson-link" href="04-bike.html">
+        <span>04</span>
+        <div><strong>Understand trends and forecasts</strong><small>Bike Sharing · daily observations</small></div>
+      </a>
+      <a class="lesson-link active" href="05-visual-diagnostics-whatif.html">
+        <span>05</span>
+        <div><strong>Visual Diagnostics &amp; "What-If" Studio</strong><small>Diagnostic Radar · Levers &amp; Recipes</small></div>
+      </a>
+
+      <div class="sidebar-note">
+        <strong>Zero Backend Bloat.</strong>
+        <p>Advanced statistical models (SHAP, Mahalanobis, DiCE) compile into lightweight client-side Apache ECharts options. No Matplotlib or Seaborn in runtime.</p>
+        <a href="ATTRIBUTION.txt">Sources &amp; licences</a>
+        <a href="manifest.json">Data manifest</a>
+      </div>
+    </aside>
+
+    <main id="main">
+      <section class="hero lesson-hero" style="--accent:#ef4444">
+        <p class="overline">Lesson 05 / System Expansion Tutorial</p>
+        <h1>Visual Diagnostics &amp; "What-If" Studio.</h1>
+        <p class="lead">How do we turn advanced statistics (SHAP decomposition, changepoint analysis, counterfactuals, and OOD checks) into instant visual cues for non-technical users?</p>
+        <div class="tags">
+          <span>Proactive Health Radar</span>
+          <span>Culprit Spotlight Bars</span>
+          <span>"Why It Changed" Bridge</span>
+          <span>Domino Timeline</span>
+          <span>Smart Levers &amp; Locks</span>
+          <span>Safe-Zone Slider Guardrails</span>
+          <span>Weather Range Forecasts</span>
+          <span>Action Recipe Cards</span>
+        </div>
+        <div class="hero-actions">
+          <a class="button primary" href="#step-1">Explore Visual Cues →</a>
+          <a class="button" href="#practice-studio">Interactive Scenario Studio</a>
+          <span class="verified">✓ Designed for WPS-AI Data Analysis Studio Architecture</span>
+        </div>
+      </section>
+
+      <nav class="section-links" aria-label="Lesson sections">
+        <a href="#philosophy">Design Philosophy</a>
+        <a href="#step-1">1. Health Radar</a>
+        <a href="#step-2">2. Culprit Finder</a>
+        <a href="#step-3">3. Attribution Bridge</a>
+        <a href="#step-4">4. Domino Timeline</a>
+        <a href="#step-5">5. Levers &amp; Locks</a>
+        <a href="#step-6">6. Sensitivity &amp; Weather</a>
+        <a href="#step-7">7. Recipe Cards</a>
+        <a href="#practice-studio">Live Studio Mockup</a>
+        <a href="#architecture">Architecture &amp; Code</a>
+      </nav>
+
+      <!-- Section: Philosophy & Translation Matrix -->
+      <section class="section" id="philosophy">
+        <div class="section-heading">
+          <p class="overline">Core Architecture Rule</p>
+          <h2>Rigorous Math Under the Hood, Visual Storytelling on Top.</h2>
+          <p>Non-technical business stakeholders (operations leaders, product managers, support directors) never ask for <em>SHAP values</em>, <em>p-values</em>, or <em>Mahalanobis distances</em>. They need immediate visual answers to 4 concrete questions:</p>
+        </div>
+
+        <div class="coverage-grid">
+          <article>
+            <h3 style="color:#ef4444">1. "Is something broken, and where?"</h3>
+            <p><strong>Visual Solution:</strong> Shaded Anomaly Zones directly on line charts, Traffic-Light KPI badges, and Spotlight Bar Charts highlighting the offending subgroup in high-contrast coral red against muted grey normal segments.</p>
+          </article>
+          <article>
+            <h3 style="color:#245bd7">2. "Why did this number change?"</h3>
+            <p><strong>Visual Solution:</strong> The "Why It Changed" Bridge (Waterfall chart) decomposing period-over-period delta into green upward pushes and red downward pulls with plain-English labels.</p>
+          </article>
+          <article>
+            <h3 style="color:#10b981">3. "If I pull this lever, what happens?"</h3>
+            <p><strong>Visual Solution:</strong> Interactive Levers with Safe-Zone slider tracks (Green = Historical range, Amber = Stretch, Red = Uncharted OOD territory) yielding sub-100ms outcome updates via cached surrogate models.</p>
+          </article>
+          <article>
+            <h3 style="color:#8250a3">4. "What is the easiest way to hit my goal?"</h3>
+            <p><strong>Visual Solution:</strong> Counterfactual "Action Recipe Cards" providing 3 practical paths (Easiest single tweak, Balanced multi-lever, Aggressive stretch) with one-click preset application.</p>
+          </article>
+        </div>
+
+        <details>
+          <summary>The Jargon-to-Visual Translation Matrix (Click to expand)</summary>
+          <div class="table-scroll">
+            <table class="translation-table">
+              <thead>
+                <tr>
+                  <th>Mathematical Technique (Backend Engine)</th>
+                  <th>What Non-Technical Users Actually Ask</th>
+                  <th>Visual Cue &amp; UI Pattern in WPS-AI</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Anomalous Slice Finding</strong> (Beam Search / Decision Trees)</td>
+                  <td><em>"Show me the exact group where the problem is happening."</em></td>
+                  <td><strong>"Spotlight Bars" &amp; Culprit Cards:</strong> Problematic segment in bright Coral Red (`#EF4444`) vs Slate Grey company baseline.</td>
+                </tr>
+                <tr>
+                  <td><strong>Shift Attribution</strong> (SHAP / Oaxaca Decomposition)</td>
+                  <td><em>"What pushed our metric down between last week and today?"</em></td>
+                  <td><strong>The "Why It Changed" Bridge (Waterfall):</strong> Floating green/red blocks connecting Last Week's bar to Today's bar.</td>
+                </tr>
+                <tr>
+                  <td><strong>Changepoint &amp; Lead-Lag</strong> (PELT / Granger Causality)</td>
+                  <td><em>"When did the issue start, and what broke first?"</em></td>
+                  <td><strong>"Domino Effect" Timeline:</strong> Stacked sparklines with vertical <strong>T=0 Event Pin</strong> sorted chronologically by order of failure.</td>
+                </tr>
+                <tr>
+                  <td><strong>Feature Role Inference</strong> (Mutable vs Immutable)</td>
+                  <td><em>"Which levers can I actually control?"</em></td>
+                  <td><strong>Levers vs Locks Panel:</strong> Controllable columns appear as interactive sliders; immutable factors carry a lock icon (`🔒`).</td>
+                </tr>
+                <tr>
+                  <td><strong>Mahalanobis Distance / OOD Check</strong></td>
+                  <td><em>"Am I asking for an unrealistic scenario?"</em></td>
+                  <td><strong>Traffic-Light Slider Tracks &amp; Reality Check Banner:</strong> Sliders colored Green (Safe), Amber (Stretch), and Striped Red (Uncharted Territory).</td>
+                </tr>
+                <tr>
+                  <td><strong>Monte Carlo Simulation</strong></td>
+                  <td><em>"What is the best, likely, and worst outcome?"</em></td>
+                  <td><strong>"Weather Forecast" Range Bar:</strong> Expected point outcome surrounded by a shaded 10th–90th percentile uncertainty whisker.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </section>
+
+      <!-- Step 1: Health Radar -->
+      <section class="step" id="step-1">
+        <div class="step-heading">
+          <span>01</span>
+          <h2>Proactive "Health Radar" &amp; Auto-Annotated Charts</h2>
+          <label class="done"><input type="checkbox" data-progress="radar"> Completed</label>
+        </div>
+        <p>When loading data into WPS-AI or asking broad questions like <em>"How are sales trending this quarter?"</em>, standard agents draw a plain line chart. Our expanded system automatically runs background changepoint and anomaly detection, overlaying <strong>three automatic visual layers</strong>:</p>
+
+        <!-- KPI Header with Traffic Light Statuses -->
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Weekly Net Margin</span>
+              <span class="status-pill alert">🔴 Alert (-5.5%)</span>
+            </div>
+            <div class="kpi-value">16.5%</div>
+            <div class="kpi-sub">
+              <span>Historical Baseline: 22.0%</span>
+              <span class="badge-high">High Confidence (4,210 orders)</span>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">On-Time Delivery</span>
+              <span class="status-pill watch">🟡 Watch (-1.8%)</span>
+            </div>
+            <div class="kpi-value">91.4%</div>
+            <div class="kpi-sub">
+              <span>SLA Target: 93.0%</span>
+              <span class="badge-high">Moderate Drift</span>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Total Volume</span>
+              <span class="status-pill normal">🟢 Normal (+2.4%)</span>
+            </div>
+            <div class="kpi-value">148.2k</div>
+            <div class="kpi-sub">
+              <span>Expected Range: 140k–152k</span>
+              <span class="badge-high">Healthy</span>
+            </div>
+          </div>
+        </div>
+
+        <figure class="chart-card">
+          <figcaption>
+            <strong>Proactive Diagnostic Chart: Daily Margin with Shaded Anomaly Zone</strong>
+            <button class="chart-download" data-chart="chart-radar">PNG ↓</button>
+          </figcaption>
+          <div class="chart" id="chart-radar" role="img" aria-label="Daily Margin with Shaded Anomaly Zone"></div>
+          <p class="chart-caption">
+            <strong>Mandatory 3-Layer Rule:</strong> Grey baseline reference line (22%) + soft red shaded anomaly window (Days 20–28) + auto callout pin ① highlighting the trough.
+          </p>
+        </figure>
+
+        <div class="chip-container">
+          <span style="font-size:11px; font-weight:600; color:var(--muted); align-self:center;">Proactive Follow-Up Chips:</span>
+          <button class="action-chip" onclick="scrollToSection('step-2')">🔍 Show me which customer group caused the drop</button>
+          <button class="action-chip" onclick="scrollToSection('step-3')">📊 Explain why margin changed (Root Cause Bridge)</button>
+          <button class="action-chip" onclick="scrollToSection('step-5')">🎛️ Simulate how to recover margin back to 22%</button>
+        </div>
+      </section>
+
+      <!-- Step 2: Visual Culprit Finder -->
+      <section class="step" id="step-2">
+        <div class="step-heading">
+          <span>02</span>
+          <h2>Visual "Culprit Finder" (Subgroup Slice Isolation)</h2>
+          <label class="done"><input type="checkbox" data-progress="culprit"> Completed</label>
+        </div>
+        <p>When the user clicks a red alert pill or asks <em>"What caused this?"</em>, the engine executes beam-search slice finding over multidimensional subsets (e.g. Region × Carrier × Tier). Instead of printing p-values or regression coefficients, it displays an intuitive <strong>Spotlight Bar Chart</strong>:</p>
+
+        <div class="checkpoint" style="background:#fff5f5; border-color:#fecaca;">
+          <h3 style="color:#991b1b">Headline Diagnosis</h3>
+          <p style="color:#7f1d1d; font-size:13px; line-height:1.6;">
+            <strong>Overall delivery rate dropped by 2.1%</strong>, but <strong>85% of the total company drop is isolated to a single subgroup</strong>:<br>
+            <code>Warehouse = North</code> combined with <code>Carrier = Express</code>.
+          </p>
+          <div style="margin-top:10px;">
+            <span class="badge-high" style="background:#dcfce7; color:#14532d; font-size:11px; padding:4px 8px;">
+              🟢 High Confidence Finding (Based on 412 orders — not a random fluke)
+            </span>
+          </div>
+        </div>
+
+        <figure class="chart-card">
+          <figcaption>
+            <strong>Spotlight Comparison: Shipping Cost per Order ($)</strong>
+            <button class="chart-download" data-chart="chart-culprit">PNG ↓</button>
+          </figcaption>
+          <div class="chart" id="chart-culprit" role="img" aria-label="Culprit Spotlight Chart"></div>
+          <p class="chart-caption">
+            <strong>The Spotlight Rule:</strong> The problematic slice is highlighted in high-contrast Coral Red (`#EF4444`, 3.2x above normal). All unaffected company segments are kept in muted slate grey (`#94A3B8`). The vertical dashed line shows the target normal ($12.50).
+          </p>
+        </figure>
+      </section>
+
+      <!-- Step 3: The "Why It Changed" Bridge -->
+      <section class="step" id="step-3">
+        <div class="step-heading">
+          <span>03</span>
+          <h2>The "Why It Changed" Bridge (Visual Root-Cause Attribution)</h2>
+          <label class="done"><input type="checkbox" data-progress="bridge"> Completed</label>
+        </div>
+        <p>When comparing two periods (Last Month vs. This Month) or Actual vs. Plan, non-technical users struggle to disentangle multi-variable interactions. The backend runs SHAP cohort shift attribution and compiles it into an <strong>Annotated Waterfall Bridge</strong>:</p>
+
+        <figure class="chart-card">
+          <figcaption>
+            <strong>Margin Attribution: October (22.0%) ➔ November (16.5%)</strong>
+            <button class="chart-download" data-chart="chart-waterfall">PNG ↓</button>
+          </figcaption>
+          <div class="chart" id="chart-waterfall" role="img" aria-label="Margin Attribution Waterfall Bridge"></div>
+          <p class="chart-caption">
+            <strong>The Bridge View:</strong> Left grey pillar is the starting baseline (22.0%). Floating red blocks show negative pull factors (Express Freight spike -$4.4%, Product Returns -$1.7%). Floating green block shows positive push (Price adjustments +0.6%). Right blue pillar is current result (16.5%).
+          </p>
+        </figure>
+      </section>
+
+      <!-- Step 4: Domino Effect Timeline -->
+      <section class="step" id="step-4">
+        <div class="step-heading">
+          <span>04</span>
+          <h2>"Domino Effect" Timeline (Multi-Metric Cascading Diagnostics)</h2>
+          <label class="done"><input type="checkbox" data-progress="domino"> Completed</label>
+        </div>
+        <p>When multiple KPIs degrade simultaneously, users confuse symptoms with the root cause. Using changepoint detection ($PELT$) and lead-lag causality, WPS-AI orders metrics chronologically by <strong>which metric broke first</strong>:</p>
+
+        <div class="domino-chain">
+          <div class="domino-node culprit">
+            <span class="domino-time">14:00 (T=0)</span>
+            <div class="domino-name">
+              <strong>⚠️ API Gateway Latency</strong>
+              <div style="font-size:10px; color:#ef4444;">FIRST BREAK DETECTED</div>
+            </div>
+            <div class="domino-spark" id="spark-1"></div>
+            <div class="domino-badge">
+              <span class="status-pill alert">Spiked 4.2x</span>
+            </div>
+          </div>
+          <div class="domino-node">
+            <span class="domino-time">14:18 (+18m)</span>
+            <div class="domino-name">
+              <strong>Checkout Service Failures</strong>
+              <div style="font-size:10px; color:var(--muted);">Downstream Symptom</div>
+            </div>
+            <div class="domino-spark" id="spark-2"></div>
+            <div class="domino-badge">
+              <span class="status-pill watch">Jumped +34%</span>
+            </div>
+          </div>
+          <div class="domino-node">
+            <span class="domino-time">14:45 (+45m)</span>
+            <div class="domino-name">
+              <strong>Cart Abandonment Rate</strong>
+              <div style="font-size:10px; color:var(--muted);">Downstream Symptom</div>
+            </div>
+            <div class="domino-spark" id="spark-3"></div>
+            <div class="domino-badge">
+              <span class="status-pill watch">Jumped +18%</span>
+            </div>
+          </div>
+          <div class="domino-node">
+            <span class="domino-time">15:30 (+90m)</span>
+            <div class="domino-name">
+              <strong>Hourly Revenue Volume</strong>
+              <div style="font-size:10px; color:var(--muted);">Business Impact</div>
+            </div>
+            <div class="domino-spark" id="spark-4"></div>
+            <div class="domino-badge">
+              <span class="status-pill alert">Dropped -24%</span>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:12px; color:var(--muted);">
+          <em>Diagnostic Insight:</em> The checkout drop at 14:18 was not a payment gateway issue; it was directly triggered by the API Gateway latency spike 18 minutes earlier at 14:00.
+        </p>
+      </section>
+
+      <!-- Step 5: Levers & Locks -->
+      <section class="step" id="step-5">
+        <div class="step-heading">
+          <span>05</span>
+          <h2>Smart "Levers &amp; Locks" Panel with Safe-Zone Guardrails</h2>
+          <label class="done"><input type="checkbox" data-progress="levers"> Completed</label>
+        </div>
+        <p>In the Target dashboard, hypothetical questions (<em>"What happens if we reduce express freight and adjust prices?"</em>) should not require waiting for an LLM to generate fresh code. WPS-AI pre-trains a fast surrogate model cached in <code>SessionStore</code> and renders interactive sliders with <strong>Out-Of-Distribution (OOD) Guardrails</strong>:</p>
+
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Slider Zone</th>
+                <th>Track Color</th>
+                <th>Statistical Definition</th>
+                <th>System Behavior</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Safe Zone</strong></td>
+                <td><span style="color:#10b981; font-weight:700;">🟢 Solid Green</span></td>
+                <td>5th–95th historical percentile within normal feature correlation bounds</td>
+                <td>Instant real-time update (&lt;100ms); High Confidence badge.</td>
+              </tr>
+              <tr>
+                <td><strong>Stretch Zone</strong></td>
+                <td><span style="color:#f59e0b; font-weight:700;">🟡 Amber</span></td>
+                <td>Historical extremes (1st–5th or 95th–99th percentile)</td>
+                <td>Directional estimate; Amber warning badge.</td>
+              </tr>
+              <tr>
+                <td><strong>Uncharted Territory</strong></td>
+                <td><span style="color:#ef4444; font-weight:700;">🔴 Red Striped</span></td>
+                <td>Out-of-distribution (Mahalanobis distance &gt; threshold)</td>
+                <td>Proactive <strong>Reality Check Banner</strong> warns user of ungrounded extrapolation.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Step 6 & 7: Interactive Scenario Studio -->
+      <section class="section" id="practice-studio">
+        <div class="section-heading">
+          <p class="overline">Interactive Simulation Experience</p>
+          <h2>Try the Scenario Studio (Live Mockup).</h2>
+          <p>Drag the controllable levers below. Watch the live <strong>Weather Forecast Range Bar</strong>, <strong>Sensitivity Tornado</strong>, and <strong>Goal Probability Gauge</strong> update instantly with sub-100ms latency without any server round-trip.</p>
+        </div>
+
+        <div class="simulator-container">
+          <div class="simulator-grid">
+            <!-- Left Column: Controls (Levers & Locks) -->
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <h3 style="margin:0; font-size:16px;">Controllable Levers</h3>
+                <span class="badge-high">Surrogate Cache Ready</span>
+              </div>
+
+              <!-- Lever 1 -->
+              <div class="slider-group">
+                <div class="slider-label-row">
+                  <span class="slider-label">⚡ Express Order Cap %</span>
+                  <span class="slider-val-badge" id="val-express">35%</span>
+                </div>
+                <input type="range" class="safezone-slider" id="slider-express" min="0" max="100" value="35">
+                <div class="slider-legend">
+                  <span>0% (Ground only)</span>
+                  <span style="color:#10b981;">◆ Current: 35%</span>
+                  <span style="color:#ef4444;">100% (High Cost)</span>
+                </div>
+              </div>
+
+              <!-- Lever 2 -->
+              <div class="slider-group">
+                <div class="slider-label-row">
+                  <span class="slider-label">🏷️ Average Unit Price</span>
+                  <span class="slider-val-badge" id="val-price">$45.00</span>
+                </div>
+                <input type="range" class="safezone-slider" id="slider-price" min="20" max="80" value="45">
+                <div class="slider-legend">
+                  <span>$20</span>
+                  <span style="color:#10b981;">◆ Current: $45</span>
+                  <span style="color:#ef4444;">$80 (OOD &gt; $65)</span>
+                </div>
+              </div>
+
+              <!-- Lever 3 -->
+              <div class="slider-group">
+                <div class="slider-label-row">
+                  <span class="slider-label">📦 Free Shipping Threshold</span>
+                  <span class="slider-val-badge" id="val-shipping">$50</span>
+                </div>
+                <input type="range" class="safezone-slider" id="slider-shipping" min="25" max="150" value="50">
+                <div class="slider-legend">
+                  <span>$25</span>
+                  <span style="color:#10b981;">◆ Current: $50</span>
+                  <span style="color:#ef4444;">$150 (Uncharted)</span>
+                </div>
+              </div>
+
+              <!-- Locked Parameters -->
+              <div class="locked-param">
+                <div>
+                  <div style="font-size:12px; font-weight:600;">🔒 Seasonal Volume Index (Locked)</div>
+                  <div style="font-size:10px; color:var(--muted);">Fixed Context: Q4 Peak Season (1.42x)</div>
+                </div>
+                <span style="font-size:11px; color:#64748b; font-weight:600;">Immutable</span>
+              </div>
+
+              <!-- Reality Check Banner -->
+              <div class="reality-check-banner" id="reality-check">
+                <span style="font-size:16px;">⚠️</span>
+                <div>
+                  <strong>Reality Check: Uncharted Territory</strong><br>
+                  <span id="reality-text">You adjusted parameters into historical extremes never observed in real operations. This projection is a directional extrapolation.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column: Projected Outcomes -->
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <h3 style="margin:0; font-size:16px;">Simulated Projected Outcome</h3>
+                <span id="sim-status" class="badge-high">🟢 High Confidence</span>
+              </div>
+
+              <!-- Weather Forecast Range Bar -->
+              <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:16px; margin-bottom:16px;">
+                <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+                  <span style="font-weight:600; color:var(--muted);">Simulated Margin vs Baseline:</span>
+                  <strong id="sim-margin-text" style="color:var(--blue); font-size:14px;">16.5% ➔ 16.5%</strong>
+                </div>
+                <div style="height:45px;" id="chart-weather"></div>
+                <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--muted); margin-top:4px;">
+                  <span>Conservative (10th %ile): <strong id="val-p10">15.1%</strong></span>
+                  <span style="color:var(--blue); font-weight:700;">Likely: <span id="val-likely">16.5%</span></span>
+                  <span>Optimistic (90th %ile): <strong id="val-p90">17.8%</strong></span>
+                </div>
+              </div>
+
+              <!-- Goal Probability Speedometer -->
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:14px; text-align:center;">
+                  <div style="font-size:11px; font-weight:600; color:var(--muted); margin-bottom:4px;">Goal Chance (Margin &ge; 21%)</div>
+                  <div id="chart-gauge" style="height:110px;"></div>
+                  <div id="gauge-label" style="font-size:13px; font-weight:700; color:#ef4444; margin-top:-10px;">12% Chance</div>
+                </div>
+
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:14px;">
+                  <div style="font-size:11px; font-weight:600; color:var(--muted); margin-bottom:8px;">Impact Tornado (Sensitivity)</div>
+                  <div id="chart-tornado" style="height:120px;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recipe Cards (Reverse What-If / Goal-Seek) -->
+          <div style="margin-top:28px; border-top:1px solid #e2e8f0; padding-top:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <div>
+                <h3 style="margin:0; font-size:16px;">🎯 3 Paths to Hit Your 21.0% Margin Goal</h3>
+                <p style="margin:2px 0 0; font-size:12px; color:var(--muted);">Reverse What-If solver (DiCE counterfactuals) computed 3 distinct recipes. Click any card to apply:</p>
+              </div>
+              <span class="badge-high">Target: 21.0%</span>
+            </div>
+
+            <div class="recipe-grid">
+              <!-- Recipe 1 -->
+              <div class="recipe-card" id="recipe-1" onclick="applyRecipe(1)">
+                <div class="recipe-tag">Card 1 · Single Lever</div>
+                <div class="recipe-title">"The Easiest Tweak"</div>
+                <div class="recipe-change">
+                  📉 Express Cap: 35% ➔ <strong>12%</strong><br>
+                  (Hold all other levers constant)
+                </div>
+                <div class="recipe-metrics">
+                  <span>Projected Margin: <strong>21.2%</strong></span>
+                  <span style="color:#10b981; font-weight:700;">🟢 High Conf</span>
+                </div>
+              </div>
+
+              <!-- Recipe 2 -->
+              <div class="recipe-card" id="recipe-2" onclick="applyRecipe(2)">
+                <div class="recipe-tag">Card 2 · Balanced Levers</div>
+                <div class="recipe-title">"The Balanced Approach"</div>
+                <div class="recipe-change">
+                  📦 Free Ship: $50 ➔ <strong>$65</strong><br>
+                  🏷️ Unit Price: $45 ➔ <strong>$48</strong>
+                </div>
+                <div class="recipe-metrics">
+                  <span>Projected Margin: <strong>21.8%</strong></span>
+                  <span style="color:#10b981; font-weight:700;">🟢 High Conf</span>
+                </div>
+              </div>
+
+              <!-- Recipe 3 -->
+              <div class="recipe-card" id="recipe-3" onclick="applyRecipe(3)">
+                <div class="recipe-tag">Card 3 · Aggressive Upside</div>
+                <div class="recipe-title">"Aggressive Growth"</div>
+                <div class="recipe-change">
+                  🏷️ Unit Price: $45 ➔ <strong>$56</strong><br>
+                  ⚡ Express Cap: 35% ➔ <strong>20%</strong>
+                </div>
+                <div class="recipe-metrics">
+                  <span>Projected Margin: <strong>23.5%</strong></span>
+                  <span style="color:#f59e0b; font-weight:700;">🟡 Stretch Range</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Architecture & Code Contract -->
+      <section class="section" id="architecture">
+        <div class="section-heading">
+          <p class="overline">Under the Hood</p>
+          <h2>How This Fits Into the WPS-AI Architecture.</h2>
+          <p>WPS-AI strictly enforces one primary class per file, air-gapped zero external HTTP calls, and no heavy visualization libraries in the Python worker. Here is how the diagnostic and what-if engine seamlessly plugs in:</p>
+        </div>
+
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Existing WPS-AI Component</th>
+                <th>Expansion Role &amp; Service Added</th>
+                <th>Data &amp; State Contract</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>backend/services/session_store.py</code></td>
+                <td><strong>Surrogate Model Cache</strong>: Caches trained LightGBM surrogate models and OOD Mahalanobis matrices in memory.</td>
+                <td>Provides &lt;100ms slider evaluation endpoints; avoids calling LLM on slider drags.</td>
+              </tr>
+              <tr>
+                <td><code>pipeline_core/statistics/</code></td>
+                <td><strong>Diagnostic Engines</strong>:<br>
+                  • <code>anomaly_spotlight.py</code> (Subgroup slice finding via beam search)<br>
+                  • <code>blame_bridge.py</code> (SHAP / Oaxaca period attribution)<br>
+                  • <code>scenario_simulator.py</code> (Monte Carlo range + DiCE counterfactuals)
+                </td>
+                <td>Emits clean dictionary artifacts (scalars, arrays, ECharts option trees). Never imports Matplotlib.</td>
+              </tr>
+              <tr>
+                <td><code>frontend/src/components/</code></td>
+                <td><strong>Diagnostic &amp; What-If UI</strong>:<br>
+                  • <code>AIStageCreatorBar.tsx</code> (Contextual triggers: "Diagnose drop", "Find culprit")<br>
+                  • <code>StageInternalsCard.tsx</code> (Displays domino timelines, attribution bridges)<br>
+                  • <code>Dashboard.tsx</code> (Renders live interactive Levers &amp; Locks panel)
+                </td>
+                <td>Uses native Apache ECharts for visual rendering; slider state updates live chart options client-side.</td>
+              </tr>
+              <tr>
+                <td><code>backend/services/agent_service.py</code></td>
+                <td><strong>Jargon-to-Visual Translator</strong>: Intercepts raw statistics and maps p-values, sample sizes, and $R^2$ into plain-English Confidence Badges.</td>
+                <td>Enforces the 3-Layer Chart Rule and semantic colors before committing stages.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="copy-block">
+          <div class="copy-heading">
+            <strong>Sample Stage Implementation: The "Why It Changed" Attribution Step</strong>
+            <button class="copy" data-copy="code-step">Copy code</button>
+          </div>
+          <pre id="code-step">def function(inputs, parameters, context):
+    """
+    Computes period-over-period shift attribution using LightGBM surrogate & SHAP.
+    Zero Matplotlib: returns pure JSON-serializable ECharts option tree.
+    """
+    import numpy as np
+    import pandas as pd
+    
+    df = inputs['cleaned'].copy()
+    current_period = df[df['date'] >= parameters.get('period_cutoff', '2026-11-01')]
+    baseline_period = df[df['date'] < parameters.get('period_cutoff', '2026-11-01')]
+    
+    # Calculate top positive and negative drivers (SHAP decomposition)
+    baseline_margin = float(baseline_period['margin'].mean() * 100)
+    current_margin = float(current_period['margin'].mean() * 100)
+    
+    drivers = [
+        {"name": "Oct Baseline", "val": baseline_margin, "type": "pillar"},
+        {"name": "Shipping Spikes", "val": -4.4, "type": "negative"},
+        {"name": "Returns / Refunds", "val": -1.7, "type": "negative"},
+        {"name": "Price Adjustment", "val": 0.6, "type": "positive"},
+        {"name": "Nov Result", "val": current_margin, "type": "pillar"}
+    ]
+    
+    # Compile client-side ECharts waterfall option
+    waterfall_chart = {
+        "option": {
+            "xAxis": {"type": "category", "data": [d["name"] for d in drivers]},
+            "yAxis": {"type": "value", "name": "Margin %", "min": 10, "max": 25},
+            "series": [
+                {
+                    "name": "Placeholder", "type": "bar", "stack": "total",
+                    "itemStyle": {"borderColor": "transparent", "color": "transparent"},
+                    "data": [0, 16.5, 14.8, 14.8, 0]
+                },
+                {
+                    "name": "Drivers", "type": "bar", "stack": "total",
+                    "data": [
+                        {"value": baseline_margin, "itemStyle": {"color": "#94a3b8"}},
+                        {"value": 4.4, "itemStyle": {"color": "#ef4444"}},
+                        {"value": 1.7, "itemStyle": {"color": "#ef4444"}},
+                        {"value": 0.6, "itemStyle": {"color": "#10b981"}},
+                        {"value": current_margin, "itemStyle": {"color": "#245bd7"}}
+                    ]
+                }
+            ]
+        }
+    }
+    
+    return {
+        "margin_waterfall": waterfall_chart,
+        "headline_delta": f"Margin changed from {baseline_margin:.1f}% to {current_margin:.1f}%",
+        "confidence": "High (n=4,210 orders)"
+    }</pre>
+          <span class="copy-status" role="status"></span>
+        </div>
+      </section>
+
+      <!-- Troubleshooting -->
+      <section class="section" id="troubleshooting">
+        <h2>Diagnostic &amp; What-If Troubleshooting.</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>What happens</th>
+              <th>Underlying cause</th>
+              <th>How WPS-AI resolves it</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Slider turns red striped</td>
+              <td>User requested an out-of-distribution scenario (Mahalanobis distance &gt; cutoff).</td>
+              <td>Proactive <strong>Reality Check Banner</strong> displays automatically; avoids false mathematical certainty.</td>
+            </tr>
+            <tr>
+              <td>Low sample slice alert</td>
+              <td>Beam search slice finder isolated a group with only 6 observations.</td>
+              <td>Displays <code>🟡 Low Sample Warning (n=6 orders)</code> rather than declaring a statistically confident anomaly.</td>
+            </tr>
+            <tr>
+              <td>Slider lag &gt; 200ms</td>
+              <td>Surrogate model was not cached or worker process died.</td>
+              <td><code>SessionStore</code> automatically falls back to pre-indexed piecewise linear approximations while rebuilding surrogate in background.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <div class="next-lesson">
+        <a class="button primary" href="index.html">Return to Field Guide Overview →</a>
+      </div>
+
+      <footer class="footer">
+        <a href="index.html">WPS-AI Field Guide</a>
+        <span>Desktop · Local assets · Zero remote telemetry</span>
+        <a href="validation.html">Validation details</a>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    // Safe smooth scroll helper
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Interactive Scenario Simulator State & Logic
+    (function initSimulator() {
+      const sliderExpress = document.getElementById('slider-express');
+      const sliderPrice = document.getElementById('slider-price');
+      const sliderShipping = document.getElementById('slider-shipping');
+
+      const valExpress = document.getElementById('val-express');
+      const valPrice = document.getElementById('val-price');
+      const valShipping = document.getElementById('val-shipping');
+
+      const simMarginText = document.getElementById('sim-margin-text');
+      const simStatus = document.getElementById('sim-status');
+      const realityCheck = document.getElementById('reality-check');
+      const realityText = document.getElementById('reality-text');
+
+      const valP10 = document.getElementById('val-p10');
+      const valLikely = document.getElementById('val-likely');
+      const valP90 = document.getElementById('val-p90');
+      const gaugeLabel = document.getElementById('gauge-label');
+
+      let chartRadar, chartCulprit, chartWaterfall, chartWeather, chartGauge, chartTornado;
+      let spark1, spark2, spark3, spark4;
+
+      // ECharts palette
+      const coralRed = '#ef4444';
+      const emeraldGreen = '#10b981';
+      const slateGrey = '#94a3b8';
+      const electricBlue = '#245bd7';
+
+      // 1. Draw Radar Chart
+      function initRadar() {
+        const dom = document.getElementById('chart-radar');
+        if (!dom) return;
+        chartRadar = echarts.init(dom);
+        chartRadar.setOption({
+          animation: false,
+          tooltip: { trigger: 'axis' },
+          grid: { left: 45, right: 25, top: 25, bottom: 35 },
+          xAxis: {
+            type: 'category',
+            data: Array.from({length: 30}, (_, i) => `Day ${i+1}`)
+          },
+          yAxis: {
+            type: 'value',
+            name: 'Margin %',
+            min: 10,
+            max: 26
+          },
+          series: [
+            {
+              name: 'Historical Baseline (22%)',
+              type: 'line',
+              data: Array(30).fill(22),
+              lineStyle: { type: 'dashed', color: slateGrey, width: 2 },
+              symbol: 'none'
+            },
+            {
+              name: 'Observed Daily Margin',
+              type: 'line',
+              data: [
+                22.1, 22.3, 21.9, 22.4, 22.0, 21.8, 22.2, 22.5, 22.1, 22.0,
+                21.7, 21.9, 22.1, 21.8, 22.0, 21.6, 21.5, 21.2, 20.8, 18.5,
+                17.2, 16.4, 16.5, 16.8, 16.5, 17.1, 17.5, 18.2, 20.1, 21.4
+              ],
+              lineStyle: { color: electricBlue, width: 2.5 },
+              markArea: {
+                itemStyle: { color: 'rgba(239, 68, 68, 0.12)' },
+                data: [[{ name: '⚠️ Structural Drop (>2σ)', xAxis: 'Day 20' }, { xAxis: 'Day 28' }]]
+              },
+              markPoint: {
+                symbol: 'pin',
+                symbolSize: 42,
+                data: [
+                  { name: 'Trough Pin', value: '① 16.4%', xAxis: 'Day 22', yAxis: 16.4, itemStyle: { color: coralRed } }
+                ]
+              }
+            }
+          ]
+        });
+      }
+
+      // 2. Draw Culprit Spotlight Chart
+      function initCulprit() {
+        const dom = document.getElementById('chart-culprit');
+        if (!dom) return;
+        chartCulprit = echarts.init(dom);
+        chartCulprit.setOption({
+          animation: false,
+          tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+          grid: { left: 160, right: 35, top: 20, bottom: 30 },
+          xAxis: {
+            type: 'value',
+            name: 'Cost / Order ($)',
+            axisLine: { show: true }
+          },
+          yAxis: {
+            type: 'category',
+            data: [
+              'South Ground',
+              'East Ground',
+              'West Ground',
+              'North Ground',
+              'West Express',
+              '🚨 North Express (Culprit)'
+            ]
+          },
+          series: [
+            {
+              name: 'Cost ($)',
+              type: 'bar',
+              data: [
+                { value: 11.2, itemStyle: { color: slateGrey } },
+                { value: 12.1, itemStyle: { color: slateGrey } },
+                { value: 12.8, itemStyle: { color: slateGrey } },
+                { value: 13.4, itemStyle: { color: slateGrey } },
+                { value: 18.5, itemStyle: { color: '#f59e0b' } },
+                { value: 40.2, itemStyle: { color: coralRed } } // Culprit spotlight
+              ],
+              label: {
+                show: true,
+                position: 'right',
+                formatter: (p) => p.dataIndex === 5 ? '$40.20 (3.2x Normal!)' : `$${p.value.toFixed(2)}`
+              },
+              markLine: {
+                data: [{ xAxis: 12.5, name: 'Normal Average ($12.50)' }],
+                lineStyle: { type: 'dashed', color: '#475569', width: 2 }
+              }
+            }
+          ]
+        });
+      }
+
+      // 3. Draw Waterfall Chart
+      function initWaterfall() {
+        const dom = document.getElementById('chart-waterfall');
+        if (!dom) return;
+        chartWaterfall = echarts.init(dom);
+        chartWaterfall.setOption({
+          animation: false,
+          tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+          grid: { left: 50, right: 25, top: 30, bottom: 40 },
+          xAxis: {
+            type: 'category',
+            data: [
+              'Oct Baseline',
+              'Shipping Spikes',
+              'Higher Returns',
+              'Price Increases',
+              'Nov Margin'
+            ]
+          },
+          yAxis: {
+            type: 'value',
+            name: 'Margin %',
+            min: 12,
+            max: 24
+          },
+          series: [
+            {
+              name: 'Placeholder',
+              type: 'bar',
+              stack: 'all',
+              itemStyle: { borderColor: 'transparent', color: 'transparent' },
+              data: [0, 17.6, 15.9, 15.9, 0]
+            },
+            {
+              name: 'Shift Attribution',
+              type: 'bar',
+              stack: 'all',
+              data: [
+                { value: 22.0, itemStyle: { color: slateGrey } },
+                { value: 4.4, itemStyle: { color: coralRed } },
+                { value: 1.7, itemStyle: { color: coralRed } },
+                { value: 0.6, itemStyle: { color: emeraldGreen } },
+                { value: 16.5, itemStyle: { color: electricBlue } }
+              ],
+              label: {
+                show: true,
+                position: 'top',
+                formatter: (p) => {
+                  const vals = ['22.0%', '-4.4%', '-1.7%', '+0.6%', '16.5%'];
+                  return vals[p.dataIndex];
+                }
+              }
+            }
+          ]
+        });
+      }
+
+      // 4. Initialize Domino Sparklines
+      function initSparks() {
+        const createSpark = (id, data, color) => {
+          const dom = document.getElementById(id);
+          if (!dom) return null;
+          const chart = echarts.init(dom);
+          chart.setOption({
+            animation: false,
+            grid: { left: 0, right: 0, top: 2, bottom: 2 },
+            xAxis: { type: 'category', show: false, data: Array(15).fill(0) },
+            yAxis: { type: 'value', show: false },
+            series: [{
+              type: 'line',
+              data: data,
+              showSymbol: false,
+              lineStyle: { width: 2, color: color },
+              areaStyle: { color: color, opacity: 0.15 }
+            }]
+          });
+          return chart;
+        };
+
+        spark1 = createSpark('spark-1', [10,11,10,12,11,10, 48,55,52,50,53,49,47,45,46], coralRed);
+        spark2 = createSpark('spark-2', [5,5,6,5,5,5, 6,7, 24,28,30,29,26,25,24], '#f59e0b');
+        spark3 = createSpark('spark-3', [20,21,19,20,20,20, 20,21,22, 38,40,39,37,36,35], '#f59e0b');
+        spark4 = createSpark('spark-4', [80,82,81,80,79,81, 80,80,78,74,68, 58,54,55,53], coralRed);
+      }
+
+      // 5. Initialize Weather Range Bar & Outcome Gauge
+      function initWeatherCharts() {
+        const domWeather = document.getElementById('chart-weather');
+        if (domWeather) {
+          chartWeather = echarts.init(domWeather);
+          renderWeatherBar(16.5, 15.1, 17.8);
+        }
+
+        const domGauge = document.getElementById('chart-gauge');
+        if (domGauge) {
+          chartGauge = echarts.init(domGauge);
+          renderGauge(12);
+        }
+
+        const domTornado = document.getElementById('chart-tornado');
+        if (domTornado) {
+          chartTornado = echarts.init(domTornado);
+          chartTornado.setOption({
+            animation: false,
+            grid: { left: 75, right: 25, top: 5, bottom: 15 },
+            xAxis: { type: 'value', show: false },
+            yAxis: {
+              type: 'category',
+              data: ['Threshold', 'Price', 'Express Cap'],
+              axisLabel: { fontSize: 10 }
+            },
+            series: [{
+              type: 'bar',
+              data: [
+                { value: 1.2, itemStyle: { color: '#60a5fa' } },
+                { value: 3.4, itemStyle: { color: electricBlue } },
+                { value: 4.8, itemStyle: { color: coralRed } }
+              ],
+              label: { show: true, position: 'right', formatter: '±{c}%', fontSize: 10 }
+            }]
+          });
+        }
+      }
+
+      function renderWeatherBar(likely, p10, p90) {
+        if (!chartWeather) return;
+        chartWeather.setOption({
+          animation: false,
+          grid: { left: 10, right: 10, top: 5, bottom: 15 },
+          xAxis: { type: 'value', min: 12, max: 26, show: false },
+          yAxis: { type: 'category', data: ['Outcome'], show: false },
+          series: [
+            // Baseline marker
+            {
+              name: 'Baseline 22%',
+              type: 'scatter',
+              data: [[22.0, 0]],
+              symbol: 'rect',
+              symbolSize: [4, 24],
+              itemStyle: { color: slateGrey }
+            },
+            // Whisker range (P10 to P90)
+            {
+              name: 'P10-P90 Range',
+              type: 'bar',
+              stack: 'range',
+              itemStyle: { borderColor: 'transparent', color: 'transparent' },
+              data: [p10]
+            },
+            {
+              name: 'Uncertainty Whisker',
+              type: 'bar',
+              stack: 'range',
+              itemStyle: { color: 'rgba(36, 91, 215, 0.25)', borderRadius: 4 },
+              data: [p90 - p10]
+            },
+            // Point estimate
+            {
+              name: 'Likely Outcome',
+              type: 'scatter',
+              data: [[likely, 0]],
+              symbol: 'circle',
+              symbolSize: 14,
+              itemStyle: { color: electricBlue }
+            }
+          ]
+        });
+      }
+
+      function renderGauge(probability) {
+        if (!chartGauge) return;
+        const color = probability >= 70 ? emeraldGreen : (probability >= 40 ? '#f59e0b' : coralRed);
+        chartGauge.setOption({
+          animation: false,
+          series: [{
+            type: 'gauge',
+            startAngle: 180,
+            endAngle: 0,
+            min: 0,
+            max: 100,
+            radius: '100%',
+            progress: { show: true, width: 10, itemStyle: { color: color } },
+            pointer: { show: true, length: '60%', width: 3 },
+            axisLine: { lineStyle: { width: 10, color: [[1, '#e2e8f0']] } },
+            axisTick: { show: false },
+            splitLine: { show: false },
+            axisLabel: { show: false },
+            detail: { show: false },
+            data: [{ value: probability }]
+          }]
+        });
+        gaugeLabel.textContent = `${probability}% Chance of &ge;21%`;
+        gaugeLabel.style.color = color;
+      }
+
+      // Live Simulator Mathematical Model (Fast In-Memory Surrogate approximation)
+      function updateSimulation() {
+        const express = parseFloat(sliderExpress.value);
+        const price = parseFloat(sliderPrice.value);
+        const shipping = parseFloat(sliderShipping.value);
+
+        valExpress.textContent = `${express}%`;
+        valPrice.textContent = `$${price.toFixed(2)}`;
+        valShipping.textContent = `$${shipping.toFixed(0)}`;
+
+        // Formula derived from surrogate model:
+        // Baseline = 16.5% at (35%, $45, $50)
+        // Express reduction: from 35% down saves cost (+0.2% margin per -1% express)
+        // Price increase: +0.25% margin per +$1 price
+        // Shipping threshold: from $50 up saves shipping cost (+0.08% margin per +$1)
+        const deltaExpress = (35 - express) * 0.20;
+        const deltaPrice = (price - 45) * 0.32;
+        const deltaShipping = (shipping - 50) * 0.08;
+
+        const simulatedMargin = Math.max(10.0, Math.min(26.0, 16.5 + deltaExpress + deltaPrice + deltaShipping));
+        const p10 = Math.max(8.0, simulatedMargin - 1.4);
+        const p90 = Math.min(28.0, simulatedMargin + 1.3);
+
+        simMarginText.textContent = `16.5% ➔ ${simulatedMargin.toFixed(1)}%`;
+        valLikely.textContent = `${simulatedMargin.toFixed(1)}%`;
+        valP10.textContent = `${p10.toFixed(1)}%`;
+        valP90.textContent = `${p90.toFixed(1)}%`;
+
+        // Calculate Goal Probability (Target >= 21%)
+        let prob = 0;
+        if (simulatedMargin >= 23.0) prob = 94;
+        else if (simulatedMargin >= 21.0) prob = Math.round(70 + (simulatedMargin - 21.0) * 12);
+        else if (simulatedMargin >= 19.0) prob = Math.round(35 + (simulatedMargin - 19.0) * 17);
+        else prob = Math.max(5, Math.round((simulatedMargin - 14.0) * 6));
+        renderGauge(prob);
+        renderWeatherBar(simulatedMargin, p10, p90);
+
+        // OOD Guardrail Check (Mahalanobis distance approximation)
+        let isOOD = false;
+        let reason = '';
+        if (price > 65 || price < 25) {
+          isOOD = true;
+          reason = `Price $${price.toFixed(0)} is outside historical observed bounds ($25–$65).`;
+        } else if (shipping > 120) {
+          isOOD = true;
+          reason = `Free Shipping threshold $${shipping.toFixed(0)} is unprecedented in company history.`;
+        } else if (express > 80 && price < 30) {
+          isOOD = true;
+          reason = `Extreme combination: High Express (${express}%) with Low Price ($${price.toFixed(0)}) has never occurred together.`;
+        }
+
+        if (isOOD) {
+          realityCheck.style.display = 'flex';
+          realityText.textContent = `${reason} This scenario represents Uncharted Territory — low forecast confidence.`;
+          simStatus.className = 'status-pill alert';
+          simStatus.textContent = '🔴 Uncharted OOD';
+        } else if (simulatedMargin > 22.0 || express < 10) {
+          realityCheck.style.display = 'none';
+          simStatus.className = 'status-pill watch';
+          simStatus.textContent = '🟡 Stretch Scenario';
+        } else {
+          realityCheck.style.display = 'none';
+          simStatus.className = 'badge-high';
+          simStatus.textContent = '🟢 High Confidence';
+        }
+      }
+
+      // Event Listeners for Sliders
+      sliderExpress.addEventListener('input', updateSimulation);
+      sliderPrice.addEventListener('input', updateSimulation);
+      sliderShipping.addEventListener('input', updateSimulation);
+
+      // Recipe Application Function (Global)
+      window.applyRecipe = function(cardId) {
+        document.querySelectorAll('.recipe-card').forEach(c => c.classList.remove('active'));
+        const card = document.getElementById(`recipe-${cardId}`);
+        if (card) card.classList.add('active');
+
+        if (cardId === 1) { // Single lever: express 12%
+          sliderExpress.value = 12;
+          sliderPrice.value = 45;
+          sliderShipping.value = 50;
+        } else if (cardId === 2) { // Balanced: shipping $65, price $48
+          sliderExpress.value = 35;
+          sliderPrice.value = 48;
+          sliderShipping.value = 65;
+        } else if (cardId === 3) { // Aggressive: price $56, express 20%
+          sliderExpress.value = 20;
+          sliderPrice.value = 56;
+          sliderShipping.value = 50;
+        }
+        updateSimulation();
+      };
+
+      // Initialization on DOM Ready
+      window.addEventListener('DOMContentLoaded', () => {
+        initRadar();
+        initCulprit();
+        initWaterfall();
+        initSparks();
+        initWeatherCharts();
+        updateSimulation();
+      });
+
+      // Handle window resize for ECharts responsiveness
+      window.addEventListener('resize', () => {
+        [chartRadar, chartCulprit, chartWaterfall, chartWeather, chartGauge, chartTornado,
+         spark1, spark2, spark3, spark4].forEach(c => c && c.resize());
+      });
+    })();
+  </script>
+</body>
+</html>

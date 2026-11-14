@@ -19,3 +19,6 @@ backend/static/assets/
 backend/static/index.html
 !frontend/src/lib/
 artifact/
+temp/
+TEMP_*/
+

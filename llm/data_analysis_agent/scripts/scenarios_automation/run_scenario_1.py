@@ -1,7 +1,13 @@
+import sys
 import time
+from pathlib import Path
 from playwright.sync_api import sync_playwright
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from common import SCREENSHOTS_DIR, ensure_temp_dirs
+
 def run():
+    ensure_temp_dirs()
     with sync_playwright() as p:
         browser = p.chromium.launch(executable_path='/usr/bin/google-chrome', headless=True)
         context = browser.new_context(viewport={'width': 1366, 'height': 850})
@@ -10,7 +16,7 @@ def run():
         print("[Scenario 1] Navigating to studio...")
         page.goto('http://127.0.0.1:8080')
         page.wait_for_load_state('networkidle')
-        page.screenshot(path='artifacts/scenario_report/screenshots/s1_00_initial_home.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's1_00_initial_home.png'))
 
         # 1. Load energy example
         print("[Scenario 1] Clicking 'Load energy example'...")
@@ -18,7 +24,7 @@ def run():
         load_btn.click()
         page.wait_for_timeout(3000)
         page.wait_for_load_state('networkidle')
-        page.screenshot(path='artifacts/scenario_report/screenshots/s1_01_loaded_example.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's1_01_loaded_example.png'))
 
         # 2. Select Pipeline view
         print("[Scenario 1] Navigating to Pipeline...")
@@ -26,7 +32,7 @@ def run():
         if pipeline_nav.count() > 0:
             pipeline_nav.click()
         page.wait_for_timeout(1000)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s1_02_pipeline_view.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's1_02_pipeline_view.png'))
 
         # 3. Open Data cleaning
         print("[Scenario 1] Navigating to Data cleaning...")
@@ -34,7 +40,7 @@ def run():
         if cleaning_nav.count() > 0:
             cleaning_nav.click()
         page.wait_for_timeout(1000)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s1_03_data_cleaning.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's1_03_data_cleaning.png'))
 
         # 4. Select Run
         print("[Scenario 1] Clicking Run...")
@@ -51,7 +57,7 @@ def run():
                 break
             time.sleep(1)
         print(f"[Scenario 1] Run finished. Succeeded: {succeeded}")
-        page.screenshot(path='artifacts/scenario_report/screenshots/s1_04_run_finished.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's1_04_run_finished.png'))
 
         # 5. Open Visualization
         print("[Scenario 1] Navigating to Visualization...")
@@ -59,7 +65,7 @@ def run():
         if vis_nav.count() > 0:
             vis_nav.click()
         page.wait_for_timeout(2000)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s1_05_visualization_view.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's1_05_visualization_view.png'))
 
         # Check metrics in visualization
         content = page.content()
@@ -79,14 +85,14 @@ def run():
             dash_page.goto(dash_url)
             dash_page.wait_for_load_state('networkidle')
             dash_page.wait_for_timeout(2000)
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s1_06_dashboard_initial.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's1_06_dashboard_initial.png'))
 
             # Open Filters and scenarios
             print("[Scenario 1] Opening Filters and scenarios drawer...")
             filters_btn = dash_page.locator('button:has-text("Filters and scenarios")')
             filters_btn.click()
             dash_page.wait_for_timeout(1000)
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s1_07_filters_drawer_open.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's1_07_filters_drawer_open.png'))
 
             # Change Price per kWh to 0.20
             print("[Scenario 1] Changing Price per kWh to 0.20...")
@@ -98,7 +104,7 @@ def run():
             apply_btn.click()
             dash_page.wait_for_timeout(3000)
             dash_page.wait_for_load_state('networkidle')
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s1_08_dashboard_price_020.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's1_08_dashboard_price_020.png'))
 
             # Check values
             d_content = dash_page.content()
@@ -116,7 +122,7 @@ def run():
             dash_page.locator('button:has-text("Apply controls")').click()
             dash_page.wait_for_timeout(3000)
             dash_page.wait_for_load_state('networkidle')
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s1_09_dashboard_zoneA_020.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's1_09_dashboard_zoneA_020.png'))
             
             d_content2 = dash_page.content()
             print("Zone A check: 5,132.22:", "5,132.22" in d_content2)
@@ -131,12 +137,13 @@ def run():
             dash_page.locator('button:has-text("Apply controls")').click()
             dash_page.wait_for_timeout(3000)
             dash_page.wait_for_load_state('networkidle')
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s1_10_dashboard_reset.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's1_10_dashboard_reset.png'))
             d_content3 = dash_page.content()
             print("Reset check: 19,511.36:", "19,511.36" in d_content3)
             print("Reset check: 2,926.70:", "2,926.70" in d_content3)
 
         browser.close()
+
 
 if __name__ == '__main__':
     run()

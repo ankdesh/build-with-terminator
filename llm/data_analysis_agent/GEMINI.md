@@ -43,3 +43,10 @@ This document outlines the architectural principles, design constraints, and eng
 - **Centralized Configuration File**: All system parameters (endpoints, ports, timeouts, retry limits, and file size thresholds) are defined in `config.json` and hoisted into immutable typed models in `config.py`. Sane defaults (e.g. `https://api.openai.com/v1` default OpenAI endpoint) ensure zero-config initial boot.
 - **Secret Isolation**: Sensitive credentials (`OPENAI_API_KEY`) are kept strictly out of committed configuration files and loaded exclusively via environment variables.
 - **Document Intent**: Functions and classes include docstrings explaining purpose, inputs, and behaviors.
+
+---
+
+## 6. Temporary & Generated Files Policy
+- **Designated Temporary Location**: All temporary files, automation test outputs, browser screenshots, diagnostic logs, and evaluation reports MUST be placed strictly inside a `temp/TEMP_` folder (a directory prefixed with `TEMP_` within the `temp/` folder, such as `temp/TEMP_reports/` or `temp/TEMP_scenarios/`).
+- **Clean Workspace Guarantee**: Never generate temporary test files, execution reports, or transient screenshots in the repository root, `docs/`, or source directories. The `temp/` directory and any `TEMP_*` paths are designated for transient artifacts and must remain isolated from tracked documentation and production assets.
+

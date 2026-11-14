@@ -12,7 +12,8 @@ from fastapi.staticfiles import StaticFiles
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 from starlette.responses import Response
 
-from backend.exceptions import WPSAIBaseException
+from backend.exceptions import SessionNotFoundError, WPSAIBaseException
+from backend.routers.scenario import router as scenario_router
 from backend.routes.project_routes import router as project_router
 from backend.routes import project_routes
 from backend.services.workspace_service import WorkspaceConflict
@@ -66,6 +67,7 @@ app.add_middleware(TrustedHostMiddleware, allowed_hosts=list(config.allowed_host
 
 # Include API route modules
 app.include_router(session_router)
+app.include_router(scenario_router)
 app.include_router(project_router)
 app.include_router(project_routes.internal_router)
 # Retain data-only export compatibility. The legacy chat executor is not routed.
@@ -103,8 +105,9 @@ async def missing_project(request: Request, exc: KeyError) -> JSONResponse:
 async def wps_exception_handler(request: Request, exc: WPSAIBaseException) -> JSONResponse:
     """Handle custom domain exceptions uniformly."""
     logger.error("Domain exception: %s", exc)
+    status_code = 404 if isinstance(exc, SessionNotFoundError) else 400
     return JSONResponse(
-        status_code=400,
+        status_code=status_code,
         content={"error": exc.message, "details": exc.details},
     )
 

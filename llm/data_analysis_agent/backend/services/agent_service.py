@@ -10,6 +10,7 @@ from backend.exceptions import CodeExecutionError
 from backend.models.chat import ChatMessage, ExecutionResult
 from backend.models.profile import DataProfile
 from backend.services.code_executor import CodeExecutor
+from backend.services.jargon_translator import JargonTranslator
 from backend.services.llm_gateway import LLMGateway, llm
 from backend.services.model_output import parse_model_object
 from config import config
@@ -69,10 +70,12 @@ class AgentService:
     def __init__(
         self,
         code_executor: Optional[CodeExecutor] = None,
-        openai_client: Any = None
+        openai_client: Any = None,
+        jargon_translator: Optional[JargonTranslator] = None,
     ) -> None:
         self.code_executor = code_executor or CodeExecutor()
         self.llm = LLMGateway(openai_client) if openai_client is not None else llm
+        self.jargon_translator = jargon_translator or JargonTranslator()
 
     async def run_analysis_stream(
         self,
@@ -175,6 +178,21 @@ class AgentService:
                     )
                 if exec_result.chart:
                     yield make_log(f"Generated Apache ECharts visual spec: '{exec_result.chart.title}'")
+
+                # Enrich execution result with confidence badges, follow-up chips, and 3-layer chart styling
+                try:
+                    exec_result = self.jargon_translator.enrich_execution_result(
+                        exec_result=exec_result,
+                        user_query=user_query,
+                        df=df,
+                    )
+                    if exec_result.confidence_badges:
+                        top_badge = exec_result.confidence_badges[0]
+                        yield make_log(f"Assigned confidence badge: {top_badge.icon} {top_badge.title}")
+                    if exec_result.follow_up_chips:
+                        yield make_log(f"Generated {len(exec_result.follow_up_chips)} contextual follow-up action chips")
+                except Exception as ex:
+                    logger.warning("Jargon translation failed non-critically: %s", ex)
 
                 # Format and present results using the LLM
                 yield {"event": "status", "data": "Formatting calculation results..."}

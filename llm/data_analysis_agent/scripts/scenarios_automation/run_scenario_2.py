@@ -1,11 +1,16 @@
 import os
+import sys
 import time
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from common import SCREENSHOTS_DIR, ensure_temp_dirs
+
 CSV_PATH = str(Path('docs/scenarios/data/sales_january.csv').resolve())
 
 def run():
+    ensure_temp_dirs()
     with sync_playwright() as p:
         browser = p.chromium.launch(executable_path='/usr/bin/google-chrome', headless=True)
         context = browser.new_context(viewport={'width': 1366, 'height': 850})
@@ -20,7 +25,7 @@ def run():
         page.locator('button[aria-label="New project"]').click()
         page.wait_for_timeout(2000)
         page.wait_for_load_state('networkidle')
-        page.screenshot(path='artifacts/scenario_report/screenshots/s2_01_new_project_created.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's2_01_new_project_created.png'))
 
         # Rename project to 'Minimal sales report'
         print("[Scenario 2] Renaming project to 'Minimal sales report'...")
@@ -32,7 +37,7 @@ def run():
         page.wait_for_timeout(500)
         page.locator('button:has-text("Done")').click()
         page.wait_for_timeout(1000)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s2_02_project_renamed.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's2_02_project_renamed.png'))
 
         # 2. Upload CSV in Data input
         print("[Scenario 2] Navigating to Data input...")
@@ -44,7 +49,7 @@ def run():
         file_input.set_input_files(CSV_PATH)
         page.wait_for_timeout(3000)
         page.wait_for_load_state('networkidle')
-        page.screenshot(path='artifacts/scenario_report/screenshots/s2_03_csv_uploaded.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's2_03_csv_uploaded.png'))
 
         # Business context
         print("[Scenario 2] Setting Business context...")
@@ -59,7 +64,7 @@ def run():
         bc_textarea.fill(b_context)
         page.locator('header.studio-header').click()
         page.wait_for_timeout(1000)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s2_04_business_context_saved.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's2_04_business_context_saved.png'))
 
         # 3. Chat prompt
         print("[Scenario 2] Opening Chat dock...")
@@ -76,7 +81,7 @@ def run():
 
         chat_label = page.locator('.chat-context span').first.text_content()
         print("[Scenario 2] Active chat context label:", chat_label)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s2_05_chat_project_context.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's2_05_chat_project_context.png'))
 
         prompt_text = """Create a minimal reusable sales dashboard from this CSV.
 
@@ -95,7 +100,7 @@ Keep the original CSV unchanged. Save the stages for review; I will select Run."
         print("[Scenario 2] Pasting prompt and sending to chat...")
         chat_input = page.locator('aside.studio-dock textarea')
         chat_input.fill(prompt_text)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s2_06_prompt_entered.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's2_06_prompt_entered.png'))
         
         send_btn = page.locator('aside.studio-dock button[aria-label="Send chat message"]')
         send_btn.click()
@@ -113,13 +118,13 @@ Keep the original CSV unchanged. Save the stages for review; I will select Run."
                 break
             time.sleep(2)
         
-        page.screenshot(path='artifacts/scenario_report/screenshots/s2_07_review_received.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's2_07_review_received.png'))
 
         # Click Apply
         print("[Scenario 2] Applying proposed review...")
         apply_btn.click()
         page.wait_for_timeout(2000)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s2_08_review_applied.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's2_08_review_applied.png'))
 
         # Select Run
         print("[Scenario 2] Clicking Run in top bar...")
@@ -136,19 +141,19 @@ Keep the original CSV unchanged. Save the stages for review; I will select Run."
                 break
             time.sleep(1)
         print(f"[Scenario 2] Run completed in {int(time.time() - start_run)}s. Done: {run_done}")
-        page.screenshot(path='artifacts/scenario_report/screenshots/s2_09_run_completed.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's2_09_run_completed.png'))
 
         # Navigate to Data cleaning
         print("[Scenario 2] Checking Data cleaning stage...")
         page.locator('aside.studio-navigation nav button:has-text("Data cleaning")').click()
         page.wait_for_timeout(2000)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s2_10_data_cleaning_stage.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's2_10_data_cleaning_stage.png'))
 
         # Navigate to Visualization
         print("[Scenario 2] Checking Visualization stage...")
         page.locator('aside.studio-navigation nav button:has-text("Visualization")').click()
         page.wait_for_timeout(2000)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s2_11_visualization_stage.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's2_11_visualization_stage.png'))
 
         vis_content = page.content()
         print("Sales value 800.00 in vis:", "800.00" in vis_content or "800" in vis_content)
@@ -166,12 +171,12 @@ Keep the original CSV unchanged. Save the stages for review; I will select Run."
             dash_page.goto(dash_url)
             dash_page.wait_for_load_state('networkidle')
             dash_page.wait_for_timeout(2000)
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s2_12_dashboard_initial.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's2_12_dashboard_initial.png'))
 
             # Open Filters and scenarios
             dash_page.locator('button:has-text("Filters and scenarios")').click()
             dash_page.wait_for_timeout(1000)
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s2_13_dashboard_controls_open.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's2_13_dashboard_controls_open.png'))
 
             # Set Discount percent to 10
             disc_input = dash_page.locator('label:has-text("Discount percent") input')
@@ -180,7 +185,7 @@ Keep the original CSV unchanged. Save the stages for review; I will select Run."
             dash_page.locator('button:has-text("Apply controls")').click()
             dash_page.wait_for_timeout(3000)
             dash_page.wait_for_load_state('networkidle')
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s2_14_discount_10_applied.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's2_14_discount_10_applied.png'))
 
             d1_content = dash_page.content()
             print("Scenario sales 720.00:", "720.00" in d1_content or "720" in d1_content)
@@ -195,7 +200,7 @@ Keep the original CSV unchanged. Save the stages for review; I will select Run."
             dash_page.locator('button:has-text("Apply controls")').click()
             dash_page.wait_for_timeout(3000)
             dash_page.wait_for_load_state('networkidle')
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s2_15_india_discount_10.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's2_15_india_discount_10.png'))
 
             d2_content = dash_page.content()
             print("India sales 530.00:", "530.00" in d2_content or "530" in d2_content)
@@ -212,7 +217,7 @@ Keep the original CSV unchanged. Save the stages for review; I will select Run."
             dash_page.locator('button:has-text("Apply controls")').click()
             dash_page.wait_for_timeout(3000)
             dash_page.wait_for_load_state('networkidle')
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s2_16_dashboard_reset.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's2_16_dashboard_reset.png'))
 
         browser.close()
 

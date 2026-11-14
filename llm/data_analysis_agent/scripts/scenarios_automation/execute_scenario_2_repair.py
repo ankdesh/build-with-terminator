@@ -1,9 +1,15 @@
+import sys
 import time
+from pathlib import Path
 from playwright.sync_api import sync_playwright
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from common import SCREENSHOTS_DIR, ensure_temp_dirs
 
 PROJECT_ID = "fbd71690-4cda-483a-a75b-b5d06aa17fd0"
 
 def run():
+    ensure_temp_dirs()
     with sync_playwright() as p:
         browser = p.chromium.launch(executable_path='/usr/bin/google-chrome', headless=True)
         context = browser.new_context(viewport={'width': 1366, 'height': 850})
@@ -32,7 +38,7 @@ def run():
         drawer_btn = page.locator('button.run-drawer-toggle')
         drawer_btn.click()
         page.wait_for_timeout(1000)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s2_09a_run_error_drawer.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's2_09a_run_error_drawer.png'))
 
         # Ensure Chat dock is open
         if page.locator('aside.studio-dock').count() == 0:
@@ -52,7 +58,7 @@ def run():
         print(f"[Scenario 2 Repair] Sending repair prompt...")
         chat_input = page.locator('aside.studio-dock textarea')
         chat_input.fill(repair_prompt)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s2_09b_repair_prompt_sent.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's2_09b_repair_prompt_sent.png'))
         page.locator('aside.studio-dock button[aria-label="Send chat message"]').click()
 
         # Wait for new review card
@@ -66,7 +72,7 @@ def run():
                 btn = apply_btns.nth(i)
                 if btn.is_visible() and not btn.is_disabled():
                     print(f"[Scenario 2 Repair] Found active Apply button in {int(time.time() - start_wait)}s!")
-                    page.screenshot(path='artifacts/scenario_report/screenshots/s2_09c_repair_review_card.png')
+                    page.screenshot(path=str(SCREENSHOTS_DIR / 's2_09c_repair_review_card.png'))
                     btn.click()
                     applied = True
                     break
@@ -76,12 +82,12 @@ def run():
 
         if not applied:
             print("[Scenario 2 Repair] ERROR: Could not find active Apply button within timeout!")
-            page.screenshot(path='artifacts/scenario_report/screenshots/s2_09c_error_waiting_apply.png')
+            page.screenshot(path=str(SCREENSHOTS_DIR / 's2_09c_error_waiting_apply.png'))
             browser.close()
             return
 
         page.wait_for_timeout(2000)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s2_09d_repair_applied.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's2_09d_repair_applied.png'))
 
         # Click Run
         print("[Scenario 2 Repair] Clicking Run in top bar...")
@@ -98,13 +104,13 @@ def run():
                 break
             time.sleep(1)
         print(f"[Scenario 2 Repair] Run finished in {int(time.time() - start_run)}s. Succeeded: {run_succeeded}")
-        page.screenshot(path='artifacts/scenario_report/screenshots/s2_09e_run_succeeded.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's2_09e_run_succeeded.png'))
 
         # Check Visualization
         print("[Scenario 2 Repair] Checking Visualization view...")
         page.locator('aside.studio-navigation nav button:has-text("Visualization")').click()
         page.wait_for_timeout(2000)
-        page.screenshot(path='artifacts/scenario_report/screenshots/s2_10_visualization_view.png')
+        page.screenshot(path=str(SCREENSHOTS_DIR / 's2_10_visualization_view.png'))
 
         vis_content = page.content()
         print("Visualization check Sales value 800.00:", "800.00" in vis_content or "800" in vis_content)
@@ -123,13 +129,13 @@ def run():
             dash_page.goto(dash_url)
             dash_page.wait_for_load_state('networkidle')
             dash_page.wait_for_timeout(2000)
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s2_11_dashboard_initial.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's2_11_dashboard_initial.png'))
 
             # Open Filters and scenarios
             print("[Scenario 2 Repair] Opening Filters and scenarios drawer...")
             dash_page.locator('button:has-text("Filters and scenarios")').click()
             dash_page.wait_for_timeout(1000)
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s2_12_dashboard_controls_open.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's2_12_dashboard_controls_open.png'))
 
             # Set Discount percent to 10
             print("[Scenario 2 Repair] Setting Discount percent to 10...")
@@ -139,7 +145,7 @@ def run():
             dash_page.locator('button:has-text("Apply controls")').click()
             dash_page.wait_for_timeout(3000)
             dash_page.wait_for_load_state('networkidle')
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s2_13_discount_10_applied.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's2_13_discount_10_applied.png'))
 
             d1_content = dash_page.content()
             print("Dashboard check Scenario sales 720.00:", "720.00" in d1_content or "720" in d1_content)
@@ -155,7 +161,7 @@ def run():
             dash_page.locator('button:has-text("Apply controls")').click()
             dash_page.wait_for_timeout(3000)
             dash_page.wait_for_load_state('networkidle')
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s2_14_india_discount_10.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's2_14_india_discount_10.png'))
 
             d2_content = dash_page.content()
             print("Dashboard check India sales 530.00:", "530.00" in d2_content or "530" in d2_content)
@@ -173,7 +179,7 @@ def run():
             dash_page.locator('button:has-text("Apply controls")').click()
             dash_page.wait_for_timeout(3000)
             dash_page.wait_for_load_state('networkidle')
-            dash_page.screenshot(path='artifacts/scenario_report/screenshots/s2_15_dashboard_reset.png')
+            dash_page.screenshot(path=str(SCREENSHOTS_DIR / 's2_15_dashboard_reset.png'))
 
         browser.close()
 

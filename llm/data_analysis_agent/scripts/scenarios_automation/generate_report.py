@@ -1,5 +1,9 @@
 import os
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from common import TEMP_REPORTS_DIR, SCREENSHOTS_DIR, ensure_temp_dirs
 
 html_content = """<!DOCTYPE html>
 <html lang="en">
@@ -975,12 +979,16 @@ TypeError: StringMethods.startswith() got an unexpected keyword argument 'case'
 </html>
 """
 
-report_path_1 = Path("docs/scenarios/scenario_execution_report.html")
-report_path_1.write_text(html_content, encoding="utf-8")
-print(f"Written: {report_path_1.resolve()} ({len(html_content)} bytes)")
+ensure_temp_dirs()
 
-report_path_2 = Path("artifacts/scenario_report/index.html")
-# Adjust screenshot relative path for artifacts/scenario_report/
-artifacts_html = html_content.replace('src="report_screenshots/', 'src="screenshots/')
-report_path_2.write_text(artifacts_html, encoding="utf-8")
-print(f"Written: {report_path_2.resolve()} ({len(artifacts_html)} bytes)")
+# Ensure all image paths point to local screenshots/ directory inside TEMP_reports/
+final_html = html_content.replace('report_screenshots/', 'screenshots/')
+
+report_path_1 = TEMP_REPORTS_DIR / "scenario_execution_report.html"
+report_path_1.write_text(final_html, encoding="utf-8")
+print(f"Written report: {report_path_1.resolve()} ({len(final_html)} bytes)")
+
+report_path_2 = TEMP_REPORTS_DIR / "index.html"
+report_path_2.write_text(final_html, encoding="utf-8")
+print(f"Written index: {report_path_2.resolve()} ({len(final_html)} bytes)")
+
