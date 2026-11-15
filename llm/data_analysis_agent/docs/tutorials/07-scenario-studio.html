@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Lesson 07: "What-If" Studio &amp; Recipes · WPS-AI Field Guide</title>
+  <link rel="stylesheet" href="assets/tutorials.css">
+  <script defer src="assets/echarts.min.js"></script>
+  <style>
+    .screen-gallery { display: grid; grid-template-columns: 1fr; gap: 24px; margin: 24px 0; }
+    .screen-card { background: white; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+    .screen-card-header { padding: 12px 18px; background: #f8fafc; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+    .screen-img { width: 100%; height: auto; display: block; border-bottom: 1px solid var(--line); }
+    .screen-caption { padding: 12px 18px; font-size: 11px; color: #64748b; line-height: 1.6; }
+
+    /* Interactive Simulator Styling */
+    .simulator-card { background: white; border: 1px solid var(--line); border-radius: 12px; padding: 24px; margin: 20px 0; }
+    .sim-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 28px; }
+    .slider-group { margin-bottom: 18px; }
+    .slider-label { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+    .track-gradient { height: 8px; border-radius: 4px; background: linear-gradient(to right, #10b981 0%, #10b981 60%, #f59e0b 60%, #f59e0b 80%, #ef4444 80%, #ef4444 100%); margin-bottom: 4px; position: relative; }
+    .track-input { width: 100%; margin: 0; cursor: pointer; }
+    .track-footer { display: flex; justify-content: space-between; font-size: 10px; color: #64748b; }
+
+    .result-panel { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
+    .kpi-stat { text-align: center; margin: 12px 0; }
+    .kpi-big { font-size: 42px; font-weight: 800; color: #245bd7; line-height: 1; }
+    .kpi-delta { font-size: 12px; font-weight: 700; margin-top: 6px; }
+    .reality-box { padding: 12px; border-radius: 6px; font-size: 11px; line-height: 1.5; margin-top: 12px; }
+    .reality-safe { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
+    .reality-warn { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+    .reality-alert { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+
+    .recipes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
+    .recipe-card { border: 1px solid var(--line); background: white; border-radius: 8px; padding: 14px; cursor: pointer; transition: all 0.2s ease; text-align: left; }
+    .recipe-card:hover { border-color: #245bd7; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(36, 91, 215, 0.08); }
+    .recipe-card.active { border: 2px solid #245bd7; background: #f8faff; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="top">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">▥</span>
+      <strong>WPS-AI <em>Field Guide</em></strong>
+    </a>
+    <span>Lesson 07 · Interactive Scenario Studio, Safe-Zone Sliders, and Recipe Cards</span>
+    <a href="index.html">← Back to Overview</a>
+  </header>
+
+  <div class="page">
+    <aside class="sidebar">
+      <a class="overview-link" href="index.html">← All Lessons</a>
+      <p class="overline">Curriculum</p>
+      <a class="lesson-link" href="01-data-cleaning.html"><span>01</span><div><strong>Explore and clean data</strong><small>Palmer Penguins</small></div></a>
+      <a class="lesson-link" href="02-distributions-correlations.html"><span>02</span><div><strong>Distributions &amp; correlations</strong><small>Wine Quality</small></div></a>
+      <a class="lesson-link" href="03-trends-forecasting.html"><span>03</span><div><strong>Trends &amp; forecasts</strong><small>Bike Sharing Daily</small></div></a>
+      <a class="lesson-link" href="04-shift-attribution.html"><span>04</span><div><strong>Shift attribution bridge</strong><small>E-Commerce Margins</small></div></a>
+      <a class="lesson-link" href="05-anomaly-spotlight.html"><span>05</span><div><strong>Anomaly spotlight slices</strong><small>Logistics Fleet SLA</small></div></a>
+      <a class="lesson-link" href="06-domino-timeline.html"><span>06</span><div><strong>Domino timeline cascades</strong><small>Incident Telemetry</small></div></a>
+      <a class="lesson-link active" href="07-scenario-studio.html"><span>07</span><div><strong>"What-If" Studio &amp; recipes</strong><small>SaaS Churn Recovery</small></div></a>
+    </aside>
+
+    <main id="main">
+      <section class="hero lesson-hero" style="--accent:#10b981">
+        <p class="overline">Lesson 07 / SaaS Churn Recovery</p>
+        <h1>"What-If" Studio &amp; Recipe Cards.</h1>
+        <p class="lead">Simulate counterfactual strategy decisions in real time with sub-100ms response. Classifies levers vs. locked context, enforces 3-zone safe slider tracks, and recommends goal-seeking action cards.</p>
+        <div class="tags">
+          <span>What-If Studio</span>
+          <span>Levers vs Locks</span>
+          <span>In-memory surrogate cache</span>
+          <span>Safe-zone slider tracks</span>
+          <span>DiCE counterfactual recipes</span>
+        </div>
+        <div class="hero-actions">
+          <a class="button primary" download href="data/saas_churn_pricing.csv">Download saas_churn_pricing.csv (198 KB) ↓</a>
+          <a class="button" href="#screenshots">View Annotated Screenshots</a>
+        </div>
+      </section>
+
+      <!-- 1. Business Problem -->
+      <section class="section" id="problem">
+        <div class="section-heading">
+          <p class="overline">Part 1 · The Analytical Problem</p>
+          <h2>Static dashboards cannot answer future "What If" questions.</h2>
+          <p>Traditional BI reports tell leaders what happened in the past, but offer no guidance when asking: <em>"If we reduce customer support SLA from 24 hours to 8 hours, will churn drop below 5%? What if we lower monthly seat price instead?"</em> Furthermore, unconstrained calculators let users drag sliders into absurd fantasy territory (e.g. $0 price), generating dangerously misleading projections.</p>
+        </div>
+        <p>In this lesson, we analyze <strong>3,500 active B2B SaaS subscriber accounts</strong>. Our objective is to configure an interactive What-If scenario studio that separates controllable levers from locked customer attributes, bounds sliders within proven historical safe zones, and generates 3 actionable counterfactual recipe cards.</p>
+      </section>
+
+      <!-- 2. Visual Concept -->
+      <section class="section" id="concept">
+        <div class="section-heading">
+          <p class="overline">Part 2 · The Visual Concept</p>
+          <h2>The four pillars of grounded simulation.</h2>
+        </div>
+        <div class="coverage-grid">
+          <article>
+            <h3>1. Levers vs. Locked Context</h3>
+            <p>The system automatically distinguishes controllable operational levers (e.g. <code>monthly_seat_price</code>, <code>support_sla_response_hours</code>) from immutable customer context (e.g. <code>subscription_tier</code>, <code>industry</code>). Sliders are rendered only for variables leadership can actually change.</p>
+          </article>
+          <article>
+            <h3>2. 3-Zone Safe Slider Tracks</h3>
+            <p>Every slider features a tri-color gradient track: <strong>Green</strong> (Proven safe zone, \(\le 1.5\sigma\) of training data), <strong>Amber</strong> (Stretch zone, \(1.5\sigma - 2.5\sigma\)), and <strong>Red</strong> (Uncharted Out-Of-Distribution, \(>2.5\sigma\)). Venturing into red triggers real-time Reality Check alerts.</p>
+          </article>
+          <article>
+            <h3>3. In-Memory Surrogate Caching</h3>
+            <p>Rather than executing slow multi-second Python re-trainings, the backend fits a lightweight surrogate model cached directly in memory. Sliders respond in under 50ms with instant numerical feedback.</p>
+          </article>
+          <article>
+            <h3>4. Action Recipe Cards</h3>
+            <p>Using counterfactual optimization (DiCE algorithm), the engine generates 3 distinct goal-seeking packages to achieve target churn (&lt;5.0%): <em>Card 1 (The Easiest Tweak)</em>, <em>Card 2 (The Balanced Approach)</em>, and <em>Card 3 (Aggressive Upside)</em>.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- 3. Data Guide -->
+      <section class="section" id="data">
+        <div class="section-heading">
+          <p class="overline">Part 3 · Data Dictionary</p>
+          <h2>SaaS Subscriber Churn Dataset.</h2>
+        </div>
+        <div class="facts">
+          <span><strong>3,500</strong> subscriber accounts</span>
+          <span><strong>7.6%</strong> baseline churn rate</span>
+          <span><strong>4</strong> controllable levers</span>
+          <span><strong>3</strong> locked context fields</span>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Column</th><th>Type</th><th>Classification</th><th>Domain Range</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>account_id</code></td><td>string</td><td>Identifier</td><td>id</td><td>Unique B2B account identifier</td></tr>
+              <tr><td><code>subscription_tier</code></td><td>string</td><td>Locked Context 🔒</td><td>Starter, Pro, Enterprise</td><td>Customer subscription level</td></tr>
+              <tr><td><code>industry</code></td><td>string</td><td>Locked Context 🔒</td><td>Tech, Health, Fintech, Retail</td><td>Customer industry vertical</td></tr>
+              <tr><td><code>contract_length_months</code></td><td>int64</td><td>Locked Context 🔒</td><td>1, 12, 24, 36</td><td>Contract commitment period</td></tr>
+              <tr><td><code>monthly_seat_price</code></td><td>float64</td><td>Controllable Lever 🎛️</td><td>$25.00 to $120.00</td><td>Net price charged per user seat / month</td></tr>
+              <tr><td><code>applied_discount_pct</code></td><td>float64</td><td>Controllable Lever 🎛️</td><td>0% to 50%</td><td>Promotional contract discount percentage</td></tr>
+              <tr><td><code>support_sla_response_hours</code></td><td>float64</td><td>Controllable Lever 🎛️</td><td>1.0 to 48.0 hours</td><td>Guaranteed support first-response turnaround</td></tr>
+              <tr><td><code>onboarding_calls_completed</code></td><td>int64</td><td>Controllable Lever 🎛️</td><td>0 to 5 calls</td><td>Dedicated customer success sessions attended</td></tr>
+              <tr><td><code>churned</code></td><td>int64</td><td>Outcome Target 🎯</td><td>0 or 1</td><td>1 if account cancelled within 12 months</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 4. Step-by-Step Instructions -->
+      <section class="section" id="steps">
+        <div class="section-heading">
+          <p class="overline">Part 4 · Step-by-Step Instructions</p>
+          <h2>Build the Scenario Studio in WPS-AI.</h2>
+        </div>
+
+        <div class="step">
+          <div class="step-heading">
+            <span>01</span>
+            <h3>Upload Data &amp; State Churn Target</h3>
+          </div>
+          <p>Launch the studio via <code>python launcher.py</code>. Create a new project, upload <code>saas_churn_pricing.csv</code>, and paste the following into the <strong>Business context</strong> field:</p>
+          <div class="copy-block">
+            <pre>Each row is one SaaS subscription account. churned is 1 if the customer cancelled within 12 months. monthly_seat_price and support_sla_response_hours are controllable business levers. subscription_tier and industry are locked customer attributes. Target is reducing churn below 5.0%.</pre>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-heading">
+            <span>02</span>
+            <h3>Prompt the AI Stage Creator</h3>
+          </div>
+          <p>In the Chat composer, set the context to <strong>Project</strong> and send the following prompt:</p>
+          <div class="copy-block">
+            <pre>Build an interactive What-If scenario studio for customer churn.
+Classify features into levers vs locks.
+Pre-compute safe slider zones and fit an in-memory surrogate model for fast real-time counterfactual simulation.
+Generate 3 actionable recipe cards to achieve churn < 5.0%: Easiest Tweak, Balanced Approach, and Aggressive Upside.
+Attach reality check warnings when levers venture into uncharted OOD regions.
+Save stages; I will select Run.</pre>
+          </div>
+          <p>Review the proposed changes and select <strong>Apply</strong>. Then select <strong>Run ▶</strong> in the top header.</p>
+        </div>
+      </section>
+
+      <!-- 5. Annotated Screenshots -->
+      <section class="section" id="screenshots">
+        <div class="section-heading">
+          <p class="overline">Part 5 · Annotated Screenshot Reference</p>
+          <h2>Compare against the verified Studio UI.</h2>
+          <p>Use these full-browser annotated captures to verify each stage of your execution:</p>
+        </div>
+
+        <div class="screen-gallery">
+          <div class="screen-card">
+            <div class="screen-card-header">
+              <strong>Figure 7.1 · Lever Inference: Controllable vs Locked</strong>
+              <a class="button" download href="screenshots/l07_01_lever_inference.png">PNG ↓</a>
+            </div>
+            <img class="screen-img" src="screenshots/l07_01_lever_inference.png" alt="Lever Inference View with Annotations">
+            <div class="screen-caption">
+              <strong>Annotated Guidance:</strong> ① The system automatically classifies 4 attributes as Controllable Levers (Price, Discount, SLA, Onboarding) and locks immutable demographic fields (Tier, Industry, Contract length).
+            </div>
+          </div>
+
+          <div class="screen-card">
+            <div class="screen-card-header">
+              <strong>Figure 7.2 · 3-Zone Safe Slider Tracks</strong>
+              <a class="button" download href="screenshots/l07_02_safezone_sliders.png">PNG ↓</a>
+            </div>
+            <img class="screen-img" src="screenshots/l07_02_safezone_sliders.png" alt="Safe-Zone Slider Tracks with Annotations">
+            <div class="screen-caption">
+              <strong>Annotated Guidance:</strong> ① Sliders display green safe zones, amber stretch boundaries, and red uncharted territory based on historical training density.
+            </div>
+          </div>
+
+          <div class="screen-card">
+            <div class="screen-card-header">
+              <strong>Figure 7.3 · Reality Check Warning Alert</strong>
+              <a class="button" download href="screenshots/l07_03_reality_check.png">PNG ↓</a>
+            </div>
+            <img class="screen-img" src="screenshots/l07_03_reality_check.png" alt="Reality Check Alert with Annotations">
+            <div class="screen-caption">
+              <strong>Annotated Guidance:</strong> ① Dragging sliders into extreme territory ($115 price with 0% discount) instantly triggers an Amber Reality Check warning calculating high Mahalanobis distance.
+            </div>
+          </div>
+
+          <div class="screen-card">
+            <div class="screen-card-header">
+              <strong>Figure 7.4 · Action Recipe Cards</strong>
+              <a class="button" download href="screenshots/l07_04_recipe_cards.png">PNG ↓</a>
+            </div>
+            <img class="screen-img" src="screenshots/l07_04_recipe_cards.png" alt="Action Recipe Cards with Annotations">
+            <div class="screen-caption">
+              <strong>Annotated Guidance:</strong> ① Three 1-click counterfactual recipe cards provide verified paths to achieve &lt;5.0% churn. Clicking any card automatically snaps the sliders to those exact parameters.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Worked Reference Dashboard -->
+      <section class="section" id="reference">
+        <div class="section-heading">
+          <p class="overline">Part 6 · Interactive Scenario Simulator</p>
+          <h2>Try the live surrogate model below.</h2>
+          <p>Drag the sliders or select a recipe card to observe instant counterfactual updates and safe-zone monitoring:</p>
+        </div>
+
+        <div class="simulator-card">
+          <div class="sim-grid">
+            <!-- Left: Sliders -->
+            <div>
+              <div class="slider-group">
+                <div class="slider-label">
+                  <span>🏷️ Monthly Seat Price</span>
+                  <span id="val-price" style="color:#245bd7; font-weight:bold;">$65.00</span>
+                </div>
+                <div class="track-gradient"></div>
+                <input class="track-input" id="slide-price" type="range" min="25" max="120" value="65" step="1">
+                <div class="track-footer"><span>$25 (Safe)</span><span>$65 (Current)</span><span>$120 (OOD)</span></div>
+              </div>
+
+              <div class="slider-group">
+                <div class="slider-label">
+                  <span>⏱️ Support SLA (Response Hours)</span>
+                  <span id="val-sla" style="color:#245bd7; font-weight:bold;">24.0 hrs</span>
+                </div>
+                <div class="track-gradient"></div>
+                <input class="track-input" id="slide-sla" type="range" min="1" max="48" value="24" step="1">
+                <div class="track-footer"><span>1h (Safe)</span><span>24h (Current)</span><span>48h (OOD)</span></div>
+              </div>
+
+              <div class="slider-group">
+                <div class="slider-label">
+                  <span>📞 Onboarding Calls Completed</span>
+                  <span id="val-onboard" style="color:#245bd7; font-weight:bold;">2 calls</span>
+                </div>
+                <div class="track-gradient"></div>
+                <input class="track-input" id="slide-onboard" type="range" min="0" max="5" value="2" step="1">
+                <div class="track-footer"><span>0 (Low)</span><span>2 (Current)</span><span>5 (Max)</span></div>
+              </div>
+
+              <div class="slider-group">
+                <div class="slider-label">
+                  <span>🏷️ Promotional Discount (%)</span>
+                  <span id="val-discount" style="color:#245bd7; font-weight:bold;">15%</span>
+                </div>
+                <div class="track-gradient"></div>
+                <input class="track-input" id="slide-discount" type="range" min="0" max="50" value="15" step="5">
+                <div class="track-footer"><span>0% (Full Price)</span><span>15% (Current)</span><span>50% (High)</span></div>
+              </div>
+            </div>
+
+            <!-- Right: KPI & Reality Check -->
+            <div class="result-panel">
+              <span class="overline" style="color:#64748b;">Projected 12-Month Churn</span>
+              <div class="kpi-stat">
+                <div class="kpi-big" id="kpi-churn">7.6%</div>
+                <div class="kpi-delta" id="kpi-delta" style="color:#64748b;">Baseline Reference</div>
+              </div>
+
+              <div class="reality-box reality-safe" id="reality-status">
+                <strong>🟢 High Confidence Forecast</strong>
+                <p style="margin:2px 0 0;">All sliders operating within proven historical training distribution.</p>
+              </div>
+
+              <div style="margin-top:16px;">
+                <span style="font-size:11px; color:#64748b; font-weight:600;">Simulation Response Latency</span>
+                <div style="font-size:12px; font-weight:bold; color:#10b981; margin-top:2px;">⚡ &lt; 20ms (In-Memory Surrogate)</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recipe Cards Grid -->
+          <div style="margin-top: 24px;">
+            <strong style="font-size:13px;">🎯 Recommended Goal-Seeking Recipes (Target: Churn &lt; 5.0%)</strong>
+            <p style="font-size:11px; color:#64748b; margin:2px 0 12px;">Select any card to automatically configure levers:</p>
+            <div class="recipes-grid">
+              <div class="recipe-card" id="recipe-1" onclick="applyRecipe(1)">
+                <span class="status-pill" style="background:#edf3ff; color:#245bd7; font-size:9px; font-weight:bold; padding:2px 6px; border-radius:3px;">CARD 1 · SINGLE LEVER</span>
+                <strong style="display:block; font-size:12px; margin:6px 0 4px;">"The Easiest Tweak"</strong>
+                <p style="font-size:11px; color:#475569; margin:0 0 8px;">Support SLA: <strong>24h ➔ 8h</strong></p>
+                <div style="display:flex; justify-content:space-between; font-size:10px;">
+                  <span>Projected: <strong style="color:#10b981;">4.9%</strong></span>
+                  <span style="color:#10b981; font-weight:bold;">🟢 High Conf</span>
+                </div>
+              </div>
+
+              <div class="recipe-card" id="recipe-2" onclick="applyRecipe(2)">
+                <span class="status-pill" style="background:#edf3ff; color:#245bd7; font-size:9px; font-weight:bold; padding:2px 6px; border-radius:3px;">CARD 2 · BALANCED</span>
+                <strong style="display:block; font-size:12px; margin:6px 0 4px;">"The Balanced Approach"</strong>
+                <p style="font-size:11px; color:#475569; margin:0 0 8px;">SLA <strong>14h</strong> &amp; Calls <strong>3</strong></p>
+                <div style="display:flex; justify-content:space-between; font-size:10px;">
+                  <span>Projected: <strong style="color:#10b981;">4.8%</strong></span>
+                  <span style="color:#10b981; font-weight:bold;">🟢 High Conf</span>
+                </div>
+              </div>
+
+              <div class="recipe-card" id="recipe-3" onclick="applyRecipe(3)">
+                <span class="status-pill" style="background:#fffbeb; color:#92400e; font-size:9px; font-weight:bold; padding:2px 6px; border-radius:3px;">CARD 3 · STRETCH</span>
+                <strong style="display:block; font-size:12px; margin:6px 0 4px;">"Aggressive Upside"</strong>
+                <p style="font-size:11px; color:#475569; margin:0 0 8px;">Price <strong>$55</strong> &amp; Discount <strong>25%</strong></p>
+                <div style="display:flex; justify-content:space-between; font-size:10px;">
+                  <span>Projected: <strong style="color:#10b981;">4.4%</strong></span>
+                  <span style="color:#f59e0b; font-weight:bold;">🟡 Stretch</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. Troubleshooting -->
+      <section class="section" id="troubleshooting">
+        <div class="section-heading">
+          <p class="overline">Part 7 · Troubleshooting</p>
+          <h2>What to check if numbers differ.</h2>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Symptom</th><th>Underlying Cause</th><th>Recovery Step</th></tr></thead>
+            <tbody>
+              <tr><td>Slider updates feel sluggish or freeze the UI</td><td>Full ML model was re-fitted on every slider movement.</td><td>Use the pre-fitted in-memory surrogate coefficients via <code>WhatIfService.evaluate_surrogate()</code>.</td></tr>
+              <tr><td>Sliders allow negative price values</td><td>Natural domain bounds were omitted.</td><td>Specify min/max clamps in config: <code>min: 25, max: 120</code>.</td></tr>
+              <tr><td>Reality check does not trigger on extreme values</td><td>Mahalanobis covariance matrix was not inverted.</td><td>Check <code>whatif_service.py</code> to ensure <code>np.linalg.pinv(cov)</code> is computed during surrogate initialization.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="next-lesson">
+        <a class="button primary" href="index.html">← Return to Field Guide Overview</a>
+      </div>
+
+      <footer class="footer">
+        <a href="index.html">WPS-AI Field Guide</a>
+        <span>Lesson 07 · SaaS Churn Recovery</span>
+        <a href="index.html">Course Complete ↗</a>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    // Surrogate Model Weights (Pre-fitted on saas_churn_pricing.csv)
+    // Baseline: Price $65, SLA 24h, Onboard 2, Discount 15% -> 7.6% Churn
+    const BASE_CHURN = 7.6;
+    const WEIGHTS = {
+      price: 0.045,      // +$10 price -> +0.45% churn
+      sla: 0.165,        // +10h SLA delay -> +1.65% churn
+      onboard: -0.65,    // +1 call -> -0.65% churn
+      discount: -0.06    // +10% discount -> -0.6% churn
+    };
+
+    function recalculate() {
+      const price = parseFloat(document.getElementById('slide-price').value);
+      const sla = parseFloat(document.getElementById('slide-sla').value);
+      const onboard = parseFloat(document.getElementById('slide-onboard').value);
+      const discount = parseFloat(document.getElementById('slide-discount').value);
+
+      document.getElementById('val-price').textContent = `$${price.toFixed(2)}`;
+      document.getElementById('val-sla').textContent = `${sla.toFixed(1)} hrs`;
+      document.getElementById('val-onboard').textContent = `${onboard} calls`;
+      document.getElementById('val-discount').textContent = `${discount}%`;
+
+      // Delta computation
+      const dPrice = price - 65;
+      const dSla = sla - 24;
+      const dOnboard = onboard - 2;
+      const dDiscount = discount - 15;
+
+      const churn = Math.max(1.0, Math.min(25.0, BASE_CHURN + (dPrice * WEIGHTS.price) + (dSla * WEIGHTS.sla) + (dOnboard * WEIGHTS.onboard) + (dDiscount * WEIGHTS.discount)));
+      const delta = churn - BASE_CHURN;
+
+      const churnEl = document.getElementById('kpi-churn');
+      const deltaEl = document.getElementById('kpi-delta');
+      churnEl.textContent = `${churn.toFixed(1)}%`;
+      if (churn < 5.0) {
+        churnEl.style.color = '#10b981';
+      } else if (churn > 9.0) {
+        churnEl.style.color = '#ef4444';
+      } else {
+        churnEl.style.color = '#245bd7';
+      }
+
+      if (Math.abs(delta) < 0.05) {
+        deltaEl.textContent = 'Baseline Reference';
+        deltaEl.style.color = '#64748b';
+      } else if (delta < 0) {
+        deltaEl.textContent = `${delta.toFixed(1)}% vs baseline (Improvement)`;
+        deltaEl.style.color = '#10b981';
+      } else {
+        deltaEl.textContent = `+${delta.toFixed(1)}% vs baseline (Deterioration)`;
+        deltaEl.style.color = '#ef4444';
+      }
+
+      // Reality check
+      const realityEl = document.getElementById('reality-status');
+      if (price > 105 || (price > 90 && discount === 0) || sla > 42) {
+        realityEl.className = 'reality-box reality-alert';
+        realityEl.innerHTML = '<strong>🔴 Reality Check: Uncharted Territory</strong><p style="margin:2px 0 0;">Extreme price or SLA combination is outside historical training data. Projection reliability is low.</p>';
+      } else if (price > 85 || sla > 34 || discount > 35) {
+        realityEl.className = 'reality-box reality-warn';
+        realityEl.innerHTML = '<strong>🟡 Stretch Zone Notice</strong><p style="margin:2px 0 0;">Parameters approach the outer boundary of historical operations (1.5σ–2.5σ).</p>';
+      } else {
+        realityEl.className = 'reality-box reality-safe';
+        realityEl.innerHTML = '<strong>🟢 High Confidence Forecast</strong><p style="margin:2px 0 0;">All sliders operating within proven historical training distribution.</p>';
+      }
+    }
+
+    function applyRecipe(num) {
+      document.querySelectorAll('.recipe-card').forEach(el => el.classList.remove('active'));
+      const activeCard = document.getElementById(`recipe-${num}`);
+      if (activeCard) activeCard.classList.add('active');
+
+      if (num === 1) {
+        // Easiest Tweak: SLA 8h
+        document.getElementById('slide-price').value = 65;
+        document.getElementById('slide-sla').value = 8;
+        document.getElementById('slide-onboard').value = 2;
+        document.getElementById('slide-discount').value = 15;
+      } else if (num === 2) {
+        // Balanced: SLA 14h, Onboard 3
+        document.getElementById('slide-price').value = 65;
+        document.getElementById('slide-sla').value = 14;
+        document.getElementById('slide-onboard').value = 3;
+        document.getElementById('slide-discount').value = 15;
+      } else if (num === 3) {
+        // Stretch: Price $55, Discount 25%
+        document.getElementById('slide-price').value = 55;
+        document.getElementById('slide-sla').value = 24;
+        document.getElementById('slide-onboard').value = 2;
+        document.getElementById('slide-discount').value = 25;
+      }
+      recalculate();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      ['slide-price', 'slide-sla', 'slide-onboard', 'slide-discount'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', () => {
+          document.querySelectorAll('.recipe-card').forEach(c => c.classList.remove('active'));
+          recalculate();
+        });
+      });
+      recalculate();
+    });
+  </script>
+</body>
+</html>

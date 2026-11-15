@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Lesson 04: Shift Attribution Bridge · WPS-AI Field Guide</title>
+  <link rel="stylesheet" href="assets/tutorials.css">
+  <script defer src="assets/echarts.min.js"></script>
+  <style>
+    .screen-gallery { display: grid; grid-template-columns: 1fr; gap: 24px; margin: 24px 0; }
+    .screen-card { background: white; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+    .screen-card-header { padding: 12px 18px; background: #f8fafc; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+    .screen-img { width: 100%; height: auto; display: block; border-bottom: 1px solid var(--line); }
+    .screen-caption { padding: 12px 18px; font-size: 11px; color: #64748b; line-height: 1.6; }
+    .chart-container { height: 360px; background: white; border: 1px solid var(--line); border-radius: 8px; margin: 16px 0; padding: 12px; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="top">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">▥</span>
+      <strong>WPS-AI <em>Field Guide</em></strong>
+    </a>
+    <span>Lesson 04 · BlameBridge SHAP Decomposition &amp; Waterfall Diagnostics</span>
+    <a href="index.html">← Back to Overview</a>
+  </header>
+
+  <div class="page">
+    <aside class="sidebar">
+      <a class="overview-link" href="index.html">← All Lessons</a>
+      <p class="overline">Curriculum</p>
+      <a class="lesson-link" href="01-data-cleaning.html"><span>01</span><div><strong>Explore and clean data</strong><small>Palmer Penguins</small></div></a>
+      <a class="lesson-link" href="02-distributions-correlations.html"><span>02</span><div><strong>Distributions &amp; correlations</strong><small>Wine Quality</small></div></a>
+      <a class="lesson-link" href="03-trends-forecasting.html"><span>03</span><div><strong>Trends &amp; forecasts</strong><small>Bike Sharing Daily</small></div></a>
+      <a class="lesson-link active" href="04-shift-attribution.html"><span>04</span><div><strong>Shift attribution bridge</strong><small>E-Commerce Margins</small></div></a>
+      <a class="lesson-link" href="05-anomaly-spotlight.html"><span>05</span><div><strong>Anomaly spotlight slices</strong><small>Logistics Fleet SLA</small></div></a>
+      <a class="lesson-link" href="06-domino-timeline.html"><span>06</span><div><strong>Domino timeline cascades</strong><small>Incident Telemetry</small></div></a>
+      <a class="lesson-link" href="07-scenario-studio.html"><span>07</span><div><strong>"What-If" Studio &amp; recipes</strong><small>SaaS Churn Recovery</small></div></a>
+    </aside>
+
+    <main id="main">
+      <section class="hero lesson-hero" style="--accent:#e11d48">
+        <p class="overline">Lesson 04 / E-Commerce Margins</p>
+        <h1>"Why it changed" (Attribution Bridge).</h1>
+        <p class="lead">Why did net profit margin drop by -5.5% between Q1 and Q2? Decompose period shift into floating positive and negative drivers with exact conservation.</p>
+        <div class="tags">
+          <span>BlameBridge</span>
+          <span>SHAP value decomposition</span>
+          <span>Waterfall chart</span>
+          <span>Zero-drift conservation</span>
+          <span>Proactive action chips</span>
+        </div>
+        <div class="hero-actions">
+          <a class="button primary" download href="data/ecommerce_margin_shift.csv">Download ecommerce_margin_shift.csv (325 KB) ↓</a>
+          <a class="button" href="#screenshots">View Annotated Screenshots</a>
+        </div>
+      </section>
+
+      <!-- 1. Business Problem -->
+      <section class="section" id="problem">
+        <div class="section-heading">
+          <p class="overline">Part 1 · The Analytical Problem</p>
+          <h2>Net shifts trigger inter-departmental blame.</h2>
+          <p>When an executive metric drops—such as net margin falling from 22.0% in Q1 to 16.5% in Q2—every team points to their colleagues: logistics blames marketing discounts, marketing blames rising return rates, and finance blames warehouse overhead. Without mathematical attribution, leadership cannot prioritize corrective actions.</p>
+        </div>
+        <p>In this lesson, we examine <strong>4,200 e-commerce orders</strong> spanning Q1 and Q2 across four sales regions. Our goal is to decompose the -5.5% net margin erosion into discrete, mathematically conserved driver contributions and render an intuitive ECharts waterfall bridge.</p>
+      </section>
+
+      <!-- 2. Visual Concept -->
+      <section class="section" id="concept">
+        <div class="section-heading">
+          <p class="overline">Part 2 · The Visual Concept</p>
+          <h2>The floating waterfall bridge.</h2>
+        </div>
+        <div class="coverage-grid">
+          <article>
+            <h3>1. Mathematically Conserved Drivers</h3>
+            <p>Using TreeSHAP attribution in <code>BlameBridge</code>, every factor is quantified in exact basis points. The baseline (22.0%), negative drags (-4.4% shipping, -1.7% returns), and positive offsets (+0.6% price mix) sum precisely to the final ending result (16.5%).</p>
+          </article>
+          <article>
+            <h3>2. Floating Visual Architecture</h3>
+            <p>An ECharts stacked bar chart creates the floating waterfall effect: a transparent spacer series lifts each driver bar to its starting level. Drags render in alert red (<code>#ef4444</code>), positive lifts in safe green (<code>#10b981</code>), and anchor periods in solid neutral blue (<code>#245bd7</code>).</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- 3. Data Guide -->
+      <section class="section" id="data">
+        <div class="section-heading">
+          <p class="overline">Part 3 · Data Dictionary</p>
+          <h2>E-Commerce Margin Dataset.</h2>
+        </div>
+        <div class="facts">
+          <span><strong>4,200</strong> customer orders</span>
+          <span><strong>2,100</strong> Q1 orders</span>
+          <span><strong>2,100</strong> Q2 orders</span>
+          <span><strong>-5.5%</strong> net margin shift</span>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Column</th><th>Type</th><th>Units</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>order_id</code></td><td>string</td><td>id</td><td>Unique order identifier</td></tr>
+              <tr><td><code>order_date</code></td><td>string</td><td>YYYY-MM-DD</td><td>Date of transaction</td></tr>
+              <tr><td><code>quarter</code></td><td>string</td><td>Q1 / Q2</td><td>Fiscal quarter period</td></tr>
+              <tr><td><code>region</code></td><td>string</td><td>category</td><td>Distribution hub: North, South, East, West</td></tr>
+              <tr><td><code>product_category</code></td><td>string</td><td>category</td><td>Category: Electronics, Apparel, HomeGoods</td></tr>
+              <tr><td><code>unit_price</code></td><td>float64</td><td>USD ($)</td><td>Gross retail price per item</td></tr>
+              <tr><td><code>discount_pct</code></td><td>float64</td><td>0.0 to 0.40</td><td>Promotional discount applied at checkout</td></tr>
+              <tr><td><code>shipping_cost</code></td><td>float64</td><td>USD ($)</td><td>Fulfillment carrier cost</td></tr>
+              <tr><td><code>returned</code></td><td>int64</td><td>0 or 1</td><td>1 if customer returned item for refund</td></tr>
+              <tr><td><code>net_margin_pct</code></td><td>float64</td><td>percentage</td><td>Order profit margin: (Revenue - Costs) / Revenue</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 4. Step-by-Step Instructions -->
+      <section class="section" id="steps">
+        <div class="section-heading">
+          <p class="overline">Part 4 · Step-by-Step Instructions</p>
+          <h2>Build the attribution bridge in WPS-AI Studio.</h2>
+        </div>
+
+        <div class="step">
+          <div class="step-heading">
+            <span>01</span>
+            <h3>Upload Data &amp; Specify Period Comparison</h3>
+          </div>
+          <p>Launch the studio via <code>python launcher.py</code>. Create a new project, upload <code>ecommerce_margin_shift.csv</code>, and paste the following into the <strong>Business context</strong> field:</p>
+          <div class="copy-block">
+            <pre>Each row is one e-commerce customer transaction in Q1 or Q2 2024. net_margin_pct is the profit margin of the order. shipping_cost and discount_pct are cost drivers. returned is 1 if the item was returned. Compare Q1 baseline against Q2 to attribute the net margin erosion.</pre>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-heading">
+            <span>02</span>
+            <h3>Prompt the AI Stage Creator</h3>
+          </div>
+          <p>In the Chat composer, set the context to <strong>Project</strong> and send the following prompt:</p>
+          <div class="copy-block">
+            <pre>Build an attribution pipeline using BlameBridge to explain the quarterly margin change from Q1 to Q2.
+Calculate exact delta contributions for shipping_cost, discount_pct, return_rate, and product_mix.
+Render an ECharts waterfall chart showing the starting baseline (22.0%), negative and positive driver bars, and final ending margin (16.5%).
+Provide proactive action chips for downstream scenario exploration.
+Save stages; I will select Run.</pre>
+          </div>
+          <p>Review the proposed changes and select <strong>Apply</strong>. Then select <strong>Run ▶</strong> in the top header.</p>
+        </div>
+      </section>
+
+      <!-- 5. Annotated Screenshots -->
+      <section class="section" id="screenshots">
+        <div class="section-heading">
+          <p class="overline">Part 5 · Annotated Screenshot Reference</p>
+          <h2>Compare against the verified Studio UI.</h2>
+          <p>Use these full-browser annotated captures to verify each stage of your execution:</p>
+        </div>
+
+        <div class="screen-gallery">
+          <div class="screen-card">
+            <div class="screen-card-header">
+              <strong>Figure 4.1 · Period Shift Summary &amp; KPI Pill</strong>
+              <a class="button" download href="screenshots/l04_01_data_setup.png">PNG ↓</a>
+            </div>
+            <img class="screen-img" src="screenshots/l04_01_data_setup.png" alt="Q1 vs Q2 Margin Setup with Annotations">
+            <div class="screen-caption">
+              <strong>Annotated Guidance:</strong> ① Confirm the data setup documents the -5.5% margin erosion between Q1 (22.0%) and Q2 (16.5%) across 4,200 orders.
+            </div>
+          </div>
+
+          <div class="screen-card">
+            <div class="screen-card-header">
+              <strong>Figure 4.2 · BlameBridge Python Decomposition Internals</strong>
+              <a class="button" download href="screenshots/l04_02_attribution_internals.png">PNG ↓</a>
+            </div>
+            <img class="screen-img" src="screenshots/l04_02_attribution_internals.png" alt="BlameBridge Attribution Internals with Annotations">
+            <div class="screen-caption">
+              <strong>Annotated Guidance:</strong> ① The analysis stage enforces exact delta conservation: 22.0% baseline - 4.4% (shipping) - 1.7% (returns) + 0.6% (pricing) = 16.5% final margin.
+            </div>
+          </div>
+
+          <div class="screen-card">
+            <div class="screen-card-header">
+              <strong>Figure 4.3 · ECharts Waterfall Bridge Chart</strong>
+              <a class="button" download href="screenshots/l04_03_waterfall_result.png">PNG ↓</a>
+            </div>
+            <img class="screen-img" src="screenshots/l04_03_waterfall_result.png" alt="Waterfall Bridge Chart with Annotations">
+            <div class="screen-caption">
+              <strong>Annotated Guidance:</strong> ① The waterfall immediately isolates that 80% of the entire net margin loss (-4.4% out of -5.5%) stems exclusively from carrier shipping cost spikes.
+            </div>
+          </div>
+
+          <div class="screen-card">
+            <div class="screen-card-header">
+              <strong>Figure 4.4 · Proactive Diagnostic Action Chips</strong>
+              <a class="button" download href="screenshots/l04_04_followup_action.png">PNG ↓</a>
+            </div>
+            <img class="screen-img" src="screenshots/l04_04_followup_action.png" alt="Proactive Diagnostic Action Chips with Annotations">
+            <div class="screen-caption">
+              <strong>Annotated Guidance:</strong> ① One-click action chips allow the analyst to jump directly to Lesson 05 (drill into shipping carrier anomalies) or Lesson 07 (simulate margin recovery recipes).
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Worked Reference Dashboard -->
+      <section class="section" id="reference">
+        <div class="section-heading">
+          <p class="overline">Part 6 · Worked Reference Dashboard</p>
+          <h2>Interactive Reference Waterfall &amp; Checkpoints.</h2>
+          <p>Verify your calculations against the live reference chart below:</p>
+        </div>
+
+        <div class="chart-container" id="waterfall-bridge-chart"></div>
+
+        <div class="table-scroll" style="margin-top:20px;">
+          <table>
+            <thead><tr><th>Bridge Step</th><th>Delta Contribution</th><th>Running Level</th><th>Business Driver Meaning</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Q1 Baseline</strong></td><td>—</td><td><strong>22.0%</strong></td><td>Historical profitable benchmark across all product categories.</td></tr>
+              <tr><td>Carrier Shipping Costs</td><td><strong style="color:#ef4444;">-4.4%</strong></td><td>17.6%</td><td>80% of entire erosion caused by fuel surcharges and carrier rate increases.</td></tr>
+              <tr><td>Product Return Surge</td><td><strong style="color:#ef4444;">-1.7%</strong></td><td>15.9%</td><td>Higher return volumes in electronics category created restocking losses.</td></tr>
+              <tr><td>Apparel Price Uplift</td><td><strong style="color:#10b981;">+0.6%</strong></td><td>16.5%</td><td>Premium apparel catalog expansion partially cushioned the drop.</td></tr>
+              <tr><td><strong>Q2 Final Result</strong></td><td><strong>-5.5% Total</strong></td><td><strong>16.5%</strong></td><td>Exact mathematical closure: 22.0 - 4.4 - 1.7 + 0.6 = 16.5%.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 7. Troubleshooting -->
+      <section class="section" id="troubleshooting">
+        <div class="section-heading">
+          <p class="overline">Part 7 · Troubleshooting</p>
+          <h2>What to check if numbers differ.</h2>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Symptom</th><th>Underlying Cause</th><th>Recovery Step</th></tr></thead>
+            <tbody>
+              <tr><td>Waterfall steps do not align with ending bar</td><td>Intermediate delta terms were rounded before computing running sum.</td><td>Keep float precision until final ECharts formatting to maintain zero-drift conservation.</td></tr>
+              <tr><td>Negative bars appear above previous step</td><td>Base stack did not account for step direction.</td><td>Ensure <code>base[i] = (delta < 0) ? current - abs(delta) : current</code>.</td></tr>
+              <tr><td>Action chips do not respond</td><td>Context listener was not attached to the stage card.</td><td>Verify the <code>AIStageCreatorBar</code> is active in project mode.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="next-lesson">
+        <a class="button primary" href="05-anomaly-spotlight.html">Next: Lesson 05 (Anomaly Spotlight &amp; Slice Finding) →</a>
+      </div>
+
+      <footer class="footer">
+        <a href="index.html">WPS-AI Field Guide</a>
+        <span>Lesson 04 · E-Commerce Margins</span>
+        <a href="05-anomaly-spotlight.html">Next Lesson ↗</a>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const dom = document.getElementById('waterfall-bridge-chart');
+      if (dom && window.echarts) {
+        const chart = echarts.init(dom);
+        const steps = ['Q1 Baseline', 'Shipping Spikes', 'Return Surge', 'Price Uplift', 'Q2 Result'];
+        // Stack base: transparent spacer
+        const base = [0, 17.6, 15.9, 15.9, 0];
+        // Stack values: bar heights
+        const deltas = [22.0, 4.4, 1.7, 0.6, 16.5];
+        const colors = ['#64748b', '#ef4444', '#ef4444', '#10b981', '#245bd7'];
+
+        chart.setOption({
+          title: { text: 'Quarterly Margin Attribution Bridge (Q1 ➔ Q2)', textStyle: { fontSize: 13, fontWeight: 600 } },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: { type: 'shadow' },
+            formatter: (params) => {
+              const tar = params[1];
+              return `${tar.name}: <b>${tar.value > 0 ? (tar.name.includes('Spikes') || tar.name.includes('Surge') ? '-' : '') + tar.value : tar.value}%</b>`;
+            }
+          },
+          grid: { top: 40, bottom: 30, left: 50, right: 30 },
+          xAxis: { type: 'category', data: steps },
+          yAxis: { type: 'value', min: 0, max: 25, axisLabel: { formatter: '{value}%' } },
+          series: [
+            {
+              name: 'Spacer',
+              type: 'bar',
+              stack: 'total',
+              itemStyle: { borderColor: 'transparent', color: 'transparent' },
+              emphasis: { itemStyle: { borderColor: 'transparent', color: 'transparent' } },
+              data: base
+            },
+            {
+              name: 'Shift Delta',
+              type: 'bar',
+              stack: 'total',
+              data: deltas.map((val, idx) => ({
+                value: val,
+                itemStyle: { color: colors[idx], borderRadius: 4 }
+              })),
+              label: {
+                show: true,
+                position: 'top',
+                formatter: (p) => {
+                  if (p.dataIndex === 0) return '22.0%';
+                  if (p.dataIndex === 1) return '-4.4%';
+                  if (p.dataIndex === 2) return '-1.7%';
+                  if (p.dataIndex === 3) return '+0.6%';
+                  return '16.5%';
+                },
+                fontSize: 11,
+                fontWeight: 600
+              }
+            }
+          ]
+        });
+        window.addEventListener('resize', () => chart.resize());
+      }
+    });
+  </script>
+</body>
+</html>

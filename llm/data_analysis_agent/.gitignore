@@ -21,4 +21,4 @@ backend/static/index.html
 artifact/
 temp/
 TEMP_*/
-
+.agents/

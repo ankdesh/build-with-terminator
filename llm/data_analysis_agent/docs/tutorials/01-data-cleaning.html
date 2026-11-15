@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Lesson 01: Explore and Clean Data · WPS-AI Field Guide</title>
+  <link rel="stylesheet" href="assets/tutorials.css">
+  <script defer src="assets/echarts.min.js"></script>
+  <style>
+    .screen-gallery { display: grid; grid-template-columns: 1fr; gap: 24px; margin: 24px 0; }
+    .screen-card { background: white; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+    .screen-card-header { padding: 12px 18px; background: #f8fafc; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+    .screen-img { width: 100%; height: auto; display: block; border-bottom: 1px solid var(--line); }
+    .screen-caption { padding: 12px 18px; font-size: 11px; color: #64748b; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="top">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">▥</span>
+      <strong>WPS-AI <em>Field Guide</em></strong>
+    </a>
+    <span>Lesson 01 · Data Profiling, Complete-Case Cleaning, and Bivariate Association</span>
+    <a href="index.html">← Back to Overview</a>
+  </header>
+
+  <div class="page">
+    <aside class="sidebar">
+      <a class="overview-link" href="index.html">← All Lessons</a>
+      <p class="overline">Curriculum</p>
+      <a class="lesson-link active" href="01-data-cleaning.html"><span>01</span><div><strong>Explore and clean data</strong><small>Palmer Penguins</small></div></a>
+      <a class="lesson-link" href="02-distributions-correlations.html"><span>02</span><div><strong>Distributions &amp; correlations</strong><small>Wine Quality</small></div></a>
+      <a class="lesson-link" href="03-trends-forecasting.html"><span>03</span><div><strong>Trends &amp; forecasts</strong><small>Bike Sharing Daily</small></div></a>
+      <a class="lesson-link" href="04-shift-attribution.html"><span>04</span><div><strong>Shift attribution bridge</strong><small>E-Commerce Margins</small></div></a>
+      <a class="lesson-link" href="05-anomaly-spotlight.html"><span>05</span><div><strong>Anomaly spotlight slices</strong><small>Logistics Fleet SLA</small></div></a>
+      <a class="lesson-link" href="06-domino-timeline.html"><span>06</span><div><strong>Domino timeline cascades</strong><small>Incident Telemetry</small></div></a>
+      <a class="lesson-link" href="07-scenario-studio.html"><span>07</span><div><strong>"What-If" Studio &amp; recipes</strong><small>SaaS Churn Recovery</small></div></a>
+    </aside>
+
+    <main id="main">
+      <section class="hero lesson-hero" style="--accent:#245bd7">
+        <p class="overline">Lesson 01 / Palmer Penguins</p>
+        <h1>Explore and clean data.</h1>
+        <p class="lead">How do we establish rigorous complete-case data cleaning, inspect physical measurements across species, and verify bivariate relationships without guessing?</p>
+        <div class="tags">
+          <span>Complete-case cleaning</span>
+          <span>Missing value imputation</span>
+          <span>Grouped aggregations</span>
+          <span>Scatter plots</span>
+          <span>Interactive filters</span>
+        </div>
+        <div class="hero-actions">
+          <a class="button primary" download href="data/penguins.csv">Download penguins.csv (17 KB) ↓</a>
+          <a class="button" href="#screenshots">View Annotated Screenshots</a>
+        </div>
+      </section>
+
+      <!-- 1. Business Problem -->
+      <section class="section" id="problem">
+        <div class="section-heading">
+          <p class="overline">Part 1 · The Analytical Problem</p>
+          <h2>Dirty data creates false conclusions.</h2>
+          <p>Real-world datasets contain missing measurements, ambiguous string tokens, and incomplete entries. If an analyst computes totals or averages before cleaning, missing cells either corrupt aggregations or cause runtime calculation crashes.</p>
+        </div>
+        <p>In this lesson, we study <strong>344 historical penguin observations</strong> from the Palmer Archipelago. Our goal is to determine how body mass and flipper length relate across three species (Adelie, Gentoo, Chinstrap) while explicitly handling missing biological measurements.</p>
+      </section>
+
+      <!-- 2. Visual Concept -->
+      <section class="section" id="concept">
+        <div class="section-heading">
+          <p class="overline">Part 2 · The Visual Concept</p>
+          <h2>What complete-case cleaning represents.</h2>
+        </div>
+        <div class="coverage-grid">
+          <article>
+            <h3>1. Complete-Case Measurement Filter</h3>
+            <p>Rows missing crucial numeric measurements (flipper length or body mass) are filtered out, while rows missing descriptive labels (like sex) are preserved and labeled <code>Unknown</code>. This preserves sample size while preventing calculation crashes.</p>
+          </article>
+          <article>
+            <h3>2. Bivariate Scatter &amp; Grouped Bar Bindings</h3>
+            <p>Once cleaned, we bind observations to standard column charts. We map species counts to a bar chart and flipper length vs. body mass to a scatter plot, establishing that body mass scales positively with wing flipper size (r = 0.871).</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- 3. Data Guide -->
+      <section class="section" id="data">
+        <div class="section-heading">
+          <p class="overline">Part 3 · Data Dictionary</p>
+          <h2>Palmer Penguins Dataset (CC0 License).</h2>
+        </div>
+        <div class="facts">
+          <span><strong>344</strong> source rows</span>
+          <span><strong>8</strong> columns</span>
+          <span><strong>2</strong> missing measurements</span>
+          <span><strong>11</strong> missing sex labels</span>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Column</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>species</code></td><td>string</td><td>Penguin species: Adelie, Chinstrap, Gentoo</td></tr>
+              <tr><td><code>island</code></td><td>string</td><td>Sampling island: Biscoe, Dream, Torgersen</td></tr>
+              <tr><td><code>bill_length_mm</code></td><td>float64</td><td>Culmen length (millimetres)</td></tr>
+              <tr><td><code>bill_depth_mm</code></td><td>float64</td><td>Culmen depth (millimetres)</td></tr>
+              <tr><td><code>flipper_length_mm</code></td><td>float64</td><td>Flipper length (millimetres)</td></tr>
+              <tr><td><code>body_mass_g</code></td><td>float64</td><td>Observed body mass (grams)</td></tr>
+              <tr><td><code>sex</code></td><td>string</td><td>Recorded sex (male, female, or missing)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 4. Step-by-Step Instructions -->
+      <section class="section" id="steps">
+        <div class="section-heading">
+          <p class="overline">Part 4 · Step-by-Step Instructions</p>
+          <h2>Build the dashboard in WPS-AI Studio.</h2>
+        </div>
+
+        <div class="step">
+          <div class="step-heading">
+            <span>01</span>
+            <h3>Upload Data &amp; Paste Business Context</h3>
+          </div>
+          <p>Launch the studio via <code>python launcher.py</code>. Create a new project, upload <code>penguins.csv</code>, and paste the following into the <strong>Business context</strong> field:</p>
+          <div class="copy-block">
+            <pre>Each row is one historical penguin observation. Species and island are categories. Bill and flipper measurements are in millimetres; body mass is in grams. Missing sex is not a reason to remove an otherwise valid measurement. Year is an observation label, not an equally spaced time series.</pre>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-heading">
+            <span>02</span>
+            <h3>Prompt the AI Stage Creator</h3>
+          </div>
+          <p>In the Chat composer, set the context to <strong>Project</strong> and send the following prompt:</p>
+          <div class="copy-block">
+            <pre>Build a desktop dashboard with separate Data cleaning and Analysis stages and Visualization widgets.
+In cleanup, remove rows missing bill_length_mm, bill_depth_mm, flipper_length_mm or body_mass_g; replace missing sex with 'Unknown'.
+Add a species select filter on cleaned data (All, Adelie, Gentoo, Chinstrap).
+Create KPI metrics 'Records used' and 'Mean body mass'.
+Create bar chart 'Species counts', pie chart 'Species share', and scatter plot 'Mass and flipper length'.
+Create the summary table 'Species summary' with species, count, and mean body mass.
+Save stages; I will select Run.</pre>
+          </div>
+          <p>Review the proposed changes and select <strong>Apply</strong>. Then select <strong>Run ▶</strong> in the top header.</p>
+        </div>
+      </section>
+
+      <!-- 5. Annotated Screenshots -->
+      <section class="section" id="screenshots">
+        <div class="section-heading">
+          <p class="overline">Part 5 · Annotated Screenshot Reference</p>
+          <h2>Compare against the verified Studio UI.</h2>
+          <p>Use these full-browser annotated captures to verify each stage of your execution:</p>
+        </div>
+
+        <div class="screen-gallery">
+          <div class="screen-card">
+            <div class="screen-card-header">
+              <strong>Figure 1.1 · Data Setup &amp; Context Input</strong>
+              <a class="button" download href="screenshots/l01_01_data_setup.png">PNG ↓</a>
+            </div>
+            <img class="screen-img" src="screenshots/l01_01_data_setup.png" alt="Data Setup View with Annotations">
+            <div class="screen-caption">
+              <strong>Annotated Guidance:</strong> ① Verify that the data profiler reads 344 rows and 8 columns. ② Paste domain rules into the Business Context textarea.
+            </div>
+          </div>
+
+          <div class="screen-card">
+            <div class="screen-card-header">
+              <strong>Figure 1.2 · Pipeline Canvas &amp; Stage Contracts</strong>
+              <a class="button" download href="screenshots/l01_02_pipeline_stages.png">PNG ↓</a>
+            </div>
+            <img class="screen-img" src="screenshots/l01_02_pipeline_stages.png" alt="Pipeline Stages View with Annotations">
+            <div class="screen-caption">
+              <strong>Annotated Guidance:</strong> ① Inspect the Cleaning stage to confirm 2 rows with missing measurements are dropped (342 cleaned rows). ② Verify the Visualization stage binds chart widgets to cleaned outputs.
+            </div>
+          </div>
+
+          <div class="screen-card">
+            <div class="screen-card-header">
+              <strong>Figure 1.3 · Dashboard Results (Counts &amp; Correlation Scatter)</strong>
+              <a class="button" download href="screenshots/l01_03_dashboard_result.png">PNG ↓</a>
+            </div>
+            <img class="screen-img" src="screenshots/l01_03_dashboard_result.png" alt="Dashboard Result View with Annotations">
+            <div class="screen-caption">
+              <strong>Annotated Guidance:</strong> ① Confirm Records used = 342 and Mean body mass = 4,201.75 g. ② Inspect the positive bivariate scatter plot (r = 0.871).
+            </div>
+          </div>
+
+          <div class="screen-card">
+            <div class="screen-card-header">
+              <strong>Figure 1.4 · Target Application Filter Controls</strong>
+              <a class="button" download href="screenshots/l01_04_target_controls.png">PNG ↓</a>
+            </div>
+            <img class="screen-img" src="screenshots/l01_04_target_controls.png" alt="Target Application Filter View with Annotations">
+            <div class="screen-caption">
+              <strong>Annotated Guidance:</strong> ① In the Target dashboard (separate port), select 'Adelie only'. ② Select Apply Controls: instant update to 151 records and 3,700.66 g mean mass.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Worked Reference Dashboard -->
+      <section class="section" id="reference">
+        <div class="section-heading">
+          <p class="overline">Part 6 · Worked Reference Dashboard</p>
+          <h2>Verified Numerical Checkpoints.</h2>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Metric Check</th><th>Baseline (All Data)</th><th>Adelie Filtered Subset</th></tr></thead>
+            <tbody>
+              <tr><td>Records used</td><td><strong>342</strong></td><td><strong>151</strong></td></tr>
+              <tr><td>Mean body mass (g)</td><td><strong>4,201.75</strong></td><td><strong>3,700.66</strong></td></tr>
+              <tr><td>Mean flipper length (mm)</td><td><strong>200.91</strong></td><td><strong>189.95</strong></td></tr>
+              <tr><td>Correlation r (Flipper vs Mass)</td><td><strong>0.871</strong></td><td><strong>0.468</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 7. Troubleshooting -->
+      <section class="section" id="troubleshooting">
+        <div class="section-heading">
+          <p class="overline">Part 7 · Troubleshooting</p>
+          <h2>What to check if numbers differ.</h2>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Symptom</th><th>Underlying Cause</th><th>Recovery Step</th></tr></thead>
+            <tbody>
+              <tr><td>Records used shows 344 instead of 342</td><td>Cleaning stage did not drop the two rows with null measurements.</td><td>In Chat, state: <code>Ensure rows missing bill_length_mm, flipper_length_mm or body_mass_g are dropped. Apply and Run.</code></td></tr>
+              <tr><td>Missing sex rows were dropped entirely</td><td>Imputation rule was omitted.</td><td>Specify: <code>Keep rows with missing sex; replace null sex with 'Unknown'.</code></td></tr>
+              <tr><td>Target filter does not recalculate</td><td>Values were changed without selecting Apply Controls.</td><td>Select the blue <strong>Apply Controls</strong> button in the target drawer.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="next-lesson">
+        <a class="button primary" href="02-distributions-correlations.html">Next: Lesson 02 (Wine Quality Distributions) →</a>
+      </div>
+
+      <footer class="footer">
+        <a href="index.html">WPS-AI Field Guide</a>
+        <span>Lesson 01 · Palmer Penguins</span>
+        <a href="02-distributions-correlations.html">Next Lesson ↗</a>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>
