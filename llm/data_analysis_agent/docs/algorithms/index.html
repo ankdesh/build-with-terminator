@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; script-src 'self' file:; style-src 'self' 'unsafe-inline' file:; img-src 'self' data: file:; connect-src 'none'; font-src 'self' file:; object-src 'none'; base-uri 'none'">
+  <meta name="description" content="An offline visual guide to the algorithms and chart bindings in WPS-AI Data Analysis Studio.">
+  <title>Algorithms, explained · WPS-AI</title>
+  <link rel="stylesheet" href="guide.css">
+  <script defer src="../../tutorials/assets/echarts.min.js"></script>
+  <script defer src="examples.js"></script>
+  <script defer src="guide.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to the example</a>
+  <aside class="sidebar" aria-label="Guide navigation">
+    <a class="brand" href="#summary/all"><span class="brand-mark" aria-hidden="true">∑</span><span>WPS-AI<span class="brand-sub">Algorithm guide</span></span></a>
+    <p class="nav-caption">Follow the calculation</p>
+    <nav id="topics" aria-label="Algorithm topics"></nav>
+    <div class="sidebar-footer"><span class="local-dot" aria-hidden="true"></span> Local examples · no model needed<a href="README.md">About this guide ↗</a></div>
+  </aside>
+  <main id="main" tabindex="-1">
+    <header class="topbar"><span>Learn / Algorithms and charts</span><div><button id="copy-link" type="button">Copy example link</button><button id="print" type="button">Print example</button></div></header>
+    <div class="intro-line"><span id="chapter" class="eyebrow"></span><span id="status" class="status"></span></div>
+    <h1 id="title"></h1>
+    <p class="question" id="question"></p>
+    <p id="intro" class="intro"></p>
+    <section class="experiment" aria-labelledby="experiment-label">
+      <label id="experiment-label" for="variant">Change the example</label>
+      <div class="control-row"><select id="variant"></select><button id="reset" type="button">Reset example</button><span>Same algorithm. Different input or setting.</span></div>
+    </section>
+    <div id="result" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+    <section id="metrics" class="metrics" aria-label="Calculated values"></section>
+    <div class="workspace">
+      <section class="evidence" aria-label="Worked visualization">
+        <div id="chart-list"></div>
+        <div class="takeaway"><span class="eyebrow">What to notice</span><p id="takeaway"></p></div>
+        <p id="chart-error" class="notice" hidden>The chart library could not load. The checked values are available below. Keep the guide in its repository folders.</p>
+      </section>
+      <section class="method" aria-labelledby="method-title">
+        <div class="panel-label"><span class="eyebrow">The algorithm</span><h2 id="method-title">How the calculation works</h2></div>
+        <ol id="steps" class="steps"></ol>
+        <div class="formula"><span class="eyebrow">The rule</span><p id="formula"></p></div>
+        <div class="worked"><span class="eyebrow">Work through this example</span><p id="worked"></p></div>
+      </section>
+    </div>
+    <section class="values section-block" aria-labelledby="values-title">
+      <details id="values-detail"><summary id="values-title">Check the numbers <span>Open the table used in this explanation</span></summary><div id="values-table" class="table-scroll" tabindex="0" role="region" aria-label="Example values"></div></details>
+    </section>
+    <section class="connection section-block" aria-labelledby="connection-title">
+      <div class="section-head"><div><span class="eyebrow">Project connection</span><h2 id="connection-title">From the calculation to the screen</h2></div><span class="small-label">Python calculates. ECharts draws.</span></div>
+      <ol id="route" class="route"></ol>
+      <p class="connection-note">A saved step returns a named output. A widget selects that output. The engine prepares its view. The shared <code>ChartViewer</code> draws the chart in the builder, live dashboard, and exported app.</p>
+      <div class="code-tabs" role="tablist" aria-label="Inspect project integration">
+        <button type="button" id="tab-code" role="tab" aria-selected="true" aria-controls="code-panel" tabindex="0" data-tab="code">Calculation</button>
+        <button type="button" id="tab-output" role="tab" aria-selected="false" aria-controls="code-panel" tabindex="-1" data-tab="output">Returned output</button>
+        <button type="button" id="tab-binding" role="tab" aria-selected="false" aria-controls="code-panel" tabindex="-1" data-tab="binding">Chart connection</button>
+      </div>
+      <pre id="code-panel" role="tabpanel" aria-labelledby="tab-code" tabindex="0"><code id="code"></code></pre>
+      <div class="source-row"><span>Read the source</span><div id="sources"></div></div>
+      <p class="shared-path">Shared rendering: <a href="../../pipeline_core/engine.py">engine.py: chart_from_frame / render_artifacts</a> → <a href="../../frontend/src/components/Dashboard.tsx">Dashboard.tsx</a> → <a href="../../frontend/src/components/ChartViewer.tsx">ChartViewer.tsx: setOption</a>. Backend session APIs return values or options; they do not create these widgets automatically.</p>
+    </section>
+    <section class="limits section-block" aria-labelledby="limits-title"><span class="eyebrow">Read the result correctly</span><h2 id="limits-title">What this result can tell you</h2><ul id="limits"></ul></section>
+    <footer class="page-footer"><p id="data-source"></p><p><a href="../../tutorials/ATTRIBUTION.txt">Public data sources and licences</a> · Synthetic examples are labelled above.</p><p>Examples are calculated before page load with the current Python code. Controls select saved examples; they do not run a model or change your projects. Chart titles and spacing are adapted for this guide.</p><div class="chapter-actions"><a id="previous" class="button" href="#summary/all">← Previous topic</a><a id="next" class="button primary" href="#distribution/half">Next topic →</a></div></footer>
+  </main>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <noscript><p class="notice">Enable JavaScript to use the worked examples. The <a href="README.md">guide index</a> lists the algorithms and their project connections.</p></noscript>
+</body>
+</html>

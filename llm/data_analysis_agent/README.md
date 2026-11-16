@@ -99,6 +99,10 @@ Review cleanup and select **Accept revision** before downloading a Windows appli
 
 Start with the [step-by-step Markdown scenarios](docs/scenarios/README.md) to explore energy costs, build a ten-row sales report, inspect demand trends, and reuse a report with a new CSV. Each guide includes result checks and a short demonstration script. The first scenario needs no model access; the sales guide includes small synthetic practice files.
 
+## Algorithms and their charts
+
+Open the [interactive HTML algorithm guide](docs/algorithms/index.html) to see how the calculations work and how their outputs become charts. Ten topics cover grouped totals, distributions, correlations, moving averages, forecasts, subgroup search, change attribution, change points, ridge what-if estimates, and goal search with simulation. Each topic includes selectable examples, short explanations, checked values, and links to the implementation. It works offline without a model or builder. See [the guide notes](docs/algorithms/README.md) to rebuild its examples.
+
 ## Guided analysis tutorials
 
 Open [the tutorial start page](tutorials/index.html) in a desktop browser, or extract [the complete tutorial ZIP](artifacts/wps-ai-tutorial-pack.zip). Keep all folders beside the HTML files. The pack includes four public CSVs, local interactive reference charts, copyable prompts, result checkpoints, and replacement/invalid-schema practice files. The pages work offline and do not call the builder API.
