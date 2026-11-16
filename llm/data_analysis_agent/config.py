@@ -51,6 +51,19 @@ class AppConfig:
     llm_max_retries: int = 0
     llm_temperature: float | None = 0.1
     allowed_hosts: tuple[str, ...] = ("*",)
+    llm_provider: str = "openai"
+    bedrock_region: str = "us-east-1"
+    bedrock_model_id: str = "us.anthropic.claude-sonnet-4-6"
+    bedrock_profile: str | None = None
+    openai_agent_protocol: str = "json_actions"
+    agent_max_steps: int = 12
+    agent_max_repairs: int = 2
+    agent_turn_timeout_seconds: int = 600
+    agent_execution_timeout_seconds: int = 120
+    agent_memory_limit_mb: int = 4096
+    agent_artifact_retention_days: int = 7
+    agent_artifact_limit_mb: int = 500
+    agent_context_limit_chars: int = 128000
 
     @classmethod
     def load(cls, config_path: Optional[Path] = None) -> "AppConfig":
@@ -109,6 +122,25 @@ class AppConfig:
             raise ValueError("Invalid LLM configuration: timeout must be positive, retries non-negative, and temperature null or between 0 and 2")
 
         allowed_hosts = file_settings.get("allowed_hosts", ["*"])
+        provider = file_settings.get("llm_provider", "openai")
+        if provider not in {"openai", "bedrock"}:
+            raise ValueError("llm_provider must be openai or bedrock")
+        protocol = file_settings.get("openai_agent_protocol", "json_actions")
+        if protocol not in {"native", "json_actions"}:
+            raise ValueError("openai_agent_protocol must be native or json_actions")
+        bedrock_region = str(file_settings.get("bedrock_region") or "us-east-1").strip()
+        bedrock_model = str(file_settings.get("bedrock_model_id") or "us.anthropic.claude-sonnet-4-6").strip()
+        bedrock_profile = file_settings.get("bedrock_profile")
+        if not bedrock_region or not bedrock_model or (bedrock_profile is not None and
+                (not isinstance(bedrock_profile,str) or not bedrock_profile.strip())):
+            raise ValueError("Bedrock region/model must be non-empty; profile must be null or a non-empty name")
+        agent_options = {name: int(file_settings.get(name, default)) for name, default in {
+            "agent_max_steps": 12, "agent_max_repairs": 2, "agent_turn_timeout_seconds": 600,
+            "agent_execution_timeout_seconds": 120, "agent_memory_limit_mb": 4096,
+            "agent_artifact_retention_days": 7, "agent_artifact_limit_mb": 500,
+            "agent_context_limit_chars": 128000}.items()}
+        if any(value < 1 for value in agent_options.values()):
+            raise ValueError("Agent limits must be positive integers")
         if (not isinstance(allowed_hosts, list) or not allowed_hosts
                 or any(not isinstance(hostname, str) or not hostname.strip() for hostname in allowed_hosts)):
             raise ValueError("allowed_hosts must be a non-empty list of host names or IP addresses")
@@ -131,6 +163,12 @@ class AppConfig:
             llm_max_retries=llm_retries,
             llm_temperature=temperature,
             allowed_hosts=tuple(dict.fromkeys(["127.0.0.1", "localhost", *allowed_hosts])),
+            llm_provider=provider,
+            bedrock_region=bedrock_region,
+            bedrock_model_id=bedrock_model,
+            bedrock_profile=bedrock_profile,
+            openai_agent_protocol=protocol,
+            **agent_options,
         )
 
 

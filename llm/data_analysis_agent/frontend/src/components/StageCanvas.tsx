@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState, useId } from 'react';
-import { ArrowRight, BarChart3, Database, ExternalLink, Sigma, Sparkles, Trash2 } from 'lucide-react';
+import { ArrowRight, BarChart3, Database, Sigma, Sparkles, Trash2 } from 'lucide-react';
 import type { Job, Run, Stage, Workspace } from '../lib/projects';
 
 const columns = [

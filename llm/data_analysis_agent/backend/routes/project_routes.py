@@ -17,6 +17,7 @@ from sse_starlette.sse import EventSourceResponse
 from backend.services.dataset_import import import_csv
 from backend.services.chat_service import ChatService, redact, results_preview
 from backend.services.chat_store import ChatStore, context_for, public_item
+from backend.services.agent_store import AgentStore, public_turn, TERMINAL
 from backend.services.project_service import ProjectService
 from backend.services.project_store import ProjectStore
 from backend.services.workspace_service import Workspaces
@@ -37,6 +38,7 @@ target_tasks: dict[tuple[str, str], asyncio.Task[None]] = {}
 target_running: set[tuple[str, str]] = set()
 chat_followups: dict[str, asyncio.Task[None]] = {}
 chat_action_lock = asyncio.Lock()
+durable_chat_tasks: set[asyncio.Task] = set()
 
 
 class CreateProject(BaseModel):
@@ -48,6 +50,24 @@ class BuildRequest(BaseModel):
     description: str | None = Field(default=None, max_length=12000)
     stage_id: str | None = Field(default=None, max_length=200)
     expected_version: int | None = None
+    request_id: str | None = Field(default=None,max_length=200)
+    page_context: str | None = Field(default=None,max_length=200)
+    proposal_id: str | None = Field(default=None,max_length=200)
+
+
+class QuestionAnswer(BaseModel):
+    question_id: str
+    text: str = Field(min_length=1,max_length=4000)
+    save_as_rule: bool = False
+
+
+class ClarificationAnswers(BaseModel):
+    answers: list[QuestionAnswer] = Field(min_length=1,max_length=3)
+    refresh_context: bool = False
+
+
+class RuleRequest(BaseModel):
+    text: str = Field(min_length=1,max_length=4000)
 
 
 class RunRequest(BaseModel):
@@ -159,13 +179,126 @@ async def upload_dataset(project_id: str, csv_file: UploadFile = File(...), desc
 
 @router.post("/{project_id}/chat")
 async def build_project(project_id: str, request: BuildRequest) -> EventSourceResponse:
-    async def update(emit: Any, cancel: threading.Event) -> None:
+    # Validate ownership before opening a successful event stream.
+    store.get(project_id)
+    return durable_chat(project_id,request)
+
+
+def durable_chat(project_id: str, request: BuildRequest, resume_turn: str | None = None) -> EventSourceResponse:
+    queue: asyncio.Queue = asyncio.Queue()
+    cancel = threading.Event()
+    def emit(event: dict) -> None:
+        queue.put_nowait(event)
+        events.publish(project_id)
+    async def produce() -> None:
         try:
-            await ChatService(service).respond(project_id, request.query, request.stage_id,
-                request.expected_version, emit, cancel)
+            await ChatService(service).respond(project_id,request.query,request.stage_id,request.expected_version,
+                emit,cancel,request_id=request.request_id,page_context=request.page_context,
+                proposal_id=request.proposal_id,resume_turn=resume_turn)
+        except asyncio.CancelledError:
+            cancel.set()
+        except Exception as exc:
+            emit({'event':'error','message':redact(str(exc))})
         finally:
-            events.publish(project_id)
-    return stream_operation(update)
+            emit({'event':'done'})
+    task = asyncio.create_task(produce())
+    durable_chat_tasks.add(task)
+    task.add_done_callback(durable_chat_tasks.discard)
+    async def stream() -> Any:
+        # Disconnect detaches the listener; only explicit cancellation stops work.
+        while True:
+            event = await queue.get()
+            yield {'event':event['event'],'data':json.dumps(event),'id':str(event.get('sequence',''))}
+            if event['event']=='done': break
+    return EventSourceResponse(stream())
+
+
+@router.get('/{project_id}/chat/turns/{turn_id}')
+async def get_chat_turn(project_id: str, turn_id: str) -> dict:
+    return cast(dict,public_turn(AgentStore(store).get(project_id,turn_id)))
+
+
+@router.get('/{project_id}/chat/turns/{turn_id}/events')
+async def chat_turn_events(project_id: str, turn_id: str, request: Request, after: int = 0) -> EventSourceResponse:
+    state = AgentStore(store)
+    state.get(project_id,turn_id)
+    try: cursor = max(after,int(request.headers.get('last-event-id','0')))
+    except ValueError: raise HTTPException(422,'Invalid event cursor')
+    async def stream() -> Any:
+        nonlocal cursor
+        while True:
+            for event in state.events(project_id,turn_id,cursor):
+                cursor = event['sequence']
+                yield {'event':event['event'],'data':json.dumps(event),'id':str(cursor)}
+            if state.get(project_id,turn_id)['status'] in TERMINAL | {'awaiting_clarification'}: break
+            await asyncio.sleep(.2)
+    return EventSourceResponse(stream())
+
+
+@router.post('/{project_id}/chat/turns/{turn_id}/cancel')
+async def cancel_chat_turn(project_id: str, turn_id: str) -> dict:
+    turn = ChatService(service).cancel(project_id,turn_id)
+    events.publish(project_id)
+    return cast(dict,public_turn(turn))
+
+
+@router.post('/{project_id}/chat/clarifications/{item_id}/answer')
+async def answer_clarification(project_id: str, item_id: str, body: ClarificationAnswers) -> EventSourceResponse:
+    turn = ChatService(service).answer_questions(project_id,item_id,[a.model_dump() for a in body.answers],body.refresh_context)
+    events.publish(project_id)
+    if turn['status']!='queued':
+        async def done() -> Any:
+            yield {'event':'done','data':json.dumps({'event':'done'})}
+        return EventSourceResponse(done())
+    return durable_chat(project_id,BuildRequest(query=turn['query']),turn['id'])
+
+
+@router.get('/{project_id}/analysis-rules')
+async def analysis_rules(project_id: str) -> list[dict]:
+    return AgentStore(store).rules(project_id)
+
+
+@router.post('/{project_id}/analysis-rules')
+async def add_analysis_rule(project_id: str, body: RuleRequest) -> dict:
+    rule = AgentStore(store).save_rule(project_id,body.text)
+    events.publish(project_id)
+    return rule
+
+
+@router.put('/{project_id}/analysis-rules/{rule_id}')
+async def update_analysis_rule(project_id: str, rule_id: str, body: RuleRequest) -> dict:
+    rule = AgentStore(store).save_rule(project_id,body.text,rule_id)
+    events.publish(project_id)
+    return rule
+
+
+@router.delete('/{project_id}/analysis-rules/{rule_id}')
+async def delete_analysis_rule(project_id: str, rule_id: str) -> dict:
+    AgentStore(store).delete_rule(project_id,rule_id)
+    events.publish(project_id)
+    return {'deleted':True}
+
+
+@router.get('/{project_id}/analysis/{artifact_id}')
+async def analysis_artifact(project_id: str, artifact_id: str) -> dict:
+    AgentStore(store).prune(project_id)
+    artifact = AgentStore(store).artifact(project_id,artifact_id)
+    return {k:artifact[k] for k in ['id','result','provenance','expired']}
+
+
+@router.get('/{project_id}/analysis/{artifact_id}/table.csv')
+async def download_analysis_table(project_id: str, artifact_id: str) -> FileResponse:
+    state=AgentStore(store)
+    artifact=state.artifact(project_id,artifact_id)
+    filename=artifact['result'].get('csv_file')
+    if not filename: raise HTTPException(404,'This result has no table')
+    return FileResponse(state.artifact_file(project_id,artifact_id,filename),media_type='text/csv',filename='analysis.csv')
+
+
+@router.delete('/{project_id}/analysis')
+async def clear_analysis_files(project_id: str) -> dict:
+    AgentStore(store).prune(project_id,clear=True)
+    return {'cleared':True}
 
 
 @router.get('/{project_id}/chat/items/{item_id}')

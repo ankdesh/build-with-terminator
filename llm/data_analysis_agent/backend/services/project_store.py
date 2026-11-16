@@ -60,6 +60,18 @@ class ProjectStore:
             if "metadata" not in columns:
                 db.execute("ALTER TABLE messages ADD COLUMN metadata TEXT NOT NULL DEFAULT '{}'")
             db.execute("CREATE TABLE IF NOT EXISTS chat_items (id TEXT PRIMARY KEY, project_id TEXT NOT NULL, record TEXT NOT NULL)")
+            db.executescript('''
+                CREATE TABLE IF NOT EXISTS agent_turns (id TEXT PRIMARY KEY, project_id TEXT NOT NULL,
+                    request_id TEXT NOT NULL, record TEXT NOT NULL, UNIQUE(project_id,request_id));
+                CREATE TABLE IF NOT EXISTS agent_events (turn_id TEXT NOT NULL, sequence INTEGER NOT NULL,
+                    record TEXT NOT NULL, PRIMARY KEY(turn_id,sequence));
+                CREATE TABLE IF NOT EXISTS project_rules (id TEXT PRIMARY KEY, project_id TEXT NOT NULL, record TEXT NOT NULL);
+                CREATE TABLE IF NOT EXISTS analysis_artifacts (id TEXT PRIMARY KEY, project_id TEXT NOT NULL, record TEXT NOT NULL);
+            ''')
+
+    def recover(self) -> None:
+        """Run once at application startup, never when opening another store handle."""
+        with self.connect() as db:
             for item in db.execute("SELECT id,record FROM chat_items").fetchall():
                 record = json.loads(item["record"])
                 if record.get("run_status") in {"queued", "answering"}:
@@ -76,6 +88,11 @@ class ProjectStore:
                 if record["status"] == "running":
                     record.update(status="interrupted", finished_at=now(), error="Application stopped before this run completed")
                     db.execute("UPDATE runs SET record=? WHERE id=?", (json.dumps(record), row["id"]))
+            for row in db.execute('SELECT id,record FROM agent_turns').fetchall():
+                turn = json.loads(row['record'])
+                if turn['status'] not in {'completed','failed','cancelled','interrupted','awaiting_clarification'}:
+                    turn.update(status='interrupted', error='Builder stopped. Retry this request explicitly.', updated_at=now())
+                    db.execute('UPDATE agent_turns SET record=? WHERE id=?', (json.dumps(turn), row['id']))
 
     def connect(self) -> sqlite3.Connection:
         db = sqlite3.connect(self.database, timeout=10)
@@ -252,7 +269,9 @@ class ProjectStore:
         display = self.run(project_id, project["display_run_id"]) if project["display_run_id"] else None
         from backend.services.workspace_service import Workspaces
         from backend.services.chat_store import ChatStore
+        from backend.services.agent_store import AgentStore, public_turn
         return {"project": project, "workspace": Workspaces(self).get(project_id), "chat_items": ChatStore(self).list(project_id),
+            "active_turn": public_turn(AgentStore(self).active(project_id)), "analysis_rules": AgentStore(self).rules(project_id),
             "revisions": self.revisions(project_id), "messages": self.messages(project_id),
             "draft": self.revision(project_id, project["draft_id"]).model_dump() if project["draft_id"] else None,
             "partial_run": partial.model_dump() if (partial := self.partial_run(project_id)) else None,

@@ -2,13 +2,14 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import {
   Activity, ArrowDownToLine, ArrowRight, BarChart3, Check, CheckCircle2, ChevronDown, ChevronUp, CircleHelp, Copy,
-  Database, ExternalLink, FileUp, History, LayoutDashboard, ListTree, Loader2, MessageSquare,
+  Database, ExternalLink, FileUp, History, ListTree, Loader2, MessageSquare,
   PanelRightClose, PanelRightOpen, Pencil, Play, Plus, Power, Redo2, Rocket, RotateCcw, Send, Settings2,
   Sigma, Sparkles, Square, Trash2, Undo2, X,
 } from 'lucide-react';
 import { Dashboard } from './components/Dashboard';
 import { DataProfileCard } from './components/DataProfileCard';
 import { StageCanvas } from './components/StageCanvas';
+import { ClarificationCard, AnalysisResult, ProjectRules, ChatText } from './components/AgentChat';
 import { ChatReview } from './components/ChatReview';
 import { StageInspector } from './components/StageInspector';
 import { PropertiesPanel } from './components/PropertiesPanel';
@@ -165,14 +166,16 @@ export default function BuilderApp() {
   useEffect(() => () => abort.current?.abort(), []);
   const activeJob = jobs.find(job => ['queued', 'running'].includes(job.status));
   const latestJob = jobs[0];
-  const working = chatBusy || saving;
+  const activeTurn = view?.active_turn;
+  const working = chatBusy || saving || Boolean(activeTurn);
+  const chatRunning = chatBusy || Boolean(activeTurn && activeTurn.status !== 'awaiting_clarification');
   const document = view?.workspace.document;
   const workspace = view?.workspace;
   const lastEvent = activeJob?.events[activeJob.events.length - 1];
   const progress = status || lastEvent?.message || (lastEvent?.title ? `${lastEvent.title}: ${lastEvent.status}` : activeJob ? 'Waiting for the execution slot' : '');
   const needsConfirmation = view?.display_run?.result?.cleanup_impacts.some(impact => impact.requires_confirmation);
   const stage = workspace?.stages.find(s => s.id === selected);
-  const effectiveStageId = selected === 'project' ? null : (selected || (page === 'cleaning' ? 'category:cleaning' : page === 'analysis' ? 'category:analysis' : page === 'dashboard' ? 'category:visualization' : page === 'data' ? 'category:input' : null));
+  const effectiveStageId = selected === 'project' ? null : selected;
   const effectiveStage = workspace?.stages.find(s => s.id === effectiveStageId);
   const categoryLabel = ({'category:input': 'Data input', 'category:cleaning': 'Data cleaning', 'category:analysis': 'Analysis', 'category:visualization': 'Visualization'} as Record<string, string>)[effectiveStageId || ''];
   const context = categoryLabel ? { stage_id: effectiveStageId, label: `${categoryLabel} · Create or edit stages` } : effectiveStage ? { stage_id: effectiveStage.id, label: `${{input: 'Data input', cleaning: 'Data cleaning', analysis: 'Analysis', visualization: 'Visualization'}[effectiveStage.type]} · ${effectiveStage.title}` } : { stage_id: null, label: 'Project' };
@@ -216,7 +219,7 @@ export default function BuilderApp() {
     finally { setSaving(false); if (file.current) file.current.value = ''; }
   };
   const send = async (explicitQuery?: string, explicitStageId?: string | null) => {
-    if (!view) return;
+    if (!view || working) return;
     const text = (explicitQuery !== undefined ? explicitQuery : query).trim();
     if (!text) return;
     const targetStageId = explicitStageId !== undefined ? explicitStageId : context.stage_id;
@@ -227,12 +230,27 @@ export default function BuilderApp() {
     abort.current = new AbortController();
     updateView({ ...view, messages: [...view.messages, { role: 'user', content: text, created_at: new Date().toISOString(), metadata: { context: targetContext } }] });
     try {
-      await streamProject(`/api/projects/${id}/chat`, { query: text, stage_id: targetStageId, expected_version: view.workspace.version }, event => {
+      await streamProject(`/api/projects/${id}/chat`, { query: text, stage_id: targetStageId, expected_version: view.workspace.version, request_id: crypto.randomUUID(), page_context: page }, event => {
         if (event.event === 'status') setStatus(event.message);
+        if (event.event === 'turn_started') refresh(id).catch(() => {});
         if (event.event === 'error') setError(event.message);
       }, abort.current.signal);
     } catch (e: any) { if (e.name !== 'AbortError') setError(e.message); }
     finally { abort.current = null; setChatBusy(false); setStatus(''); await refresh(id); await list(); }
+  };
+
+  const answerClarification = async (itemId: string, answers: {question_id: string; text: string; save_as_rule: boolean}[], refreshContext: boolean) => {
+    if (!view || chatBusy) return;
+    const id = view.project.id;
+    setChatBusy(true); setError(''); setStatus('Resuming your request');
+    abort.current = new AbortController();
+    try {
+      await streamProject(`/api/projects/${id}/chat/clarifications/${itemId}/answer`, {answers, refresh_context: refreshContext}, event => {
+        if (event.event === 'status') setStatus(event.message);
+        if (event.event === 'error') setError(event.message);
+      }, abort.current.signal);
+    } catch (e: any) { if (e.name !== 'AbortError') setError(e.message); }
+    finally { abort.current = null; setChatBusy(false); setStatus(''); await refresh(id); }
   };
 
   const handleCreateWithAI = (targetCategory: 'cleaning' | 'analysis' | 'visualization', promptText: string) => {
@@ -302,6 +320,11 @@ export default function BuilderApp() {
     } catch (e: any) { setError(e.message); }
   };
   const cancel = async () => {
+    if (projectId && (activeTurn || viewRef.current?.active_turn)) {
+      const turn = activeTurn || viewRef.current?.active_turn;
+      await request(`/api/projects/${projectId}/chat/turns/${turn!.id}/cancel`, jsonBody({})).catch(e => setError(e.message));
+      abort.current?.abort(); await refresh(projectId); return;
+    }
     if (abort.current) { abort.current.abort(); return; }
     if (activeJob && projectId) await request(`/api/projects/${projectId}/jobs/${activeJob.id}/cancel`, jsonBody({})).catch(e => setError(e.message));
   };
@@ -639,18 +662,22 @@ export default function BuilderApp() {
             const item = view.chat_items?.find(value => value.id === message.metadata?.item_id);
             return <article className={`studio-message ${message.role}`} key={`${message.created_at}-${index}`}>
               <span>{message.role === 'user' ? 'You' : 'WPS-AI'} · {message.metadata?.context?.label || 'Project'}</span>
-              <p>{message.content}</p>
+              <ChatText text={message.content} />
               {message.metadata?.run_id && <small className="message-provenance">Run {message.metadata.run_id.slice(0, 8)} · Revision {message.metadata.revision_id?.slice(0, 8)} · Input {message.metadata.input_hash?.slice(0, 8)}</small>}
+              {item?.kind === 'clarification' && <ClarificationCard item={item} disabled={chatBusy || saving} onAnswer={answerClarification} />}
+              {message.metadata?.artifact_id && <AnalysisResult projectId={view.project.id} artifactId={message.metadata.artifact_id} onReady={() => chatEnd.current?.scrollIntoView({block: 'nearest'})} />}
               {item && ['proposal', 'needs_run'].includes(message.metadata?.kind || '') && <ChatReview item={item} projectId={view.project.id} developer={developer} disabled={working || Boolean(activeJob)} issues={workspace?.issues || []}
                 onAction={chatAction} onUndo={() => document && save(document, 'undo')} />}
             </article>;
-          })}{chatBusy && <div className="chat-thinking"><Loader2 size={14} className="spin" />{status}</div>}<div ref={chatEnd} /></div>
-          <form className="chat-composer" onSubmit={event => { event.preventDefault(); send(); }}>
+          })}{chatRunning && <div className="chat-thinking"><Loader2 size={14} className="spin" />{status || `Request ${activeTurn?.status || 'running'}`}</div>}<div ref={chatEnd} /></div>
+          {activeTurn && <button type="button" onClick={cancel}>Cancel request</button>}
+          {view && <ProjectRules projectId={view.project.id} rules={view.analysis_rules || []} onChange={() => refresh(view.project.id)} disabled={working} />}
+          {activeTurn?.status === 'awaiting_clarification' ? <div className="chat-composer"><p>Answer the questions above to continue this request.</p></div> : <form className="chat-composer" onSubmit={event => { event.preventDefault(); send(); }}>
             <div className="chat-context" aria-label="Chat context"><span>{context.label}</span>{(selected || context.stage_id) && <button type="button" onClick={() => setSelected(selected === 'project' ? null : 'project')} aria-label="Toggle Project context"><X size={13} />{selected === 'project' ? 'Reset' : 'Project'}</button>}</div>
             <div className="chat-shortcuts">{getChatShortcuts(categoryLabel, effectiveStage).map(([label, text]) => <button type="button" disabled={working || !view} key={label} onClick={() => setQuery(text)}>{label}</button>)}</div>
             <textarea aria-label="Ask about the selected context or request changes" placeholder={effectiveStage ? `Ask about ${effectiveStage.title} or request a change…` : categoryLabel ? `Describe the ${categoryLabel.toLowerCase()} stages to create…` : 'Ask a question or describe a pipeline change…'} value={query} disabled={working || !view} onChange={e => setQuery(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); send(); } }} />
             <div><span>Answers do not edit. Review and Apply changes.</span><button className="primary icon-button" disabled={working || !query.trim() || !view} aria-label="Send chat message"><Send size={16} /></button></div>
-          </form>
+          </form>}
         </> : dock === 'inspect' && developer && view ? <StageInspector projectId={view.project.id} stageId={stage?.id || null} version={view.workspace.version} runKey={`${view.display_run?.run_id || ""}:${latestJob?.id || ""}:${latestJob?.status || ""}`} onSelect={id => setSelected(id)} />
           : document ? <PropertiesPanel document={document} stage={stage} run={(view?.partial_run?.workspace_version === workspace?.version ? view?.partial_run : view?.display_run) || null} onChange={save} onDelete={deleteStage} onOpenData={() => navigate('data')} disabled={working} /> : <p className="dock-description">Create a project to edit properties.</p>}
       </aside>}

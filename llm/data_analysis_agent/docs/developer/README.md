@@ -10,6 +10,7 @@ Reviewed on 2026-11-04. Runtime version: **0.3.1**. Runtime ABI: **2**. New proj
 | --- | --- |
 | [System architecture](01-architecture.md) | Which processes run, and how do they communicate? |
 | [Builder components](02-builder-ui.md) | Which UI component owns each function? |
+| [AI chat workflow](agent-workflow.md) | How do routing, Bedrock, temporary calculations, and clarification work? |
 | [Authoring and LLM access](03-authoring.md) | How does chat become a saved, checked workspace? |
 | [Data contracts and persistence](04-data-state.md) | What is stored, versioned, reused, and accepted? |
 | [Execution engine](05-execution.md) | How do steps run, filter data, cache outputs, and fail? |

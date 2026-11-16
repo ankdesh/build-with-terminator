@@ -482,3 +482,18 @@ button.stage-empty { width: 100%; cursor: pointer; white-space: normal; }
 .stages-empty-card p { font-size: 12px; color: #7387a2; max-width: 480px; margin: 0 auto 18px; line-height: 1.65; }
 .stages-empty-card .button-row { justify-content: center; }
 
+
+/* Durable chat questions, evidence and explicit project rules. */
+.chat-review fieldset { min-width: 0; margin: 12px 0; padding: 8px; border: 1px solid #dbe6f6; border-radius: 6px; }
+.chat-review legend { padding: 0 4px; font-weight: 600; }
+.chat-review label { display: block; margin: 8px 0; }
+.chat-review input:not([type="checkbox"]), .project-rules input, .project-rules textarea { width: 100%; min-width: 0; padding: 7px; border: 1px solid #cbd5e1; border-radius: 5px; background: white; color: #24364f; }
+.chat-review button[aria-pressed="true"] { background: #dbeafe; border-color: #2563eb; color: #1d4ed8; }
+.chat-review .checkbox-label { display: flex; gap: 6px; align-items: center; }
+.chat-analysis { min-width: 0; margin: 12px 0; overflow: hidden; }
+.chat-analysis > strong { display: block; margin: 10px 0; font-size: 22px; }
+.project-rules { max-height: 220px; overflow-y: auto; margin: 0 14px 8px; padding: 8px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; }
+.project-rules summary { cursor: pointer; font-weight: 600; }
+.project-rules p { margin: 8px 0; }
+.project-rules textarea { min-height: 60px; margin: 8px 0 4px; }
+.project-rules form { display: flex; gap: 6px; margin-top: 10px; }

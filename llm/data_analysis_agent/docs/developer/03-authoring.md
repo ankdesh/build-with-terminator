@@ -1,5 +1,7 @@
 # Conversational authoring and LLM access
 
+The current typed workflow, Bedrock configuration, clarification cards, and temporary analysis are described in [AI chat workflow](agent-workflow.md). The older JSON Pointer authoring path remains for compatibility callers.
+
 ![Stage-aware answers, reviewed edits, and explicit execution](diagrams/authoring.svg)
 
 ## Request flow

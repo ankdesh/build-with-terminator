@@ -38,7 +38,7 @@ async def test_gateway_configures_and_reuses_one_client(monkeypatch):
         SimpleNamespace(message=SimpleNamespace(content='{"answer":42}', refusal=None))])
     factory = Mock(return_value=client)
     monkeypatch.setattr(llm_gateway, "AsyncOpenAI", factory)
-    settings = replace(config, openai_api_key="test-key", openai_api_base="http://localhost:9000/v1",
+    settings = replace(config, llm_provider="openai", openai_api_key="test-key", openai_api_base="http://localhost:9000/v1",
         openai_model_name="local-model", llm_timeout_seconds=12, llm_max_retries=2, llm_temperature=0)
     gateway = llm_gateway.LLMGateway(settings=settings)
     messages = [{"role": "user", "content": "Calculate"}]
@@ -58,7 +58,7 @@ async def test_missing_key_fails_before_sdk_creation(monkeypatch):
     factory = Mock()
     monkeypatch.setattr(llm_gateway, "AsyncOpenAI", factory)
     with pytest.raises(LLMConfigurationError, match="OPENAI_API_KEY"):
-        await llm_gateway.LLMGateway(settings=replace(config, openai_api_key="")).complete([])
+        await llm_gateway.LLMGateway(settings=replace(config, llm_provider="openai", openai_api_key="")).complete([])
     factory.assert_not_called()
 
 
@@ -120,7 +120,7 @@ def test_invalid_temperature_config_is_rejected(tmp_path, value):
 async def test_gateway_omits_null_temperature_and_keeps_structured_output():
     client = AsyncMock()
     client.chat.completions.create.return_value = completion()
-    gateway = llm_gateway.LLMGateway(client, replace(config, llm_temperature=None))
+    gateway = llm_gateway.LLMGateway(client, replace(config, llm_provider="openai", llm_temperature=None))
     schema = {'type': 'json_schema', 'json_schema': {'name': 'test'}}
     await gateway.complete([{'role': 'user', 'content': 'Return JSON'}], schema)
     kwargs = client.chat.completions.create.await_args.kwargs
@@ -134,7 +134,7 @@ async def test_gateway_omits_null_temperature_and_keeps_structured_output():
 async def test_gateway_retries_explicit_temperature_rejection_once_and_remembers(code):
     client = AsyncMock()
     client.chat.completions.create.side_effect = [bad_request('temperature', code, 'Only the default is supported'), completion(), completion()]
-    gateway = llm_gateway.LLMGateway(client, replace(config, llm_temperature=.1))
+    gateway = llm_gateway.LLMGateway(client, replace(config, llm_provider="openai", llm_temperature=.1))
     schema = {'type': 'json_object'}
     messages = [{'role': 'user', 'content': 'Return JSON'}]
     assert await gateway.complete(messages, schema) == '{"ok":true}'
@@ -153,7 +153,7 @@ async def test_gateway_retries_explicit_temperature_rejection_once_and_remembers
 async def test_gateway_does_not_drop_schema_or_retry_other_bad_requests():
     client = AsyncMock()
     client.chat.completions.create.side_effect = bad_request('response_format', 'invalid_json_schema', 'Schema is invalid')
-    gateway = llm_gateway.LLMGateway(client, replace(config, llm_temperature=.1))
+    gateway = llm_gateway.LLMGateway(client, replace(config, llm_provider="openai", llm_temperature=.1))
     with pytest.raises(LLMServiceError, match='response_format.*invalid_json_schema'):
         await gateway.complete([], {'type': 'json_schema'})
     assert client.chat.completions.create.await_count == 1
@@ -166,7 +166,7 @@ async def test_failed_compatibility_retry_reports_the_second_error_without_furth
         bad_request('temperature', 'unsupported_value', 'Only the default is supported'),
         bad_request('model', 'model_not_found', 'Model unavailable'),
     ]
-    gateway = llm_gateway.LLMGateway(client, replace(config, llm_temperature=.1))
+    gateway = llm_gateway.LLMGateway(client, replace(config, llm_provider="openai", llm_temperature=.1))
     with pytest.raises(LLMServiceError, match='Model unavailable'):
         await gateway.complete([])
     assert client.chat.completions.create.await_count == 2
@@ -178,7 +178,7 @@ async def test_provider_diagnostics_redact_credentials_and_ignore_request_echo()
     error = bad_request('model', 'invalid_request_error', 'Invalid model. key=my-test-secret Bearer another-secret sk-provider-secret')
     error.body['request'] = {'messages': 'private request text'}
     client.chat.completions.create.side_effect = error
-    gateway = llm_gateway.LLMGateway(client, replace(config, openai_api_key='my-test-secret', llm_temperature=None))
+    gateway = llm_gateway.LLMGateway(client, replace(config, llm_provider="openai", openai_api_key='my-test-secret', llm_temperature=None))
     with pytest.raises(LLMServiceError) as caught:
         await gateway.complete([])
     details = str(caught.value)

@@ -34,7 +34,16 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    project_routes.store.recover()
+    project_routes.service.closing = False
     yield
+    project_routes.service.closing = True
+    for flag in project_routes.service.chat_cancellations.values(): flag.set()
+    chat_tasks = list(project_routes.durable_chat_tasks)
+    for task in chat_tasks: task.cancel()
+    if chat_tasks:
+        import asyncio
+        await asyncio.gather(*chat_tasks,return_exceptions=True)
     for cancel in project_routes.target_cancellations.values():
         cancel.set()
     await project_routes.targets.close()
@@ -114,7 +123,11 @@ async def wps_exception_handler(request: Request, exc: WPSAIBaseException) -> JS
 
 @app.get('/api/capabilities')
 async def capabilities() -> dict:
-    return {'developer_mode': os.environ.get('WPS_DEVELOPER_MODE') == '1', 'reviewed_chat': True}
+    import asyncio
+    from backend.services.sandbox_runner import sandbox_available
+    return {'developer_mode': os.environ.get('WPS_DEVELOPER_MODE') == '1', 'reviewed_chat': True,
+        'agent_protocol_version':2,'temporary_analysis':await asyncio.to_thread(sandbox_available),
+        'clarifications':True,'llm_provider':config.llm_provider}
 
 
 @app.get("/health")
@@ -124,8 +137,9 @@ async def health_check() -> dict:
         "status": "healthy",
         "app": "WPS-AI",
         "mode": "builder",
-        "model": config.openai_model_name,
-        "api_base_configured": bool(config.openai_api_base),
+        "provider": config.llm_provider,
+        "model": config.bedrock_model_id if config.llm_provider=='bedrock' else config.openai_model_name,
+        "api_base_configured": bool(config.bedrock_region if config.llm_provider=='bedrock' else config.openai_api_base),
     }
 
 

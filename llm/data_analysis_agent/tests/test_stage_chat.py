@@ -218,7 +218,7 @@ async def test_answer_only_followup_rejects_edit_or_run_requests(saved_project):
     store, pid, _ = saved_project
     before = Workspaces(store).get(pid)
     chat = chat_service(store, [{'kind': 'proposal', 'message': 'Not allowed'}]*3)
-    with pytest.raises(ValueError, match='valid chat response'):
+    with pytest.raises(ValueError, match='answer_only'):
         await chat.respond(pid, 'Original question', 'step:totals', None, lambda _: None, threading.Event(), answer_only=True)
     assert Workspaces(store).get(pid) == before and store.view(pid)['chat_items'] == []
 

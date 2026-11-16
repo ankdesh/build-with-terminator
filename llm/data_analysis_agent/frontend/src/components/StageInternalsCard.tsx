@@ -18,7 +18,7 @@ import {
   Layers,
   Wand2,
 } from 'lucide-react';
-import type { Job, Run, Stage, Step, WorkspaceDocument, Output } from '../lib/projects';
+import type { Job, Run, Stage, Step, WorkspaceDocument } from '../lib/projects';
 import { DataTableViewer } from './DataTableViewer';
 
 interface StageInternalsCardProps {

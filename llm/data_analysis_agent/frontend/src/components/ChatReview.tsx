@@ -21,6 +21,7 @@ export function ChatReview({ item, projectId, developer, disabled, issues, onAct
   return <section className="chat-review" aria-label={item.kind === 'proposal' ? 'Review proposed changes' : 'Run required'}>
     <strong>{item.kind === 'proposal' ? `Changes · ${item.status}` : 'Results need a run'}</strong>
     {item.kind === 'proposal' && <>
+      {item.validation && <p>Candidate validation: {item.validation.status}</p>}
       <p>{item.calculation_changed ? 'Calculations will need Run.' : 'Presentation only; saved results can be reused.'}</p>
       {!!item.issues?.length && <div className="review-warning"><strong>Incomplete draft</strong><ul>{item.issues.map(issue => <li key={issue}>{issue}</li>)}</ul></div>}
       <details><summary>{item.changes?.length || 0} changed {item.changes?.length === 1 ? 'field' : 'fields'} · review before applying</summary>
