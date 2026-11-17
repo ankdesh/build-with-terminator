@@ -17,6 +17,7 @@ import { SettingsField, ControlSettings } from './components/SettingsFields';
 import { AIStageCreatorBar } from './components/AIStageCreatorBar';
 import { StageInternalsCard } from './components/StageInternalsCard';
 import { jsonBody, request, streamProject } from './lib/projects';
+import { createRequestId } from './lib/requestId';
 import type { Job, ProjectSummary, ProjectView, Stage, Step, Target, WorkspaceDocument } from './lib/projects';
 
 type Page = 'pipeline' | 'data' | 'cleaning' | 'analysis' | 'dashboard' | 'history';
@@ -230,7 +231,7 @@ export default function BuilderApp() {
     abort.current = new AbortController();
     updateView({ ...view, messages: [...view.messages, { role: 'user', content: text, created_at: new Date().toISOString(), metadata: { context: targetContext } }] });
     try {
-      await streamProject(`/api/projects/${id}/chat`, { query: text, stage_id: targetStageId, expected_version: view.workspace.version, request_id: crypto.randomUUID(), page_context: page }, event => {
+      await streamProject(`/api/projects/${id}/chat`, { query: text, stage_id: targetStageId, expected_version: view.workspace.version, request_id: createRequestId(), page_context: page }, event => {
         if (event.event === 'status') setStatus(event.message);
         if (event.event === 'turn_started') refresh(id).catch(() => {});
         if (event.event === 'error') setError(event.message);
