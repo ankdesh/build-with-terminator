@@ -19,7 +19,7 @@ from pipeline_core.validation import validate_parameters
 from backend.services.workspace_service import Workspaces
 from pipeline_core.workspace import WorkspaceDocument
 from backend.services.llm_gateway import LLMGateway
-from backend.services.sandbox_runner import SandboxRunner
+from backend.services.agent_runner import AgentRunner
 from backend.services.workspace_editor import edit_workspace, NeedsClarification
 from backend.services.agent_contracts import Question
 
@@ -32,7 +32,7 @@ class ProjectService:
         self.lock = asyncio.Lock()
         self.authoring_locks: dict[str, asyncio.Lock] = {}
         self.cancellations: dict[str, threading.Event] = {}
-        self.validation_runner = SandboxRunner()
+        self.validation_runner = AgentRunner()
         self.chat_tasks: dict[str, asyncio.Task] = {}
         self.chat_cancellations: dict[str, threading.Event] = {}
         self.closing = False
@@ -208,7 +208,7 @@ class ProjectService:
                                 continue
                             from uuid import uuid4
                             validation_dir = self.store.project_dir(project_id)/'validation'/str(uuid4())
-                            emit({'event':'status','message':'Checking the candidate against the current dataset in isolation'})
+                            emit({'event':'status','message':'Checking the candidate against the current dataset in the worker process'})
                             async with self.lock:
                                 response = await self.validate_candidate(snapshot,self.store.dataset_path(project_id),
                                     snapshot.default_parameters(),validation_dir,cancel)

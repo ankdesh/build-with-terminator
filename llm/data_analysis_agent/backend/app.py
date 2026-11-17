@@ -123,10 +123,8 @@ async def wps_exception_handler(request: Request, exc: WPSAIBaseException) -> JS
 
 @app.get('/api/capabilities')
 async def capabilities() -> dict:
-    import asyncio
-    from backend.services.sandbox_runner import sandbox_available
     return {'developer_mode': os.environ.get('WPS_DEVELOPER_MODE') == '1', 'reviewed_chat': True,
-        'agent_protocol_version':2,'temporary_analysis':await asyncio.to_thread(sandbox_available),
+        'agent_protocol_version':2,'temporary_analysis':True,
         'clarifications':True,'llm_provider':config.llm_provider}
 
 

@@ -144,7 +144,7 @@ class AgentController:
             turn['analysis_plan']=plan.model_dump()
             try:
                 turn['status']='executing';self.state.put(turn)
-                emit({'event':'status','message':'Calculating against the full selected dataset in isolation'})
+                emit({'event':'status','message':'Calculating against the full selected dataset in the worker process'})
                 artifact = await TemporaryAnalysis(self.service).execute(turn['project_id'],plan,turn,cancel)
                 emit({'event':'artifact','artifact':{k:artifact[k] for k in ['id','result','provenance','expired']}})
                 return artifact
@@ -154,7 +154,7 @@ class AgentController:
                 if cancel.is_set(): raise
                 error=str(exc)
                 turn['analysis_failure']={**turn.get('analysis_failure',{}),'plan':plan.model_dump(),'error':error}
-                if 'Automatic Python is unavailable' in error or 'deadline' in error: raise
+                if 'deadline' in error: raise
         raise ValueError('Temporary analysis failed after bounded repairs: '+error)
 
     async def _drive(self, turn: dict, emit_callback: Callable[[dict],None], cancel: threading.Event) -> dict:

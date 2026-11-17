@@ -125,10 +125,10 @@ async def evaluate(case: dict, repeat: int, semaphore: asyncio.Semaphore) -> dic
       from backend.services.workspace_service import Workspaces
       from pipeline_core.partial import execution_plan
       from pipeline_core.workspace import WorkspaceDocument
-      from backend.services.sandbox_runner import SandboxRunner
+      from backend.services.agent_runner import AgentRunner
       candidate=chat.items.get(pid,result['id'])['document']
       snapshot,blocked=execution_plan(WorkspaceDocument.model_validate(candidate));assert not blocked
-      response=await SandboxRunner().run(snapshot,store.dataset_path(pid),snapshot.default_parameters(),root/'verify',threading.Event())
+      response=await AgentRunner().run(snapshot,store.dataset_path(pid),snapshot.default_parameters(),root/'verify',threading.Event())
       assert response['success'],response.get('error')
       assert any(value.get('kind')=='metric' and value.get('value')==30 for value in response['result']['outputs'].values()),'New project total must equal 30'
       report['creation_result_verified']=True

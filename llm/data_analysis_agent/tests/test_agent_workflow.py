@@ -1,4 +1,4 @@
-"""Workflow contracts, isolation and numerical evidence use deterministic fixtures."""
+"""Workflow contracts, worker execution and numerical evidence use deterministic fixtures."""
 import json
 import threading
 from dataclasses import replace
@@ -89,7 +89,7 @@ async def test_clarification_resumes_original_request_without_duplicate_user(sav
 
 
 @pytest.mark.asyncio
-async def test_temporary_analysis_isolated_and_no_saved_state_change(saved_project):
+async def test_temporary_analysis_worker_does_not_change_saved_state(saved_project):
     store,pid,_=saved_project;service=ProjectService(store);before=store.view(pid)
     state=AgentStore(store);turn,_=state.create(pid,'Sum?',{'stage_id':None,'label':'Project'},before['workspace'],store.get(pid)['dataset_hash'])
     plan=AnalysisPlan(kind='query',message='Sum',operations=[QueryOperation(op='aggregate',column='value',metric='sum',alias='total')])
@@ -230,17 +230,16 @@ async def test_matching_temporary_result_reused_and_tampered_result_recomputed(s
 
 
 @pytest.mark.asyncio
-async def test_sandbox_hides_host_files_and_credentials(tmp_path, simple_revision, input_csv,monkeypatch):
-    from backend.services.sandbox_runner import SandboxRunner
+async def test_agent_worker_has_normal_host_file_access(tmp_path, simple_revision, input_csv):
+    from backend.services.agent_runner import AgentRunner
     from pipeline_core.partial import PartialRevision
-    secret=tmp_path/'host-secret';secret.write_text('not visible to worker')
-    monkeypatch.setenv('AWS_SECRET_ACCESS_KEY','not-visible')
+    secret=tmp_path/'host-secret';secret.write_text('visible to the normal worker')
     payload=simple_revision.model_dump();payload['parameters']=[];payload['dashboard']['widgets']=[]
     payload['steps']=[{'id':'probe','title':'Probe','stage':'analysis','function':'probe','inputs':['data'],'outputs':['check'],
-        'code':f"import os\ndef probe(inputs, parameters, context):\n    return {{'check': os.path.exists({str(secret)!r}) or bool(os.environ.get('AWS_SECRET_ACCESS_KEY'))}}\n"}]
-    result=await SandboxRunner().run(PartialRevision.model_validate(payload),input_csv,{},tmp_path/'isolated',threading.Event())
-    assert result['success'] and result['result']['outputs']['check']['value'] is False
-    assert not (tmp_path/'isolated'/'input.csv').exists()
+        'code':f"from pathlib import Path\ndef probe(inputs, parameters, context):\n    return {{'check': Path({str(secret)!r}).read_text()}}\n"}]
+    result=await AgentRunner().run(PartialRevision.model_validate(payload),input_csv,{},tmp_path/'worker',threading.Event())
+    assert result['success'] and result['result']['outputs']['check']['value'] == 'visible to the normal worker'
+    assert not (tmp_path/'worker'/'input.csv').exists()
 
 
 @pytest.mark.asyncio
@@ -271,3 +270,15 @@ async def test_redundant_source_echo_does_not_trigger_generation(saved_project):
     context=json.loads(llm.requests[1].messages[1]['content'])
     assert 'code' not in context['supported_entity_schemas']['step']['properties']
 
+
+
+@pytest.mark.asyncio
+async def test_agent_worker_preserves_cancellation_and_deadline_errors(tmp_path):
+    from backend.services.agent_runner import AgentRunner
+    runner=AgentRunner()
+    runner.worker.run=AsyncMock(return_value={'success':False,'cancelled':True,'error':'Run cancelled'})
+    with pytest.raises(ValueError,match='Chat cancelled'):
+        await runner.run(None,tmp_path/'data.csv',{},tmp_path/'job',threading.Event())
+    runner.worker.run=AsyncMock(return_value={'success':False,'error':'Pipeline exceeded its execution deadline'})
+    with pytest.raises(ValueError,match='deadline'):
+        await runner.run(None,tmp_path/'data.csv',{},tmp_path/'job',threading.Event())

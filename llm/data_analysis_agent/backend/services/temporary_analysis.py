@@ -1,4 +1,4 @@
-"""Temporary analysis uses isolated execution and never promotes a saved run."""
+"""Temporary analysis uses a normal worker process and never promotes a saved run."""
 from __future__ import annotations
 import json
 import hashlib
@@ -9,7 +9,7 @@ from typing import Any
 from uuid import uuid4
 from backend.services.agent_contracts import AnalysisPlan, Question
 from backend.services.agent_store import AgentStore
-from backend.services.sandbox_runner import SandboxRunner
+from backend.services.agent_runner import AgentRunner
 from backend.services.workspace_editor import NeedsClarification, validate_generated_source
 from pipeline_core.engine import PipelineEngine, chart_from_frame, fingerprint, safe_json, validate_chart
 from pipeline_core.models import ChartBinding, InputContract, PipelineStep
@@ -78,7 +78,7 @@ class TemporaryAnalysis:
     def __init__(self, service: Any):
         self.service = service
         self.store = service.store
-        self.runner = SandboxRunner()
+        self.runner = AgentRunner()
 
     async def execute(self, project_id: str, plan: AnalysisPlan, turn: dict, cancel: threading.Event) -> dict:
         project = self.store.get(project_id)

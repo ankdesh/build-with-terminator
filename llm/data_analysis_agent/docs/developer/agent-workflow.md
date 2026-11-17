@@ -36,7 +36,7 @@ Saved edits use add/update/remove operations with stable IDs. A separate writer 
 
 Data questions use the complete selected dataset. They prefer current draft cleaning. If no cleaning exists, the result is labelled raw. Independent cleaning branches require a source choice. A cleaning failure prompts for repair or explicit use of raw data.
 
-Common filters, grouping, aggregation, sorting, selection, correlation and descriptions use deterministic DataFrame operations. Other calculations use a Python function. Both paths run in a Linux bubblewrap worker with no network, no credentials, read-only runtime files, and a private output directory. Install `bubblewrap` and permit user/network namespaces. If isolation is unavailable, the application reports that capability error; it does not run automatic Python in the builder process.
+Common filters, grouping, aggregation, sorting, selection, correlation and descriptions use deterministic DataFrame operations. Other calculations use a Python function. Both paths use the normal `ProcessRunner` worker. No bubblewrap dependency, namespace sandbox, or sandbox capability check is used. The worker has normal host filesystem and network access. It retains the existing minimal environment, input snapshot, time and memory limits, cancellation, and per-request output directory.
 
 Temporary tables retain full CSV output. The chat shows at most 100 rows and 20 columns. Charts use the existing JSON-only ECharts renderer. Provenance records the input hash, source, workspace version, calculation hash, parameters, project-rule version, and installed runtime package versions. Reuse requires matching input, calculation, source, parameters, rules, and runtime code/package hashes; cached files must pass integrity checks. Temporary work does not replace a saved dashboard run.
 
@@ -52,7 +52,7 @@ Default limits are 12 model steps, 600 active-work seconds, 120 execution second
 
 ## Validation
 
-Run local regression tests outside a restrictive namespace sandbox, because tests exercise asyncio threads and bubblewrap:
+Run local regression tests in the normal development environment. The tests exercise asyncio threads and worker subprocesses:
 
 ```sh
 uv run --extra dev pytest -q
